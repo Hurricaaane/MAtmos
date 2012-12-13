@@ -1,0 +1,568 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<contents>
+<condition name="Breathing again">
+	<descriptible>
+		<nickname>Breathing again</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<sheet>Deltas</sheet>
+	<key>23</key>
+	<symbol>&gt;</symbol>
+	<constant>0</constant>
+	<list></list>
+</condition>
+<condition name="Contact Lava">
+	<descriptible>
+		<nickname>Contact Lava</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<sheet>Instants</sheet>
+	<key>36</key>
+	<symbol>==</symbol>
+	<constant>11</constant>
+	<list></list>
+</condition>
+<condition name="Contact Lava (Flowing)">
+	<descriptible>
+		<nickname>Contact Lava (Flowing)</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<sheet>Instants</sheet>
+	<key>36</key>
+	<symbol>==</symbol>
+	<constant>10</constant>
+	<list></list>
+</condition>
+<condition name="Contact Water">
+	<descriptible>
+		<nickname>Contact Water</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<sheet>Instants</sheet>
+	<key>36</key>
+	<symbol>==</symbol>
+	<constant>9</constant>
+	<list></list>
+</condition>
+<condition name="Contact Water (Flowing)">
+	<descriptible>
+		<nickname>Contact Water (Flowing)</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<sheet>Instants</sheet>
+	<key>36</key>
+	<symbol>==</symbol>
+	<constant>8</constant>
+	<list></list>
+</condition>
+<condition name="Entering Water">
+	<descriptible>
+		<nickname>Entering Water</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<sheet>Deltas</sheet>
+	<key>6</key>
+	<symbol>&gt;</symbol>
+	<constant>0</constant>
+	<list></list>
+</condition>
+<condition name="Falling Impact Fast">
+	<descriptible>
+		<nickname>Falling Impact Fast</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<sheet>Deltas</sheet>
+	<key>43</key>
+	<symbol>&lt;</symbol>
+	<constant>-5000</constant>
+	<list></list>
+</condition>
+<condition name="Falling Impact Hurt">
+	<descriptible>
+		<nickname>Falling Impact Hurt</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<sheet>Deltas</sheet>
+	<key>43</key>
+	<symbol>&lt;</symbol>
+	<constant>-2000</constant>
+	<list></list>
+</condition>
+<condition name="Falling more than 4 blocks">
+	<descriptible>
+		<nickname>Falling more than 4 blocks</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<sheet>Instants</sheet>
+	<key>43</key>
+	<symbol>&gt;</symbol>
+	<constant>4000</constant>
+	<list></list>
+</condition>
+<condition name="Going Underwater (1)">
+	<descriptible>
+		<nickname>Going Underwater (1)</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<sheet>Deltas</sheet>
+	<key>23</key>
+	<symbol>&lt;</symbol>
+	<constant>0</constant>
+	<list></list>
+</condition>
+<condition name="Going Underwater (2)">
+	<descriptible>
+		<nickname>Going Underwater (2)</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<sheet>Instants</sheet>
+	<key>23</key>
+	<symbol>&gt;</symbol>
+	<constant>290</constant>
+	<list></list>
+</condition>
+<condition name="Health Decrease">
+	<descriptible>
+		<nickname>Health Decrease</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<sheet>Deltas</sheet>
+	<key>24</key>
+	<symbol>&lt;</symbol>
+	<constant>0</constant>
+	<list></list>
+</condition>
+<condition name="High Speeds">
+	<descriptible>
+		<nickname>High Speeds</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<sheet>Instants</sheet>
+	<key>45</key>
+	<symbol>&gt;</symbol>
+	<constant>150</constant>
+	<list></list>
+</condition>
+<condition name="No Y Motion delta">
+	<descriptible>
+		<nickname>No Y Motion delta</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<sheet>Deltas</sheet>
+	<key>34</key>
+	<symbol>==</symbol>
+	<constant>0</constant>
+	<list></list>
+</condition>
+<condition name="Translating on Y">
+	<descriptible>
+		<nickname>Translating on Y</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<sheet>Deltas</sheet>
+	<key>34</key>
+	<symbol>!=</symbol>
+	<constant>0</constant>
+	<list></list>
+</condition>
+<condition name="Under Water">
+	<descriptible>
+		<nickname>Under Water</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<sheet>Instants</sheet>
+	<key>23</key>
+	<symbol>&lt;</symbol>
+	<constant>300</constant>
+	<list></list>
+</condition>
+<set name="Breathing again">
+	<descriptible>
+		<nickname>Breathing again</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<truepart>Breathing again</truepart>
+</set>
+<set name="Contact Lava (on)">
+	<descriptible>
+		<nickname>Contact Lava (on)</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<truepart>Contact Lava</truepart>
+</set>
+<set name="Contact Lava Flowing (on)">
+	<descriptible>
+		<nickname>Contact Lava Flowing (on)</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<truepart>Contact Lava (Flowing)</truepart>
+</set>
+<set name="Diving into Water">
+	<descriptible>
+		<nickname>Diving into Water</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<truepart>Entering Water</truepart>
+	<truepart>Falling Impact Fast</truepart>
+</set>
+<set name="Fall Damage">
+	<descriptible>
+		<nickname>Fall Damage</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<truepart>Falling Impact Hurt</truepart>
+	<truepart>Health Decrease</truepart>
+</set>
+<set name="Falling more than 4 blocks">
+	<descriptible>
+		<nickname>Falling more than 4 blocks</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<truepart>Translating on Y</truepart>
+	<truepart>Falling more than 4 blocks</truepart>
+</set>
+<set name="Going Underwater">
+	<descriptible>
+		<nickname>Going Underwater</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<truepart>Going Underwater (1)</truepart>
+	<truepart>Going Underwater (2)</truepart>
+</set>
+<set name="High Speeds">
+	<descriptible>
+		<nickname>High Speeds</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<truepart>High Speeds</truepart>
+	<truepart>No Y Motion delta</truepart>
+</set>
+<set name="Jumping into Water">
+	<descriptible>
+		<nickname>Jumping into Water</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<truepart>Falling Impact Hurt</truepart>
+	<truepart>Contact Water</truepart>
+</set>
+<set name="Jumping into Water Flowing">
+	<descriptible>
+		<nickname>Jumping into Water Flowing</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<truepart>Falling Impact Hurt</truepart>
+	<truepart>Contact Water (Flowing)</truepart>
+</set>
+<set name="Under Water">
+	<descriptible>
+		<nickname>Under Water</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<truepart>Under Water</truepart>
+</set>
+<event name="Diving into Water">
+	<descriptible>
+		<nickname>Diving into Water</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<path>sound3/matmos_interactions/water_divein.ogg</path>
+	<volmin>1.0</volmin>
+	<volmax>1.0</volmax>
+	<pitchmin>0.9</pitchmin>
+	<pitchmax>1.2</pitchmax>
+	<metasound>0</metasound>
+</event>
+<event name="Fall Damage">
+	<descriptible>
+		<nickname>Fall Damage</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<path>sound3/damage/fallbig1.ogg</path>
+	<path>sound3/damage/fallbig2.ogg</path>
+	<volmin>1.0</volmin>
+	<volmax>1.0</volmax>
+	<pitchmin>0.8</pitchmin>
+	<pitchmax>1.0</pitchmax>
+	<metasound>0</metasound>
+</event>
+<event name="Jumping into Water">
+	<descriptible>
+		<nickname>Jumping into Water</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<path>sound3/matmos_interactions/water_jumpin.ogg</path>
+	<volmin>1.0</volmin>
+	<volmax>1.0</volmax>
+	<pitchmin>0.9</pitchmin>
+	<pitchmax>1.1</pitchmax>
+	<metasound>0</metasound>
+</event>
+<event name="Out of Water">
+	<descriptible>
+		<nickname>Out of Water</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<path>sound3/matmos_interactions/water_underwater_a.ogg</path>
+	<path>sound3/matmos_interactions/water_underwater_b.ogg</path>
+	<path>sound3/matmos_interactions/water_underwater_c.ogg</path>
+	<path>sound3/matmos_interactions/water_underwater_d.ogg</path>
+	<volmin>1.0</volmin>
+	<volmax>1.0</volmax>
+	<pitchmin>1.3</pitchmin>
+	<pitchmax>1.4</pitchmax>
+	<metasound>0</metasound>
+</event>
+<event name="Under Water">
+	<descriptible>
+		<nickname>Under Water</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<path>sound3/matmos_interactions/water_underwater_a.ogg</path>
+	<path>sound3/matmos_interactions/water_underwater_b.ogg</path>
+	<path>sound3/matmos_interactions/water_underwater_c.ogg</path>
+	<path>sound3/matmos_interactions/water_underwater_d.ogg</path>
+	<volmin>1.0</volmin>
+	<volmax>1.0</volmax>
+	<pitchmin>0.9</pitchmin>
+	<pitchmax>1.1</pitchmax>
+	<metasound>0</metasound>
+</event>
+<event name="__SAMPLE">
+	<descriptible>
+		<nickname>__SAMPLE</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<path>sound3/matmos_interactions/water_divein.ogg</path>
+	<volmin>1.0</volmin>
+	<volmax>1.0</volmax>
+	<pitchmin>0.9</pitchmin>
+	<pitchmax>1.2</pitchmax>
+	<metasound>0</metasound>
+</event>
+<machine name="Contact Lava (on)">
+	<descriptible>
+		<nickname>Contact Lava (on)</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<allow>Contact Lava (on)</allow>
+	<allow>Contact Lava Flowing (on)</allow>
+	<stream>
+		<path>sound3/matmos_interactions/fire_burst.ogg</path>
+		<volume>1.0</volume>
+		<pitch>1.0</pitch>
+		<fadeintime>0.0</fadeintime>
+		<fadeouttime>0.0</fadeouttime>
+		<delaybeforefadein>0.0</delaybeforefadein>
+		<delaybeforefadeout>1.7</delaybeforefadeout>
+		<islooping>0</islooping>
+		<isusingpause>0</isusingpause>
+	</stream>
+</machine>
+<machine name="Contact Water (on)">
+	<descriptible>
+		<nickname>Contact Water (on)</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<allow>Jumping into Water Flowing</allow>
+	<allow>Jumping into Water</allow>
+	<eventtimed>
+		<eventname>Jumping into Water</eventname>
+		<delaymin>10.0</delaymin>
+		<delaymax>10.0</delaymax>
+		<delaystart>-1.0</delaystart>
+		<volmod>1.0</volmod>
+		<pitchmod>1.0</pitchmod>
+	</eventtimed>
+</machine>
+<machine name="Diving into Water">
+	<descriptible>
+		<nickname>Diving into Water</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<allow>Diving into Water</allow>
+	<eventtimed>
+		<eventname>Diving into Water</eventname>
+		<delaymin>10.0</delaymin>
+		<delaymax>10.0</delaymax>
+		<delaystart>-1.0</delaystart>
+		<volmod>1.0</volmod>
+		<pitchmod>1.0</pitchmod>
+	</eventtimed>
+</machine>
+<machine name="Fall Damage">
+	<descriptible>
+		<nickname>Fall Damage</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<allow>Fall Damage</allow>
+	<eventtimed>
+		<eventname>Fall Damage</eventname>
+		<delaymin>10.0</delaymin>
+		<delaymax>10.0</delaymax>
+		<delaystart>-1.0</delaystart>
+		<volmod>1.0</volmod>
+		<pitchmod>1.0</pitchmod>
+	</eventtimed>
+</machine>
+<machine name="Falling gust">
+	<descriptible>
+		<nickname>Falling gust</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<allow>Falling more than 4 blocks</allow>
+	<stream>
+		<path>sound3/matmos_interactions/speed_wind.ogg</path>
+		<volume>1.0</volume>
+		<pitch>1.0</pitch>
+		<fadeintime>4.0</fadeintime>
+		<fadeouttime>0.0</fadeouttime>
+		<delaybeforefadein>0.0</delaybeforefadein>
+		<delaybeforefadeout>0.0</delaybeforefadeout>
+		<islooping>1</islooping>
+		<isusingpause>0</isusingpause>
+	</stream>
+</machine>
+<machine name="Phasing in water">
+	<descriptible>
+		<nickname>Phasing in water</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<allow>Breathing again</allow>
+	<allow>Going Underwater</allow>
+	<eventtimed>
+		<eventname>Out of Water</eventname>
+		<delaymin>10.0</delaymin>
+		<delaymax>10.0</delaymax>
+		<delaystart>-1.0</delaystart>
+		<volmod>1.0</volmod>
+		<pitchmod>1.0</pitchmod>
+	</eventtimed>
+</machine>
+<machine name="Speed gust">
+	<descriptible>
+		<nickname>Speed gust</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<allow>High Speeds</allow>
+	<restrict>Under Water</restrict>
+	<stream>
+		<path>sound3/matmos_interactions/speed_wind.ogg</path>
+		<volume>0.05</volume>
+		<pitch>1.0</pitch>
+		<fadeintime>0.5</fadeintime>
+		<fadeouttime>1.0</fadeouttime>
+		<delaybeforefadein>0.0</delaybeforefadein>
+		<delaybeforefadeout>0.3</delaybeforefadeout>
+		<islooping>1</islooping>
+		<isusingpause>0</isusingpause>
+	</stream>
+</machine>
+<machine name="Under Water">
+	<descriptible>
+		<nickname>Under Water</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<allow>Under Water</allow>
+	<eventtimed>
+		<eventname>Under Water</eventname>
+		<delaymin>0.2</delaymin>
+		<delaymax>3.0</delaymax>
+		<delaystart>0.0</delaystart>
+		<volmod>0.5</volmod>
+		<pitchmod>1.0</pitchmod>
+	</eventtimed>
+	<stream>
+		<path>sound3/matmos_interactions/water_underwater_loop.ogg</path>
+		<volume>0.5</volume>
+		<pitch>1.0</pitch>
+		<fadeintime>0.0</fadeintime>
+		<fadeouttime>0.0</fadeouttime>
+		<delaybeforefadein>0.0</delaybeforefadein>
+		<delaybeforefadeout>0.0</delaybeforefadeout>
+		<islooping>1</islooping>
+		<isusingpause>1</isusingpause>
+	</stream>
+</machine>
+</contents>

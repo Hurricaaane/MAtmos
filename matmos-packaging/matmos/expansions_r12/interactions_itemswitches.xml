@@ -1,0 +1,808 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<contents>
+<list name="Consumable Food">
+	<descriptible>
+		<nickname>Consumable Food</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<constant>260</constant>
+	<constant>319</constant>
+	<constant>320</constant>
+	<constant>322</constant>
+	<constant>349</constant>
+	<constant>350</constant>
+	<constant>354</constant>
+	<constant>357</constant>
+	<constant>360</constant>
+	<constant>363</constant>
+	<constant>364</constant>
+	<constant>365</constant>
+	<constant>366</constant>
+	<constant>367</constant>
+	<constant>382</constant>
+	<constant>391</constant>
+	<constant>392</constant>
+	<constant>393</constant>
+	<constant>394</constant>
+	<constant>396</constant>
+</list>
+<list name="Sword Sharp">
+	<descriptible>
+		<nickname>Sword Sharp</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<constant>267</constant>
+	<constant>276</constant>
+	<constant>283</constant>
+</list>
+<list name="Sword Soft">
+	<descriptible>
+		<nickname>Sword Soft</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<constant>268</constant>
+	<constant>272</constant>
+</list>
+<list name="Tool Sharp">
+	<descriptible>
+		<nickname>Tool Sharp</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<constant>256</constant>
+	<constant>257</constant>
+	<constant>258</constant>
+	<constant>277</constant>
+	<constant>278</constant>
+	<constant>279</constant>
+	<constant>284</constant>
+	<constant>285</constant>
+	<constant>286</constant>
+	<constant>292</constant>
+	<constant>293</constant>
+	<constant>294</constant>
+</list>
+<list name="Tool Soft">
+	<descriptible>
+		<nickname>Tool Soft</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<constant>269</constant>
+	<constant>270</constant>
+	<constant>271</constant>
+	<constant>273</constant>
+	<constant>274</constant>
+	<constant>275</constant>
+	<constant>290</constant>
+	<constant>291</constant>
+	<constant>346</constant>
+</list>
+<list name="Utility">
+	<descriptible>
+		<nickname>Utility</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<constant>345</constant>
+	<constant>347</constant>
+</list>
+<condition name="Interact Block Stance To Off">
+	<descriptible>
+		<nickname>Interact Block Stance To Off</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<sheet>Deltas</sheet>
+	<key>60</key>
+	<symbol>&lt;</symbol>
+	<constant>0</constant>
+	<list></list>
+</condition>
+<condition name="Interact Block Stance To On">
+	<descriptible>
+		<nickname>Interact Block Stance To On</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<sheet>Deltas</sheet>
+	<key>60</key>
+	<symbol>&gt;</symbol>
+	<constant>0</constant>
+	<list></list>
+</condition>
+<condition name="Interact Bow">
+	<descriptible>
+		<nickname>Interact Bow</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<sheet>Instants</sheet>
+	<key>32</key>
+	<symbol>==</symbol>
+	<constant>261</constant>
+	<list></list>
+</condition>
+<condition name="Interact Consumable Food">
+	<descriptible>
+		<nickname>Interact Consumable Food</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<sheet>Instants</sheet>
+	<key>32</key>
+	<symbol>in</symbol>
+	<constant>0</constant>
+	<list>Consumable Food</list>
+</condition>
+<condition name="Interact Different Item Select">
+	<descriptible>
+		<nickname>Interact Different Item Select</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<sheet>Deltas</sheet>
+	<key>32</key>
+	<symbol>!=</symbol>
+	<constant>0</constant>
+	<list></list>
+</condition>
+<condition name="Interact Hands">
+	<descriptible>
+		<nickname>Interact Hands</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<sheet>Instants</sheet>
+	<key>32</key>
+	<symbol>==</symbol>
+	<constant>-1</constant>
+	<list></list>
+</condition>
+<condition name="Interact Hit">
+	<descriptible>
+		<nickname>Interact Hit</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<sheet>Instants</sheet>
+	<key>40</key>
+	<symbol>&gt;</symbol>
+	<constant>1</constant>
+	<list></list>
+</condition>
+<condition name="Interact Item Select">
+	<descriptible>
+		<nickname>Interact Item Select</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<sheet>Deltas</sheet>
+	<key>46</key>
+	<symbol>!=</symbol>
+	<constant>0</constant>
+	<list></list>
+</condition>
+<condition name="Interact Sword Sharp">
+	<descriptible>
+		<nickname>Interact Sword Sharp</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<sheet>Instants</sheet>
+	<key>32</key>
+	<symbol>in</symbol>
+	<constant>267</constant>
+	<list>Sword Sharp</list>
+</condition>
+<condition name="Interact Sword Soft">
+	<descriptible>
+		<nickname>Interact Sword Soft</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<sheet>Instants</sheet>
+	<key>32</key>
+	<symbol>in</symbol>
+	<constant>0</constant>
+	<list>Sword Soft</list>
+</condition>
+<condition name="Interact Tool Sharp">
+	<descriptible>
+		<nickname>Interact Tool Sharp</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<sheet>Instants</sheet>
+	<key>32</key>
+	<symbol>in</symbol>
+	<constant>257</constant>
+	<list>Tool Sharp</list>
+</condition>
+<condition name="Interact Tool Soft">
+	<descriptible>
+		<nickname>Interact Tool Soft</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<sheet>Instants</sheet>
+	<key>32</key>
+	<symbol>in</symbol>
+	<constant>0</constant>
+	<list>Tool Soft</list>
+</condition>
+<condition name="Interact Utility">
+	<descriptible>
+		<nickname>Interact Utility</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<sheet>Instants</sheet>
+	<key>32</key>
+	<symbol>in</symbol>
+	<constant>0</constant>
+	<list>Utility</list>
+</condition>
+<condition name="Is underwater">
+	<descriptible>
+		<nickname>Is underwater</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<sheet>Instants</sheet>
+	<key>23</key>
+	<symbol>&lt;</symbol>
+	<constant>300</constant>
+	<list></list>
+</condition>
+<set name="Interact Block Stance To Off">
+	<descriptible>
+		<nickname>Interact Block Stance To Off</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<truepart>Interact Block Stance To Off</truepart>
+</set>
+<set name="Interact Block Stance To On">
+	<descriptible>
+		<nickname>Interact Block Stance To On</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<truepart>Interact Block Stance To On</truepart>
+</set>
+<set name="Interact Bow Draw">
+	<descriptible>
+		<nickname>Interact Bow Draw</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<truepart>Interact Bow</truepart>
+	<truepart>Interact Item Select</truepart>
+</set>
+<set name="Interact Consumable Food Draw">
+	<descriptible>
+		<nickname>Interact Consumable Food Draw</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<truepart>Interact Consumable Food</truepart>
+	<truepart>Interact Item Select</truepart>
+</set>
+<set name="Interact Hands">
+	<descriptible>
+		<nickname>Interact Hands</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<truepart>Interact Hands</truepart>
+</set>
+<set name="Interact Hands Select">
+	<descriptible>
+		<nickname>Interact Hands Select</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<truepart>Interact Hands</truepart>
+	<truepart>Interact Different Item Select</truepart>
+</set>
+<set name="Interact Item Select">
+	<descriptible>
+		<nickname>Interact Item Select</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<truepart>Interact Item Select</truepart>
+</set>
+<set name="Interact Sword Sharp Draw">
+	<descriptible>
+		<nickname>Interact Sword Sharp Draw</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<truepart>Interact Sword Sharp</truepart>
+	<truepart>Interact Item Select</truepart>
+</set>
+<set name="Interact Sword Soft Draw">
+	<descriptible>
+		<nickname>Interact Sword Soft Draw</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<truepart>Interact Sword Soft</truepart>
+	<truepart>Interact Item Select</truepart>
+</set>
+<set name="Interact Sword Soft Hit">
+	<descriptible>
+		<nickname>Interact Sword Soft Hit</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<truepart>Interact Target</truepart>
+	<truepart>Interact Sword Soft</truepart>
+	<truepart>Interact Hit</truepart>
+</set>
+<set name="Interact Tool Sharp Draw">
+	<descriptible>
+		<nickname>Interact Tool Sharp Draw</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<truepart>Interact Tool Sharp</truepart>
+	<truepart>Interact Item Select</truepart>
+</set>
+<set name="Interact Tool Soft Draw">
+	<descriptible>
+		<nickname>Interact Tool Soft Draw</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<truepart>Interact Tool Soft</truepart>
+	<truepart>Interact Item Select</truepart>
+</set>
+<set name="Interact Utility Draw">
+	<descriptible>
+		<nickname>Interact Utility Draw</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<truepart>Interact Utility</truepart>
+	<truepart>Interact Item Select</truepart>
+</set>
+<set name="Is out of water">
+	<descriptible>
+		<nickname>Is out of water</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<falsepart>Is underwater</falsepart>
+</set>
+<set name="Is underwater">
+	<descriptible>
+		<nickname>Is underwater</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<truepart>Is underwater</truepart>
+</set>
+<event name="Interact Bow Draw">
+	<descriptible>
+		<nickname>Interact Bow Draw</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<path>sound3/matmos_interactions/bow_draw.ogg</path>
+	<volmin>1.0</volmin>
+	<volmax>1.0</volmax>
+	<pitchmin>0.95</pitchmin>
+	<pitchmax>1.1</pitchmax>
+	<metasound>0</metasound>
+</event>
+<event name="Interact Consumable Food Draw">
+	<descriptible>
+		<nickname>Interact Consumable Food Draw</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<path>sound3/matmos_interactions/food_draw.ogg</path>
+	<volmin>1.0</volmin>
+	<volmax>1.0</volmax>
+	<pitchmin>0.9</pitchmin>
+	<pitchmax>1.1</pitchmax>
+	<metasound>0</metasound>
+</event>
+<event name="Interact Generic Draw">
+	<descriptible>
+		<nickname>Interact Generic Draw</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<path>sound3/matmos_interactions/generic_draw.ogg</path>
+	<volmin>1.0</volmin>
+	<volmax>1.0</volmax>
+	<pitchmin>0.9</pitchmin>
+	<pitchmax>1.1</pitchmax>
+	<metasound>0</metasound>
+</event>
+<event name="Interact Generic Holster">
+	<descriptible>
+		<nickname>Interact Generic Holster</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<path>sound3/matmos_interactions/generic_draw.ogg</path>
+	<volmin>1.0</volmin>
+	<volmax>1.0</volmax>
+	<pitchmin>0.7</pitchmin>
+	<pitchmax>0.8</pitchmax>
+	<metasound>0</metasound>
+</event>
+<event name="Interact Sword Sharp Draw">
+	<descriptible>
+		<nickname>Interact Sword Sharp Draw</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<path>sound3/matmos_interactions/sword_draw.ogg</path>
+	<volmin>1.0</volmin>
+	<volmax>1.0</volmax>
+	<pitchmin>0.95</pitchmin>
+	<pitchmax>1.05</pitchmax>
+	<metasound>0</metasound>
+</event>
+<event name="Interact Sword Soft Draw">
+	<descriptible>
+		<nickname>Interact Sword Soft Draw</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<path>sound3/matmos_interactions/blunt_draw.ogg</path>
+	<volmin>1.0</volmin>
+	<volmax>1.0</volmax>
+	<pitchmin>0.95</pitchmin>
+	<pitchmax>1.05</pitchmax>
+	<metasound>0</metasound>
+</event>
+<event name="Interact Tool Sharp Draw">
+	<descriptible>
+		<nickname>Interact Tool Sharp Draw</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<path>sound3/matmos_interactions/tool_draw.ogg</path>
+	<volmin>1.0</volmin>
+	<volmax>1.0</volmax>
+	<pitchmin>0.95</pitchmin>
+	<pitchmax>1.05</pitchmax>
+	<metasound>0</metasound>
+</event>
+<event name="Interact Tool Soft Draw">
+	<descriptible>
+		<nickname>Interact Tool Soft Draw</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<path>sound3/matmos_interactions/blunt_draw.ogg</path>
+	<volmin>1.0</volmin>
+	<volmax>1.0</volmax>
+	<pitchmin>0.95</pitchmin>
+	<pitchmax>1.05</pitchmax>
+	<metasound>0</metasound>
+</event>
+<event name="Interact Underwater Switch">
+	<descriptible>
+		<nickname>Interact Underwater Switch</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<path>sound3/matmos_interactions/water_underwater_a.ogg</path>
+	<path>sound3/matmos_interactions/water_underwater_b.ogg</path>
+	<path>sound3/matmos_interactions/water_underwater_c.ogg</path>
+	<path>sound3/matmos_interactions/water_underwater_d.ogg</path>
+	<volmin>1.0</volmin>
+	<volmax>1.0</volmax>
+	<pitchmin>0.7</pitchmin>
+	<pitchmax>0.8</pitchmax>
+	<metasound>0</metasound>
+</event>
+<event name="Interact Utility Draw">
+	<descriptible>
+		<nickname>Interact Utility Draw</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<path>sound3/matmos_interactions/utility_draw.ogg</path>
+	<volmin>1.0</volmin>
+	<volmax>1.0</volmax>
+	<pitchmin>0.95</pitchmin>
+	<pitchmax>1.05</pitchmax>
+	<metasound>0</metasound>
+</event>
+<event name="__SAMPLE">
+	<descriptible>
+		<nickname>__SAMPLE</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<path>sound3/matmos_interactions/sword_draw.ogg</path>
+	<volmin>1.0</volmin>
+	<volmax>1.0</volmax>
+	<pitchmin>0.95</pitchmin>
+	<pitchmax>1.05</pitchmax>
+	<metasound>0</metasound>
+</event>
+<machine name="Interact Block Stance To Off">
+	<descriptible>
+		<nickname>Interact Block Stance To Off</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<allow>Interact Block Stance To Off</allow>
+	<restrict>Is underwater</restrict>
+	<eventtimed>
+		<eventname>Interact Generic Holster</eventname>
+		<delaymin>10.0</delaymin>
+		<delaymax>10.0</delaymax>
+		<delaystart>-1.0</delaystart>
+		<volmod>1.0</volmod>
+		<pitchmod>1.0</pitchmod>
+	</eventtimed>
+</machine>
+<machine name="Interact Block Stance To On">
+	<descriptible>
+		<nickname>Interact Block Stance To On</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<allow>Interact Block Stance To On</allow>
+	<restrict>Is underwater</restrict>
+	<eventtimed>
+		<eventname>Interact Generic Draw</eventname>
+		<delaymin>10.0</delaymin>
+		<delaymax>10.0</delaymax>
+		<delaystart>-1.0</delaystart>
+		<volmod>1.0</volmod>
+		<pitchmod>1.0</pitchmod>
+	</eventtimed>
+</machine>
+<machine name="Interact Bow Draw">
+	<descriptible>
+		<nickname>Interact Bow Draw</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<allow>Interact Bow Draw</allow>
+	<restrict>Is underwater</restrict>
+	<eventtimed>
+		<eventname>Interact Bow Draw</eventname>
+		<delaymin>10.0</delaymin>
+		<delaymax>10.0</delaymax>
+		<delaystart>-1.0</delaystart>
+		<volmod>1.0</volmod>
+		<pitchmod>1.0</pitchmod>
+	</eventtimed>
+</machine>
+<machine name="Interact Consumable Food Draw">
+	<descriptible>
+		<nickname>Interact Consumable Food Draw</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<allow>Interact Consumable Food Draw</allow>
+	<restrict>Is underwater</restrict>
+	<eventtimed>
+		<eventname>Interact Consumable Food Draw</eventname>
+		<delaymin>10.0</delaymin>
+		<delaymax>10.0</delaymax>
+		<delaystart>-1.0</delaystart>
+		<volmod>1.0</volmod>
+		<pitchmod>1.0</pitchmod>
+	</eventtimed>
+</machine>
+<machine name="Interact Generic Draw">
+	<descriptible>
+		<nickname>Interact Generic Draw</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<allow>Interact Item Select</allow>
+	<restrict>Interact Hands</restrict>
+	<restrict>Interact Sword Sharp Draw</restrict>
+	<restrict>Interact Sword Soft Draw</restrict>
+	<restrict>Interact Tool Sharp Draw</restrict>
+	<restrict>Interact Bow Draw</restrict>
+	<restrict>Interact Consumable Food Draw</restrict>
+	<restrict>Interact Tool Soft Draw</restrict>
+	<restrict>Interact Utility Draw</restrict>
+	<restrict>Is underwater</restrict>
+	<eventtimed>
+		<eventname>Interact Generic Draw</eventname>
+		<delaymin>10.0</delaymin>
+		<delaymax>10.0</delaymax>
+		<delaystart>-1.0</delaystart>
+		<volmod>1.0</volmod>
+		<pitchmod>1.0</pitchmod>
+	</eventtimed>
+</machine>
+<machine name="Interact Generic Hands Select">
+	<descriptible>
+		<nickname>Interact Generic Hands Select</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<allow>Interact Hands Select</allow>
+	<restrict>Is underwater</restrict>
+	<eventtimed>
+		<eventname>Interact Generic Holster</eventname>
+		<delaymin>10.0</delaymin>
+		<delaymax>10.0</delaymax>
+		<delaystart>-1.0</delaystart>
+		<volmod>0.5</volmod>
+		<pitchmod>1.0</pitchmod>
+	</eventtimed>
+</machine>
+<machine name="Interact Sword Sharp Draw">
+	<descriptible>
+		<nickname>Interact Sword Sharp Draw</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<allow>Interact Sword Sharp Draw</allow>
+	<restrict>Is underwater</restrict>
+	<eventtimed>
+		<eventname>Interact Sword Sharp Draw</eventname>
+		<delaymin>10.0</delaymin>
+		<delaymax>10.0</delaymax>
+		<delaystart>-1.0</delaystart>
+		<volmod>1.0</volmod>
+		<pitchmod>1.0</pitchmod>
+	</eventtimed>
+</machine>
+<machine name="Interact Sword Soft Draw">
+	<descriptible>
+		<nickname>Interact Sword Soft Draw</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<allow>Interact Sword Soft Draw</allow>
+	<restrict>Is underwater</restrict>
+	<eventtimed>
+		<eventname>Interact Sword Soft Draw</eventname>
+		<delaymin>10.0</delaymin>
+		<delaymax>10.0</delaymax>
+		<delaystart>-1.0</delaystart>
+		<volmod>1.0</volmod>
+		<pitchmod>1.0</pitchmod>
+	</eventtimed>
+</machine>
+<machine name="Interact Tool Sharp Draw">
+	<descriptible>
+		<nickname>Interact Tool Sharp Draw</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<allow>Interact Tool Sharp Draw</allow>
+	<restrict>Is underwater</restrict>
+	<eventtimed>
+		<eventname>Interact Tool Sharp Draw</eventname>
+		<delaymin>10.0</delaymin>
+		<delaymax>10.0</delaymax>
+		<delaystart>-1.0</delaystart>
+		<volmod>1.0</volmod>
+		<pitchmod>1.0</pitchmod>
+	</eventtimed>
+</machine>
+<machine name="Interact Tool Soft Draw">
+	<descriptible>
+		<nickname>Interact Tool Soft Draw</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<allow>Interact Tool Soft Draw</allow>
+	<restrict>Is underwater</restrict>
+	<eventtimed>
+		<eventname>Interact Tool Soft Draw</eventname>
+		<delaymin>10.0</delaymin>
+		<delaymax>10.0</delaymax>
+		<delaystart>-1.0</delaystart>
+		<volmod>1.0</volmod>
+		<pitchmod>1.0</pitchmod>
+	</eventtimed>
+</machine>
+<machine name="Interact Underwater Stance">
+	<descriptible>
+		<nickname>Interact Underwater Stance</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<allow>Interact Hands Select</allow>
+	<allow>Interact Item Select</allow>
+	<restrict>Is out of water</restrict>
+	<eventtimed>
+		<eventname>Interact Underwater Switch</eventname>
+		<delaymin>100.0</delaymin>
+		<delaymax>100.0</delaymax>
+		<delaystart>-1.0</delaystart>
+		<volmod>1.0</volmod>
+		<pitchmod>1.0</pitchmod>
+	</eventtimed>
+</machine>
+<machine name="Interact Utility Draw">
+	<descriptible>
+		<nickname>Interact Utility Draw</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<allow>Interact Utility Draw</allow>
+	<restrict>Is underwater</restrict>
+	<eventtimed>
+		<eventname>Interact Utility Draw</eventname>
+		<delaymin>10.0</delaymin>
+		<delaymax>10.0</delaymax>
+		<delaystart>-1.0</delaystart>
+		<volmod>1.0</volmod>
+		<pitchmod>1.0</pitchmod>
+	</eventtimed>
+</machine>
+</contents>

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><contents>
+<condition name="In Minecart">
+	<descriptible>
+		<nickname>In Minecart</nickname>
+		<description/>
+		<icon/>
+		<meta/>
+	</descriptible>
+	<sheet>Instants</sheet>
+	<key>68</key>
+	<symbol>==</symbol>
+	<constant>1</constant>
+	<list/>
+</condition>
+<condition name="Is Speedy">
+	<descriptible>
+		<nickname>Is Speedy</nickname>
+		<description/>
+		<icon/>
+		<meta/>
+	</descriptible>
+	<sheet>Instants</sheet>
+	<key>74</key>
+	<symbol>&gt;</symbol>
+	<constant>1500</constant>
+	<list/>
+</condition>
+<condition name="Is very Speedy">
+	<descriptible>
+		<nickname>Is very Speedy</nickname>
+		<description/>
+		<icon/>
+		<meta/>
+	</descriptible>
+	<sheet>Instants</sheet>
+	<key>74</key>
+	<symbol>&gt;</symbol>
+	<constant>3000</constant>
+	<list/>
+</condition>
+<set name="Is moving in Minecart">
+	<descriptible>
+		<nickname>Is moving in Minecart</nickname>
+		<description/>
+		<icon/>
+		<meta/>
+	</descriptible>
+	<truepart>In Minecart</truepart>
+	<truepart>Is Speedy</truepart>
+</set>
+<set name="Is moving in Minecart fast">
+	<descriptible>
+		<nickname>Is moving in Minecart fast</nickname>
+		<description/>
+		<icon/>
+		<meta/>
+	</descriptible>
+	<truepart>In Minecart</truepart>
+	<truepart>Is very Speedy</truepart>
+</set>
+<event name="Dummy">
+	<descriptible>
+		<nickname>Dummy</nickname>
+		<description/>
+		<icon/>
+		<meta/>
+	</descriptible>
+	<volmin>1.0</volmin>
+	<volmax>1.0</volmax>
+	<pitchmin>1.0</pitchmin>
+	<pitchmax>1.0</pitchmax>
+	<metasound>0</metasound>
+</event>
+<event name="Moving in Minecart">
+	<descriptible>
+		<nickname>Moving in Minecart</nickname>
+		<description/>
+		<icon/>
+		<meta/>
+	</descriptible>
+	<path>sound3/matmos_extras/minecart1.ogg</path>
+	<path>sound3/matmos_extras/minecart2.ogg</path>
+	<path>sound3/matmos_extras/minecart3.ogg</path>
+	<path>sound3/matmos_extras/minecart4.ogg</path>
+	<path>sound3/matmos_extras/minecart5.ogg</path>
+	<path>sound3/matmos_extras/minecart6.ogg</path>
+	<path>sound3/matmos_extras/minecart7.ogg</path>
+	<path>sound3/matmos_extras/minecart8.ogg</path>
+	<volmin>1.0</volmin>
+	<volmax>1.0</volmax>
+	<pitchmin>0.98</pitchmin>
+	<pitchmax>1.08</pitchmax>
+	<metasound>0</metasound>
+</event>
+<event name="Moving in Minecart fast">
+	<descriptible>
+		<nickname>Moving in Minecart fast</nickname>
+		<description/>
+		<icon/>
+		<meta/>
+	</descriptible>
+	<path>sound3/matmos_extras/minecart1.ogg</path>
+	<path>sound3/matmos_extras/minecart2.ogg</path>
+	<path>sound3/matmos_extras/minecart3.ogg</path>
+	<path>sound3/matmos_extras/minecart4.ogg</path>
+	<path>sound3/matmos_extras/minecart5.ogg</path>
+	<path>sound3/matmos_extras/minecart6.ogg</path>
+	<path>sound3/matmos_extras/minecart7.ogg</path>
+	<path>sound3/matmos_extras/minecart8.ogg</path>
+	<volmin>1.0</volmin>
+	<volmax>1.0</volmax>
+	<pitchmin>1.25</pitchmin>
+	<pitchmax>1.35</pitchmax>
+	<metasound>0</metasound>
+</event>
+<machine name="Moving in Minecart">
+	<descriptible>
+		<nickname>Moving in Minecart</nickname>
+		<description/>
+		<icon/>
+		<meta/>
+	</descriptible>
+	<allow>Is moving in Minecart</allow>
+	<restrict>Is moving in Minecart fast</restrict>
+	<eventtimed>
+		<eventname>Moving in Minecart</eventname>
+		<delaymin>0.7</delaymin>
+		<delaymax>0.8</delaymax>
+		<delaystart>0.0</delaystart>
+		<volmod>0.5</volmod>
+		<pitchmod>1.0</pitchmod>
+	</eventtimed>
+</machine>
+<machine name="Moving in Minecart Fast">
+	<descriptible>
+		<nickname>Moving in Minecart Fast</nickname>
+		<description/>
+		<icon/>
+		<meta/>
+	</descriptible>
+	<allow>Is moving in Minecart fast</allow>
+	<eventtimed>
+		<eventname>Moving in Minecart fast</eventname>
+		<delaymin>0.6</delaymin>
+		<delaymax>0.7</delaymax>
+		<delaystart>0.0</delaystart>
+		<volmod>0.5</volmod>
+		<pitchmod>1.0</pitchmod>
+	</eventtimed>
+</machine>
+</contents>
