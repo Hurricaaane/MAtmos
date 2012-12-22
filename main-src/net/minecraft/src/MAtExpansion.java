@@ -368,7 +368,7 @@ public class MAtExpansion implements MAtCustomVolume
 			TimeStatistic stat = new TimeStatistic(Locale.ENGLISH);
 			buildKnowledge();
 			
-			MAtMod.LOGGER.info("Expansion " + getUserDefinedName() + " loaded (" + stat.getSecondsAsString(1) + "s).");
+			MAtMod.LOGGER.info("Expansion " + getUserDefinedName() + " loaded (" + stat.getSecondsAsString(3) + "s).");
 			this.isBuilding = false;
 		}
 		

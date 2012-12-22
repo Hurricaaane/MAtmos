@@ -1,18 +1,14 @@
 package eu.ha3.matmos.engine;
 
-import java.util.Locale;
-
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
+
+import net.sf.practicalxml.DomUtil;
 
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
-import eu.ha3.easy.TimeStatistic;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -90,13 +86,8 @@ public class UtilityLoader
 	static final String ISLOOPING = "islooping";
 	static final String ISUSINGPAUSE = "isusingpause";
 	
-	private XPath xp;
-	
 	private UtilityLoader()
 	{
-		XPathFactory xpf = XPathFactory.newInstance();
-		this.xp = xpf.newXPath();
-		
 	}
 	
 	/**
@@ -153,28 +144,29 @@ public class UtilityLoader
 		
 	}
 	
-	private void extractXMLdescriptible(Knowledge original, Node capsule, Descriptible descriptible)
+	private void extractXMLdescriptible(Knowledge original, Element capsule, Descriptible descriptible)
 		throws XPathExpressionException
 	{
-		if (this.xp.evaluate("./" + DESCRIPTIBLE, capsule) != null)
+		Element descElt = DomUtil.getChild(capsule, DESCRIPTIBLE);
+		
+		if (descElt != null)
 		{
-			Node desc = (Node) this.xp.evaluate("./" + DESCRIPTIBLE, capsule, XPathConstants.NODE);
-			parseXMLdescriptible(original, desc, descriptible);
+			parseXMLdescriptible(original, descElt, descriptible);
 			
 		}
 		
 	}
 	
-	private void parseXMLdescriptible(Knowledge original, Node descNode, Descriptible descriptible)
+	private void parseXMLdescriptible(Knowledge original, Element descNode, Descriptible descriptible)
 		throws XPathExpressionException
 	{
 		if (descNode == null)
 			return;
 		
-		String nickname = this.xp.evaluate("./" + NICKNAME, descNode);
-		String description = this.xp.evaluate("./" + DESCRIPTION, descNode);
-		String icon = this.xp.evaluate("./" + ICON, descNode);
-		String meta = this.xp.evaluate("./" + META, descNode);
+		String nickname = eltString(NICKNAME, descNode);
+		String description = eltString(DESCRIPTION, descNode);
+		String icon = eltString(ICON, descNode);
+		String meta = eltString(META, descNode);
 		
 		if (nickname != null)
 		{
@@ -195,7 +187,7 @@ public class UtilityLoader
 		
 	}
 	
-	private void parseXMLdynamic(Knowledge original, Node capsule, String name, boolean allowOverrides)
+	private void parseXMLdynamic(Knowledge original, Element capsule, String name, boolean allowOverrides)
 		throws XPathExpressionException
 	{
 		boolean exists = original.getDynamic(name) != null;
@@ -210,17 +202,13 @@ public class UtilityLoader
 		Dynamic descriptible = original.getDynamic(name);
 		extractXMLdescriptible(original, capsule, descriptible);
 		
-		int entrycount =
-			(int) Math.floor((Double) this.xp.evaluate("count(./" + ENTRY + ")", capsule, XPathConstants.NUMBER));
-		for (int n = 1; n <= entrycount; n++) // n begins to 1, ends up to count included
+		for (Element eelt : DomUtil.getChildren(capsule, ENTRY))
 		{
-			Node entry = (Node) this.xp.evaluate("./" + ENTRY + "[" + n + "]", capsule, XPathConstants.NODE);
-			
-			Node nameNode = entry.getAttributes().getNamedItem(SHEET);
+			Node nameNode = eelt.getAttributes().getNamedItem(SHEET);
 			
 			if (nameNode != null)
 			{
-				descriptible.addCouple(nameNode.getNodeValue(), Integer.parseInt(entry.getTextContent()));
+				descriptible.addCouple(nameNode.getNodeValue(), Integer.parseInt(eelt.getTextContent()));
 				
 			}
 			
@@ -228,7 +216,7 @@ public class UtilityLoader
 		
 	}
 	
-	private void parseXMLlist(Knowledge original, Node capsule, String name, boolean allowOverrides)
+	private void parseXMLlist(Knowledge original, Element capsule, String name, boolean allowOverrides)
 		throws XPathExpressionException
 	{
 		boolean exists = original.getList(name) != null;
@@ -243,11 +231,9 @@ public class UtilityLoader
 		SugarList descriptible = original.getList(name);
 		extractXMLdescriptible(original, capsule, descriptible);
 		
-		int constcount =
-			(int) Math.floor((Double) this.xp.evaluate("count(./" + CONSTANT + ")", capsule, XPathConstants.NUMBER));
-		for (int n = 1; n <= constcount; n++) // n begins to 1, ends up to count included
+		for (Element eelt : DomUtil.getChildren(capsule, CONSTANT))
 		{
-			String constant = this.xp.evaluate("./" + CONSTANT + "[" + n + "]", capsule);
+			String constant = textOf(eelt);
 			
 			descriptible.add(toInt(constant));
 			
@@ -255,7 +241,7 @@ public class UtilityLoader
 		
 	}
 	
-	private void parseXMLcondition(Knowledge original, Node capsule, String name, boolean allowOverrides)
+	private void parseXMLcondition(Knowledge original, Element capsule, String name, boolean allowOverrides)
 		throws XPathExpressionException
 	{
 		boolean exists = original.getCondition(name) != null;
@@ -270,12 +256,12 @@ public class UtilityLoader
 		Condition descriptible = original.getCondition(name);
 		extractXMLdescriptible(original, capsule, descriptible);
 		
-		String sheet = this.xp.evaluate("./" + SHEET, capsule);
-		String key = this.xp.evaluate("./" + KEY, capsule);
-		String dynamickey = this.xp.evaluate("./" + DYNAMICKEY, capsule);
-		String symbol = this.xp.evaluate("./" + SYMBOL, capsule);
-		String constant = this.xp.evaluate("./" + CONSTANT, capsule);
-		String list = this.xp.evaluate("./" + LIST, capsule);
+		String sheet = eltString(SHEET, capsule);
+		String key = eltString(KEY, capsule);
+		String dynamickey = eltString(DYNAMICKEY, capsule);
+		String symbol = eltString(SYMBOL, capsule);
+		String constant = eltString(CONSTANT, capsule);
+		String list = eltString(LIST, capsule);
 		
 		if (sheet != null)
 		{
@@ -309,7 +295,7 @@ public class UtilityLoader
 		
 	}
 	
-	private void parseXMLset(Knowledge original, Node capsule, String name, boolean allowOverrides)
+	private void parseXMLset(Knowledge original, Element capsule, String name, boolean allowOverrides)
 		throws XPathExpressionException
 	{
 		boolean exists = original.getConditionSet(name) != null;
@@ -324,21 +310,17 @@ public class UtilityLoader
 		ConditionSet descriptible = original.getConditionSet(name);
 		extractXMLdescriptible(original, capsule, descriptible);
 		
-		int truepartcount =
-			(int) Math.floor((Double) this.xp.evaluate("count(./" + TRUEPART + ")", capsule, XPathConstants.NUMBER));
-		for (int n = 1; n <= truepartcount; n++) // n begins to 1, ends up to count included
+		for (Element eelt : DomUtil.getChildren(capsule, TRUEPART))
 		{
-			String truepart = this.xp.evaluate("./" + TRUEPART + "[" + n + "]", capsule);
+			String truepart = textOf(eelt);
 			
 			descriptible.addCondition(truepart, true);
 			
 		}
 		
-		int falsepartcount =
-			(int) Math.floor((Double) this.xp.evaluate("count(./" + FALSEPART + ")", capsule, XPathConstants.NUMBER));
-		for (int n = 1; n <= falsepartcount; n++) // n begins to 1, ends up to count included
+		for (Element eelt : DomUtil.getChildren(capsule, FALSEPART))
 		{
-			String falsepart = this.xp.evaluate("./" + FALSEPART + "[" + n + "]", capsule);
+			String falsepart = textOf(eelt);
 			
 			descriptible.addCondition(falsepart, false);
 			
@@ -346,7 +328,7 @@ public class UtilityLoader
 		
 	}
 	
-	private void parseXMLevent(Knowledge original, Node capsule, String name, boolean allowOverrides)
+	private void parseXMLevent(Knowledge original, Element capsule, String name, boolean allowOverrides)
 		throws XPathExpressionException
 	{
 		boolean exists = original.getEvent(name) != null;
@@ -361,11 +343,11 @@ public class UtilityLoader
 		Event descriptible = original.getEvent(name);
 		extractXMLdescriptible(original, capsule, descriptible);
 		
-		String volmin = this.xp.evaluate("./" + VOLMIN, capsule);
-		String volmax = this.xp.evaluate("./" + VOLMAX, capsule);
-		String pitchmin = this.xp.evaluate("./" + PITCHMIN, capsule);
-		String pitchmax = this.xp.evaluate("./" + PITCHMAX, capsule);
-		String metasound = this.xp.evaluate("./" + METASOUND, capsule);
+		String volmin = eltString(VOLMIN, capsule);
+		String volmax = eltString(VOLMAX, capsule);
+		String pitchmin = eltString(PITCHMIN, capsule);
+		String pitchmax = eltString(PITCHMAX, capsule);
+		String metasound = eltString(METASOUND, capsule);
 		
 		if (volmin != null)
 		{
@@ -392,11 +374,9 @@ public class UtilityLoader
 			descriptible.metaSound = toInt(metasound);
 		}
 		
-		int pathcount =
-			(int) Math.floor((Double) this.xp.evaluate("count(./" + PATH + ")", capsule, XPathConstants.NUMBER));
-		for (int n = 1; n <= pathcount; n++) // n begins to 1, ends up to count included
+		for (Element eelt : DomUtil.getChildren(capsule, PATH))
 		{
-			String path = this.xp.evaluate("./" + PATH + "[" + n + "]", capsule);
+			String path = textOf(eelt);
 			
 			descriptible.paths.add(path);
 			
@@ -404,7 +384,7 @@ public class UtilityLoader
 		
 	}
 	
-	private void parseXMLmachine(Knowledge original, Node capsule, String name, boolean allowOverrides)
+	private void parseXMLmachine(Knowledge original, Element capsule, String name, boolean allowOverrides)
 		throws XPathExpressionException
 	{
 		boolean exists = original.getMachine(name) != null;
@@ -419,57 +399,42 @@ public class UtilityLoader
 		Machine descriptible = original.getMachine(name);
 		extractXMLdescriptible(original, capsule, descriptible);
 		
-		int eventtimedcount =
-			(int) Math.floor((Double) this.xp.evaluate("count(./" + EVENTTIMED + ")", capsule, XPathConstants.NUMBER));
-		for (int n = 1; n <= eventtimedcount; n++) // n begins to 1, ends up to count included
+		for (Element eelt : DomUtil.getChildren(capsule, EVENTTIMED))
 		{
-			Node eventtimedNode =
-				(Node) this.xp.evaluate("./" + EVENTTIMED + "[" + n + "]", capsule, XPathConstants.NODE);
-			
 			int size = descriptible.addEventTimed();
-			inscriptXMLeventTimed(descriptible.getEventTimed(size - 1), eventtimedNode);
+			inscriptXMLeventTimed(descriptible.getEventTimed(size - 1), eelt);
 			
 		}
 		
-		int streamcount =
-			(int) Math.floor((Double) this.xp.evaluate("count(./" + STREAM + ")", capsule, XPathConstants.NUMBER));
-		for (int n = 1; n <= streamcount; n++) // n begins to 1, ends up to count included
+		for (Element eelt : DomUtil.getChildren(capsule, STREAM))
 		{
-			Node streamNode = (Node) this.xp.evaluate("./" + STREAM + "[" + n + "]", capsule, XPathConstants.NODE);
-			
 			int size = descriptible.addStream();
-			inscriptXMLstream(descriptible.getStream(size - 1), streamNode);
+			inscriptXMLstream(descriptible.getStream(size - 1), eelt);
 			
 		}
 		
-		int allowcount =
-			(int) Math.floor((Double) this.xp.evaluate("count(./" + ALLOW + ")", capsule, XPathConstants.NUMBER));
-		for (int n = 1; n <= allowcount; n++) // n begins to 1, ends up to count included
+		for (Element eelt : DomUtil.getChildren(capsule, ALLOW))
 		{
-			String allow = this.xp.evaluate("./" + ALLOW + "[" + n + "]", capsule);
-			descriptible.addAllow(allow);
+			descriptible.addAllow(textOf(eelt));
 			
 		}
 		
-		int restrictcount =
-			(int) Math.floor((Double) this.xp.evaluate("count(./" + RESTRICT + ")", capsule, XPathConstants.NUMBER));
-		for (int n = 1; n <= restrictcount; n++) // n begins to 1, ends up to count included
+		for (Element eelt : DomUtil.getChildren(capsule, RESTRICT))
 		{
-			String restrict = this.xp.evaluate("./" + RESTRICT + "[" + n + "]", capsule);
-			descriptible.addRestrict(restrict);
+			descriptible.addRestrict(textOf(eelt));
 			
 		}
 		
 	}
 	
-	private void inscriptXMLeventTimed(TimedEvent inscriptible, Node specs) throws XPathExpressionException
+	private void inscriptXMLeventTimed(TimedEvent inscriptible, Element specs) throws XPathExpressionException
 	{
-		String eventname = this.xp.evaluate("./" + EVENTNAME, specs);
-		String volmod = this.xp.evaluate("./" + VOLMOD, specs);
-		String pitchmod = this.xp.evaluate("./" + PITCHMOD, specs);
-		String delaystart = this.xp.evaluate("./" + DELAYSTART, specs);
-		String delaymin = this.xp.evaluate("./" + DELAYMIN, specs);
-		String delaymax = this.xp.evaluate("./" + DELAYMAX, specs);
+		String eventname = eltString(EVENTNAME, specs);
+		String volmod = eltString(VOLMOD, specs);
+		String pitchmod = eltString(PITCHMOD, specs);
+		String delaystart = eltString(DELAYSTART, specs);
+		String delaymin = eltString(DELAYMIN, specs);
+		String delaymax = eltString(DELAYMAX, specs);
 		
 		if (eventname != null)
 		{
@@ -503,17 +468,17 @@ public class UtilityLoader
 		
 	}
 	
-	private void inscriptXMLstream(Stream inscriptible, Node specs) throws XPathExpressionException
+	private void inscriptXMLstream(Stream inscriptible, Element specs) throws XPathExpressionException
 	{
-		String _PATH = this.xp.evaluate("./" + PATH, specs);
-		String _VOLUME = this.xp.evaluate("./" + VOLUME, specs);
-		String _PITCH = this.xp.evaluate("./" + PITCH, specs);
-		String _FADEINTIME = this.xp.evaluate("./" + FADEINTIME, specs);
-		String _FADEOUTTIME = this.xp.evaluate("./" + FADEOUTTIME, specs);
-		String _DELAYBEFOREFADEIN = this.xp.evaluate("./" + DELAYBEFOREFADEIN, specs);
-		String _DELAYBEFOREFADEOUT = this.xp.evaluate("./" + DELAYBEFOREFADEOUT, specs);
-		String _ISLOOPING = this.xp.evaluate("./" + ISLOOPING, specs);
-		String _ISUSINGPAUSE = this.xp.evaluate("./" + ISUSINGPAUSE, specs);
+		String _PATH = eltString(PATH, specs);
+		String _VOLUME = eltString(VOLUME, specs);
+		String _PITCH = eltString(PITCH, specs);
+		String _FADEINTIME = eltString(FADEINTIME, specs);
+		String _FADEOUTTIME = eltString(FADEOUTTIME, specs);
+		String _DELAYBEFOREFADEIN = eltString(DELAYBEFOREFADEIN, specs);
+		String _DELAYBEFOREFADEOUT = eltString(DELAYBEFOREFADEOUT, specs);
+		String _ISLOOPING = eltString(ISLOOPING, specs);
+		String _ISUSINGPAUSE = eltString(ISUSINGPAUSE, specs);
 		
 		if (_PATH != null)
 		{
@@ -565,12 +530,14 @@ public class UtilityLoader
 	private void parseXML(Knowledge original, Document doc, boolean allowOverrides)
 		throws XPathExpressionException, DOMException
 	{
+		Element elt = doc.getDocumentElement();
+		DomUtil.removeEmptyTextRecursive(elt);
 		
 		{
-			NodeList cat = doc.getElementsByTagName(DYNAMIC);
+			NodeList cat = elt.getElementsByTagName(DYNAMIC);
 			for (int i = 0; i < cat.getLength(); i++)
 			{
-				Node capsule = cat.item(i);
+				Element capsule = (Element) cat.item(i);
 				Node nameNode = capsule.getAttributes().getNamedItem(NAME);
 				
 				if (nameNode != null)
@@ -584,10 +551,10 @@ public class UtilityLoader
 		}
 		
 		{
-			NodeList cat = doc.getElementsByTagName(LIST);
+			NodeList cat = elt.getElementsByTagName(LIST);
 			for (int i = 0; i < cat.getLength(); i++)
 			{
-				Node capsule = cat.item(i);
+				Element capsule = (Element) cat.item(i);
 				Node nameNode = capsule.getAttributes().getNamedItem(NAME);
 				
 				if (nameNode != null)
@@ -600,12 +567,9 @@ public class UtilityLoader
 			
 		}
 		
-		TimeStatistic stat = new TimeStatistic(Locale.ENGLISH);
 		{
-			NodeList cat = doc.getElementsByTagName(CONDITION);
-			for (int i = 0; i < cat.getLength(); i++)
+			for (Element capsule : DomUtil.getChildren(elt, CONDITION))
 			{
-				Node capsule = cat.item(i);
 				Node nameNode = capsule.getAttributes().getNamedItem(NAME);
 				
 				if (nameNode != null)
@@ -619,10 +583,10 @@ public class UtilityLoader
 		}
 		
 		{
-			NodeList cat = doc.getElementsByTagName(SET);
+			NodeList cat = elt.getElementsByTagName(SET);
 			for (int i = 0; i < cat.getLength(); i++)
 			{
-				Node capsule = cat.item(i);
+				Element capsule = (Element) cat.item(i);
 				Node nameNode = capsule.getAttributes().getNamedItem(NAME);
 				
 				if (nameNode != null)
@@ -636,10 +600,10 @@ public class UtilityLoader
 		}
 		
 		{
-			NodeList cat = doc.getElementsByTagName(EVENT);
+			NodeList cat = elt.getElementsByTagName(EVENT);
 			for (int i = 0; i < cat.getLength(); i++)
 			{
-				Node capsule = cat.item(i);
+				Element capsule = (Element) cat.item(i);
 				Node nameNode = capsule.getAttributes().getNamedItem(NAME);
 				
 				if (nameNode != null)
@@ -653,10 +617,10 @@ public class UtilityLoader
 		}
 		
 		{
-			NodeList cat = doc.getElementsByTagName(MACHINE);
+			NodeList cat = elt.getElementsByTagName(MACHINE);
 			for (int i = 0; i < cat.getLength(); i++)
 			{
-				Node capsule = cat.item(i);
+				Element capsule = (Element) cat.item(i);
 				Node nameNode = capsule.getAttributes().getNamedItem(NAME);
 				
 				if (nameNode != null)
@@ -669,63 +633,29 @@ public class UtilityLoader
 			
 		}
 		
+		/*try
+		{
+			System.out.println(original.createXML());
+		}
+		catch (XMLStreamException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		*/
 	}
 	
-	/*
-	private static void parseXMLstream(MAtmosStream stream, XMLEventReader eventReader) throws XMLStreamException
+	private String eltString(String tagName, Element ele)
 	{
-		while (eventReader.hasNext())
-		{
-			XMLEvent event = eventReader.nextEvent();
-			
-			if (event.isStartElement())
-			{
-				StartElement startElement = event.asStartElement();
-				String locale = startElement.getName().getLocalPart();
-				
-				// !!!ATTENTION!!! stream is NOT a descriptible !
-				
-				if (locale == PATH)
-					stream.path = pickupNextEventData(eventReader);
-				
-				else if (locale == VOLUME)
-					stream.volume = Float.parseFloat( pickupNextEventData(eventReader) );
-				
-				else if (locale == PITCH)
-					stream.pitch = Float.parseFloat( pickupNextEventData(eventReader) );
-				
-				else if (locale == FADEINTIME)
-					stream.fadeInTime = Float.parseFloat( pickupNextEventData(eventReader) );
-				
-				else if (locale == FADEOUTTIME)
-					stream.fadeOutTime = Float.parseFloat( pickupNextEventData(eventReader) );
-				
-				else if (locale == DELAYBEFOREFADEIN)
-					stream.delayBeforeFadeIn = Float.parseFloat( pickupNextEventData(eventReader) );
-				
-				else if (locale == DELAYBEFOREFADEOUT)
-					stream.delayBeforeFadeOut = Float.parseFloat( pickupNextEventData(eventReader) );
-				
-				else if (locale == ISLOOPING)
-					stream.isLooping = Integer.parseInt( pickupNextEventData(eventReader) ) == 1;
-				
-				else if (locale == ISUSINGPAUSE)
-					stream.isUsingPause = Integer.parseInt( pickupNextEventData(eventReader) ) == 1;
-				
-			}
-			if (event.isEndElement())
-			{
-				EndElement endElement = event.asEndElement();
-				
-				if (endElement.getName().getLocalPart() == STREAM)
-					return;
-				
-			}
-			
-		}
+		return textOf(DomUtil.getChild(ele, tagName));
+	}
+	
+	private String textOf(Element ele)
+	{
+		if (ele == null || ele.getFirstChild() == null)
+			return null;
 		
-		return;
-		
-	}*/
+		return ele.getFirstChild().getNodeValue();
+	}
 	
 }

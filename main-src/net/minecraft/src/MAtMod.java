@@ -45,6 +45,8 @@ public class MAtMod extends HaddonImpl
 	final static public MAtLogger LOGGER = new MAtLogger();
 	final static public int VERSION = 20; // Remember to change the thing on mod_Matmos
 	
+	final static private boolean KNOWLEDGE_IS_SLOW = false;
+	
 	private MAtModPhase phase;
 	private ConfigProperty config;
 	
@@ -377,13 +379,20 @@ public class MAtMod extends HaddonImpl
 			this.hasSentSignalToTurnOn = true;
 			
 			MAtMod.LOGGER.info("Now building knowledge...");
-			new Thread() {
-				@Override
-				public void run()
-				{
-					MAtMod.this.expansionManager.signalReadyToTurnOn();
-				}
-			}.start();
+			if (KNOWLEDGE_IS_SLOW)
+			{
+				new Thread() {
+					@Override
+					public void run()
+					{
+						MAtMod.this.expansionManager.signalReadyToTurnOn();
+					}
+				}.start();
+			}
+			else
+			{
+				this.expansionManager.signalReadyToTurnOn();
+			}
 		}
 		return true;
 		
@@ -400,16 +409,26 @@ public class MAtMod extends HaddonImpl
 		// prevent the expansions from running before the thread could even start
 		this.expansionManager.clearExpansions();
 		
-		new Thread() {
-			@Override
-			public void run()
-			{
-				TimeStatistic stat = new TimeStatistic(Locale.ENGLISH);
-				MAtMod.this.expansionManager.loadExpansions();
-				MAtMod.LOGGER.info("Expansions loaded (" + stat.getSecondsAsString(1) + "s).");
-				
-			}
-		}.start();
+		if (KNOWLEDGE_IS_SLOW)
+		{
+			new Thread() {
+				@Override
+				public void run()
+				{
+					TimeStatistic stat = new TimeStatistic(Locale.ENGLISH);
+					MAtMod.this.expansionManager.loadExpansions();
+					MAtMod.LOGGER.info("Expansions loaded (" + stat.getSecondsAsString(1) + "s).");
+					
+				}
+			}.start();
+		}
+		else
+		{
+			TimeStatistic stat = new TimeStatistic(Locale.ENGLISH);
+			MAtMod.this.expansionManager.loadExpansions();
+			MAtMod.LOGGER.info("Expansions loaded (" + stat.getSecondsAsString(1) + "s).");
+		}
+		
 		startRunning();
 		
 	}
