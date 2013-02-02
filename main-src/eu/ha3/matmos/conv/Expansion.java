@@ -1,4 +1,4 @@
-package net.minecraft.src;
+package eu.ha3.matmos.conv;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,7 +20,6 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import net.minecraft.client.Minecraft;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -52,7 +51,7 @@ import eu.ha3.util.property.simple.ConfigProperty;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class MAtExpansion implements MAtCustomVolume
+public class Expansion implements CustomVolume
 {
 	private DocumentBuilder documentBuilder;
 	private Document document;
@@ -65,7 +64,7 @@ public class MAtExpansion implements MAtCustomVolume
 	private String docDescription;
 	
 	private boolean isReady;
-	private MAtExpansionError error;
+	private ExpansionError error;
 	
 	private boolean hasStructure;
 	
@@ -78,12 +77,12 @@ public class MAtExpansion implements MAtCustomVolume
 	private String friendlyName;
 	private boolean isBuilding;
 	
-	public MAtExpansion(String userDefinedIdentifier)
+	public Expansion(String userDefinedIdentifier, File configurationSource)
 	{
 		this.userDefinedIdentifier = userDefinedIdentifier;
 		this.isReady = false;
 		this.hasStructure = false;
-		this.error = MAtExpansionError.NO_DOCUMENT;
+		this.error = ExpansionError.NO_DOCUMENT;
 		
 		this.docName = userDefinedIdentifier;
 		this.docDescription = "";
@@ -104,8 +103,7 @@ public class MAtExpansion implements MAtCustomVolume
 		this.myConfiguration.commit();
 		try
 		{
-			this.myConfiguration.setSource(new File(Minecraft.getMinecraftDir(), "matmos/expansions_r12_userconfig/"
-				+ userDefinedIdentifier + ".cfg").getCanonicalPath());
+			this.myConfiguration.setSource(configurationSource.getCanonicalPath());
 			this.myConfiguration.load();
 		}
 		catch (IOException e1)
@@ -191,7 +189,7 @@ public class MAtExpansion implements MAtCustomVolume
 							this.dataFrequency = 1;
 						}
 						
-						MAtMod.LOGGER.fine("Set " + this.userDefinedIdentifier + " frequency to " + this.dataFrequency);
+						AnyLogger.fine("Set " + this.userDefinedIdentifier + " frequency to " + this.dataFrequency);
 						
 					}
 					catch (NumberFormatException e)
@@ -209,19 +207,19 @@ public class MAtExpansion implements MAtCustomVolume
 		}
 		catch (SAXException e)
 		{
-			this.error = MAtExpansionError.COULD_NOT_PARSE_XML;
+			this.error = ExpansionError.COULD_NOT_PARSE_XML;
 			e.printStackTrace();
 			
 		}
 		catch (IOException e)
 		{
-			this.error = MAtExpansionError.COULD_NOT_PARSE_XML;
+			this.error = ExpansionError.COULD_NOT_PARSE_XML;
 			e.printStackTrace();
 			
 		}
 		catch (XPathExpressionException e)
 		{
-			MAtMod.LOGGER.warning("Error with XPath on expansion " + this.userDefinedIdentifier);
+			AnyLogger.warning("Error with XPath on expansion " + this.userDefinedIdentifier);
 			e.printStackTrace();
 			
 		}
@@ -245,7 +243,7 @@ public class MAtExpansion implements MAtCustomVolume
 		}
 		catch (MAtmosException e)
 		{
-			this.error = MAtExpansionError.COULD_NOT_MAKE_KNOWLEDGE;
+			this.error = ExpansionError.COULD_NOT_MAKE_KNOWLEDGE;
 			e.printStackTrace();
 			
 		}
@@ -299,7 +297,7 @@ public class MAtExpansion implements MAtCustomVolume
 		
 	}
 	
-	public MAtExpansionError getError()
+	public ExpansionError getError()
 	{
 		return this.error;
 		
@@ -368,7 +366,7 @@ public class MAtExpansion implements MAtCustomVolume
 			TimeStatistic stat = new TimeStatistic(Locale.ENGLISH);
 			buildKnowledge();
 			
-			MAtMod.LOGGER.info("Expansion " + getUserDefinedName() + " loaded (" + stat.getSecondsAsString(3) + "s).");
+			AnyLogger.info("Expansion " + getUserDefinedName() + " loaded (" + stat.getSecondsAsString(3) + "s).");
 			this.isBuilding = false;
 		}
 		
@@ -391,8 +389,8 @@ public class MAtExpansion implements MAtCustomVolume
 	@Override
 	public float getVolume()
 	{
-		if (this.soundManager instanceof MAtCustomVolume)
-			return ((MAtCustomVolume) this.soundManager).getVolume();
+		if (this.soundManager instanceof CustomVolume)
+			return ((CustomVolume) this.soundManager).getVolume();
 		
 		return 1;
 		
@@ -401,9 +399,9 @@ public class MAtExpansion implements MAtCustomVolume
 	@Override
 	public void setVolume(float volume)
 	{
-		if (this.soundManager instanceof MAtCustomVolume)
+		if (this.soundManager instanceof CustomVolume)
 		{
-			((MAtCustomVolume) this.soundManager).setVolume(volume);
+			((CustomVolume) this.soundManager).setVolume(volume);
 			this.myConfiguration.setProperty("volume", getVolume());
 		}
 		

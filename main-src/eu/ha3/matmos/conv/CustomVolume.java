@@ -1,4 +1,4 @@
-package net.minecraft.src;
+package eu.ha3.matmos.conv;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -16,7 +16,7 @@ package net.minecraft.src;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public interface MAtCustomVolume
+public interface CustomVolume
 {
 	public void setVolume(float vol);
 	

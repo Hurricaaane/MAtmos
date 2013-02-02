@@ -25,14 +25,14 @@ import eu.ha3.util.property.simple.PropertyTypeException;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class MAtProcessorConfig extends MAtProcessorModel
+public class MAtProcessorCVARS extends MAtProcessorModel
 {
 	private File defaultsConfig;
 	private File userConfig;
 	
 	private ConfigProperty config;
 	
-	MAtProcessorConfig(MAtMod modIn, Data dataIn, String normalNameIn, String deltaNameIn)
+	public MAtProcessorCVARS(MAtMod modIn, Data dataIn, String normalNameIn, String deltaNameIn)
 	{
 		super(modIn, dataIn, normalNameIn, deltaNameIn);
 		this.defaultsConfig = new File(Minecraft.getMinecraftDir(), "matmos/dataconfigvars_defaults.cfg");
@@ -58,7 +58,7 @@ public class MAtProcessorConfig extends MAtProcessorModel
 	}
 	
 	@Override
-	void doProcess()
+	protected void doProcess()
 	{
 		this.config.load();
 		for (String key : this.config.getAllProperties().keySet())

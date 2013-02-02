@@ -1,4 +1,4 @@
-package net.minecraft.src;
+package eu.ha3.matmos.conv;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -16,8 +16,7 @@ package net.minecraft.src;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public enum MAtExpansionError
+public enum ExpansionError
 {
 	NO_DOCUMENT, COULD_NOT_PARSE_XML, COULD_NOT_MAKE_KNOWLEDGE
-	
 }

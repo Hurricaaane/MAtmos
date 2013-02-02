@@ -3,6 +3,7 @@ package net.minecraft.src;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.ha3.matmos.conv.ProcessorModel;
 import eu.ha3.matmos.engine.Data;
 
 /*
@@ -60,10 +61,10 @@ public class MAtDataGatherer
 	private MAtScanCoordsPipeline largePipeline;
 	private MAtScanCoordsPipeline smallPipeline;
 	
-	private MAtProcessorModel relaxedProcessor;
-	private MAtProcessorModel frequentProcessor;
-	private MAtProcessorModel contactProcessor;
-	private MAtProcessorModel configVarsProcessor;
+	private ProcessorModel relaxedProcessor;
+	private ProcessorModel frequentProcessor;
+	private ProcessorModel contactProcessor;
+	private ProcessorModel configVarsProcessor;
 	
 	private MAtProcessorEnchantments enchantmentsCurrentItem;
 	private MAtProcessorEnchantments enchantmentsArmor1;
@@ -74,8 +75,8 @@ public class MAtDataGatherer
 	private MAtProcessorPotionQuality potionPowerProcessor;
 	private MAtProcessorPotionQuality potionDurationProcessor;
 	
-	private List<MAtProcessorModel> additionalRelaxedProcessors;
-	private List<MAtProcessorModel> additionalFrequentProcessors;
+	private List<ProcessorModel> additionalRelaxedProcessors;
+	private List<ProcessorModel> additionalFrequentProcessors;
 	
 	private Data data;
 	
@@ -105,8 +106,8 @@ public class MAtDataGatherer
 		this.largeScanner = new MAtScanVolumetricModel(this.mod);
 		this.smallScanner = new MAtScanVolumetricModel(this.mod);
 		
-		this.additionalRelaxedProcessors = new ArrayList<MAtProcessorModel>();
-		this.additionalFrequentProcessors = new ArrayList<MAtProcessorModel>();
+		this.additionalRelaxedProcessors = new ArrayList<ProcessorModel>();
+		this.additionalFrequentProcessors = new ArrayList<ProcessorModel>();
 		
 		this.data = new Data();
 		prepareSheets();
@@ -120,7 +121,7 @@ public class MAtDataGatherer
 		this.relaxedProcessor = new MAtProcessorRelaxed(this.mod, this.data, INSTANTS, DELTAS);
 		this.frequentProcessor = new MAtProcessorFrequent(this.mod, this.data, INSTANTS, DELTAS);
 		this.contactProcessor = new MAtProcessorContact(this.mod, this.data, CONTACTSCAN, null);
-		this.configVarsProcessor = new MAtProcessorConfig(this.mod, this.data, CONFIGVARS, null);
+		this.configVarsProcessor = new MAtProcessorCVARS(this.mod, this.data, CONFIGVARS, null);
 		
 		this.enchantmentsCurrentItem = new MAtProcessorEnchantments(this.mod, this.data, CURRENTITEM_E, null) {
 			@Override
@@ -213,7 +214,7 @@ public class MAtDataGatherer
 			this.smallScanner.startScan(x, y, z, 16, 8, 16, 2048, null);
 			this.relaxedProcessor.process();
 			
-			for (MAtProcessorModel processor : this.additionalRelaxedProcessors)
+			for (ProcessorModel processor : this.additionalRelaxedProcessors)
 			{
 				processor.process();
 			}
@@ -236,7 +237,7 @@ public class MAtDataGatherer
 			this.potionPowerProcessor.process();
 			this.potionDurationProcessor.process();
 			
-			for (MAtProcessorModel processor : this.additionalFrequentProcessors)
+			for (ProcessorModel processor : this.additionalFrequentProcessors)
 			{
 				processor.process();
 			}

@@ -23,7 +23,7 @@ public class MAtProcessorContact extends MAtProcessorModel
 {
 	private int contactSum[];
 	
-	MAtProcessorContact(MAtMod modIn, Data dataIn, String normalNameIn, String deltaNameIn)
+	public MAtProcessorContact(MAtMod modIn, Data dataIn, String normalNameIn, String deltaNameIn)
 	{
 		super(modIn, dataIn, normalNameIn, deltaNameIn);
 		this.contactSum = new int[MAtDataGatherer.COUNT_WORLD_BLOCKS];
@@ -40,7 +40,7 @@ public class MAtProcessorContact extends MAtProcessorModel
 	}
 	
 	@Override
-	void doProcess()
+	protected void doProcess()
 	{
 		Minecraft mc = mod().manager().getMinecraft();
 		int x = (int) Math.floor(mc.thePlayer.posX);

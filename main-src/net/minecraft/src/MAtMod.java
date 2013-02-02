@@ -14,6 +14,8 @@ import java.util.logging.Level;
 
 import net.minecraft.client.Minecraft;
 import eu.ha3.easy.TimeStatistic;
+import eu.ha3.matmos.conv.AnyLogger;
+import eu.ha3.matmos.conv.ExpansionManager;
 import eu.ha3.matmos.engine.MAtmosLogger;
 import eu.ha3.mc.convenience.Ha3Signal;
 import eu.ha3.mc.convenience.Ha3StaticUtilities;
@@ -40,9 +42,9 @@ import eu.ha3.util.property.simple.ConfigProperty;
  */
 
 public class MAtMod extends HaddonImpl
-	implements SupportsFrameEvents, SupportsTickEvents, SupportsKeyEvents, SupportsEverythingReady /*, Ha3Personalizable*/
+	implements SupportsFrameEvents, SupportsTickEvents, SupportsKeyEvents, SupportsEverythingReady
 {
-	final static public MAtLogger LOGGER = new MAtLogger();
+	final static public AnyLogger LOGGER = new AnyLogger();
 	final static public int VERSION = 21; // Remember to change the thing on mod_Matmos
 	
 	final static private boolean KNOWLEDGE_IS_SLOW = false;
@@ -53,7 +55,7 @@ public class MAtMod extends HaddonImpl
 	private Ha3SoundCommunicator sndComm;
 	private MAtUserControl userControl;
 	private MAtDataGatherer dataGatherer;
-	private MAtExpansionManager expansionManager;
+	private ExpansionManager expansionManager;
 	private MAtSoundManagerMaster soundManagerMaster;
 	private MAtUpdateNotifier updateNotifier;
 	
@@ -120,7 +122,9 @@ public class MAtMod extends HaddonImpl
 		
 		this.userControl = new MAtUserControl(this);
 		this.dataGatherer = new MAtDataGatherer(this);
-		this.expansionManager = new MAtExpansionManager(this);
+		this.expansionManager =
+			new ExpansionManager(this, new File(Minecraft.getMinecraftDir(), "matmos/expansions_r12/"), new File(
+				Minecraft.getMinecraftDir(), "matmos/expansions_r12_userconfig/"));
 		this.updateNotifier = new MAtUpdateNotifier(this);
 		
 		this.soundManagerMaster = new MAtSoundManagerMaster(this);
@@ -156,11 +160,11 @@ public class MAtMod extends HaddonImpl
 		this.soundManagerMaster.setVolume(this.config.getFloat("globalvolume.scale"));
 		this.updateNotifier.loadConfig(this.config);
 		
-		MAtMod.LOGGER.info("Took " + this.timeStatistic.getSecondsAsString(1) + " seconds to setup MAtmos base.");
+		AnyLogger.info("Took " + this.timeStatistic.getSecondsAsString(1) + " seconds to setup MAtmos base.");
 		
 		//
 		
-		MAtMod.LOGGER.info("Pre-loading.");
+		AnyLogger.info("Pre-loading.");
 		
 		// This registers stuff to Minecraft (key bindings...)
 		this.userControl.load();
@@ -182,7 +186,7 @@ public class MAtMod extends HaddonImpl
 		
 		this.phase = MAtModPhase.CONSTRUCTING;
 		
-		MAtMod.LOGGER.info("Constructing.");
+		AnyLogger.info("Constructing.");
 		
 		this.dataGatherer.load();
 		// note: soundManager needs to be loaded post sndcomms
@@ -205,14 +209,14 @@ public class MAtMod extends HaddonImpl
 		});
 		
 		this.expansionManager.loadExpansions();
-		MAtMod.LOGGER.info("Took " + this.timeStatistic.getSecondsAsString(1) + " seconds to enable MAtmos.");
+		AnyLogger.info("Took " + this.timeStatistic.getSecondsAsString(1) + " seconds to enable MAtmos.");
 		
 	}
 	
 	private void sndCommFailed()
 	{
 		this.phase = MAtModPhase.SOUNDCOMMUNICATOR_FAILURE;
-		MAtMod.LOGGER.severe("CRITICAL Error with SoundCommunicator (after "
+		AnyLogger.severe("CRITICAL Error with SoundCommunicator (after "
 			+ this.timeStatistic.getSecondsAsString(3) + " s.). Will not load.");
 		
 		this.isFatalError = true;
@@ -294,19 +298,19 @@ public class MAtMod extends HaddonImpl
 	{
 		this.phase = MAtModPhase.RESOURCE_LOADER;
 		
-		MAtMod.LOGGER.info("SoundCommunicator loaded (after " + this.timeStatistic.getSecondsAsString(3) + " s.).");
+		AnyLogger.info("SoundCommunicator loaded (after " + this.timeStatistic.getSecondsAsString(3) + " s.).");
 		
 		String firstBlocker = getFirstBlocker();
 		if (firstBlocker != null)
 		{
-			MAtMod.LOGGER.warning(firstBlocker);
-			MAtMod.LOGGER.warning("MAtmos will not attempt load sounds on its own at all.");
+			AnyLogger.warning(firstBlocker);
+			AnyLogger.warning("MAtmos will not attempt load sounds on its own at all.");
 			loadFinalPhase();
 			
 		}
 		else
 		{
-			MAtMod.LOGGER.info("Bypassing Resource Reloader threaded wait. This may cause issues.");
+			AnyLogger.info("Bypassing Resource Reloader threaded wait. This may cause issues.");
 			
 			try
 			{
@@ -314,8 +318,8 @@ public class MAtMod extends HaddonImpl
 			}
 			catch (Exception e)
 			{
-				MAtMod.LOGGER.severe("A severe error has occured while trying to reload resources.");
-				MAtMod.LOGGER.severe("MAtmos may not function properly.");
+				AnyLogger.severe("A severe error has occured while trying to reload resources.");
+				AnyLogger.severe("MAtmos may not function properly.");
 				e.printStackTrace();
 				
 				try
@@ -340,11 +344,11 @@ public class MAtMod extends HaddonImpl
 	{
 		this.phase = MAtModPhase.FINAL_PHASE;
 		
-		MAtMod.LOGGER.info("ResourceReloader finished (after " + this.timeStatistic.getSecondsAsString(3) + " s.).");
+		AnyLogger.info("ResourceReloader finished (after " + this.timeStatistic.getSecondsAsString(3) + " s.).");
 		
 		this.phase = MAtModPhase.READY;
 		
-		MAtMod.LOGGER.info("Ready.");
+		AnyLogger.info("Ready.");
 		
 		startRunning();
 		
@@ -364,7 +368,7 @@ public class MAtMod extends HaddonImpl
 	{
 		if (!trySendSignalToTurnOn())
 		{
-			MAtMod.LOGGER.info("MAtmos is not yet enabled and mods are loaded: Knowledge will be built later...");
+			AnyLogger.info("MAtmos is not yet enabled and mods are loaded: Knowledge will be built later...");
 		}
 		this.everythingIsReady = true;
 	}
@@ -378,7 +382,7 @@ public class MAtMod extends HaddonImpl
 		{
 			this.hasSentSignalToTurnOn = true;
 			
-			MAtMod.LOGGER.info("Now building knowledge...");
+			AnyLogger.info("Now building knowledge...");
 			if (KNOWLEDGE_IS_SLOW)
 			{
 				new Thread() {
@@ -417,7 +421,7 @@ public class MAtMod extends HaddonImpl
 				{
 					TimeStatistic stat = new TimeStatistic(Locale.ENGLISH);
 					MAtMod.this.expansionManager.loadExpansions();
-					MAtMod.LOGGER.info("Expansions loaded (" + stat.getSecondsAsString(1) + "s).");
+					AnyLogger.info("Expansions loaded (" + stat.getSecondsAsString(1) + "s).");
 					
 				}
 			}.start();
@@ -426,7 +430,7 @@ public class MAtMod extends HaddonImpl
 		{
 			TimeStatistic stat = new TimeStatistic(Locale.ENGLISH);
 			MAtMod.this.expansionManager.loadExpansions();
-			MAtMod.LOGGER.info("Expansions loaded (" + stat.getSecondsAsString(1) + "s).");
+			AnyLogger.info("Expansions loaded (" + stat.getSecondsAsString(1) + "s).");
 		}
 		
 		startRunning();
@@ -443,9 +447,9 @@ public class MAtMod extends HaddonImpl
 		
 		this.isRunning = true;
 		
-		MAtMod.LOGGER.fine("Loading...");
+		AnyLogger.fine("Loading...");
 		this.expansionManager.modWasTurnedOnOrOff();
-		MAtMod.LOGGER.fine("Loaded.");
+		AnyLogger.fine("Loaded.");
 		
 	}
 	
@@ -459,9 +463,9 @@ public class MAtMod extends HaddonImpl
 		
 		this.isRunning = false;
 		
-		MAtMod.LOGGER.fine("Stopping...");
+		AnyLogger.fine("Stopping...");
 		this.expansionManager.modWasTurnedOnOrOff();
-		MAtMod.LOGGER.fine("Stopped.");
+		AnyLogger.fine("Stopped.");
 		
 		createDataDump();
 		
@@ -472,7 +476,7 @@ public class MAtMod extends HaddonImpl
 		if (!this.config.getBoolean("dump.enabled"))
 			return;
 		
-		MAtMod.LOGGER.fine("Dumping data.");
+		AnyLogger.fine("Dumping data.");
 		
 		try
 		{
@@ -527,7 +531,7 @@ public class MAtMod extends HaddonImpl
 	}
 	
 	// XXX Blatant design.
-	public MAtExpansionManager getExpansionManager()
+	public ExpansionManager getExpansionManager()
 	{
 		return this.expansionManager;
 		
@@ -634,7 +638,7 @@ public class MAtMod extends HaddonImpl
 		// If there were changes...
 		if (this.config.commit())
 		{
-			MAtMod.LOGGER.info("Saving configuration...");
+			AnyLogger.info("Saving configuration...");
 			
 			// Write changes on disk.
 			this.config.save();

@@ -20,13 +20,13 @@ import eu.ha3.matmos.engine.Data;
 
 public abstract class MAtProcessorPotionQuality extends MAtProcessorModel
 {
-	MAtProcessorPotionQuality(MAtMod modIn, Data dataIn, String normalNameIn, String deltaNameIn)
+	public MAtProcessorPotionQuality(MAtMod modIn, Data dataIn, String normalNameIn, String deltaNameIn)
 	{
 		super(modIn, dataIn, normalNameIn, deltaNameIn);
 	}
 	
 	@Override
-	void doProcess()
+	protected void doProcess()
 	{
 		EntityPlayer player = mod().manager().getMinecraft().thePlayer;
 		

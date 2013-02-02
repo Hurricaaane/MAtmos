@@ -1,4 +1,4 @@
-package net.minecraft.src;
+package eu.ha3.matmos.conv;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -16,31 +16,31 @@ package net.minecraft.src;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class MAtLogger
+public class AnyLogger
 {
 	final private static String modName = "MAtmos";
 	
-	public void fine(String message)
+	public static void fine(String message)
 	{
 		//print(message, "FINE");
 	}
 	
-	public void info(String message)
+	public static void info(String message)
 	{
 		print(message, "INFO");
 	}
 	
-	public void warning(String message)
+	public static void warning(String message)
 	{
 		print(message, "WARNING");
 	}
 	
-	public void severe(String message)
+	public static void severe(String message)
 	{
 		print(message, "SEVERE");
 	}
 	
-	private void print(String message, String type)
+	private static void print(String message, String type)
 	{
 		System.out.println("(" + modName + ": " + type + ") " + message);
 	}

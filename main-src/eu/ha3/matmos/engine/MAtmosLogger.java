@@ -21,5 +21,4 @@ import java.util.logging.Logger;
 public class MAtmosLogger
 {
 	final public static Logger LOGGER = Logger.getLogger("eu.ha3.matmos.engine");
-	
 }

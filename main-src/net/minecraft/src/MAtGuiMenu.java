@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import eu.ha3.matmos.conv.Expansion;
 import eu.ha3.mc.gui.HDisplayStringProvider;
 import eu.ha3.mc.gui.HGuiSliderControl;
 import eu.ha3.mc.gui.HSliderListener;
@@ -44,7 +45,7 @@ public class MAtGuiMenu extends GuiScreen
 	private int pageFromZero;
 	private final int IDS_PER_PAGE = 5;
 	
-	private List<MAtExpansion> expansionList;
+	private List<Expansion> expansionList;
 	
 	// Keep the active page in memory. Globally... (herpderp)
 	private static int in_memory_page = 0;
@@ -62,7 +63,7 @@ public class MAtGuiMenu extends GuiScreen
 		this.mod = matmos;
 		this.pageFromZero = pageFromZero;
 		
-		this.expansionList = new ArrayList<MAtExpansion>();
+		this.expansionList = new ArrayList<Expansion>();
 		
 		in_memory_page = this.pageFromZero;
 	}
@@ -85,7 +86,7 @@ public class MAtGuiMenu extends GuiScreen
 		final int _LEFT = this.width / 2 - _WIDTH / 2;
 		final int _RIGHT = this.width / 2 + _WIDTH / 2;
 		
-		Map<String, MAtExpansion> expansions = this.mod.getExpansionManager().getExpansions();
+		Map<String, Expansion> expansions = this.mod.getExpansionManager().getExpansions();
 		int id = 0;
 		
 		{
@@ -134,7 +135,7 @@ public class MAtGuiMenu extends GuiScreen
 			&& expansionIndex < sortedNames.size(); expansionIndex++)
 		{
 			final String uniqueIdentifier = sortedNames.get(expansionIndex);
-			final MAtExpansion expansion = expansions.get(uniqueIdentifier);
+			final Expansion expansion = expansions.get(uniqueIdentifier);
 			this.expansionList.add(expansion);
 			
 			HGuiSliderControl sliderControl =
@@ -295,7 +296,7 @@ public class MAtGuiMenu extends GuiScreen
 		else if (par1GuiButton.id >= 400)
 		{
 			int id = par1GuiButton.id - 400;
-			MAtExpansion expansion = this.expansionList.get(id);
+			Expansion expansion = this.expansionList.get(id);
 			
 			if (expansion.isRunning())
 			{
@@ -309,8 +310,8 @@ public class MAtGuiMenu extends GuiScreen
 	
 	private void aboutToClose()
 	{
-		Map<String, MAtExpansion> expansions = this.mod.getExpansionManager().getExpansions();
-		for (MAtExpansion expansion : expansions.values())
+		Map<String, Expansion> expansions = this.mod.getExpansionManager().getExpansions();
+		for (Expansion expansion : expansions.values())
 		{
 			if (expansion.getVolume() == 0f && expansion.isRunning())
 			{
@@ -321,7 +322,7 @@ public class MAtGuiMenu extends GuiScreen
 		}
 		
 		this.mod.saveConfig();
-		for (MAtExpansion expansion : expansions.values())
+		for (Expansion expansion : expansions.values())
 		{
 			expansion.saveConfig();
 			

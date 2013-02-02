@@ -6,6 +6,8 @@ import java.util.Random;
 
 import net.minecraft.client.Minecraft;
 import paulscode.sound.SoundSystem;
+import eu.ha3.matmos.conv.AnyLogger;
+import eu.ha3.matmos.conv.CustomVolume;
 import eu.ha3.matmos.engine.SoundRelay;
 import eu.ha3.mc.haddon.PrivateAccessException;
 
@@ -25,7 +27,7 @@ import eu.ha3.mc.haddon.PrivateAccessException;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class MAtSoundManagerChild implements SoundRelay, MAtCustomVolume
+public class MAtSoundManagerChild implements SoundRelay, CustomVolume
 {
 	private MAtMod mod;
 	
@@ -193,7 +195,7 @@ public class MAtSoundManagerChild implements SoundRelay, MAtCustomVolume
 	@Override
 	public void eraseStreamingToken(int token)
 	{
-		MAtMod.LOGGER.info("Erasing token #" + token);
+		AnyLogger.info("Erasing token #" + token);
 		
 		MAtSoundStream stream = this.tokens.get(token);
 		stream.interruptStreaming();
@@ -226,7 +228,7 @@ public class MAtSoundManagerChild implements SoundRelay, MAtCustomVolume
 	@Override
 	public void finalize()
 	{
-		MAtMod.LOGGER.info("Calling finalizer of SMC");
+		AnyLogger.info("Calling finalizer of SMC");
 		
 		try
 		{

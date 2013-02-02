@@ -1,7 +1,6 @@
 package net.minecraft.src;
 
-import java.util.ArrayList;
-
+import eu.ha3.matmos.conv.ProcessorModel;
 import eu.ha3.matmos.engine.Data;
 
 /*
@@ -20,62 +19,19 @@ import eu.ha3.matmos.engine.Data;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public abstract class MAtProcessorModel
+public abstract class MAtProcessorModel extends ProcessorModel
 {
 	private MAtMod mod;
-	private Data data;
 	
-	private String normalName;
-	private String deltaName;
-	
-	private ArrayList<Integer> normalSheet;
-	private ArrayList<Integer> deltaSheet;
-	
-	MAtProcessorModel(MAtMod modIn, Data dataIn, String normalNameIn, String deltaNameIn)
+	public MAtProcessorModel(MAtMod modIn, Data dataIn, String normalNameIn, String deltaNameIn)
 	{
+		super(dataIn, normalNameIn, deltaNameIn);
 		this.mod = modIn;
-		this.data = dataIn;
-		this.normalName = normalNameIn;
-		this.deltaName = deltaNameIn;
 		
 	}
 	
 	public MAtMod mod()
 	{
 		return this.mod;
-		
 	}
-	
-	public Data data()
-	{
-		return this.data;
-		
-	}
-	
-	abstract void doProcess();
-	
-	public void process()
-	{
-		this.normalSheet = data().sheets.get(this.normalName);
-		if (this.deltaName != null)
-		{
-			this.deltaSheet = data().sheets.get(this.deltaName);
-		}
-		
-		doProcess();
-		
-	}
-	
-	void setValue(int index, int newValue)
-	{
-		int previousValue = this.normalSheet.get(index);
-		this.normalSheet.set(index, newValue);
-		
-		if (this.deltaName != null)
-		{
-			this.deltaSheet.set(index, newValue - previousValue);
-		}
-		
-	}
-	
 }

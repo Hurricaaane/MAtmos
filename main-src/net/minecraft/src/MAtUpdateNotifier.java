@@ -17,6 +17,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import eu.ha3.matmos.conv.AnyLogger;
 import eu.ha3.util.property.simple.ConfigProperty;
 
 /*
@@ -64,7 +65,7 @@ public class MAtUpdateNotifier extends Thread// implements Ha3Personalizable
 	{
 		try
 		{
-			URL url = new URL("http://ha3.eu/query/matmos-main-version.xml");
+			URL url = new URL("http://q.mc.ha3.eu/query/matmos-main-version.xml");
 			
 			InputStream contents = url.openStream();
 			
@@ -93,7 +94,7 @@ public class MAtUpdateNotifier extends Thread// implements Ha3Personalizable
 				}
 				
 			}
-			MAtMod.LOGGER.info("Update version found: " + maxvn);
+			AnyLogger.info("Update version found: " + maxvn);
 			
 			try
 			{

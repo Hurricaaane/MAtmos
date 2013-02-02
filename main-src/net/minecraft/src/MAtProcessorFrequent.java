@@ -21,15 +21,14 @@ import eu.ha3.matmos.engine.Data;
 
 public class MAtProcessorFrequent extends MAtProcessorModel
 {
-	
-	MAtProcessorFrequent(MAtMod modIn, Data dataIn, String normalNameIn, String deltaNameIn)
+	public MAtProcessorFrequent(MAtMod modIn, Data dataIn, String normalNameIn, String deltaNameIn)
 	{
 		super(modIn, dataIn, normalNameIn, deltaNameIn);
 		
 	}
 	
 	@Override
-	void doProcess()
+	protected void doProcess()
 	{
 		Minecraft mc = mod().manager().getMinecraft();
 		World w = mc.theWorld;

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import net.minecraft.client.Minecraft;
 import paulscode.sound.SoundSystem;
+import eu.ha3.matmos.conv.CustomVolume;
 import eu.ha3.matmos.engine.SoundRelay;
 
 /*
@@ -24,7 +25,7 @@ import eu.ha3.matmos.engine.SoundRelay;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class MAtSoundManagerMaster implements SoundRelay, MAtCustomVolume
+public class MAtSoundManagerMaster implements SoundRelay, CustomVolume
 {
 	// XXX Implement me: Does not do anything and sndcomms is down
 	

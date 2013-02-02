@@ -1,4 +1,4 @@
-package net.minecraft.src;
+package eu.ha3.matmos.conv;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,7 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.src.MAtMod;
+import net.minecraft.src.MAtSoundManagerChild;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
@@ -27,10 +28,10 @@ import net.minecraft.client.Minecraft;
   0. You just DO WHAT THE FUCK YOU WANT TO.
  */
 
-public class MAtExpansionManager
+public class ExpansionManager
 {
 	private MAtMod mod;
-	private Map<String, MAtExpansion> expansions;
+	private Map<String, Expansion> expansions;
 	private List<MAtSoundManagerChild> soundManagers;
 	
 	private File expansionsFolder;
@@ -38,15 +39,15 @@ public class MAtExpansionManager
 	
 	private boolean canBuildKnowledge;
 	
-	public MAtExpansionManager(MAtMod mAtmosHaddon)
+	public ExpansionManager(MAtMod mAtmosHaddon, File expansionsFolder, File userconfigFolder)
 	{
 		this.mod = mAtmosHaddon;
 		
-		this.expansions = new ConcurrentHashMap<String, MAtExpansion>();
+		this.expansions = new ConcurrentHashMap<String, Expansion>();
 		this.soundManagers = new ArrayList<MAtSoundManagerChild>();
 		
-		this.expansionsFolder = new File(Minecraft.getMinecraftDir(), "matmos/expansions_r12/");
-		this.userconfigFolder = new File(Minecraft.getMinecraftDir(), "matmos/expansions_r12_userconfig/");
+		this.expansionsFolder = expansionsFolder;
+		this.userconfigFolder = userconfigFolder;
 		
 		if (!this.expansionsFolder.exists())
 		{
@@ -60,7 +61,7 @@ public class MAtExpansionManager
 		
 	}
 	
-	private void renewExpansionProngs(MAtExpansion expansion)
+	private void renewExpansionProngs(Expansion expansion)
 	{
 		MAtSoundManagerChild soundManager = new MAtSoundManagerChild(this.mod);
 		this.soundManagers.add(soundManager);
@@ -72,7 +73,8 @@ public class MAtExpansionManager
 	
 	public void createExpansionEntry(String userDefinedIdentifier)
 	{
-		MAtExpansion expansion = new MAtExpansion(userDefinedIdentifier);
+		Expansion expansion =
+			new Expansion(userDefinedIdentifier, new File(this.userconfigFolder + userDefinedIdentifier + ".cfg"));
 		this.expansions.put(userDefinedIdentifier, expansion);
 		renewExpansionProngs(expansion);
 		
@@ -87,43 +89,29 @@ public class MAtExpansionManager
 		}
 		catch (FileNotFoundException e)
 		{
-			MAtMod.LOGGER.warning("Error with FileNotFound on ExpansionLoader (on file "
-				+ file.getAbsolutePath() + ").");
+			AnyLogger.warning("Error with FileNotFound on ExpansionLoader (on file " + file.getAbsolutePath() + ").");
 			
 		}
 		
 	}
 	
-	/*public void removeExpansion(String userDefinedIdentifier)
-	{
-		if (this.expansions.containsKey(userDefinedIdentifier))
-		{
-			MAtExpansion expansion = this.expansions.get(userDefinedIdentifier);
-			
-			expansion.turnOff();
-			
-			this.expansions.remove(userDefinedIdentifier);
-		}
-		
-	}*/
-	
 	public void addExpansion(String userDefinedIdentifier, InputStream stream)
 	{
 		if (!this.expansions.containsKey(userDefinedIdentifier))
 		{
-			MAtMod.LOGGER.severe("Tried to add an expansion that has no entry!");
+			AnyLogger.severe("Tried to add an expansion that has no entry!");
 			return;
 			
 		}
 		
-		MAtExpansion expansion = this.expansions.get(userDefinedIdentifier);
+		Expansion expansion = this.expansions.get(userDefinedIdentifier);
 		expansion.inputStructure(stream);
 		
 		tryTurnOn(expansion);
 		
 	}
 	
-	private void tryTurnOn(MAtExpansion expansion)
+	private void tryTurnOn(Expansion expansion)
 	{
 		if (expansion == null)
 			return;
@@ -140,14 +128,14 @@ public class MAtExpansionManager
 		this.canBuildKnowledge = true;
 		
 		// Try build the knowledge of expansions that were structured before buildknowledge was ready
-		for (MAtExpansion expansion : this.expansions.values())
+		for (Expansion expansion : this.expansions.values())
 		{
 			tryTurnOn(expansion);
 		}
 		
 	}
 	
-	private void turnOnOrOff(MAtExpansion expansion)
+	private void turnOnOrOff(Expansion expansion)
 	{
 		if (expansion == null)
 			return;
@@ -168,14 +156,14 @@ public class MAtExpansionManager
 	
 	public synchronized void modWasTurnedOnOrOff()
 	{
-		for (MAtExpansion expansion : this.expansions.values())
+		for (Expansion expansion : this.expansions.values())
 		{
 			turnOnOrOff(expansion);
 			
 		}
 	}
 	
-	public Map<String, MAtExpansion> getExpansions()
+	public Map<String, Expansion> getExpansions()
 	{
 		return this.expansions;
 		
@@ -183,7 +171,7 @@ public class MAtExpansionManager
 	
 	public void soundRoutine()
 	{
-		for (MAtExpansion expansion : this.expansions.values())
+		for (Expansion expansion : this.expansions.values())
 		{
 			expansion.soundRoutine();
 			
@@ -193,7 +181,7 @@ public class MAtExpansionManager
 	
 	public void dataRoutine()
 	{
-		for (MAtExpansion expansion : this.expansions.values())
+		for (Expansion expansion : this.expansions.values())
 		{
 			expansion.dataRoutine();
 			
@@ -203,7 +191,7 @@ public class MAtExpansionManager
 	
 	public synchronized void clearExpansions()
 	{
-		for (MAtExpansion expansion : this.expansions.values())
+		for (Expansion expansion : this.expansions.values())
 		{
 			expansion.clear();
 		}
@@ -231,7 +219,7 @@ public class MAtExpansionManager
 	{
 		for (File file : offline)
 		{
-			MAtMod.LOGGER.info("ExpansionLoader found offline " + file.getName() + ".");
+			AnyLogger.info("ExpansionLoader found offline " + file.getName() + ".");
 			createExpansionEntry(file.getName());
 		}
 		

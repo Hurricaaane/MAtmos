@@ -38,7 +38,7 @@ public class MAtProcessorRelaxed extends MAtProcessorModel
 	private Map<String, Integer> serverAddresses;
 	private Map<String, Integer> serverPorts;
 	
-	MAtProcessorRelaxed(MAtMod modIn, Data dataIn, String normalNameIn, String deltaNameIn)
+	public MAtProcessorRelaxed(MAtMod modIn, Data dataIn, String normalNameIn, String deltaNameIn)
 	{
 		super(modIn, dataIn, normalNameIn, deltaNameIn);
 		
@@ -81,7 +81,7 @@ public class MAtProcessorRelaxed extends MAtProcessorModel
 	}
 	
 	@Override
-	void doProcess()
+	protected void doProcess()
 	{
 		Minecraft mc = mod().manager().getMinecraft();
 		World w = mc.theWorld;

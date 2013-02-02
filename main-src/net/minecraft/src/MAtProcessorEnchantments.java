@@ -20,13 +20,13 @@ import eu.ha3.matmos.engine.Data;
 
 public abstract class MAtProcessorEnchantments extends MAtProcessorModel
 {
-	MAtProcessorEnchantments(MAtMod modIn, Data dataIn, String normalNameIn, String deltaNameIn)
+	public MAtProcessorEnchantments(MAtMod modIn, Data dataIn, String normalNameIn, String deltaNameIn)
 	{
 		super(modIn, dataIn, normalNameIn, deltaNameIn);
 	}
 	
 	@Override
-	void doProcess()
+	protected void doProcess()
 	{
 		// Sets everything to 0 if no such armor
 		for (int i = 0; i < 64; i++)
