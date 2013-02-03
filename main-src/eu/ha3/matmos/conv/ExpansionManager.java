@@ -74,7 +74,7 @@ public class ExpansionManager
 	public void createExpansionEntry(String userDefinedIdentifier)
 	{
 		Expansion expansion =
-			new Expansion(userDefinedIdentifier, new File(this.userconfigFolder + userDefinedIdentifier + ".cfg"));
+			new Expansion(userDefinedIdentifier, new File(this.userconfigFolder, userDefinedIdentifier + ".cfg"));
 		this.expansions.put(userDefinedIdentifier, expansion);
 		renewExpansionProngs(expansion);
 		
