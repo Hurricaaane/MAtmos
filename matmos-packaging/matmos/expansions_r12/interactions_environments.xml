@@ -1,5 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <contents>
+<list name="Dummy">
+	<descriptible>
+		<nickname>Dummy</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<constant>1</constant>
+</list>
+<list name="Water blocks">
+	<descriptible>
+		<nickname>Water blocks</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<constant>8</constant>
+	<constant>9</constant>
+</list>
+<condition name="Block is water">
+	<descriptible>
+		<nickname>Block is water</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<sheet>Instants</sheet>
+	<key>94</key>
+	<symbol>in</symbol>
+	<constant>1</constant>
+	<list>Water blocks</list>
+</condition>
 <condition name="Breathing again">
 	<descriptible>
 		<nickname>Breathing again</nickname>
@@ -208,6 +240,15 @@
 	<constant>300</constant>
 	<list></list>
 </condition>
+<set name="Block is water">
+	<descriptible>
+		<nickname>Block is water</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<truepart>Block is water</truepart>
+</set>
 <set name="Breathing again">
 	<descriptible>
 		<nickname>Breathing again</nickname>
@@ -545,6 +586,7 @@
 		<meta></meta>
 	</descriptible>
 	<allow>Under Water</allow>
+	<allow>Block is water</allow>
 	<eventtimed>
 		<eventname>Under Water</eventname>
 		<delaymin>0.2</delaymin>
