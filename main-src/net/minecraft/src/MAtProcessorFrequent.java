@@ -184,6 +184,15 @@ public class MAtProcessorFrequent extends MAtProcessorModel
 		setValue(91, player.inventory.armorInventory[2] != null ? player.inventory.armorInventory[2].itemID : -1);
 		setValue(92, player.inventory.armorInventory[3] != null ? player.inventory.armorInventory[3].itemID : -1);
 		
+		// 93 - ME BiomeID
+		
+		setValue(94, y >= 0 && y < mod().util().getWorldHeight()
+			? getTranslatedBlockId(mc.theWorld.getBlockId(x, y, z)) : -1); //FIXME difference in Altitude notion
+		setValue(
+			95,
+			y >= 0 && y < mod().util().getWorldHeight() - 1
+				? getTranslatedBlockId(mc.theWorld.getBlockId(x, y + 1, z)) : -1);
+		
 		//
 		/*
 		for (int i = 0; i < 64; i++)
