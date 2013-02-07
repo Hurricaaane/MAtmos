@@ -16,13 +16,11 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
 
+import net.sf.practicalxml.DomUtil;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
+import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -55,7 +53,6 @@ public class Expansion implements CustomVolume
 {
 	private DocumentBuilder documentBuilder;
 	private Document document;
-	private XPath xpath;
 	private Knowledge knowledge;
 	
 	private String userDefinedIdentifier;
@@ -90,9 +87,6 @@ public class Expansion implements CustomVolume
 		this.knowledge = new Knowledge();
 		
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		XPathFactory xpf = XPathFactory.newInstance();
-		
-		this.xpath = xpf.newXPath();
 		
 		this.dataFrequency = 1;
 		this.dataCyclic = 0;
@@ -152,6 +146,19 @@ public class Expansion implements CustomVolume
 		
 	}
 	
+	private String eltString(String tagName, Element ele)
+	{
+		return textOf(DomUtil.getChild(ele, tagName));
+	}
+	
+	private String textOf(Element ele)
+	{
+		if (ele == null || ele.getFirstChild() == null)
+			return null;
+		
+		return ele.getFirstChild().getNodeValue();
+	}
+	
 	public void inputStructure(InputStream stream)
 	{
 		System.out.println("inputting " + this.userDefinedIdentifier);
@@ -163,11 +170,11 @@ public class Expansion implements CustomVolume
 			NodeList explist = this.document.getElementsByTagName("expansion");
 			if (explist.getLength() == 1)
 			{
-				Node exp = explist.item(0);
+				Element exp = (Element) explist.item(0);
 				
-				String name = this.xpath.evaluate("./name", exp);
-				String desc = this.xpath.evaluate("./description", exp);
-				String dataFreq = this.xpath.evaluate("./data", exp);
+				String name = eltString("name", exp);
+				String desc = eltString("description", exp);
+				String dataFreq = eltString("data", exp);
 				
 				if (name != null)
 				{
@@ -214,12 +221,6 @@ public class Expansion implements CustomVolume
 		catch (IOException e)
 		{
 			this.error = ExpansionError.COULD_NOT_PARSE_XML;
-			e.printStackTrace();
-			
-		}
-		catch (XPathExpressionException e)
-		{
-			AnyLogger.warning("Error with XPath on expansion " + this.userDefinedIdentifier);
 			e.printStackTrace();
 			
 		}
@@ -445,20 +446,6 @@ public class Expansion implements CustomVolume
 		return output.toString();
 		
 	}
-	
-	/*public void printKnowledge() // XXX Debugging function, remove me
-	{
-		try
-		{
-			System.out.println(this.knowledge.createXML());
-		}
-		catch (XMLStreamException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	}*/
 	
 	public void clear()
 	{
