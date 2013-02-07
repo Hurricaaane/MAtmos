@@ -1,9 +1,9 @@
 package eu.ha3.matmos.engine;
 
 import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -32,12 +32,12 @@ import javax.xml.transform.stream.StreamResult;
 
 public class Data
 {
-	public Map<String, ArrayList<Integer>> sheets;
+	public Map<String, List<Integer>> sheets;
 	public int updateVersion;
 	
 	public Data()
 	{
-		this.sheets = new LinkedHashMap<String, ArrayList<Integer>>();
+		this.sheets = new LinkedHashMap<String, List<Integer>>();
 		this.updateVersion = 0;
 		
 	}
@@ -64,9 +64,9 @@ public class Data
 		eventWriter.add(eventFactory.createStartDocument());
 		eventWriter.add(ret);
 		eventWriter.add(eventFactory.createStartElement("", "", "contents"));
-		for (Iterator<Entry<String, ArrayList<Integer>>> iter = this.sheets.entrySet().iterator(); iter.hasNext();)
+		for (Iterator<Entry<String, List<Integer>>> iter = this.sheets.entrySet().iterator(); iter.hasNext();)
 		{
-			Entry<String, ArrayList<Integer>> entry = iter.next();
+			Entry<String, List<Integer>> entry = iter.next();
 			
 			eventWriter.add(ret);
 			eventWriter.add(eventFactory.createStartElement("", "", "sheet"));
