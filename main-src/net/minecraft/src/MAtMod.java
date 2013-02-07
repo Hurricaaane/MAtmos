@@ -77,31 +77,7 @@ public class MAtMod extends HaddonImpl
 		
 		this.phase = MAtModPhase.NOT_INITIALIZED;
 		
-		setModLogger(Level.INFO);
-		setEngineLogger(Level.OFF);
-	}
-	
-	/**
-	 * Sets the logger level for MAtmos mod.
-	 * 
-	 * @param lvl
-	 */
-	public void setModLogger(Level lvl)
-	{
-		//MAtMod.LOGGER.setLevel(lvl);
-		//this.conMod.setLevel(lvl);
-		
-	}
-	
-	/**
-	 * Sets the logger level for MAtmos Engine (minecraft independent)
-	 * 
-	 * @param lvl
-	 */
-	public void setEngineLogger(Level lvl)
-	{
-		MAtmosLogger.LOGGER.setLevel(lvl);
-		
+		MAtmosLogger.LOGGER.setLevel(Level.OFF);
 	}
 	
 	@Override
@@ -160,7 +136,7 @@ public class MAtMod extends HaddonImpl
 		this.soundManagerMaster.setVolume(this.config.getFloat("globalvolume.scale"));
 		this.updateNotifier.loadConfig(this.config);
 		
-		AnyLogger.info("Took " + this.timeStatistic.getSecondsAsString(1) + " seconds to setup MAtmos base.");
+		AnyLogger.info("Took " + this.timeStatistic.getSecondsAsString(3) + " seconds to setup MAtmos base.");
 		
 		//
 		
@@ -189,28 +165,31 @@ public class MAtMod extends HaddonImpl
 		AnyLogger.info("Constructing.");
 		
 		this.dataGatherer.load();
-		// note: soundManager needs to be loaded post sndcomms
 		
 		this.sndComm.load(new Ha3Signal() {
 			@Override
 			public void signal()
 			{
-				loadResourcesPhase();
-				
+				sndCommSuccess();
 			}
 		}, new Ha3Signal() {
-			
 			@Override
 			public void signal()
 			{
 				sndCommFailed();
-				
 			}
 		});
 		
 		this.expansionManager.loadExpansions();
-		AnyLogger.info("Took " + this.timeStatistic.getSecondsAsString(1) + " seconds to enable MAtmos.");
+		loadResourcesPhase();
+		loadFinalPhase();
+		AnyLogger.info("Took " + this.timeStatistic.getSecondsAsString(3) + " seconds to enable MAtmos.");
 		
+	}
+	
+	private void sndCommSuccess()
+	{
+		AnyLogger.info("SoundCommunicator loaded (after " + this.timeStatistic.getSecondsAsString(3) + " s.).");
 	}
 	
 	private void sndCommFailed()
@@ -298,23 +277,20 @@ public class MAtMod extends HaddonImpl
 	{
 		this.phase = MAtModPhase.RESOURCE_LOADER;
 		
-		AnyLogger.info("SoundCommunicator loaded (after " + this.timeStatistic.getSecondsAsString(3) + " s.).");
-		
 		String firstBlocker = getFirstBlocker();
 		if (firstBlocker != null)
 		{
 			AnyLogger.warning(firstBlocker);
 			AnyLogger.warning("MAtmos will not attempt load sounds on its own at all.");
-			loadFinalPhase();
-			
 		}
 		else
 		{
-			AnyLogger.info("Bypassing Resource Reloader threaded wait. This may cause issues.");
+			TimeStatistic stat = new TimeStatistic();
+			AnyLogger.info("Loading resources...");
 			
 			try
 			{
-				new MAtResourceReloader(this, null).reloadResources();
+				new MAtResourceReloader(this).reloadResources();
 			}
 			catch (Exception e)
 			{
@@ -334,8 +310,8 @@ public class MAtMod extends HaddonImpl
 				{
 				}
 			}
-			loadFinalPhase();
 			
+			AnyLogger.info("Took " + stat.getSecondsAsString(3) + " seconds to load resources");
 		}
 		
 	}
@@ -583,8 +559,11 @@ public class MAtMod extends HaddonImpl
 		if (!this.isRunning)
 			return;
 		
-		this.expansionManager.soundRoutine();
-		this.soundManagerMaster.routine();
+		if (this.sndComm.isUseable())
+		{
+			this.expansionManager.soundRoutine();
+			this.soundManagerMaster.routine();
+		}
 		
 		this.userControl.frameRoutine(semi);
 		
@@ -617,7 +596,7 @@ public class MAtMod extends HaddonImpl
 		//    moved with a boolean check
 		
 		this.userControl.tickRoutine();
-		if (this.isRunning)
+		if (this.isRunning && this.sndComm.isUseable())
 		{
 			this.dataGatherer.tickRoutine();
 			this.expansionManager.dataRoutine();
@@ -651,16 +630,5 @@ public class MAtMod extends HaddonImpl
 		return this.config;
 		
 	}
-	/*
-	public boolean isStartEnabled()
-	{
-		return this.config.getBoolean("start.enabled");
-	}
-	
-	public void setStartEnabled(boolean startEnabled)
-	{
-		this.config.setProperty("start.enabled", startEnabled);
-		
-	}*/
 	
 }
