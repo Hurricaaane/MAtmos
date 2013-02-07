@@ -18,10 +18,10 @@ package net.minecraft.src;
 
 public interface MAtScanCoordsOps
 {
-	void begin();
+	public void begin();
 	
-	void finish();
+	public void finish();
 	
-	void input(long x, long y, long z);
+	public void input(long x, long y, long z);
 	
 }

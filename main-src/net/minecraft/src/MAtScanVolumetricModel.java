@@ -41,7 +41,7 @@ public class MAtScanVolumetricModel
 	
 	private Ha3Signal onDone;
 	
-	MAtScanVolumetricModel(MAtMod mod2)
+	public MAtScanVolumetricModel(MAtMod mod2)
 	{
 		this.mod = mod2;
 		this.pipeline = null;
@@ -49,13 +49,13 @@ public class MAtScanVolumetricModel
 		
 	}
 	
-	void setPipeline(MAtScanCoordsOps pipelineIn)
+	public void setPipeline(MAtScanCoordsOps pipelineIn)
 	{
 		this.pipeline = pipelineIn;
 		
 	}
 	
-	void startScan(
+	public void startScan(
 		long x, long y, long z, long xsizeIn, long ysizeIn, long zsizeIn, long opspercallIn, Ha3Signal onDoneIn) //throws MAtScannerTooLargeException
 	{
 		if (this.isScanning)
@@ -103,7 +103,7 @@ public class MAtScanVolumetricModel
 		
 	}
 	
-	void routine()
+	public void routine()
 	{
 		if (!this.isScanning)
 			return;
@@ -131,7 +131,7 @@ public class MAtScanVolumetricModel
 		
 	}
 	
-	void stopScan()
+	public void stopScan()
 	{
 		this.isScanning = false;
 		

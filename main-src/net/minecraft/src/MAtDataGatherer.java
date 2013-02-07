@@ -87,30 +87,30 @@ public class MAtDataGatherer
 	private long lastLargeScanZ;
 	private int lastLargeScanPassed;
 	
-	MAtDataGatherer(MAtMod mAtmosHaddon)
+	public MAtDataGatherer(MAtMod mAtmosHaddon)
 	{
 		this.mod = mAtmosHaddon;
 		
 	}
 	
-	void resetRegulators()
+	private void resetRegulators()
 	{
 		this.lastLargeScanPassed = MAX_LARGESCAN_PASS;
 		this.cyclicTick = 0;
 	}
 	
-	void load()
+	public void load()
 	{
 		resetRegulators();
-		
-		this.largeScanner = new MAtScanVolumetricModel(this.mod);
-		this.smallScanner = new MAtScanVolumetricModel(this.mod);
 		
 		this.additionalRelaxedProcessors = new ArrayList<ProcessorModel>();
 		this.additionalFrequentProcessors = new ArrayList<ProcessorModel>();
 		
 		this.data = new Data();
 		prepareSheets();
+		
+		this.largeScanner = new MAtScanVolumetricModel(this.mod);
+		this.smallScanner = new MAtScanVolumetricModel(this.mod);
 		
 		this.largePipeline = new MAtPipelineIDAccumulator(this.mod, this.data, LARGESCAN, LARGESCAN_THOUSAND, 1000);
 		this.smallPipeline = new MAtPipelineIDAccumulator(this.mod, this.data, SMALLSCAN, SMALLSCAN_THOUSAND, 1000);
@@ -182,7 +182,7 @@ public class MAtDataGatherer
 		
 	}
 	
-	void tickRoutine()
+	public void tickRoutine()
 	{
 		if (this.cyclicTick % 64 == 0)
 		{
@@ -255,12 +255,11 @@ public class MAtDataGatherer
 		this.largeScanner.routine();
 		this.smallScanner.routine();
 		
-		//this.cyclicTick = (this.cyclicTick + 1) % 256;
 		this.cyclicTick = this.cyclicTick + 1;
 		
 	}
 	
-	void prepareSheets()
+	private void prepareSheets()
 	{
 		createSheet(LARGESCAN, COUNT_WORLD_BLOCKS);
 		createSheet(LARGESCAN_THOUSAND, COUNT_WORLD_BLOCKS);
@@ -289,9 +288,9 @@ public class MAtDataGatherer
 		
 	}
 	
-	void createSheet(String name, int count)
+	private void createSheet(String name, int count)
 	{
-		ArrayList<Integer> array = new ArrayList<Integer>();
+		List<Integer> array = new ArrayList<Integer>();
 		this.data.sheets.put(name, array);
 		for (int i = 0; i < count; i++)
 		{

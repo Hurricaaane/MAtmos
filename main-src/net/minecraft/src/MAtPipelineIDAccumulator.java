@@ -1,6 +1,6 @@
 package net.minecraft.src;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import eu.ha3.matmos.engine.Data;
 
@@ -70,8 +70,8 @@ public class MAtPipelineIDAccumulator extends MAtScanCoordsPipeline
 	@Override
 	void doFinish()
 	{
-		ArrayList<Integer> normal = null;
-		ArrayList<Integer> proportionnal = null;
+		List<Integer> normal = null;
+		List<Integer> proportionnal = null;
 		
 		normal = data().sheets.get(this.normalName);
 		
