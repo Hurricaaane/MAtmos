@@ -19,7 +19,6 @@ import eu.ha3.matmos.conv.ExpansionManager;
 import eu.ha3.matmos.engine.MAtmosLogger;
 import eu.ha3.mc.convenience.Ha3Signal;
 import eu.ha3.mc.convenience.Ha3StaticUtilities;
-import eu.ha3.mc.haddon.SupportsEverythingReady;
 import eu.ha3.mc.haddon.SupportsFrameEvents;
 import eu.ha3.mc.haddon.SupportsKeyEvents;
 import eu.ha3.mc.haddon.SupportsTickEvents;
@@ -41,13 +40,10 @@ import eu.ha3.util.property.simple.ConfigProperty;
   0. You just DO WHAT THE FUCK YOU WANT TO.
  */
 
-public class MAtMod extends HaddonImpl
-	implements SupportsFrameEvents, SupportsTickEvents, SupportsKeyEvents, SupportsEverythingReady
+public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsTickEvents, SupportsKeyEvents
 {
 	final static public AnyLogger LOGGER = new AnyLogger();
 	final static public int VERSION = 21; // Remember to change the thing on mod_Matmos
-	
-	final static private boolean KNOWLEDGE_IS_SLOW = false;
 	
 	private MAtModPhase phase;
 	private ConfigProperty config;
@@ -64,8 +60,6 @@ public class MAtMod extends HaddonImpl
 	
 	private boolean firstTickPassed;
 	private TimeStatistic timeStatistic;
-	private boolean hasSentSignalToTurnOn;
-	private boolean everythingIsReady;
 	
 	public MAtMod()
 	{
@@ -314,67 +308,19 @@ public class MAtMod extends HaddonImpl
 			AnyLogger.info("Took " + stat.getSecondsAsString(3) + " seconds to load resources");
 		}
 		
+		AnyLogger.info("ResourceReloader finished (after " + this.timeStatistic.getSecondsAsString(3) + " s.).");
+		
 	}
 	
 	private void loadFinalPhase()
 	{
-		this.phase = MAtModPhase.FINAL_PHASE;
-		
-		AnyLogger.info("ResourceReloader finished (after " + this.timeStatistic.getSecondsAsString(3) + " s.).");
-		
 		this.phase = MAtModPhase.READY;
-		
 		AnyLogger.info("Ready.");
 		
 		startRunning();
 		
-		// Do not do that when it's ready
-		// Forge loads the Sound module before mods load up, so
-		// Forge gets stuck in the loading screen for 10 seconds building the knowledge
-		
-		//this.expansionManager.signalReadyToTurnOn();
-		if (this.everythingIsReady)
-		{
-			trySendSignalToTurnOn();
-		}
-	}
-	
-	@Override
-	public void onEverythingReady()
-	{
-		if (!trySendSignalToTurnOn())
-		{
-			AnyLogger.info("MAtmos is not yet enabled and mods are loaded: Knowledge will be built later...");
-		}
-		this.everythingIsReady = true;
-	}
-	
-	private boolean trySendSignalToTurnOn()
-	{
-		if (this.phase != MAtModPhase.READY)
-			return false;
-		
-		if (!this.hasSentSignalToTurnOn)
-		{
-			this.hasSentSignalToTurnOn = true;
-			
-			AnyLogger.info("Now building knowledge...");
-			if (KNOWLEDGE_IS_SLOW)
-			{
-				new Thread() {
-					@Override
-					public void run()
-					{
-						MAtMod.this.expansionManager.signalReadyToTurnOn();
-					}
-				}.start();
-			}
-			else
-			{
-				this.expansionManager.signalReadyToTurnOn();
-			}
-		}
-		return true;
+		AnyLogger.info("Now building knowledge...");
+		this.expansionManager.signalReadyToTurnOn();
 		
 	}
 	
@@ -389,25 +335,9 @@ public class MAtMod extends HaddonImpl
 		// prevent the expansions from running before the thread could even start
 		this.expansionManager.clearExpansions();
 		
-		if (KNOWLEDGE_IS_SLOW)
-		{
-			new Thread() {
-				@Override
-				public void run()
-				{
-					TimeStatistic stat = new TimeStatistic(Locale.ENGLISH);
-					MAtMod.this.expansionManager.loadExpansions();
-					AnyLogger.info("Expansions loaded (" + stat.getSecondsAsString(1) + "s).");
-					
-				}
-			}.start();
-		}
-		else
-		{
-			TimeStatistic stat = new TimeStatistic(Locale.ENGLISH);
-			MAtMod.this.expansionManager.loadExpansions();
-			AnyLogger.info("Expansions loaded (" + stat.getSecondsAsString(1) + "s).");
-		}
+		TimeStatistic stat = new TimeStatistic(Locale.ENGLISH);
+		MAtMod.this.expansionManager.loadExpansions();
+		AnyLogger.info("Expansions loaded (" + stat.getSecondsAsString(1) + "s).");
 		
 		startRunning();
 		
@@ -589,11 +519,6 @@ public class MAtMod extends HaddonImpl
 			return;
 			
 		}
-		
-		// We must try this, because when onEverythingReady was triggered,
-		// it is not guaranteed that MAtMod was ready.
-		//trySendSignalToTurnOn();
-		//    moved with a boolean check
 		
 		this.userControl.tickRoutine();
 		if (this.isRunning && this.sndComm.isUseable())

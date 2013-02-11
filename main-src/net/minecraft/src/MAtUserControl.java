@@ -90,35 +90,7 @@ public class MAtUserControl
 			MAtModPhase phase = this.mod.getPhase();
 			if (!this.mod.isFatalError())
 			{
-				switch (phase)
-				{
-				case CONSTRUCTING:
-					this.mod.printChat(
-						Ha3Utility.COLOR_GOLD, "Still loading... ", Ha3Utility.COLOR_GRAY,
-						"(Waiting for the sound engine to be ready)");
-					break;
-				case RESOURCE_LOADER:
-					this.mod.printChat(
-						Ha3Utility.COLOR_GOLD, "Still loading... ", Ha3Utility.COLOR_GRAY,
-						"(Minecraft is downloading sounds)");
-					this.mod.printChatShort(
-						Ha3Utility.COLOR_WHITE,
-						"This can take from seconds to 5 minutes in average, depending on your network speed.");
-					this.mod.printChatShort(
-						Ha3Utility.COLOR_GRAY, "If you're offline, it will unlock after 20 seconds.");
-					this.mod.printChatShort(
-						Ha3Utility.COLOR_WHITE, "This usually happens after reinstalling Minecraft.");
-					this.mod.printChatShort(Ha3Utility.COLOR_WHITE, "(Remember to install MAtmos sounds!)");
-					break;
-				case FINAL_PHASE:
-					this.mod.printChat(
-						Ha3Utility.COLOR_GOLD, "Still loading... ", Ha3Utility.COLOR_GRAY,
-						"(MAtmos is preparing the ambience generator)");
-					break;
-				default:
-					break;
-				}
-				
+				this.mod.printChat(Ha3Utility.COLOR_GOLD, "MAtmos is not loaded.");
 			}
 			else
 			{
