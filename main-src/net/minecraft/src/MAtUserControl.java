@@ -249,6 +249,7 @@ public class MAtUserControl
 		this.mod.initializeAndEnable();
 		this.mod.printChat(Ha3Utility.COLOR_BRIGHTGREEN, "Loading for the first time ("
 			+ stat.getSecondsAsString(2) + "s)");
+		
 		if (this.mod.manager().getMinecraft().gameSettings.soundVolume <= 0)
 		{
 			this.mod.printChat(
@@ -263,8 +264,10 @@ public class MAtUserControl
 	{
 		if (!this.mod.isRunning() && this.mod.isReady())
 		{
-			this.mod.printChat(Ha3Utility.COLOR_BRIGHTGREEN, "Reloading expansions...");
+			TimeStatistic stat = new TimeStatistic();
 			this.mod.reloadAndStart();
+			this.mod.printChat(Ha3Utility.COLOR_BRIGHTGREEN, "Reloading expansions ("
+				+ stat.getSecondsAsString(2) + "s)");
 			
 		}
 		else if (this.mod.getPhase() == MAtModPhase.NOT_YET_ENABLED)
