@@ -7,8 +7,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.Writer;
 import java.util.Locale;
 import java.util.logging.Level;
 
@@ -175,8 +173,31 @@ public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsT
 		});
 		
 		this.expansionManager.loadExpansions();
-		loadResourcesPhase();
-		loadFinalPhase();
+		
+		String firstBlocker = getFirstBlocker();
+		if (firstBlocker != null)
+		{
+			AnyLogger.warning(firstBlocker);
+			AnyLogger.warning("MAtmos will not attempt load sounds on its own at all.");
+		}
+		else
+		{
+			TimeStatistic stat = new TimeStatistic();
+			AnyLogger.info("Loading resources...");
+			
+			new MAtResourceReloader(this).reloadResources();
+			
+			AnyLogger.info("Took " + stat.getSecondsAsString(3) + " seconds to load resources");
+		}
+		
+		this.phase = MAtModPhase.READY;
+		AnyLogger.info("Ready.");
+		
+		startRunning();
+		
+		AnyLogger.info("Now building knowledge...");
+		this.expansionManager.signalReadyToTurnOn();
+		
 		AnyLogger.info("Took " + this.timeStatistic.getSecondsAsString(3) + " seconds to enable MAtmos.");
 		
 	}
@@ -267,63 +288,6 @@ public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsT
 		}
 	}
 	
-	private void loadResourcesPhase()
-	{
-		this.phase = MAtModPhase.RESOURCE_LOADER;
-		
-		String firstBlocker = getFirstBlocker();
-		if (firstBlocker != null)
-		{
-			AnyLogger.warning(firstBlocker);
-			AnyLogger.warning("MAtmos will not attempt load sounds on its own at all.");
-		}
-		else
-		{
-			TimeStatistic stat = new TimeStatistic();
-			AnyLogger.info("Loading resources...");
-			
-			try
-			{
-				new MAtResourceReloader(this).reloadResources();
-			}
-			catch (Exception e)
-			{
-				AnyLogger.severe("A severe error has occured while trying to reload resources.");
-				AnyLogger.severe("MAtmos may not function properly.");
-				e.printStackTrace();
-				
-				try
-				{
-					Writer writer = new FileWriter(new File(Minecraft.getMinecraftDir(), "matmos_error.log"), true);
-					PrintWriter pw = new PrintWriter(writer);
-					e.printStackTrace(pw);
-					pw.close();
-					
-				}
-				catch (Exception eee)
-				{
-				}
-			}
-			
-			AnyLogger.info("Took " + stat.getSecondsAsString(3) + " seconds to load resources");
-		}
-		
-		AnyLogger.info("ResourceReloader finished (after " + this.timeStatistic.getSecondsAsString(3) + " s.).");
-		
-	}
-	
-	private void loadFinalPhase()
-	{
-		this.phase = MAtModPhase.READY;
-		AnyLogger.info("Ready.");
-		
-		startRunning();
-		
-		AnyLogger.info("Now building knowledge...");
-		this.expansionManager.signalReadyToTurnOn();
-		
-	}
-	
 	public void reloadAndStart()
 	{
 		if (!isReady())
@@ -402,26 +366,21 @@ public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsT
 	
 	public void printChat(Object... args)
 	{
-		final Object[] in = new Object[] { Ha3Utility.COLOR_WHITE, "MAtmos: " };
-		
-		Object[] dest = new Object[in.length + args.length];
-		System.arraycopy(in, 0, dest, 0, in.length);
-		System.arraycopy(args, 0, dest, in.length, args.length);
-		
-		util().printChat(dest);
-		
+		printChat(new Object[] { Ha3Utility.COLOR_WHITE, "MAtmos: " }, args);
 	}
 	
 	public void printChatShort(Object... args)
 	{
-		final Object[] in = new Object[] { Ha3Utility.COLOR_WHITE, "" };
-		
+		printChat(new Object[] { Ha3Utility.COLOR_WHITE, "" }, args);
+	}
+	
+	protected void printChat(final Object[] in, Object... args)
+	{
 		Object[] dest = new Object[in.length + args.length];
 		System.arraycopy(in, 0, dest, 0, in.length);
 		System.arraycopy(args, 0, dest, in.length, args.length);
 		
 		util().printChat(dest);
-		
 	}
 	
 	public MAtSoundManagerMaster getSoundManagerMaster()

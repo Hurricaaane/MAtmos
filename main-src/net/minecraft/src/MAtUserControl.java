@@ -2,6 +2,7 @@ package net.minecraft.src;
 
 import org.lwjgl.input.Keyboard;
 
+import eu.ha3.easy.TimeStatistic;
 import eu.ha3.mc.convenience.Ha3KeyManager;
 
 /*
@@ -244,23 +245,17 @@ public class MAtUserControl
 		if (this.mod.getPhase() != MAtModPhase.NOT_YET_ENABLED)
 			return;
 		
-		this.mod.printChat(
-			Ha3Utility.COLOR_BRIGHTGREEN, "Initializing...", Ha3Utility.COLOR_GRAY,
-			" (This can take several seconds to load!)");
+		TimeStatistic stat = new TimeStatistic();
+		this.mod.initializeAndEnable();
+		this.mod.printChat(Ha3Utility.COLOR_BRIGHTGREEN, "Loading for the first time ("
+			+ stat.getSecondsAsString(2) + "s)");
 		if (this.mod.manager().getMinecraft().gameSettings.soundVolume <= 0)
 		{
 			this.mod.printChat(
 				Ha3Utility.COLOR_RED, "Warning: ", Ha3Utility.COLOR_WHITE,
-				"MAtmos cannot load yet because sounds are turned off in your game settings!");
+				"Sounds are turned off in your game settings!");
 			
 		}
-		new Thread() {
-			@Override
-			public void run()
-			{
-				MAtUserControl.this.mod.initializeAndEnable();
-			}
-		}.start();
 		
 	}
 	
