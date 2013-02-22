@@ -27,7 +27,7 @@ public class mod_MAtmos extends HaddonBridgeModLoader
 	@Override
 	public String getVersion()
 	{
-		return "r21 for 1.4.6"; // Remember to change the thing on MAtMod
+		return "r" + MAtMod.VERSION + " for " + MAtMod.FOR; // Remember to change the thing on MAtMod
 		
 	}
 	

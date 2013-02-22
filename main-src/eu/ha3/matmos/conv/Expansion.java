@@ -161,8 +161,6 @@ public class Expansion implements CustomVolume
 	
 	public void inputStructure(InputStream stream)
 	{
-		System.out.println("inputting " + this.userDefinedIdentifier);
-		
 		this.hasStructure = false;
 		try
 		{

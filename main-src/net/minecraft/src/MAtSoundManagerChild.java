@@ -2,14 +2,11 @@ package net.minecraft.src;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
-import net.minecraft.client.Minecraft;
 import paulscode.sound.SoundSystem;
 import eu.ha3.matmos.conv.AnyLogger;
 import eu.ha3.matmos.conv.CustomVolume;
 import eu.ha3.matmos.engine.SoundRelay;
-import eu.ha3.mc.haddon.PrivateAccessException;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -29,23 +26,21 @@ import eu.ha3.mc.haddon.PrivateAccessException;
 
 public class MAtSoundManagerChild implements SoundRelay, CustomVolume
 {
-	private MAtMod mod;
+	private MAtSoundManagerMaster master;
 	
 	private float managerVolume;
 	
-	private Random random;
 	private Map<Integer, MAtSoundStream> tokens;
 	
 	private float masterVolumeCheck;
 	private float settingsVolumeCheck;
 	
-	public MAtSoundManagerChild(MAtMod mod)
+	public MAtSoundManagerChild(MAtSoundManagerMaster master)
 	{
-		this.mod = mod;
+		this.master = master;
 		
 		this.managerVolume = 1f;
 		
-		this.random = new Random();
 		this.tokens = new HashMap<Integer, MAtSoundStream>();
 		this.masterVolumeCheck = -1;
 		
@@ -53,7 +48,7 @@ public class MAtSoundManagerChild implements SoundRelay, CustomVolume
 	
 	private MAtSoundManagerMaster getMaster()
 	{
-		return this.mod.getSoundManagerMaster();
+		return this.master;
 		
 	}
 	
@@ -113,39 +108,7 @@ public class MAtSoundManagerChild implements SoundRelay, CustomVolume
 	@Override
 	public void playSound(String path, float volume, float pitch, int meta)
 	{
-		Minecraft mc = this.mod.manager().getMinecraft();
-		float nx = (float) mc.thePlayer.posX;
-		float ny = (float) mc.thePlayer.posY;
-		float nz = (float) mc.thePlayer.posZ;
-		
-		String equivalent = getMaster().getSound(path);
-		
-		float soundEffectiveVolume = getMaster().getVolume() * this.managerVolume * volume;
-		
-		if (soundEffectiveVolume <= 0)
-			return;
-		
-		if (meta > 0)
-		{
-			double angle = this.random.nextFloat() * 2 * Math.PI;
-			nx = nx + (float) (Math.cos(angle) * meta);
-			ny = ny + this.random.nextFloat() * meta * 0.2F - meta * 0.01F;
-			nz = nz + (float) (Math.sin(angle) * meta);
-			
-			this.mod.getSoundCommunicator().playSound(equivalent, nx, ny, nz, soundEffectiveVolume, pitch, 0, 0F);
-		}
-		else
-		{
-			// NOTE: playSoundFX from Minecraft SoundManager
-			//   does NOT work (actually, only works for stereo sounds).
-			// Must use playSoundFX Proxy
-			//   which will play the sound 2048 blocks above the player...
-			//   ...and that somehow does the trick!
-			
-			ny = ny + 2048;
-			this.mod.getSoundCommunicator().playSound(equivalent, nx, ny, nz, soundEffectiveVolume, pitch, 0, 0F);
-			
-		}
+		this.master.playSound(path, this.managerVolume * volume, pitch, meta);
 		
 	}
 	
@@ -206,23 +169,12 @@ public class MAtSoundManagerChild implements SoundRelay, CustomVolume
 	
 	public SoundPoolEntry getSoundPoolEntryOf(String path)
 	{
-		try
-		{
-			// soundPoolSounds
-			return ((SoundPool) this.mod.util().getPrivateValueLiteral(
-				net.minecraft.src.SoundManager.class, this.mod.manager().getMinecraft().sndManager, "b", 1))
-				.getRandomSoundFromSoundPool(getMaster().getSound(path));
-		}
-		catch (PrivateAccessException e)
-		{
-			e.printStackTrace();
-			return null;
-		}
+		return this.master.getSoundPoolEntryOf(path);
 	}
 	
 	public SoundSystem getSoundSystem()
 	{
-		return this.mod.getSoundCommunicator().getSoundSystem();
+		return this.master.getSoundSystem();
 	}
 	
 	@Override

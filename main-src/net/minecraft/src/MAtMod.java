@@ -42,6 +42,7 @@ public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsT
 {
 	final static public AnyLogger LOGGER = new AnyLogger();
 	final static public int VERSION = 21; // Remember to change the thing on mod_Matmos
+	final static public String FOR = "1.4.6";
 	
 	private MAtModPhase phase;
 	private ConfigProperty config;
@@ -91,7 +92,7 @@ public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsT
 		this.userControl = new MAtUserControl(this);
 		this.dataGatherer = new MAtDataGatherer(this);
 		this.expansionManager =
-			new ExpansionManager(this, new File(Minecraft.getMinecraftDir(), "matmos/expansions_r12/"), new File(
+			new ExpansionManager(new File(Minecraft.getMinecraftDir(), "matmos/expansions_r12/"), new File(
 				Minecraft.getMinecraftDir(), "matmos/expansions_r12_userconfig/"));
 		this.updateNotifier = new MAtUpdateNotifier(this);
 		
@@ -157,6 +158,8 @@ public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsT
 		AnyLogger.info("Constructing.");
 		
 		this.dataGatherer.load();
+		this.expansionManager.setMaster(this.soundManagerMaster);
+		this.expansionManager.setData(this.dataGatherer.getData());
 		
 		this.sndComm.load(new Ha3Signal() {
 			@Override
@@ -194,9 +197,6 @@ public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsT
 		AnyLogger.info("Ready.");
 		
 		startRunning();
-		
-		AnyLogger.info("Now building knowledge...");
-		this.expansionManager.signalReadyToTurnOn();
 		
 		AnyLogger.info("Took " + this.timeStatistic.getSecondsAsString(3) + " seconds to enable MAtmos.");
 		
@@ -318,7 +318,7 @@ public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsT
 		this.isRunning = true;
 		
 		AnyLogger.fine("Loading...");
-		this.expansionManager.modWasTurnedOnOrOff();
+		this.expansionManager.activate();
 		AnyLogger.fine("Loaded.");
 		
 	}
@@ -334,7 +334,7 @@ public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsT
 		this.isRunning = false;
 		
 		AnyLogger.fine("Stopping...");
-		this.expansionManager.modWasTurnedOnOrOff();
+		this.expansionManager.deactivate();
 		AnyLogger.fine("Stopped.");
 		
 		createDataDump();

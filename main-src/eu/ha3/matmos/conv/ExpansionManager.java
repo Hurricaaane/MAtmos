@@ -9,8 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import net.minecraft.src.MAtMod;
 import net.minecraft.src.MAtSoundManagerChild;
+import net.minecraft.src.MAtSoundManagerMaster;
+import eu.ha3.matmos.engine.Data;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
@@ -30,19 +31,17 @@ import net.minecraft.src.MAtSoundManagerChild;
 
 public class ExpansionManager
 {
-	private MAtMod mod;
 	private Map<String, Expansion> expansions;
 	private List<MAtSoundManagerChild> soundManagers;
 	
 	private File expansionsFolder;
 	private File userconfigFolder;
+	private boolean isActivated;
+	private MAtSoundManagerMaster master;
+	private Data data;
 	
-	private boolean canBuildKnowledge;
-	
-	public ExpansionManager(MAtMod mAtmosHaddon, File expansionsFolder, File userconfigFolder)
+	public ExpansionManager(File expansionsFolder, File userconfigFolder)
 	{
-		this.mod = mAtmosHaddon;
-		
 		this.expansions = new ConcurrentHashMap<String, Expansion>();
 		this.soundManagers = new ArrayList<MAtSoundManagerChild>();
 		
@@ -63,11 +62,11 @@ public class ExpansionManager
 	
 	private void renewExpansionProngs(Expansion expansion)
 	{
-		MAtSoundManagerChild soundManager = new MAtSoundManagerChild(this.mod);
+		MAtSoundManagerChild soundManager = new MAtSoundManagerChild(this.master);
 		this.soundManagers.add(soundManager);
 		
 		expansion.setSoundManager(soundManager);
-		expansion.setData(this.mod.getDataGatherer().getData());
+		expansion.setData(this.data);
 		
 	}
 	
@@ -116,22 +115,7 @@ public class ExpansionManager
 		if (expansion == null)
 			return;
 		
-		if (!this.canBuildKnowledge)
-			return;
-		
 		turnOnOrOff(expansion);
-		
-	}
-	
-	public void signalReadyToTurnOn()
-	{
-		this.canBuildKnowledge = true;
-		
-		// Try build the knowledge of expansions that were structured before buildknowledge was ready
-		for (Expansion expansion : this.expansions.values())
-		{
-			tryTurnOn(expansion);
-		}
 		
 	}
 	
@@ -140,7 +124,7 @@ public class ExpansionManager
 		if (expansion == null)
 			return;
 		
-		if (this.mod.isRunning())
+		if (this.isActivated)
 		{
 			if (expansion.getVolume() > 0)
 			{
@@ -154,12 +138,31 @@ public class ExpansionManager
 		
 	}
 	
-	public synchronized void modWasTurnedOnOrOff()
+	public void activate()
+	{
+		if (this.isActivated)
+			return;
+		
+		this.isActivated = true;
+		
+		resync();
+	}
+	
+	public void deactivate()
+	{
+		if (!this.isActivated)
+			return;
+		
+		this.isActivated = false;
+		
+		resync();
+	}
+	
+	private void resync()
 	{
 		for (Expansion expansion : this.expansions.values())
 		{
 			turnOnOrOff(expansion);
-			
 		}
 	}
 	
@@ -189,7 +192,7 @@ public class ExpansionManager
 		
 	}
 	
-	public synchronized void clearExpansions()
+	public void clearExpansions()
 	{
 		for (Expansion expansion : this.expansions.values())
 		{
@@ -215,7 +218,7 @@ public class ExpansionManager
 		
 	}
 	
-	private synchronized void createExpansionEntries(List<File> offline)
+	private void createExpansionEntries(List<File> offline)
 	{
 		for (File file : offline)
 		{
@@ -242,6 +245,17 @@ public class ExpansionManager
 			}
 			
 		}
+		
+	}
+	
+	public void setMaster(MAtSoundManagerMaster master)
+	{
+		this.master = master;
+	}
+	
+	public void setData(Data data)
+	{
+		this.data = data;
 		
 	}
 	
