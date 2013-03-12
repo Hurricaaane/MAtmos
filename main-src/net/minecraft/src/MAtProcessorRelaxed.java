@@ -152,7 +152,7 @@ public class MAtProcessorRelaxed extends MAtProcessorModel
 			setValue(80, 0);
 		}
 		
-		setValue(88, w.getMoonPhase(0));
+		setValue(88, w.getMoonPhase());
 		
 		setValue(93, biome.biomeID);
 		
