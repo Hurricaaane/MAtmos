@@ -122,7 +122,7 @@ public class MAtGuiMenu extends GuiScreen
 			});
 			sliderControl.updateDisplayString();
 			
-			this.controlList.add(sliderControl);
+			this.buttonList.add(sliderControl);
 			id++;
 			
 		}
@@ -195,28 +195,28 @@ public class MAtGuiMenu extends GuiScreen
 			});
 			sliderControl.updateDisplayString();
 			
-			this.controlList.add(sliderControl);
+			this.buttonList.add(sliderControl);
 			
-			this.controlList.add(new GuiButton(400 + id - 1, _RIGHT - _UNIT, _MIX * (id + 1), _UNIT, _UNIT, "?"));
+			this.buttonList.add(new GuiButton(400 + id - 1, _RIGHT - _UNIT, _MIX * (id + 1), _UNIT, _UNIT, "?"));
 			
 			id++;
 			
 		}
 		
-		this.controlList.add(new GuiButton(220, _RIGHT - _UNIT, _MIX * (this.IDS_PER_PAGE + 2), _UNIT, _UNIT, this.mod
+		this.buttonList.add(new GuiButton(220, _RIGHT - _UNIT, _MIX * (this.IDS_PER_PAGE + 2), _UNIT, _UNIT, this.mod
 			.getConfig().getBoolean("sound.autopreview") ? "^o^" : "^_^"));
 		
 		final int _PREVNEWTWIDTH = _WIDTH / 3;
 		
 		if (this.pageFromZero != 0)
 		{
-			this.controlList.add(new GuiButton(
+			this.buttonList.add(new GuiButton(
 				201, _LEFT + _MIX, _MIX * (this.IDS_PER_PAGE + 2), _PREVNEWTWIDTH, _UNIT, stringtranslate
 					.translateKey("Previous")));
 		}
 		if (this.pageFromZero * this.IDS_PER_PAGE + this.IDS_PER_PAGE < sortedNames.size())
 		{
-			this.controlList.add(new GuiButton(
+			this.buttonList.add(new GuiButton(
 				202, _RIGHT - _MIX - _PREVNEWTWIDTH, _MIX * (this.IDS_PER_PAGE + 2), _PREVNEWTWIDTH, _UNIT,
 				stringtranslate.translateKey("Next")));
 		}
@@ -226,20 +226,20 @@ public class MAtGuiMenu extends GuiScreen
 		
 		final int _SEPARATOR = 10;
 		
-		this.controlList.add(new GuiButton(
+		this.buttonList.add(new GuiButton(
 			210, _LEFT, _SEPARATOR + _MIX * (this.IDS_PER_PAGE + 3), _AWID, _UNIT, this.mod.getConfig().getBoolean(
 				"start.enabled") ? "Start Enabled: ON" : "Start Enabled: OFF"));
 		
-		this.controlList.add(new GuiButton(
+		this.buttonList.add(new GuiButton(
 			211, _LEFT + _AWID + _GAP, _SEPARATOR + _MIX * (this.IDS_PER_PAGE + 3), _AWID, _UNIT, this.mod
 				.getConfig().getBoolean("reversed.controls") ? "Menu: Hold Down Key" : "Menu: Press Key"));
 		
 		final int _TURNOFFWIDTH = _WIDTH / 5;
 		
-		this.controlList.add(new GuiButton(200, _LEFT + _MIX, _SEPARATOR + _MIX * (this.IDS_PER_PAGE + 4), _WIDTH
+		this.buttonList.add(new GuiButton(200, _LEFT + _MIX, _SEPARATOR + _MIX * (this.IDS_PER_PAGE + 4), _WIDTH
 			- _MIX * 2 - _GAP - _TURNOFFWIDTH, _UNIT, "Done"));
 		
-		this.controlList.add(new GuiButton(212, _RIGHT - _TURNOFFWIDTH - _MIX, _SEPARATOR
+		this.buttonList.add(new GuiButton(212, _RIGHT - _TURNOFFWIDTH - _MIX, _SEPARATOR
 			+ _MIX * (this.IDS_PER_PAGE + 4), _TURNOFFWIDTH, _UNIT, "Turn Off"));
 		
 		//this.screenTitle = stringtranslate.translateKey("controls.title");
