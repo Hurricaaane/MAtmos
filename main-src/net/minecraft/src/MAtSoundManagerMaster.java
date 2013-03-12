@@ -241,4 +241,9 @@ public class MAtSoundManagerMaster implements SoundRelay, CustomVolume
 		return this.mod.getSoundCommunicator().getSoundSystem();
 	}
 	
+	public MAtSoundManagerChild createChild()
+	{
+		return new MAtSoundManagerChild(this);
+	}
+	
 }

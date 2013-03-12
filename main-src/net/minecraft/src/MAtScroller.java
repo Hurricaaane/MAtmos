@@ -43,11 +43,9 @@ public class MAtScroller extends Ha3Scroller
 	@Override
 	protected void doDraw(float fspan)
 	{
-		String msgper;
-		
 		Minecraft mc = getMinecraft();
 		
-		msgper = (int) Math.floor(this.doneValue * 100) + "%";
+		final String msgper = (int) Math.floor(this.doneValue * 100) + "%";
 		
 		ScaledResolution screenRes = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
 		

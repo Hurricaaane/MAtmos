@@ -60,22 +60,17 @@ public class ExpansionManager
 		
 	}
 	
-	private void renewExpansionProngs(Expansion expansion)
-	{
-		MAtSoundManagerChild soundManager = new MAtSoundManagerChild(this.master);
-		this.soundManagers.add(soundManager);
-		
-		expansion.setSoundManager(soundManager);
-		expansion.setData(this.data);
-		
-	}
-	
 	public void createExpansionEntry(String userDefinedIdentifier)
 	{
 		Expansion expansion =
 			new Expansion(userDefinedIdentifier, new File(this.userconfigFolder, userDefinedIdentifier + ".cfg"));
 		this.expansions.put(userDefinedIdentifier, expansion);
-		renewExpansionProngs(expansion);
+		
+		MAtSoundManagerChild soundManager = this.master.createChild();
+		this.soundManagers.add(soundManager);
+		
+		expansion.setSoundManager(soundManager);
+		expansion.setData(this.data);
 		
 	}
 	

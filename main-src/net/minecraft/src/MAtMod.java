@@ -1,10 +1,6 @@
 package net.minecraft.src;
 
-import java.io.BufferedReader;
-import java.io.Closeable;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Locale;
@@ -16,7 +12,6 @@ import eu.ha3.matmos.conv.AnyLogger;
 import eu.ha3.matmos.conv.ExpansionManager;
 import eu.ha3.matmos.engine.MAtmosLogger;
 import eu.ha3.mc.convenience.Ha3Signal;
-import eu.ha3.mc.convenience.Ha3StaticUtilities;
 import eu.ha3.mc.haddon.SupportsFrameEvents;
 import eu.ha3.mc.haddon.SupportsKeyEvents;
 import eu.ha3.mc.haddon.SupportsTickEvents;
@@ -177,21 +172,21 @@ public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsT
 		
 		this.expansionManager.loadExpansions();
 		
-		String firstBlocker = getFirstBlocker();
+		/*String firstBlocker = getFirstBlocker();
 		if (firstBlocker != null)
 		{
 			AnyLogger.warning(firstBlocker);
 			AnyLogger.warning("MAtmos will not attempt load sounds on its own at all.");
 		}
 		else
-		{
-			TimeStatistic stat = new TimeStatistic();
-			AnyLogger.info("Loading resources...");
-			
-			new MAtResourceReloader(this).reloadResources();
-			
-			AnyLogger.info("Took " + stat.getSecondsAsString(3) + " seconds to load resources");
-		}
+		{*/
+		TimeStatistic stat = new TimeStatistic();
+		AnyLogger.info("Loading resources...");
+		
+		new MAtResourceReloader(this).reloadResources();
+		
+		AnyLogger.info("Took " + stat.getSecondsAsString(3) + " seconds to load resources");
+		//}
 		
 		this.phase = MAtModPhase.READY;
 		AnyLogger.info("Ready.");
@@ -214,11 +209,10 @@ public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsT
 			+ this.timeStatistic.getSecondsAsString(3) + " s.). Will not load.");
 		
 		this.isFatalError = true;
-		this.phase = MAtModPhase.SOUNDCOMMUNICATOR_FAILURE;
 		
 	}
 	
-	private String getFirstBlocker()
+	/*private String getFirstBlocker()
 	{
 		File folder = new File(Minecraft.getMinecraftDir(), "matmos/reloader_blacklist/");
 		
@@ -286,7 +280,7 @@ public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsT
 		catch (IOException e)
 		{
 		}
-	}
+	}*/
 	
 	public void reloadAndStart()
 	{
