@@ -8,7 +8,7 @@ import java.util.Random;
 import net.minecraft.client.Minecraft;
 import paulscode.sound.SoundSystem;
 import eu.ha3.matmos.conv.CustomVolume;
-import eu.ha3.matmos.engine.SoundRelay;
+import eu.ha3.matmos.conv.ReplicableSoundRelay;
 import eu.ha3.mc.haddon.PrivateAccessException;
 
 /*
@@ -27,7 +27,7 @@ import eu.ha3.mc.haddon.PrivateAccessException;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class MAtSoundManagerMaster implements SoundRelay, CustomVolume
+public class MAtSoundManagerMaster implements ReplicableSoundRelay, CustomVolume
 {
 	// XXX Implement me: Does not do anything and sndcomms is down
 	

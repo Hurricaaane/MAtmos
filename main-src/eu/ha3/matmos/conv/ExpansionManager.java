@@ -5,13 +5,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
-import net.minecraft.src.MAtSoundManagerChild;
-import net.minecraft.src.MAtSoundManagerMaster;
 import eu.ha3.matmos.engine.Data;
+import eu.ha3.matmos.engine.SoundRelay;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
@@ -32,18 +31,18 @@ import eu.ha3.matmos.engine.Data;
 public class ExpansionManager
 {
 	private Map<String, Expansion> expansions;
-	private List<MAtSoundManagerChild> soundManagers;
+	//private List<MAtSoundManagerChild> soundManagers;
 	
 	private File expansionsFolder;
 	private File userconfigFolder;
 	private boolean isActivated;
-	private MAtSoundManagerMaster master;
+	private ReplicableSoundRelay master;
 	private Data data;
 	
 	public ExpansionManager(File expansionsFolder, File userconfigFolder)
 	{
-		this.expansions = new ConcurrentHashMap<String, Expansion>();
-		this.soundManagers = new ArrayList<MAtSoundManagerChild>();
+		this.expansions = new HashMap<String, Expansion>();
+		//this.soundManagers = new ArrayList<MAtSoundManagerChild>();
 		
 		this.expansionsFolder = expansionsFolder;
 		this.userconfigFolder = userconfigFolder;
@@ -66,8 +65,8 @@ public class ExpansionManager
 			new Expansion(userDefinedIdentifier, new File(this.userconfigFolder, userDefinedIdentifier + ".cfg"));
 		this.expansions.put(userDefinedIdentifier, expansion);
 		
-		MAtSoundManagerChild soundManager = this.master.createChild();
-		this.soundManagers.add(soundManager);
+		SoundRelay soundManager = this.master.createChild();
+		//this.soundManagers.add(soundManager);
 		
 		expansion.setSoundManager(soundManager);
 		expansion.setData(this.data);
@@ -243,7 +242,7 @@ public class ExpansionManager
 		
 	}
 	
-	public void setMaster(MAtSoundManagerMaster master)
+	public void setMaster(ReplicableSoundRelay master)
 	{
 		this.master = master;
 	}
