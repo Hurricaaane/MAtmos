@@ -17,6 +17,14 @@
 	<sheet name="Armor4Enchantments">enchantments</sheet>
 	<sheet name="PotionEffectsPower">potioneffects</sheet>
 	<sheet name="PotionEffectsDuration">potioneffects</sheet>
+	<sheet name="Detect2">entities</sheet>
+	<sheet name="Detect5">entities</sheet>
+	<sheet name="Detect10">entities</sheet>
+	<sheet name="Detect20">entities</sheet>
+	<sheet name="Detect2_Deltas">entities</sheet>
+	<sheet name="Detect5_Deltas">entities</sheet>
+	<sheet name="Detect10_Deltas">entities</sheet>
+	<sheet name="Detect20_Deltas">entities</sheet>
 
 	<list name="instants" id_max="127">
 		<data id="0">Sun LightLevel in memory</data>
@@ -306,7 +314,19 @@
 		<data id="143">Wooden Button</data>
 		<data id="144">Skull</data>
 		<data id="145">Anvil</data>
-		
+		<data id="146">Trapped Chest</data>
+		<data id="147">Weighted Light Pressure Plate</data>
+		<data id="148">Weighted Heavy Pressure Plate</data>
+		<data id="149">Redstone Comparator (off)</data>
+		<data id="150">Redstone Comparator (on)</data>
+		<data id="151">Daylight Sensor</data>
+		<data id="152">Block of Redstone</data>
+		<data id="153">Nether Quartz Ore</data>
+		<data id="154">Hopper</data>
+		<data id="155">Block of Quartz</data>
+		<data id="156">Quartz Stairs</data>
+		<data id="157">Activator Rail</data>
+		<data id="158">Dropper</data>
 		
 		
 		<data id="165">Portal (Aether)</data>
@@ -352,6 +372,67 @@
 	<list name="configvars" id_max="255">
 		<data id="0">Negated altitude where it starts to get windy</data>
 		<data id="1">Negated altitude where it's REALLY windy</data>
+	</list>
+	
+	<list name="entities" id_max="255">
+		<data id="0">Other Player</data>
+		
+		<data id="1">Dropped item</data>
+		<data id="2">Experience Orb</data>
+		
+		<data id="9">Painting</data>
+		<data id="10">Arrow (shot)</data>
+		<data id="11">Snowball (thrown)</data>
+		<data id="12">Ghast fireball</data>
+		<data id="13">Blaze Fireball</data>
+		<data id="14">Ender Pearl (thrown)</data>
+		<data id="15">Eye of Ender (thrown)</data>
+		<data id="16">Splash potion (thrown)</data>
+		<data id="17">Bottle of Enchanting (thrown)</data>
+		<data id="18">Item Frame</data>
+		<data id="19">Wither Skull</data>
+		<data id="20">Primed TNT</data>
+		<data id="21">Falling block</data>
+		<data id="22">Firework Rocket</data>
+		<data id="41">Boat</data>
+		<data id="42">Minecart</data>
+		<data id="43">Minecart with Chest</data>
+		<data id="44">Minecart with Furnace</data>
+		<data id="45">Minecart with TNT</data>
+		<data id="46">Minecart with Hopper</data>
+		<data id="47">Minecart with Spawner</data>
+		<data id="48">Mob (generic)</data>
+		<data id="49">Monster (generic)</data>
+		<data id="50">Creeper</data>
+		<data id="51">Skeleton (normal or wither)</data>
+		<data id="53">Spider</data>
+		<data id="53">Giant</data>
+		<data id="54">Zombie</data>
+		<data id="55">Slime</data>
+		<data id="56">Ghast</data>
+		<data id="57">Zombie Pigman</data>
+		<data id="58">Enderman</data>
+		<data id="59">Cave Spider</data>
+		<data id="60">Silverfish</data>
+		<data id="61">Blaze</data>
+		<data id="62">Magma Cube</data>
+		<data id="64">Wither</data>
+		<data id="66">Witch</data>
+		
+		<data id="65">Bat</data>
+		<data id="90">Pig</data>
+		<data id="91">Sheep</data>
+		<data id="92">Cow</data>
+		<data id="93">Chicken</data>
+		<data id="94">Squid</data>
+		<data id="95">Wolf</data>
+		<data id="96">Mooshroom</data>
+		<data id="97">Snow Golem</data>
+		<data id="98">Ocelot</data>
+		<data id="99">Iron Golem</data>
+		<data id="120">Villager</data>
+		<data id="200">Ender Crystal</data>
+		
 	</list>
 	
 </contents>

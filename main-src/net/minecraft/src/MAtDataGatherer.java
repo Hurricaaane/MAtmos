@@ -52,6 +52,7 @@ public class MAtDataGatherer
 	final static int COUNT_ENCHANTMENTS = 64;
 	
 	final static int MAX_LARGESCAN_PASS = 10;
+	private static final int ENTITYIDS_MAX = 256;
 	
 	private MAtMod mod;
 	
@@ -74,6 +75,11 @@ public class MAtDataGatherer
 	
 	private MAtProcessorPotionQuality potionPowerProcessor;
 	private MAtProcessorPotionQuality potionDurationProcessor;
+	
+	private MAtProcessorEntityDetector detect2;
+	private MAtProcessorEntityDetector detect5;
+	private MAtProcessorEntityDetector detect10;
+	private MAtProcessorEntityDetector detect20;
 	
 	private List<ProcessorModel> additionalRelaxedProcessors;
 	private List<ProcessorModel> additionalFrequentProcessors;
@@ -174,6 +180,15 @@ public class MAtDataGatherer
 			}
 		};
 		
+		this.detect2 =
+			new MAtProcessorEntityDetector(this.mod, this.data, "Detect2", "Detect2_Deltas", 2, ENTITYIDS_MAX);
+		this.detect5 =
+			new MAtProcessorEntityDetector(this.mod, this.data, "Detect5", "Detect5_Deltas", 5, ENTITYIDS_MAX);
+		this.detect10 =
+			new MAtProcessorEntityDetector(this.mod, this.data, "Detect10", "Detect10_Deltas", 10, ENTITYIDS_MAX);
+		this.detect20 =
+			new MAtProcessorEntityDetector(this.mod, this.data, "Detect20", "Detect20_Deltas", 20, ENTITYIDS_MAX);
+		
 	}
 	
 	public Data getData()
@@ -237,6 +252,11 @@ public class MAtDataGatherer
 			this.potionPowerProcessor.process();
 			this.potionDurationProcessor.process();
 			
+			this.detect2.process();
+			this.detect5.process();
+			this.detect10.process();
+			this.detect20.process();
+			
 			for (ProcessorModel processor : this.additionalFrequentProcessors)
 			{
 				processor.process();
@@ -285,6 +305,15 @@ public class MAtDataGatherer
 		createSheet(SPECIAL_SMALL, 1);
 		
 		createSheet(CONFIGVARS, COUNT_CONFIGVARS);
+		
+		createSheet("Detect2", ENTITYIDS_MAX);
+		createSheet("Detect5", ENTITYIDS_MAX);
+		createSheet("Detect10", ENTITYIDS_MAX);
+		createSheet("Detect20", ENTITYIDS_MAX);
+		createSheet("Detect2_Deltas", ENTITYIDS_MAX);
+		createSheet("Detect5_Deltas", ENTITYIDS_MAX);
+		createSheet("Detect10_Deltas", ENTITYIDS_MAX);
+		createSheet("Detect20_Deltas", ENTITYIDS_MAX);
 		
 	}
 	
