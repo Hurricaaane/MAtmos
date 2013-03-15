@@ -8,7 +8,7 @@ import java.util.logging.Level;
 
 import net.minecraft.client.Minecraft;
 import eu.ha3.easy.TimeStatistic;
-import eu.ha3.matmos.conv.AnyLogger;
+import eu.ha3.matmos.conv.MAtmosConvLogger;
 import eu.ha3.matmos.conv.ExpansionManager;
 import eu.ha3.matmos.engine.MAtmosLogger;
 import eu.ha3.mc.convenience.Ha3Signal;
@@ -35,17 +35,18 @@ import eu.ha3.util.property.simple.ConfigProperty;
 
 public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsTickEvents, SupportsKeyEvents
 {
-	final static public AnyLogger LOGGER = new AnyLogger();
+	final static public MAtmosConvLogger LOGGER = new MAtmosConvLogger();
 	final static public int VERSION = 21; // Remember to change the thing on mod_Matmos
 	final static public String FOR = "1.4.6";
 	
 	private MAtModPhase phase;
 	private ConfigProperty config;
 	
+	private ExpansionManager expansionManager;
+	
 	private Ha3SoundCommunicator sndComm;
 	private MAtUserControl userControl;
 	private MAtDataGatherer dataGatherer;
-	private ExpansionManager expansionManager;
 	private MAtSoundManagerMaster soundManagerMaster;
 	private MAtUpdateNotifier updateNotifier;
 	
@@ -124,11 +125,11 @@ public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsT
 		this.soundManagerMaster.setVolume(this.config.getFloat("globalvolume.scale"));
 		this.updateNotifier.loadConfig(this.config);
 		
-		AnyLogger.info("Took " + this.timeStatistic.getSecondsAsString(3) + " seconds to setup MAtmos base.");
+		MAtmosConvLogger.info("Took " + this.timeStatistic.getSecondsAsString(3) + " seconds to setup MAtmos base.");
 		
 		//
 		
-		AnyLogger.info("Pre-loading.");
+		MAtmosConvLogger.info("Pre-loading.");
 		
 		// This registers stuff to Minecraft (key bindings...)
 		this.userControl.load();
@@ -150,7 +151,7 @@ public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsT
 		
 		this.phase = MAtModPhase.CONSTRUCTING;
 		
-		AnyLogger.info("Constructing.");
+		MAtmosConvLogger.info("Constructing.");
 		
 		this.dataGatherer.load();
 		this.expansionManager.setMaster(this.soundManagerMaster);
@@ -172,115 +173,45 @@ public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsT
 		
 		this.expansionManager.loadExpansions();
 		
-		/*String firstBlocker = getFirstBlocker();
-		if (firstBlocker != null)
-		{
-			AnyLogger.warning(firstBlocker);
-			AnyLogger.warning("MAtmos will not attempt load sounds on its own at all.");
-		}
-		else
-		{*/
+		//String firstBlocker = getFirstBlocker();
+		//if (firstBlocker != null)
+		//{
+		//	AnyLogger.warning(firstBlocker);
+		//	AnyLogger.warning("MAtmos will not attempt load sounds on its own at all.");
+		//}
+		//else
+		//{
 		TimeStatistic stat = new TimeStatistic();
-		AnyLogger.info("Loading resources...");
+		MAtmosConvLogger.info("Loading resources...");
 		
 		new MAtResourceReloader(this).reloadResources();
 		
-		AnyLogger.info("Took " + stat.getSecondsAsString(3) + " seconds to load resources");
+		MAtmosConvLogger.info("Took " + stat.getSecondsAsString(3) + " seconds to load resources");
 		//}
 		
 		this.phase = MAtModPhase.READY;
-		AnyLogger.info("Ready.");
+		MAtmosConvLogger.info("Ready.");
 		
 		startRunning();
 		
-		AnyLogger.info("Took " + this.timeStatistic.getSecondsAsString(3) + " seconds to enable MAtmos.");
+		MAtmosConvLogger.info("Took " + this.timeStatistic.getSecondsAsString(3) + " seconds to enable MAtmos.");
 		
 	}
 	
 	private void sndCommSuccess()
 	{
-		AnyLogger.info("SoundCommunicator loaded (after " + this.timeStatistic.getSecondsAsString(3) + " s.).");
+		MAtmosConvLogger.info("SoundCommunicator loaded (after " + this.timeStatistic.getSecondsAsString(3) + " s.).");
 	}
 	
 	private void sndCommFailed()
 	{
 		this.phase = MAtModPhase.SOUNDCOMMUNICATOR_FAILURE;
-		AnyLogger.severe("CRITICAL Error with SoundCommunicator (after "
+		MAtmosConvLogger.severe("CRITICAL Error with SoundCommunicator (after "
 			+ this.timeStatistic.getSecondsAsString(3) + " s.). Will not load.");
 		
 		this.isFatalError = true;
 		
 	}
-	
-	/*private String getFirstBlocker()
-	{
-		File folder = new File(Minecraft.getMinecraftDir(), "matmos/reloader_blacklist/");
-		
-		if (!folder.exists())
-			return null;
-		
-		for (File file : folder.listFiles())
-		{
-			if (file.getName().endsWith(".list"))
-			{
-				BufferedReader reader;
-				try
-				{
-					reader = new BufferedReader(new FileReader(file));
-					try
-					{
-						String line;
-						while ((line = reader.readLine()) != null)
-						{
-							String[] contents = line.split("\t");
-							if (contents.length > 0 && contents[0].length() > 0)
-							{
-								if (Ha3StaticUtilities.classExists(contents[0], this))
-								{
-									if (contents.length > 1)
-										return contents[1];
-									else
-										return "A blocker was detected.";
-									
-								}
-								
-							}
-							
-						}
-						
-					}
-					catch (IOException e)
-					{
-					}
-					finally
-					{
-						closeAndShutUp(reader);
-					}
-				}
-				catch (FileNotFoundException e1)
-				{
-					// welp
-					e1.printStackTrace();
-				}
-				
-			}
-			
-		}
-		
-		return null;
-		
-	}
-	
-	private void closeAndShutUp(Closeable closeable)
-	{
-		try
-		{
-			closeable.close();
-		}
-		catch (IOException e)
-		{
-		}
-	}*/
 	
 	public void reloadAndStart()
 	{
@@ -295,7 +226,7 @@ public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsT
 		
 		TimeStatistic stat = new TimeStatistic(Locale.ENGLISH);
 		MAtMod.this.expansionManager.loadExpansions();
-		AnyLogger.info("Expansions loaded (" + stat.getSecondsAsString(1) + "s).");
+		MAtmosConvLogger.info("Expansions loaded (" + stat.getSecondsAsString(1) + "s).");
 		
 		startRunning();
 		
@@ -311,9 +242,9 @@ public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsT
 		
 		this.isRunning = true;
 		
-		AnyLogger.fine("Loading...");
+		MAtmosConvLogger.fine("Loading...");
 		this.expansionManager.activate();
-		AnyLogger.fine("Loaded.");
+		MAtmosConvLogger.fine("Loaded.");
 		
 	}
 	
@@ -327,9 +258,9 @@ public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsT
 		
 		this.isRunning = false;
 		
-		AnyLogger.fine("Stopping...");
+		MAtmosConvLogger.fine("Stopping...");
 		this.expansionManager.deactivate();
-		AnyLogger.fine("Stopped.");
+		MAtmosConvLogger.fine("Stopped.");
 		
 		createDataDump();
 		
@@ -340,7 +271,7 @@ public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsT
 		if (!this.config.getBoolean("dump.enabled"))
 			return;
 		
-		AnyLogger.fine("Dumping data.");
+		MAtmosConvLogger.fine("Dumping data.");
 		
 		try
 		{
@@ -495,7 +426,7 @@ public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsT
 		// If there were changes...
 		if (this.config.commit())
 		{
-			AnyLogger.info("Saving configuration...");
+			MAtmosConvLogger.info("Saving configuration...");
 			
 			// Write changes on disk.
 			this.config.save();

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
-import eu.ha3.matmos.conv.AnyLogger;
+import eu.ha3.matmos.conv.MAtmosConvLogger;
 
 public class MAtResourceReloader
 {
@@ -24,14 +24,7 @@ public class MAtResourceReloader
 		
 		findAndLoadResourcesFromLocation();
 		
-		StringBuilder sb = new StringBuilder().append("Loaded files:");
-		for (String afile : this.myAddedFiles)
-		{
-			sb.append(" ").append(afile);
-			
-		}
-		AnyLogger.info(sb.toString());
-		
+		MAtmosConvLogger.info("Loaded " + this.myAddedFiles.size() + " files.");
 	}
 	
 	/**
@@ -49,12 +42,10 @@ public class MAtResourceReloader
 				if (file.getName().startsWith("matmos_"))
 				{
 					loadResource(file, "sound3/" + file.getName() + "/");
-					
 				}
-				
 			}
-			
 		}
+		
 	}
 	
 	/**

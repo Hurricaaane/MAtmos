@@ -3,7 +3,7 @@ package net.minecraft.src;
 import java.net.URL;
 
 import paulscode.sound.SoundSystem;
-import eu.ha3.matmos.conv.AnyLogger;
+import eu.ha3.matmos.conv.MAtmosConvLogger;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -108,14 +108,14 @@ public class MAtSoundStream
 		if (this.isInitialized)
 			return;
 		
-		AnyLogger.info("Initializing source: " + this.sourceName + " (" + this.path + ")");
+		MAtmosConvLogger.info("Initializing source: " + this.sourceName + " (" + this.path + ")");
 		
 		SoundPoolEntry poolEntry = this.refer.getSoundPoolEntryOf(this.path);
 		if (poolEntry != null)
 		{
 			this.poolURL = poolEntry.soundUrl;
 			
-			AnyLogger.info("Source: "
+			MAtmosConvLogger.info("Source: "
 				+ this.sourceName + " is being initialized with URL: " + poolEntry.soundUrl.toString());
 			
 			SoundSystem sndSystem = this.refer.getSoundSystem();

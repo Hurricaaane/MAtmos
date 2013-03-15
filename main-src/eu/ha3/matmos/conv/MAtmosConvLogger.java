@@ -16,32 +16,42 @@ package eu.ha3.matmos.conv;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class AnyLogger
+public class MAtmosConvLogger
 {
 	final private static String modName = "MAtmos";
 	
+	private static int refinedness = 1;
+	
+	public static void setRefinedness(int refinedLevel)
+	{
+		refinedness = refinedLevel;
+	}
+	
 	public static void fine(String message)
 	{
-		//print(message, "FINE");
+		print(message, "FINE", 0);
 	}
 	
 	public static void info(String message)
 	{
-		print(message, "INFO");
+		print(message, "INFO", 1);
 	}
 	
 	public static void warning(String message)
 	{
-		print(message, "WARNING");
+		print(message, "WARNING", 2);
 	}
 	
 	public static void severe(String message)
 	{
-		print(message, "SEVERE");
+		print(message, "SEVERE", 3);
 	}
 	
-	private static void print(String message, String type)
+	private static void print(String message, String type, int refinedLevel)
 	{
-		System.out.println("(" + modName + ": " + type + ") " + message);
+		if (refinedLevel >= refinedness)
+		{
+			System.out.println("(" + modName + ": " + type + ") " + message);
+		}
 	}
 }

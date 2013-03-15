@@ -17,7 +17,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import eu.ha3.matmos.conv.AnyLogger;
+import eu.ha3.matmos.conv.MAtmosConvLogger;
 import eu.ha3.util.property.simple.ConfigProperty;
 
 /*
@@ -94,7 +94,7 @@ public class MAtUpdateNotifier extends Thread// implements Ha3Personalizable
 				}
 				
 			}
-			AnyLogger.info("Update version found: " + maxvn);
+			MAtmosConvLogger.info("Update version found: " + maxvn);
 			
 			try
 			{

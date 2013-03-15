@@ -82,7 +82,7 @@ public class ExpansionManager
 		}
 		catch (FileNotFoundException e)
 		{
-			AnyLogger.warning("Error with FileNotFound on ExpansionLoader (on file " + file.getAbsolutePath() + ").");
+			MAtmosConvLogger.warning("Error with FileNotFound on ExpansionLoader (on file " + file.getAbsolutePath() + ").");
 			
 		}
 		
@@ -92,7 +92,7 @@ public class ExpansionManager
 	{
 		if (!this.expansions.containsKey(userDefinedIdentifier))
 		{
-			AnyLogger.severe("Tried to add an expansion that has no entry!");
+			MAtmosConvLogger.severe("Tried to add an expansion that has no entry!");
 			return;
 			
 		}
@@ -216,7 +216,7 @@ public class ExpansionManager
 	{
 		for (File file : offline)
 		{
-			AnyLogger.info("ExpansionLoader found offline " + file.getName() + ".");
+			MAtmosConvLogger.info("ExpansionLoader found offline " + file.getName() + ".");
 			createExpansionEntry(file.getName());
 		}
 		

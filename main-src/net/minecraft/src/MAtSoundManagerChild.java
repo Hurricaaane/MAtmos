@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import paulscode.sound.SoundSystem;
-import eu.ha3.matmos.conv.AnyLogger;
+import eu.ha3.matmos.conv.MAtmosConvLogger;
 import eu.ha3.matmos.conv.CustomVolume;
 import eu.ha3.matmos.engine.SoundRelay;
 
@@ -158,7 +158,7 @@ public class MAtSoundManagerChild implements SoundRelay, CustomVolume
 	@Override
 	public void eraseStreamingToken(int token)
 	{
-		AnyLogger.info("Erasing token #" + token);
+		MAtmosConvLogger.info("Erasing token #" + token);
 		
 		MAtSoundStream stream = this.tokens.get(token);
 		stream.interruptStreaming();
@@ -180,7 +180,7 @@ public class MAtSoundManagerChild implements SoundRelay, CustomVolume
 	@Override
 	public void finalize()
 	{
-		AnyLogger.info("Calling finalizer of SMC");
+		MAtmosConvLogger.info("Calling finalizer of SMC");
 		
 		try
 		{
