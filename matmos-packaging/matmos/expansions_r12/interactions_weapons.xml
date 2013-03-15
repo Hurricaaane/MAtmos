@@ -34,6 +34,11 @@
 	<constant>131</constant>
 	<constant>140</constant>
 	<constant>143</constant>
+	<constant>145</constant>
+	<constant>149</constant>
+	<constant>150</constant>
+	<constant>154</constant>
+	<constant>158</constant>
 </list>
 <list name="Sword Sharp">
 	<descriptible>
@@ -419,8 +424,8 @@
 	</descriptible>
 	<truepart>Interact Sword Sharp</truepart>
 	<truepart>Interact Target</truepart>
-	<falsepart>Is looking at an interactible</falsepart>
 	<truepart>Interact Hit</truepart>
+	<falsepart>Is looking at an interactible</falsepart>
 </set>
 <set name="Interact Sword Sharp Swing">
 	<descriptible>
@@ -442,8 +447,8 @@
 	</descriptible>
 	<truepart>Interact Target</truepart>
 	<truepart>Interact Sword Soft</truepart>
-	<falsepart>Is looking at an interactible</falsepart>
 	<truepart>Interact Hit</truepart>
+	<falsepart>Is looking at an interactible</falsepart>
 </set>
 <set name="Interact Sword Soft Swing">
 	<descriptible>
@@ -463,9 +468,9 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<falsepart>Interact Target</falsepart>
 	<truepart>Interact Tool Sharp</truepart>
 	<truepart>Interact Swing</truepart>
+	<falsepart>Interact Target</falsepart>
 </set>
 <set name="Interact Tool Soft Swing to Miss">
 	<descriptible>
@@ -474,9 +479,9 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<falsepart>Interact Target</falsepart>
 	<truepart>Interact Tool Soft</truepart>
 	<truepart>Interact Swing</truepart>
+	<falsepart>Interact Target</falsepart>
 </set>
 <set name="Is out of water">
 	<descriptible>
