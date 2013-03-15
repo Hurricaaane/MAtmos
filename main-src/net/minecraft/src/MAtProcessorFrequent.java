@@ -149,7 +149,7 @@ public class MAtProcessorFrequent extends MAtProcessorModel
 		setValue(65, player.isAirBorne ? 1 : 0);
 		setValue(66, player.isUsingItem() ? 1 : 0);
 		setValue(67, player.isRiding() ? 1 : 0);
-		setValue(68, player.ridingEntity != null && player.ridingEntity.getClass() == EntityMinecart.class ? 1 : 0);
+		setValue(68, player.ridingEntity != null && player.ridingEntity.getClass() == EntityMinecartEmpty.class ? 1 : 0);
 		setValue(69, player.ridingEntity != null && player.ridingEntity.getClass() == EntityBoat.class ? 1 : 0);
 		setValue(70, mc.playerController != null && mc.playerController.isInCreativeMode() ? 1 : 0);
 		
