@@ -32,7 +32,7 @@ import eu.ha3.matmos.engine.Data;
 
 public class MAtProcessorRelaxed extends MAtProcessorModel
 {
-	private Map<String, Integer> biomeHash;
+	private Map<String, Integer> deprecatedBiomeHash;
 	private Random random;
 	
 	private Map<String, Integer> serverAddresses;
@@ -42,36 +42,36 @@ public class MAtProcessorRelaxed extends MAtProcessorModel
 	{
 		super(modIn, dataIn, normalNameIn, deltaNameIn);
 		
-		this.biomeHash = new HashMap<String, Integer>();
+		this.deprecatedBiomeHash = new HashMap<String, Integer>();
 		//biomeHash.put("Rainforest", 1);
-		this.biomeHash.put("Swampland", 2);
+		this.deprecatedBiomeHash.put("Swampland", 2);
 		//biomeHash.put("Seasonal Forest", 3);
-		this.biomeHash.put("Forest", 4);
+		this.deprecatedBiomeHash.put("Forest", 4);
 		//biomeHash.put("Savanna", 5);
 		//biomeHash.put("Shrubland", 6);
-		this.biomeHash.put("Taiga", 7);
-		this.biomeHash.put("Desert", 8);
-		this.biomeHash.put("Plains", 9);
+		this.deprecatedBiomeHash.put("Taiga", 7);
+		this.deprecatedBiomeHash.put("Desert", 8);
+		this.deprecatedBiomeHash.put("Plains", 9);
 		//biomeHash.put("Ice Desert", 10);
 		//biomeHash.put("Tundra", 11);
-		this.biomeHash.put("Hell", 12);
-		this.biomeHash.put("Sky", 13);
-		this.biomeHash.put("Ocean", 14);
-		this.biomeHash.put("Extreme Hills", 15);
-		this.biomeHash.put("River", 16);
-		this.biomeHash.put("FrozenOcean", 17);
-		this.biomeHash.put("FrozenRiver", 18);
-		this.biomeHash.put("Ice Plains", 19);
-		this.biomeHash.put("Ice Mountains", 20);
-		this.biomeHash.put("MushroomIsland", 21);
-		this.biomeHash.put("MushroomIslandShore", 22);
-		this.biomeHash.put("Beach", 23);
-		this.biomeHash.put("DesertHills", 24);
-		this.biomeHash.put("ForestHills", 25);
-		this.biomeHash.put("TaigaHills", 26);
-		this.biomeHash.put("Extreme Hills Edge", 27);
-		this.biomeHash.put("Jungle", 28);
-		this.biomeHash.put("JungleHills", 29);
+		this.deprecatedBiomeHash.put("Hell", 12);
+		this.deprecatedBiomeHash.put("Sky", 13);
+		this.deprecatedBiomeHash.put("Ocean", 14);
+		this.deprecatedBiomeHash.put("Extreme Hills", 15);
+		this.deprecatedBiomeHash.put("River", 16);
+		this.deprecatedBiomeHash.put("FrozenOcean", 17);
+		this.deprecatedBiomeHash.put("FrozenRiver", 18);
+		this.deprecatedBiomeHash.put("Ice Plains", 19);
+		this.deprecatedBiomeHash.put("Ice Mountains", 20);
+		this.deprecatedBiomeHash.put("MushroomIsland", 21);
+		this.deprecatedBiomeHash.put("MushroomIslandShore", 22);
+		this.deprecatedBiomeHash.put("Beach", 23);
+		this.deprecatedBiomeHash.put("DesertHills", 24);
+		this.deprecatedBiomeHash.put("ForestHills", 25);
+		this.deprecatedBiomeHash.put("TaigaHills", 26);
+		this.deprecatedBiomeHash.put("Extreme Hills Edge", 27);
+		this.deprecatedBiomeHash.put("Jungle", 28);
+		this.deprecatedBiomeHash.put("JungleHills", 29);
 		
 		this.random = new Random(System.nanoTime());
 		
@@ -94,7 +94,7 @@ public class MAtProcessorRelaxed extends MAtProcessorModel
 		Chunk chunk = mc.theWorld.getChunkFromBlockCoords(x, z);
 		BiomeGenBase biome = chunk.getBiomeGenForWorldCoords(x & 15, z & 15, mc.theWorld.getWorldChunkManager());
 		
-		Integer biomeInt = this.biomeHash.get(biome.biomeName);
+		Integer biomeInt = this.deprecatedBiomeHash.get(biome.biomeName);
 		
 		if (biomeInt == null)
 		{
