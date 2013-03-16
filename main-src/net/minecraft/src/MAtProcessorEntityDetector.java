@@ -1,5 +1,6 @@
 package net.minecraft.src;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,57 +24,139 @@ import eu.ha3.matmos.engine.Data;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class MAtProcessorEntityDetector extends MAtProcessorModel
+public class MAtProcessorEntityDetector
 {
-	private AxisAlignedBB bbox;
-	private int abrad;
+	private MAtMod mod;
 	
-	private Map<Integer, Integer> mappy;
+	private AxisAlignedBB bbox;
+	
 	private int max;
 	
+	private MAtProcessorModel mindistModel;
+	private Map<Integer, Double> mindistMappy;
+	
+	private MAtProcessorModel[] radiModels;
+	private int[] radi;
+	private Map<Integer, Integer>[] mappies;
+	
+	private int maxel;
+	
 	public MAtProcessorEntityDetector(
-		MAtMod modIn, Data dataIn, String normalNameIn, String deltaNameIn, int abrad, int max)
+		MAtMod modIn, Data dataIn, String mindist, String prefix, String deltaSuffix, int max, int... radiis)
 	{
-		super(modIn, dataIn, normalNameIn, deltaNameIn);
-		this.bbox = AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
-		this.abrad = abrad;
+		this.mod = modIn;
 		
-		this.mappy = new HashMap<Integer, Integer>();
+		this.mindistModel = new MAtProcessorModel(modIn, dataIn, mindist, mindist + deltaSuffix) {
+			@Override
+			protected void doProcess()
+			{
+			}
+		};
+		this.mindistMappy = new HashMap<Integer, Double>();
+		
+		this.radiModels = new MAtProcessorModel[radiis.length];
+		this.mappies = new Map[radiis.length];
+		
+		this.radi = Arrays.copyOf(radiis, radiis.length);
+		Arrays.sort(this.radi);
+		this.maxel = this.radi[this.radi.length - 1] + 10;
+		
+		for (int i = 0; i < this.radi.length; i++)
+		{
+			int radiNum = this.radi[i];
+			this.radiModels[i] =
+				new MAtProcessorModel(modIn, dataIn, prefix + radiNum, prefix + radiNum + deltaSuffix) {
+					@Override
+					protected void doProcess()
+					{
+					}
+				};
+			this.mappies[i] = new HashMap<Integer, Integer>();
+		}
+		
+		this.bbox = AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
+		
 		this.max = max;
 	}
 	
-	@SuppressWarnings("unchecked")
-	@Override
-	protected void doProcess()
+	public void refresh()
 	{
-		Minecraft mc = mod().manager().getMinecraft();
+		this.mindistModel.process();
+		for (MAtProcessorModel processor : this.radiModels)
+		{
+			processor.process();
+		}
+		for (Map mappy : this.mappies)
+		{
+			mappy.clear();
+		}
+		this.mindistMappy.clear();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void process()
+	{
+		refresh();
+		
+		Minecraft mc = this.mod.manager().getMinecraft();
 		
 		double x = mc.thePlayer.posX;
 		double y = mc.thePlayer.posY;
 		double z = mc.thePlayer.posZ;
 		
-		this.mappy.clear();
+		this.bbox.setBounds(x - this.maxel, y - this.maxel, z - this.maxel, x + this.maxel, y + this.maxel, z
+			+ this.maxel);
 		
-		List<Entity> entityList =
-			mc.theWorld.getEntitiesWithinAABB(
-				net.minecraft.src.Entity.class,
-				this.bbox.setBounds(x - this.abrad, y - this.abrad, z - this.abrad, x + this.abrad, y + this.abrad, z
-					+ this.abrad));
+		List<Entity> entityList = mc.theWorld.getEntitiesWithinAABB(net.minecraft.src.Entity.class, this.bbox);
 		
 		for (Entity e : entityList)
 		{
-			if (e != mc.thePlayer)
+			if (e != null && e != mc.thePlayer)
 			{
+				double dx = e.posX - x;
+				double dy = e.posY - y;
+				double dz = e.posZ - z;
+				
+				double dd = Math.sqrt(dx * dx + dy * dy + dz * dz);
+				
 				if (e instanceof EntityPlayer)
 				{
-					add(0, 1);
+					mindist(0, dd);
 				}
 				else
 				{
 					int eID = EntityList.getEntityID(e);
 					if (eID != 0)
 					{
-						add(eID, 1);
+						mindist(eID, dd);
+					}
+				}
+				
+				int i = 0;
+				while (i < this.radi.length)
+				{
+					if (dd <= this.radi[i])
+					{
+						for (int j = i; j < this.radi.length; j++)
+						{
+							if (e instanceof EntityPlayer)
+							{
+								add(j, 0, 1);
+							}
+							else
+							{
+								int eID = EntityList.getEntityID(e);
+								if (eID != 0)
+								{
+									add(j, eID, 1);
+								}
+							}
+						}
+						i = this.radi.length;
+					}
+					else
+					{
+						i++;
 					}
 				}
 			}
@@ -81,27 +164,46 @@ public class MAtProcessorEntityDetector extends MAtProcessorModel
 		
 		for (int i = 0; i < this.max; i++)
 		{
-			if (this.mappy.containsKey(i))
+			for (int rr = 0; rr < this.radi.length; rr++)
 			{
-				setValue(i, this.mappy.get(i));
+				if (this.mappies[rr].containsKey(i))
+				{
+					this.radiModels[rr].setValue(i, this.mappies[rr].get(i));
+				}
+				else
+				{
+					this.radiModels[rr].setValue(i, 0);
+				}
+			}
+			if (this.mindistMappy.containsKey(i))
+			{
+				this.mindistModel.setValue(i, (int) Math.floor(this.mindistMappy.get(i) * 1000));
 			}
 			else
 			{
-				setValue(i, 0);
+				this.mindistModel.setValue(i, Integer.MAX_VALUE);
 			}
 			
 		}
 	}
 	
-	protected void add(int key, int count)
+	protected void add(int radiIndex, int key, int count)
 	{
-		if (this.mappy.containsKey(key))
+		if (this.mappies[radiIndex].containsKey(key))
 		{
-			this.mappy.put(key, this.mappy.get(key) + count);
+			this.mappies[radiIndex].put(key, this.mappies[radiIndex].get(key) + count);
 		}
 		else
 		{
-			this.mappy.put(key, count);
+			this.mappies[radiIndex].put(key, count);
+		}
+	}
+	
+	protected void mindist(int key, double distance)
+	{
+		if (!this.mindistMappy.containsKey(key) || this.mindistMappy.get(key) > distance)
+		{
+			this.mindistMappy.put(key, distance);
 		}
 	}
 	

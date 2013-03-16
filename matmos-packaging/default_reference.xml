@@ -25,6 +25,8 @@
 	<sheet name="Detect5_Deltas">entities</sheet>
 	<sheet name="Detect10_Deltas">entities</sheet>
 	<sheet name="Detect20_Deltas">entities</sheet>
+	<sheet name="DetectMinDist">entities</sheet>
+	<sheet name="DetectMinDist_Deltas">entities</sheet>
 
 	<list name="instants" id_max="127">
 		<data id="0">Sun LightLevel in memory</data>
