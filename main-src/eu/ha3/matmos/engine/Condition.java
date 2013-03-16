@@ -166,7 +166,7 @@ public class Condition extends Switchable
 		{
 			if (this.knowledge.data.sheets.containsKey(this.sheet))
 			{
-				if (this.key >= 0 && this.key < this.knowledge.data.sheets.get(this.sheet).size())
+				if (this.key >= 0 && this.key < this.knowledge.data.sheets.get(this.sheet).length)
 				{
 					valid = true;
 					
@@ -236,7 +236,7 @@ public class Condition extends Switchable
 		
 		if (!isDynamic())
 		{
-			gotValue = this.knowledge.data.sheets.get(this.sheet).get(this.key);
+			gotValue = this.knowledge.data.sheets.get(this.sheet)[this.key];
 		}
 		else
 		{

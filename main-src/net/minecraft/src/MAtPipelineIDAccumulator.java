@@ -1,7 +1,5 @@
 package net.minecraft.src;
 
-import java.util.List;
-
 import eu.ha3.matmos.engine.Data;
 
 /*
@@ -70,8 +68,8 @@ public class MAtPipelineIDAccumulator extends MAtScanCoordsPipeline
 	@Override
 	void doFinish()
 	{
-		List<Integer> normal = null;
-		List<Integer> proportionnal = null;
+		int[] normal = null;
+		int[] proportionnal = null;
 		
 		normal = data().sheets.get(this.normalName);
 		
@@ -82,11 +80,11 @@ public class MAtPipelineIDAccumulator extends MAtScanCoordsPipeline
 		
 		for (int i = 0; i < this.tempnormal.length; i++)
 		{
-			normal.set(i, this.tempnormal[i]);
+			normal[i] = this.tempnormal[i];
 			
 			if (this.proportionnalName != null)
 			{
-				proportionnal.set(i, (int) (this.proportionnalTotal * this.tempnormal[i] / (float) this.count));
+				proportionnal[i] = (int) (this.proportionnalTotal * this.tempnormal[i] / (float) this.count);
 			}
 			
 		}

@@ -3,7 +3,6 @@ package eu.ha3.matmos.engine;
 import java.io.StringWriter;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -32,12 +31,12 @@ import javax.xml.transform.stream.StreamResult;
 
 public class Data
 {
-	public Map<String, List<Integer>> sheets;
+	public Map<String, int[]> sheets;
 	public int updateVersion;
 	
 	public Data()
 	{
-		this.sheets = new LinkedHashMap<String, List<Integer>>();
+		this.sheets = new LinkedHashMap<String, int[]>();
 		this.updateVersion = 0;
 		
 	}
@@ -64,23 +63,23 @@ public class Data
 		eventWriter.add(eventFactory.createStartDocument());
 		eventWriter.add(ret);
 		eventWriter.add(eventFactory.createStartElement("", "", "contents"));
-		for (Iterator<Entry<String, List<Integer>>> iter = this.sheets.entrySet().iterator(); iter.hasNext();)
+		for (Iterator<Entry<String, int[]>> iter = this.sheets.entrySet().iterator(); iter.hasNext();)
 		{
-			Entry<String, List<Integer>> entry = iter.next();
+			Entry<String, int[]> entry = iter.next();
 			
 			eventWriter.add(ret);
 			eventWriter.add(eventFactory.createStartElement("", "", "sheet"));
 			eventWriter.add(eventFactory.createAttribute("name", entry.getKey()));
-			eventWriter.add(eventFactory.createAttribute("size", entry.getValue().size() + ""));
+			eventWriter.add(eventFactory.createAttribute("size", entry.getValue().length + ""));
 			eventWriter.add(ret);
 			
 			int i = 0;
-			for (Iterator<Integer> idter = entry.getValue().iterator(); idter.hasNext();)
+			for (Integer idter : entry.getValue())
 			{
 				eventWriter.add(tab);
 				eventWriter.add(eventFactory.createStartElement("", "", "key"));
 				eventWriter.add(eventFactory.createAttribute("id", i + ""));
-				eventWriter.add(eventFactory.createCharacters(idter.next().toString()));
+				eventWriter.add(eventFactory.createCharacters(idter.toString()));
 				eventWriter.add(eventFactory.createEndElement("", "", "key"));
 				eventWriter.add(ret);
 				

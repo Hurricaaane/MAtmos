@@ -319,14 +319,7 @@ public class MAtDataGatherer
 	
 	private void createSheet(String name, int count)
 	{
-		List<Integer> array = new ArrayList<Integer>();
-		this.data.sheets.put(name, array);
-		for (int i = 0; i < count; i++)
-		{
-			array.add(0);
-			
-		}
-		
+		this.data.sheets.put(name, new int[count]);
 	}
 	
 }

@@ -1,7 +1,5 @@
 package eu.ha3.matmos.conv;
 
-import java.util.List;
-
 import eu.ha3.matmos.engine.Data;
 
 /*
@@ -27,8 +25,8 @@ public abstract class ProcessorModel
 	private String normalName;
 	private String deltaName;
 	
-	private List<Integer> normalSheet;
-	private List<Integer> deltaSheet;
+	private int[] normalSheet;
+	private int[] deltaSheet;
 	
 	public ProcessorModel(Data dataIn, String normalNameIn, String deltaNameIn)
 	{
@@ -60,12 +58,12 @@ public abstract class ProcessorModel
 	
 	public void setValue(int index, int newValue)
 	{
-		int previousValue = this.normalSheet.get(index);
-		this.normalSheet.set(index, newValue);
+		int previousValue = this.normalSheet[index];
+		this.normalSheet[index] = newValue;
 		
 		if (this.deltaName != null)
 		{
-			this.deltaSheet.set(index, newValue - previousValue);
+			this.deltaSheet[index] = newValue - previousValue;
 		}
 		
 	}
