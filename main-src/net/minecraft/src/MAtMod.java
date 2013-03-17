@@ -8,8 +8,8 @@ import java.util.logging.Level;
 
 import net.minecraft.client.Minecraft;
 import eu.ha3.easy.TimeStatistic;
-import eu.ha3.matmos.conv.MAtmosConvLogger;
 import eu.ha3.matmos.conv.ExpansionManager;
+import eu.ha3.matmos.conv.MAtmosConvLogger;
 import eu.ha3.matmos.engine.MAtmosLogger;
 import eu.ha3.mc.convenience.Ha3Signal;
 import eu.ha3.mc.haddon.SupportsFrameEvents;
@@ -36,8 +36,8 @@ import eu.ha3.util.property.simple.ConfigProperty;
 public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsTickEvents, SupportsKeyEvents
 {
 	final static public MAtmosConvLogger LOGGER = new MAtmosConvLogger();
-	final static public int VERSION = 21; // Remember to change the thing on mod_Matmos
-	final static public String FOR = "1.4.6";
+	final static public int VERSION = 22; // Remember to change the thing on mod_Matmos
+	final static public String FOR = "1.5.0";
 	
 	private MAtModPhase phase;
 	private ConfigProperty config;
