@@ -9,9 +9,8 @@ MAtmos source code requires some custom libraries found at https://github.com/Hu
 - eu.ha3.mc.gui.*
 - eu.ha3.util.property.*
 - net.minecraft.src.Ha3Utility.class
-- net.minecraft.src.Ha3Utility.class
-- net.minecraft.src.Ha3Sound*.class 
-- net.minecraft.src.Haddon*
+- net.minecraft.src.Ha3Sound*.class
+- net.minecraft.src.Haddon*.class
 
 The (net.sf.) PracticalXML library (Apache License):
 - net.sf.practicalxml.*
