@@ -36,8 +36,8 @@ import eu.ha3.util.property.simple.ConfigProperty;
 public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsTickEvents, SupportsKeyEvents
 {
 	final static public MAtmosConvLogger LOGGER = new MAtmosConvLogger();
-	final static public int VERSION = 23; // Remember to change the thing on mod_Matmos
-	final static public String FOR = "1.5.1";
+	final static public int VERSION = 24; // Remember to change the thing on mod_Matmos
+	final static public String FOR = "1.5.2";
 	
 	private MAtModPhase phase;
 	private ConfigProperty config;

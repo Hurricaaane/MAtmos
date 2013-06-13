@@ -112,7 +112,8 @@ public class MAtSoundManagerMaster implements ReplicableSoundRelay, CustomVolume
 		
 		if (!soundFile.exists())
 		{
-			MAtMod.LOGGER.warning("File " + soundPath + " is missing " + " (" + dotted + ")");
+			MAtMod.LOGGER.warning("File "
+				+ soundPath + " is missing " + " (" + dotted + "). This should not cause issues.");
 		}
 		
 		return dotted;
@@ -241,6 +242,7 @@ public class MAtSoundManagerMaster implements ReplicableSoundRelay, CustomVolume
 		return this.mod.getSoundCommunicator().getSoundSystem();
 	}
 	
+	@Override
 	public MAtSoundManagerChild createChild()
 	{
 		return new MAtSoundManagerChild(this);

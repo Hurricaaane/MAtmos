@@ -193,6 +193,11 @@ public class MAtProcessorFrequent extends MAtProcessorModel
 			y >= 0 && y < mod().util().getWorldHeight() - 1
 				? getTranslatedBlockId(mc.theWorld.getBlockId(x, y + 1, z)) : -1);
 		
+		ItemStack currentItem = player.inventory.getCurrentItem();
+		
+		setValue(96, currentItem != null ? currentItem.itemID : -1);
+		setValue(97, mc.currentScreen != null && mc.currentScreen instanceof GuiContainer ? 1 : 0);
+		
 		//
 		/*
 		for (int i = 0; i < 64; i++)
