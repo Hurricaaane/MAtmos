@@ -11,7 +11,6 @@ import java.util.Random;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.InitialDirContext;
 
-import net.minecraft.client.Minecraft;
 import eu.ha3.matmos.engine.Data;
 
 /*
@@ -152,7 +151,9 @@ public class MAtProcessorRelaxed extends MAtProcessorModel
 			setValue(80, 0);
 		}
 		
-		setValue(88, w.getMoonPhase());
+		// In Minecraft 1.6.1, the moon phase is an oscillating float
+		// instead of a linear incremental time counter
+		setValue(88, (int) (w.getMoonPhase() * 4));
 		
 		setValue(93, biome.biomeID);
 		
