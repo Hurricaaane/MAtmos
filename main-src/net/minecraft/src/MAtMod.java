@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.logging.Level;
 
-import net.minecraft.src.Minecraft;
 import eu.ha3.easy.TimeStatistic;
 import eu.ha3.matmos.conv.ExpansionManager;
 import eu.ha3.matmos.conv.MAtmosConvLogger;
@@ -73,7 +72,7 @@ public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsT
 	public void onLoad()
 	{
 		// Look for installation errors (1)
-		if (!new File(Minecraft.getMinecraftDir(), "matmos/").exists())
+		if (!new File(util().getMinecraftDir(), "matmos/").exists())
 		{
 			this.isFatalError = true;
 			manager().hookTickEvents(true);
@@ -88,8 +87,8 @@ public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsT
 		this.userControl = new MAtUserControl(this);
 		this.dataGatherer = new MAtDataGatherer(this);
 		this.expansionManager =
-			new ExpansionManager(new File(Minecraft.getMinecraftDir(), "matmos/expansions_r12/"), new File(
-				Minecraft.getMinecraftDir(), "matmos/expansions_r12_userconfig/"));
+			new ExpansionManager(new File(util().getMinecraftDir(), "matmos/expansions_r12/"), new File(util()
+				.getMinecraftDir(), "matmos/expansions_r12_userconfig/"));
 		this.updateNotifier = new MAtUpdateNotifier(this);
 		
 		this.soundManagerMaster = new MAtSoundManagerMaster(this);
@@ -113,7 +112,7 @@ public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsT
 		// Load configuration from source
 		try
 		{
-			this.config.setSource(new File(Minecraft.getMinecraftDir(), "matmos/userconfig.cfg").getCanonicalPath());
+			this.config.setSource(new File(util().getMinecraftDir(), "matmos/userconfig.cfg").getCanonicalPath());
 			this.config.load();
 		}
 		catch (IOException e)
@@ -275,7 +274,7 @@ public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsT
 		
 		try
 		{
-			File file = new File(Minecraft.getMinecraftDir(), "data_dump.xml");
+			File file = new File(util().getMinecraftDir(), "data_dump.xml");
 			file.createNewFile();
 			
 			FileWriter fw = new FileWriter(file);
@@ -390,7 +389,7 @@ public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsT
 		if (this.isFatalError)
 		{
 			printChat(Ha3Utility.COLOR_YELLOW, "A fatal error has occured. MAtmos will not load.");
-			if (!new File(Minecraft.getMinecraftDir(), "matmos/").exists())
+			if (!new File(util().getMinecraftDir(), "matmos/").exists())
 			{
 				printChat(Ha3Utility.COLOR_WHITE, "Are you sure you installed MAtmos correctly?");
 				printChat(
