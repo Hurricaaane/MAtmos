@@ -113,14 +113,15 @@ public class MAtSoundStream
 		SoundPoolEntry poolEntry = this.refer.getSoundPoolEntryOf(this.path);
 		if (poolEntry != null)
 		{
-			this.poolURL = poolEntry.soundUrl;
+			this.poolURL = poolEntry.func_110457_b();
 			
 			MAtmosConvLogger.info("Source: "
-				+ this.sourceName + " is being initialized with URL: " + poolEntry.soundUrl.toString());
+				+ this.sourceName + " is being initialized with URL: " + poolEntry.func_110458_a().toString());
 			
 			SoundSystem sndSystem = this.refer.getSoundSystem();
 			
-			sndSystem.newStreamingSource(true, this.sourceName, poolEntry.soundUrl, this.path, true, 0, 0, 0, 0, 0);
+			sndSystem.newStreamingSource(
+				true, this.sourceName, poolEntry.func_110457_b(), this.path, true, 0, 0, 0, 0, 0);
 			sndSystem.setTemporary(this.sourceName, false);
 			sndSystem.setPitch(this.sourceName, this.pitch);
 			

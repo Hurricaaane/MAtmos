@@ -1,6 +1,6 @@
 package net.minecraft.src;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.src.Minecraft;
 import eu.ha3.mc.convenience.Ha3Scroller;
 
 /*

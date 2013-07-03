@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.src.Minecraft;
 import eu.ha3.matmos.engine.Data;
 
 /*

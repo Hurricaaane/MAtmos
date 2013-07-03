@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.logging.Level;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.src.Minecraft;
 import eu.ha3.easy.TimeStatistic;
 import eu.ha3.matmos.conv.ExpansionManager;
 import eu.ha3.matmos.conv.MAtmosConvLogger;

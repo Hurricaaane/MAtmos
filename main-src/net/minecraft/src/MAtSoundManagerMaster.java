@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import net.minecraft.client.Minecraft;
 import paulscode.sound.SoundSystem;
 import eu.ha3.matmos.conv.CustomVolume;
 import eu.ha3.matmos.conv.ReplicableSoundRelay;
@@ -89,7 +88,7 @@ public class MAtSoundManagerMaster implements ReplicableSoundRelay, CustomVolume
 		if (this.soundequivalences.containsKey(soundPath))
 			return this.soundequivalences.get(soundPath);
 		
-		File soundFile = new File(this.mod.manager().getMinecraft().getMinecraftDir() + "/resources", soundPath);
+		File soundFile = new File(this.mod.util().getMinecraftDir() + "/resources", soundPath);
 		
 		// FIXME DO IT BETTER
 		String path = new StringBuilder().append(soundPath).toString();

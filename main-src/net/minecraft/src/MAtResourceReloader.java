@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.client.Minecraft;
 import eu.ha3.matmos.conv.MAtmosConvLogger;
 
 public class MAtResourceReloader
@@ -33,7 +32,7 @@ public class MAtResourceReloader
 	 */
 	private void findAndLoadResourcesFromLocation()
 	{
-		File[] filesInThisDir = new File(Minecraft.getMinecraftDir(), "resources/sound3/").listFiles();
+		File[] filesInThisDir = new File(this.mod.util().getMinecraftDir(), "resources/sound3/").listFiles();
 		
 		if (filesInThisDir != null)
 		{
