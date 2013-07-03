@@ -32,7 +32,8 @@ import eu.ha3.util.property.simple.ConfigProperty;
   0. You just DO WHAT THE FUCK YOU WANT TO.
  */
 
-public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsTickEvents, SupportsKeyEvents
+public class MAtMod extends HaddonImpl
+	implements SupportsFrameEvents, SupportsTickEvents, SupportsKeyEvents, ResourceManagerReloadListener
 {
 	final static public MAtmosConvLogger LOGGER = new MAtmosConvLogger();
 	final static public int VERSION = 24; // Remember to change the thing on mod_Matmos
@@ -172,21 +173,23 @@ public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsT
 		
 		this.expansionManager.loadExpansions();
 		
-		//String firstBlocker = getFirstBlocker();
-		//if (firstBlocker != null)
-		//{
-		//	AnyLogger.warning(firstBlocker);
-		//	AnyLogger.warning("MAtmos will not attempt load sounds on its own at all.");
-		//}
-		//else
-		//{
-		TimeStatistic stat = new TimeStatistic();
-		MAtmosConvLogger.info("Loading resources...");
+		// XXX: not reloading resources anymore!!!
+		//TimeStatistic stat = new TimeStatistic();
+		//MAtmosConvLogger.info("Loading resources...");
+		//new MAtResourceReloader(this).reloadResources();
+		//MAtmosConvLogger.info("Took " + stat.getSecondsAsString(3) + " seconds to load resources");
 		
-		new MAtResourceReloader(this).reloadResources();
-		
-		MAtmosConvLogger.info("Took " + stat.getSecondsAsString(3) + " seconds to load resources");
-		//}
+		ResourceManager resMan = manager().getMinecraft().func_110442_L();
+		if (resMan instanceof ReloadableResourceManager)
+		{
+			MAtmosConvLogger.info("Adding resource reloading listener");
+			((ReloadableResourceManager) resMan).func_110542_a(this);
+		}
+		else
+		{
+			MAtmosConvLogger.warning("The base Resource Manager is not a reloadable instance. "
+				+ "Unpredictable results will be caused by switching resource packs.");
+		}
 		
 		this.phase = MAtModPhase.READY;
 		MAtmosConvLogger.info("Ready.");
@@ -229,6 +232,18 @@ public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsT
 		
 		startRunning();
 		
+	}
+	
+	public void reloadWhileRunning()
+	{
+		if (isReady() && isRunning())
+		{
+			// Stop the mod to clear all reserved streams
+			stopRunning();
+			
+			// Restart the mod from scratch
+			reloadAndStart();
+		}
 	}
 	
 	public void startRunning()
@@ -439,4 +454,10 @@ public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsT
 		
 	}
 	
+	// ResourceManagerReloadListener
+	@Override
+	public void func_110549_a(ResourceManager var1)
+	{
+		reloadWhileRunning();
+	}
 }

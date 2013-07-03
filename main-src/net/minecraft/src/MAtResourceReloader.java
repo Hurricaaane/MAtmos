@@ -6,6 +6,7 @@ import java.util.List;
 
 import eu.ha3.matmos.conv.MAtmosConvLogger;
 
+@Deprecated
 public class MAtResourceReloader
 {
 	private MAtMod mod;
@@ -76,7 +77,7 @@ public class MAtResourceReloader
 					}
 					fileRep = fileRep.replaceAll("/", ".");
 					
-					this.mod.getManager().getMinecraft().installResource(par2Str + file.getName(), file);
+					//this.mod.getManager().getMinecraft().installResource(par2Str + file.getName(), file);
 					this.myAddedFiles.add(par2Str + file.getName());
 				}
 				catch (Exception var9)
