@@ -159,9 +159,6 @@ public class MAtSoundStream
 	
 	public void setPlaybackVolumeMod(float playbackVolume)
 	{
-		if (!this.isValid)
-			return;
-		
 		this.playbackVolume = playbackVolume;
 		
 		if (this.isInitialized)
@@ -174,6 +171,9 @@ public class MAtSoundStream
 	private void evaluateAndApplyVolume()
 	{
 		if (!this.isInitialized)
+			return;
+		
+		if (!this.isValid)
 			return;
 		
 		float volume = this.playbackVolume * this.volume;
