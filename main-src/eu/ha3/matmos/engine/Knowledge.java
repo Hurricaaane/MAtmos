@@ -724,27 +724,6 @@ public class Knowledge
 		
 	}
 	
-	public void routine()
-	{
-		if (!this.isRunning)
-			return;
-		
-		if (this.dataLastVersion != this.data.updateVersion)
-		{
-			evaluate();
-			this.dataLastVersion = this.data.updateVersion;
-			
-		}
-		
-		this.soundManager.routine();
-		for (Iterator<Machine> iter = this.machines.values().iterator(); iter.hasNext();)
-		{
-			iter.next().routine();
-			
-		}
-		
-	}
-	
 	public void soundRoutine()
 	{
 		if (!this.isRunning)
