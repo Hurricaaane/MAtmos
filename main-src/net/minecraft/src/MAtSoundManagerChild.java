@@ -126,11 +126,12 @@ public class MAtSoundManagerChild implements SoundRelay, CustomVolume
 	{
 		cacheSound(path);
 		
-		this.tokens.get(token).setWeakPath(path);
-		this.tokens.get(token).setVolume(volume);
-		this.tokens.get(token).setPitch(pitch);
+		MAtSoundStream stream = this.tokens.get(token);
+		stream.setWeakPath(path);
+		stream.setVolume(volume);
+		stream.setPitch(pitch);
 		
-		this.tokens.get(token).setPlaybackVolumeMod(computePlaybackVolume());
+		stream.setPlaybackVolumeMod(computePlaybackVolume());
 		
 		return true;
 	}
