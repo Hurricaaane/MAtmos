@@ -92,8 +92,6 @@ public class MAtMod extends HaddonImpl
 				.getMinecraftDir(), "matmos/expansions_r12_userconfig/"));
 		this.updateNotifier = new MAtUpdateNotifier(this);
 		
-		this.soundManagerMaster = new MAtSoundManagerMaster(this);
-		
 		manager().hookFrameEvents(true);
 		manager().hookTickEvents(true);
 		
@@ -122,8 +120,8 @@ public class MAtMod extends HaddonImpl
 			throw new RuntimeException("Error caused config not to work: " + e.getMessage());
 		}
 		
-		this.soundManagerMaster.setVolume(this.config.getFloat("globalvolume.scale"));
 		this.updateNotifier.loadConfig(this.config);
+		createMaster();
 		
 		MAtmosConvLogger.info("Took " + this.timeStatistic.getSecondsAsString(3) + " seconds to setup MAtmos base.");
 		
@@ -140,6 +138,12 @@ public class MAtMod extends HaddonImpl
 			initializeAndEnable();
 		}
 		
+	}
+	
+	private void createMaster()
+	{
+		this.soundManagerMaster = new MAtSoundManagerMaster(this);
+		this.soundManagerMaster.setVolume(this.config.getFloat("globalvolume.scale"));
 	}
 	
 	public void initializeAndEnable()
@@ -238,8 +242,15 @@ public class MAtMod extends HaddonImpl
 	{
 		if (isReady() && isRunning())
 		{
+			// Set a NullObject to the Master to dispose of all streams
+			this.expansionManager.setMaster(new MAtSoundManagerNullObject());
+			
 			// Stop the mod to clear all reserved streams
 			stopRunning();
+			
+			// Sreate a new master and set it
+			createMaster();
+			this.expansionManager.setMaster(this.soundManagerMaster);
 			
 			// Restart the mod from scratch
 			reloadAndStart();
@@ -459,6 +470,6 @@ public class MAtMod extends HaddonImpl
 	public void func_110549_a(ResourceManager var1)
 	{
 		MAtmosConvLogger.info("Resource Manager needs to reload. Unpredictable effects");
-		//reloadWhileRunning();
+		reloadWhileRunning();
 	}
 }
