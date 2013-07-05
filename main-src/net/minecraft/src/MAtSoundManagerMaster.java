@@ -1,6 +1,5 @@
 package net.minecraft.src;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -42,6 +41,8 @@ public class MAtSoundManagerMaster implements ReplicableSoundRelay, CustomVolume
 	
 	private Random random;
 	
+	private MAtCacheRegistry cacheRegistry;
+	
 	public MAtSoundManagerMaster(MAtMod mAtmosHaddon)
 	{
 		this.mod = mAtmosHaddon;
@@ -53,6 +54,8 @@ public class MAtSoundManagerMaster implements ReplicableSoundRelay, CustomVolume
 		
 		this.settingsVolume = 0F;
 		this.random = new Random();
+		
+		this.cacheRegistry = new MAtCacheRegistry();
 		
 	}
 	
@@ -79,41 +82,22 @@ public class MAtSoundManagerMaster implements ReplicableSoundRelay, CustomVolume
 	public void cacheSound(String path)
 	{
 		getSound(path);
-		
+		this.cacheRegistry.cacheSound(path);
 	}
 	
-	@SuppressWarnings("static-access")
 	public String getSound(String soundPath)
 	{
 		if (this.soundequivalences.containsKey(soundPath))
 			return this.soundequivalences.get(soundPath);
 		
-		File soundFile = new File(this.mod.util().getMinecraftDir() + "/resources", soundPath);
-		
-		// FIXME DO IT BETTER
-		String path = new StringBuilder().append(soundPath).toString();
-		int j = path.indexOf("/");
-		int t = path.indexOf(".");
-		String quant = path.substring(j + 1, t);
+		String quant = soundPath.substring(0, soundPath.indexOf("."));
 		String dotted = quant.replaceAll("/", ".");
-		dotted = dotted.replaceAll("0", "");
-		dotted = dotted.replaceAll("1", "");
-		dotted = dotted.replaceAll("2", "");
-		dotted = dotted.replaceAll("3", "");
-		dotted = dotted.replaceAll("4", "");
-		dotted = dotted.replaceAll("5", "");
-		dotted = dotted.replaceAll("6", "");
-		dotted = dotted.replaceAll("7", "");
-		dotted = dotted.replaceAll("8", "");
-		dotted = dotted.replaceAll("9", "");
+		while (Character.isDigit(soundPath.charAt(soundPath.length() - 1)))
+		{
+			soundPath = soundPath.substring(0, soundPath.length() - 1);
+		}
 		
 		this.soundequivalences.put(soundPath, dotted);
-		
-		if (!soundFile.exists())
-		{
-			MAtMod.LOGGER.warning("File "
-				+ soundPath + " is missing " + " (" + dotted + "). This should not cause issues.");
-		}
 		
 		return dotted;
 		
@@ -226,7 +210,7 @@ public class MAtSoundManagerMaster implements ReplicableSoundRelay, CustomVolume
 		{
 			// soundPoolSounds
 			return ((SoundPool) this.mod.util().getPrivateValueLiteral(
-				net.minecraft.src.SoundManager.class, this.mod.manager().getMinecraft().sndManager, "b", 1))
+				net.minecraft.src.SoundManager.class, this.mod.manager().getMinecraft().sndManager, "b", 3))
 				.getRandomSoundFromSoundPool(getSound(path));
 		}
 		catch (PrivateAccessException e)

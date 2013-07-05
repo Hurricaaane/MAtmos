@@ -194,7 +194,8 @@ public class Expansion implements CustomVolume
 							this.dataFrequency = 1;
 						}
 						
-						MAtmosConvLogger.fine("Set " + this.userDefinedIdentifier + " frequency to " + this.dataFrequency);
+						MAtmosConvLogger.fine("Set "
+							+ this.userDefinedIdentifier + " frequency to " + this.dataFrequency);
 						
 					}
 					catch (NumberFormatException e)
@@ -364,8 +365,10 @@ public class Expansion implements CustomVolume
 			
 			TimeStatistic stat = new TimeStatistic(Locale.ENGLISH);
 			buildKnowledge();
+			this.knowledge.cacheSounds();
 			
-			MAtmosConvLogger.info("Expansion " + getUserDefinedName() + " loaded (" + stat.getSecondsAsString(3) + "s).");
+			MAtmosConvLogger.info("Expansion "
+				+ getUserDefinedName() + " loaded (" + stat.getSecondsAsString(3) + "s).");
 			this.isBuilding = false;
 		}
 		

@@ -88,7 +88,7 @@ public class MAtMod extends HaddonImpl
 		this.userControl = new MAtUserControl(this);
 		this.dataGatherer = new MAtDataGatherer(this);
 		this.expansionManager =
-			new ExpansionManager(new File(util().getMinecraftDir(), "matmos/expansions_r12/"), new File(util()
+			new ExpansionManager(new File(util().getMinecraftDir(), "matmos/expansions_r25/"), new File(util()
 				.getMinecraftDir(), "matmos/expansions_r12_userconfig/"));
 		this.updateNotifier = new MAtUpdateNotifier(this);
 		
@@ -458,6 +458,7 @@ public class MAtMod extends HaddonImpl
 	@Override
 	public void func_110549_a(ResourceManager var1)
 	{
-		reloadWhileRunning();
+		MAtmosConvLogger.info("Resource Manager needs to reload. Unpredictable effects");
+		//reloadWhileRunning();
 	}
 }

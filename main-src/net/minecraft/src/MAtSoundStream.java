@@ -39,6 +39,8 @@ public class MAtSoundStream
 	private boolean isPaused;
 	private URL poolURL;
 	
+	private boolean isValid;
+	
 	private float playbackVolume;
 	
 	public MAtSoundStream(int number, MAtSoundManagerChild refer)
@@ -54,6 +56,9 @@ public class MAtSoundStream
 	public void startStreaming(float fadeDuration, int timesToPlay)
 	{
 		ensureInitialized();
+		
+		if (!this.isValid)
+			return;
 		
 		SoundSystem sndSystem = this.refer.getSoundSystem();
 		
@@ -114,26 +119,27 @@ public class MAtSoundStream
 		if (poolEntry != null)
 		{
 			this.poolURL = poolEntry.func_110457_b();
+			this.path = poolEntry.func_110458_a();
 			
 			MAtmosConvLogger.info("Source: "
 				+ this.sourceName + " is being initialized with URL: " + poolEntry.func_110458_a().toString());
 			
 			SoundSystem sndSystem = this.refer.getSoundSystem();
 			
-			sndSystem.newStreamingSource(
-				true, this.sourceName, poolEntry.func_110457_b(), this.path, true, 0, 0, 0, 0, 0);
+			sndSystem.newStreamingSource(true, this.sourceName, this.poolURL, this.path, true, 0, 0, 0, 0, 0);
 			sndSystem.setTemporary(this.sourceName, false);
 			sndSystem.setPitch(this.sourceName, this.pitch);
 			
 			sndSystem.setLooping(this.sourceName, true);
 			sndSystem.activate(this.sourceName);
+			this.isValid = true;
 			
 		}
 		
 		this.isInitialized = true;
 	}
 	
-	public void setPath(String path)
+	public void setWeakPath(String path)
 	{
 		this.path = path;
 		
@@ -153,6 +159,9 @@ public class MAtSoundStream
 	
 	public void setPlaybackVolumeMod(float playbackVolume)
 	{
+		if (!this.isValid)
+			return;
+		
 		this.playbackVolume = playbackVolume;
 		
 		if (this.isInitialized)
@@ -175,6 +184,9 @@ public class MAtSoundStream
 	
 	public void stopStreaming(float fadeDuration)
 	{
+		if (!this.isValid)
+			return;
+		
 		SoundSystem sndSystem = this.refer.getSoundSystem();
 		
 		if (fadeDuration <= 0f)
@@ -190,6 +202,9 @@ public class MAtSoundStream
 	
 	public void pauseStreaming()
 	{
+		if (!this.isValid)
+			return;
+		
 		SoundSystem sndSystem = this.refer.getSoundSystem();
 		sndSystem.pause(this.sourceName);
 		
@@ -199,6 +214,9 @@ public class MAtSoundStream
 	
 	public void interruptStreaming()
 	{
+		if (!this.isValid)
+			return;
+		
 		SoundSystem sndSystem = this.refer.getSoundSystem();
 		sndSystem.stop(this.sourceName);
 		
@@ -207,6 +225,9 @@ public class MAtSoundStream
 	public void unallocate()
 	{
 		if (!this.isInitialized)
+			return;
+		
+		if (!this.isValid)
 			return;
 		
 		SoundSystem sndSystem = this.refer.getSoundSystem();

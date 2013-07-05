@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import paulscode.sound.SoundSystem;
-import eu.ha3.matmos.conv.MAtmosConvLogger;
 import eu.ha3.matmos.conv.CustomVolume;
+import eu.ha3.matmos.conv.MAtmosConvLogger;
 import eu.ha3.matmos.engine.SoundRelay;
 
 /*
@@ -126,7 +126,7 @@ public class MAtSoundManagerChild implements SoundRelay, CustomVolume
 	{
 		cacheSound(path);
 		
-		this.tokens.get(token).setPath(path);
+		this.tokens.get(token).setWeakPath(path);
 		this.tokens.get(token).setVolume(volume);
 		this.tokens.get(token).setPitch(pitch);
 		
