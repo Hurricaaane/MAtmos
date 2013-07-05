@@ -12,6 +12,7 @@ import javax.naming.directory.Attributes;
 import javax.naming.directory.InitialDirContext;
 
 import eu.ha3.matmos.engine.Data;
+import eu.ha3.mc.haddon.PrivateAccessException;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -114,7 +115,17 @@ public class MAtProcessorRelaxed extends MAtProcessorModel
 		setValue(30, (int) (w.getSeed() >> 32));
 		setValue(31, (int) (w.getSeed() & 0xFFFFFFFF));
 		
-		ServerData serverData = mc.getServerData();
+		//ServerData serverData = mc.getServerData();
+		ServerData serverData = null;
+		try
+		{
+			serverData =
+				(ServerData) mod().util().getPrivateValueLiteral(Minecraft.class, Minecraft.getMinecraft(), "Q", 5);
+		}
+		catch (PrivateAccessException e)
+		{
+			e.printStackTrace();
+		}
 		if (serverData != null && serverData.serverIP != null)
 		{
 			String playerIp = serverData.serverIP;

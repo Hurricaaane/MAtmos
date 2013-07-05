@@ -1,6 +1,5 @@
 package net.minecraft.src;
 
-import net.minecraft.src.Minecraft;
 import eu.ha3.matmos.engine.Data;
 
 /*
@@ -96,7 +95,7 @@ public class MAtProcessorFrequent extends MAtProcessorModel
 		setValue(23, player.getAir());
 		
 		// Get Player health amount (Integer)
-		setValue(24, player.health);
+		setValue(24, (int) Math.ceil(player.func_110143_aJ())); // HEALTH is now a float.
 		
 		// Get Player dimension (Integer)
 		setValue(25, player.dimension);
@@ -134,7 +133,7 @@ public class MAtProcessorFrequent extends MAtProcessorModel
 		setValue(51, player.foodStats.getFoodLevel()); //(getFoodStats())
 		setValue(52, (int) (player.foodStats.getSaturationLevel() * 1000)); //(getFoodStats())
 		setValue(53, 0); // TODO (Food Exhaustion Level)
-		setValue(54, player.experienceValue * 1000);
+		setValue(54, (int) (player.experience * 1000));
 		setValue(55, player.experienceLevel);
 		setValue(56, player.experienceTotal);
 		setValue(57, player.isOnLadder() ? 1 : 0);
