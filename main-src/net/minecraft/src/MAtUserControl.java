@@ -216,7 +216,6 @@ public class MAtUserControl
 		else if (this.mod.getPhase() == MAtModPhase.NOT_YET_ENABLED)
 		{
 			whenUninitializedAction();
-			
 		}
 		
 	}
@@ -249,16 +248,10 @@ public class MAtUserControl
 			this.mod.reloadAndStart();
 			this.mod.printChat(Ha3Utility.COLOR_BRIGHTGREEN, "Reloading expansions ("
 				+ stat.getSecondsAsString(2) + "s)");
-			
 		}
 		else if (this.mod.getPhase() == MAtModPhase.NOT_YET_ENABLED)
 		{
 			whenUninitializedAction();
-			/*this.mod.printChat(Ha3Utility.COLOR_RED, "MAtmos is set to be disabled when Minecraft starts.");
-			this.mod.printChatShort(
-				Ha3Utility.COLOR_GOLD, "Press ", Ha3Utility.COLOR_WHITE, getKeyBindingMainFriendlyName(),
-				Ha3Utility.COLOR_GOLD, " to start MAtmos.");*/
-			
 		}
 	}
 	

@@ -71,6 +71,8 @@ public class MAtMod extends HaddonImpl
 		MAtmosLogger.LOGGER.setLevel(Level.OFF);
 	}
 	
+	// Operations
+	
 	@Override
 	public void onLoad()
 	{
@@ -138,12 +140,6 @@ public class MAtMod extends HaddonImpl
 		
 	}
 	
-	private void createSoundManagerMaster()
-	{
-		this.soundManagerMaster = new MAtSoundManagerMaster(this);
-		this.soundManagerMaster.setVolume(this.config.getFloat("globalvolume.scale"));
-	}
-	
 	public void initializeAndEnable()
 	{
 		if (this.phase != MAtModPhase.NOT_YET_ENABLED)
@@ -180,6 +176,12 @@ public class MAtMod extends HaddonImpl
 		
 		MAtmosConvLogger.info("Took " + this.timeStatistic.getSecondsAsString(3) + " seconds to enable MAtmos.");
 		
+	}
+	
+	private void createSoundManagerMaster()
+	{
+		this.soundManagerMaster = new MAtSoundManagerMaster(this);
+		this.soundManagerMaster.setVolume(this.config.getFloat("globalvolume.scale"));
 	}
 	
 	public void reloadAndStart()
@@ -258,59 +260,19 @@ public class MAtMod extends HaddonImpl
 		
 	}
 	
-	public void printChat(Object... args)
+	public void saveConfig()
 	{
-		printChat(new Object[] { Ha3Utility.COLOR_WHITE, "MAtmos: " }, args);
+		// If there were changes...
+		if (this.config.commit())
+		{
+			MAtmosConvLogger.info("Saving configuration...");
+			
+			// Write changes on disk.
+			this.config.save();
+		}
 	}
 	
-	public void printChatShort(Object... args)
-	{
-		printChat(new Object[] { Ha3Utility.COLOR_WHITE, "" }, args);
-	}
-	
-	protected void printChat(final Object[] in, Object... args)
-	{
-		Object[] dest = new Object[in.length + args.length];
-		System.arraycopy(in, 0, dest, 0, in.length);
-		System.arraycopy(args, 0, dest, in.length, args.length);
-		
-		util().printChat(dest);
-	}
-	
-	public CustomVolume getGlobalVolumeControl()
-	{
-		return this.soundManagerMaster;
-	}
-	
-	public Map<String, Expansion> getExpansionList()
-	{
-		return this.expansionManager.getExpansions();
-	}
-	
-	public Ha3SoundCommunicator getSoundCommunicator()
-	{
-		return this.sndComm;
-	}
-	
-	public MAtModPhase getPhase()
-	{
-		return this.phase;
-	}
-	
-	public boolean isFatalError()
-	{
-		return this.isFatalError;
-	}
-	
-	public boolean isReady()
-	{
-		return this.phase == MAtModPhase.READY;
-	}
-	
-	public boolean isRunning()
-	{
-		return this.isRunning;
-	}
+	// Events
 	
 	@Override
 	public void onKey(KeyBinding event)
@@ -368,23 +330,6 @@ public class MAtMod extends HaddonImpl
 		}
 	}
 	
-	public void saveConfig()
-	{
-		// If there were changes...
-		if (this.config.commit())
-		{
-			MAtmosConvLogger.info("Saving configuration...");
-			
-			// Write changes on disk.
-			this.config.save();
-		}
-	}
-	
-	public ConfigProperty getConfig()
-	{
-		return this.config;
-	}
-	
 	// ResourceManagerReloadListener
 	@Override
 	public void func_110549_a(ResourceManager var1)
@@ -394,7 +339,7 @@ public class MAtMod extends HaddonImpl
 		// Initiate hot reload
 		if (isReady() && isRunning())
 		{
-			// Set a NullObject to the Master to dispose of all streams
+			// Set a NullObject to all SoundManagers to dispose of all streams safely
 			this.expansionManager.neutralizeSoundManagers();
 			
 			// Stop the mod to clear all reserved streams
@@ -408,4 +353,68 @@ public class MAtMod extends HaddonImpl
 			reloadAndStart();
 		}
 	}
+	
+	// Getters
+	
+	public ConfigProperty getConfig()
+	{
+		return this.config;
+	}
+	
+	public CustomVolume getGlobalVolumeControl()
+	{
+		return this.soundManagerMaster;
+	}
+	
+	public Map<String, Expansion> getExpansionList()
+	{
+		return this.expansionManager.getExpansions();
+	}
+	
+	public Ha3SoundCommunicator getSoundCommunicator()
+	{
+		return this.sndComm;
+	}
+	
+	public MAtModPhase getPhase()
+	{
+		return this.phase;
+	}
+	
+	public boolean isFatalError()
+	{
+		return this.isFatalError;
+	}
+	
+	public boolean isReady()
+	{
+		return this.phase == MAtModPhase.READY;
+	}
+	
+	public boolean isRunning()
+	{
+		return this.isRunning;
+	}
+	
+	// Utility functions
+	
+	public void printChat(Object... args)
+	{
+		printChat(new Object[] { Ha3Utility.COLOR_WHITE, "MAtmos: " }, args);
+	}
+	
+	public void printChatShort(Object... args)
+	{
+		printChat(new Object[] { Ha3Utility.COLOR_WHITE, "" }, args);
+	}
+	
+	protected void printChat(final Object[] in, Object... args)
+	{
+		Object[] dest = new Object[in.length + args.length];
+		System.arraycopy(in, 0, dest, 0, in.length);
+		System.arraycopy(args, 0, dest, in.length, args.length);
+		
+		util().printChat(dest);
+	}
+	
 }
