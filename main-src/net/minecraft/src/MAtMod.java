@@ -4,13 +4,15 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Locale;
+import java.util.Map;
 import java.util.logging.Level;
 
 import eu.ha3.easy.TimeStatistic;
+import eu.ha3.matmos.conv.CustomVolume;
+import eu.ha3.matmos.conv.Expansion;
 import eu.ha3.matmos.conv.ExpansionManager;
 import eu.ha3.matmos.conv.MAtmosConvLogger;
 import eu.ha3.matmos.engine.MAtmosLogger;
-import eu.ha3.mc.convenience.Ha3Signal;
 import eu.ha3.mc.haddon.SupportsFrameEvents;
 import eu.ha3.mc.haddon.SupportsKeyEvents;
 import eu.ha3.mc.haddon.SupportsTickEvents;
@@ -78,7 +80,6 @@ public class MAtMod extends HaddonImpl
 			this.isFatalError = true;
 			manager().hookTickEvents(true);
 			return;
-			
 		}
 		
 		this.timeStatistic = new TimeStatistic(Locale.ENGLISH);
@@ -121,16 +122,13 @@ public class MAtMod extends HaddonImpl
 		}
 		
 		this.updateNotifier.loadConfig(this.config);
-		createMaster();
 		
-		MAtmosConvLogger.info("Took " + this.timeStatistic.getSecondsAsString(3) + " seconds to setup MAtmos base.");
-		
-		//
-		
-		MAtmosConvLogger.info("Pre-loading.");
+		createSoundManagerMaster();
 		
 		// This registers stuff to Minecraft (key bindings...)
 		this.userControl.load();
+		
+		MAtmosConvLogger.info("Took " + this.timeStatistic.getSecondsAsString(3) + " seconds to setup MAtmos base.");
 		
 		this.phase = MAtModPhase.NOT_YET_ENABLED;
 		if (this.config.getBoolean("start.enabled"))
@@ -140,7 +138,7 @@ public class MAtMod extends HaddonImpl
 		
 	}
 	
-	private void createMaster()
+	private void createSoundManagerMaster()
 	{
 		this.soundManagerMaster = new MAtSoundManagerMaster(this);
 		this.soundManagerMaster.setVolume(this.config.getFloat("globalvolume.scale"));
@@ -161,27 +159,7 @@ public class MAtMod extends HaddonImpl
 		this.expansionManager.setMaster(this.soundManagerMaster);
 		this.expansionManager.setData(this.dataGatherer.getData());
 		
-		this.sndComm.load(new Ha3Signal() {
-			@Override
-			public void signal()
-			{
-				sndCommSuccess();
-			}
-		}, new Ha3Signal() {
-			@Override
-			public void signal()
-			{
-				sndCommFailed();
-			}
-		});
-		
 		this.expansionManager.loadExpansions();
-		
-		// XXX: not reloading resources anymore!!!
-		//TimeStatistic stat = new TimeStatistic();
-		//MAtmosConvLogger.info("Loading resources...");
-		//new MAtResourceReloader(this).reloadResources();
-		//MAtmosConvLogger.info("Took " + stat.getSecondsAsString(3) + " seconds to load resources");
 		
 		ResourceManager resMan = manager().getMinecraft().func_110442_L();
 		if (resMan instanceof ReloadableResourceManager)
@@ -204,21 +182,6 @@ public class MAtMod extends HaddonImpl
 		
 	}
 	
-	private void sndCommSuccess()
-	{
-		MAtmosConvLogger.info("SoundCommunicator loaded (after " + this.timeStatistic.getSecondsAsString(3) + " s.).");
-	}
-	
-	private void sndCommFailed()
-	{
-		this.phase = MAtModPhase.SOUNDCOMMUNICATOR_FAILURE;
-		MAtmosConvLogger.severe("CRITICAL Error with SoundCommunicator (after "
-			+ this.timeStatistic.getSecondsAsString(3) + " s.). Will not load.");
-		
-		this.isFatalError = true;
-		
-	}
-	
 	public void reloadAndStart()
 	{
 		if (!isReady())
@@ -236,25 +199,6 @@ public class MAtMod extends HaddonImpl
 		
 		startRunning();
 		
-	}
-	
-	public void reloadWhileRunning()
-	{
-		if (isReady() && isRunning())
-		{
-			// Set a NullObject to the Master to dispose of all streams
-			this.expansionManager.neutralizeSoundManagers();
-			
-			// Stop the mod to clear all reserved streams
-			stopRunning();
-			
-			// Sreate a new master and set it
-			createMaster();
-			this.expansionManager.setMaster(this.soundManagerMaster);
-			
-			// Restart the mod from scratch
-			reloadAndStart();
-		}
 	}
 	
 	public void startRunning()
@@ -300,11 +244,11 @@ public class MAtMod extends HaddonImpl
 		
 		try
 		{
-			File file = new File(util().getMinecraftDir(), "data_dump.xml");
+			File file = new File(util().getMinecraftDir(), "matmos/data_dump.xml");
 			file.createNewFile();
 			
 			FileWriter fw = new FileWriter(file);
-			fw.write(getDataGatherer().getData().createXML());
+			fw.write(this.dataGatherer.getData().createXML());
 			fw.close();
 		}
 		catch (Exception e)
@@ -333,60 +277,45 @@ public class MAtMod extends HaddonImpl
 		util().printChat(dest);
 	}
 	
-	public MAtSoundManagerMaster getSoundManagerMaster()
+	public CustomVolume getGlobalVolumeControl()
 	{
 		return this.soundManagerMaster;
-		
 	}
 	
-	public MAtDataGatherer getDataGatherer()
+	public Map<String, Expansion> getExpansionList()
 	{
-		return this.dataGatherer;
-		
-	}
-	
-	// XXX Blatant design.
-	public ExpansionManager getExpansionManager()
-	{
-		return this.expansionManager;
-		
+		return this.expansionManager.getExpansions();
 	}
 	
 	public Ha3SoundCommunicator getSoundCommunicator()
 	{
 		return this.sndComm;
-		
 	}
 	
 	public MAtModPhase getPhase()
 	{
 		return this.phase;
-		
 	}
 	
 	public boolean isFatalError()
 	{
 		return this.isFatalError;
-		
 	}
 	
 	public boolean isReady()
 	{
 		return this.phase == MAtModPhase.READY;
-		
 	}
 	
 	public boolean isRunning()
 	{
 		return this.isRunning;
-		
 	}
 	
 	@Override
 	public void onKey(KeyBinding event)
 	{
 		this.userControl.communicateKeyBindingEvent(event);
-		
 	}
 	
 	@Override
@@ -398,14 +327,10 @@ public class MAtMod extends HaddonImpl
 		if (!this.isRunning)
 			return;
 		
-		if (this.sndComm.isUseable())
-		{
-			this.expansionManager.soundRoutine();
-			this.soundManagerMaster.routine();
-		}
+		this.expansionManager.soundRoutine();
+		this.soundManagerMaster.routine();
 		
 		this.userControl.frameRoutine(semi);
-		
 	}
 	
 	@Override
@@ -430,20 +355,17 @@ public class MAtMod extends HaddonImpl
 		}
 		
 		this.userControl.tickRoutine();
-		if (this.isRunning && this.sndComm.isUseable())
+		if (this.isRunning)
 		{
 			this.dataGatherer.tickRoutine();
 			this.expansionManager.dataRoutine();
-			
 		}
 		
 		if (!this.firstTickPassed)
 		{
 			this.firstTickPassed = true;
 			this.updateNotifier.attempt();
-			
 		}
-		
 	}
 	
 	public void saveConfig()
@@ -456,13 +378,11 @@ public class MAtMod extends HaddonImpl
 			// Write changes on disk.
 			this.config.save();
 		}
-		
 	}
 	
 	public ConfigProperty getConfig()
 	{
 		return this.config;
-		
 	}
 	
 	// ResourceManagerReloadListener
@@ -470,6 +390,22 @@ public class MAtMod extends HaddonImpl
 	public void func_110549_a(ResourceManager var1)
 	{
 		MAtmosConvLogger.warning("ResourceManager has changed. Unintended side-effects results may happen.");
-		reloadWhileRunning();
+		
+		// Initiate hot reload
+		if (isReady() && isRunning())
+		{
+			// Set a NullObject to the Master to dispose of all streams
+			this.expansionManager.neutralizeSoundManagers();
+			
+			// Stop the mod to clear all reserved streams
+			stopRunning();
+			
+			// Sreate a new master and set it
+			createSoundManagerMaster();
+			this.expansionManager.setMaster(this.soundManagerMaster);
+			
+			// Restart the mod from scratch
+			reloadAndStart();
+		}
 	}
 }

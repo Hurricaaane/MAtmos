@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import eu.ha3.matmos.conv.CustomVolume;
 import eu.ha3.matmos.conv.Expansion;
 import eu.ha3.mc.gui.HDisplayStringProvider;
 import eu.ha3.mc.gui.HGuiSliderControl;
@@ -86,21 +87,21 @@ public class MAtGuiMenu extends GuiScreen
 		final int _LEFT = this.width / 2 - _WIDTH / 2;
 		final int _RIGHT = this.width / 2 + _WIDTH / 2;
 		
-		Map<String, Expansion> expansions = this.mod.getExpansionManager().getExpansions();
+		Map<String, Expansion> expansions = this.mod.getExpansionList();
 		int id = 0;
 		
 		{
-			final MAtSoundManagerMaster central = this.mod.getSoundManagerMaster();
+			final CustomVolume globalVolumeControl = this.mod.getGlobalVolumeControl();
 			
 			HGuiSliderControl sliderControl =
-				new HGuiSliderControl(id, _LEFT, _MIX, _WIDTH, _UNIT, "", central.getVolume() * 0.5f);
+				new HGuiSliderControl(id, _LEFT, _MIX, _WIDTH, _UNIT, "", globalVolumeControl.getVolume() * 0.5f);
 			sliderControl.setListener(new HSliderListener() {
 				@Override
 				public void sliderValueChanged(HGuiSliderControl slider, float value)
 				{
-					central.setVolume(value * 2);
+					globalVolumeControl.setVolume(value * 2);
 					slider.updateDisplayString();
-					MAtGuiMenu.this.mod.getConfig().setProperty("globalvolume.scale", central.getVolume());
+					MAtGuiMenu.this.mod.getConfig().setProperty("globalvolume.scale", globalVolumeControl.getVolume());
 				}
 				
 				@Override
@@ -117,7 +118,7 @@ public class MAtGuiMenu extends GuiScreen
 				@Override
 				public String provideDisplayString()
 				{
-					return "Global Volume Control: " + (int) Math.floor(central.getVolume() * 100) + "%";
+					return "Global Volume Control: " + (int) Math.floor(globalVolumeControl.getVolume() * 100) + "%";
 				}
 			});
 			sliderControl.updateDisplayString();
@@ -284,7 +285,6 @@ public class MAtGuiMenu extends GuiScreen
 		{
 			this.mc.displayGuiScreen(this.parentScreen);
 			this.mod.stopRunning();
-			
 		}
 		else if (par1GuiButton.id == 220)
 		{
@@ -310,7 +310,7 @@ public class MAtGuiMenu extends GuiScreen
 	
 	private void aboutToClose()
 	{
-		Map<String, Expansion> expansions = this.mod.getExpansionManager().getExpansions();
+		Map<String, Expansion> expansions = this.mod.getExpansionList();
 		for (Expansion expansion : expansions.values())
 		{
 			if (expansion.getVolume() == 0f && expansion.isRunning())

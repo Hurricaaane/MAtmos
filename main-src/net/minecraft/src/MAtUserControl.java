@@ -62,7 +62,7 @@ public class MAtUserControl
 		this.scroller.routine();
 		if (this.scroller.isRunning())
 		{
-			this.mod.getSoundManagerMaster().setVolume(this.scroller.getValue());
+			this.mod.getGlobalVolumeControl().setVolume(this.scroller.getValue());
 			
 		}
 		
@@ -93,40 +93,21 @@ public class MAtUserControl
 			{
 				this.mod.printChat(Ha3Utility.COLOR_GOLD, "MAtmos is not loaded.");
 			}
-			else
+			else if (phase == MAtModPhase.NOT_INITIALIZED)
 			{
-				switch (phase)
-				{
-				case NOT_INITIALIZED:
-					this.mod.printChat(
-						Ha3Utility.COLOR_GOLD, "MAtmos will not load due to a fatal error. ", Ha3Utility.COLOR_GRAY,
-						"(Some MAtmos modules are not initialized)");
-					break;
-				case SOUNDCOMMUNICATOR_FAILURE:
-					this.mod.printChat(
-						Ha3Utility.COLOR_GOLD, "Still loading... ", Ha3Utility.COLOR_GRAY,
-						"(Could not retreive Minecraft sound engine)");
-					break;
-				default:
-					break;
-				}
-				
+				this.mod.printChat(
+					Ha3Utility.COLOR_GOLD, "MAtmos will not load due to a fatal error. ", Ha3Utility.COLOR_GRAY,
+					"(Some MAtmos modules are not initialized)");
 			}
 		}
-		else if (!this.mod.getSoundCommunicator().isUseable())
+		else
 		{
 			if (this.mod.manager().getMinecraft().gameSettings.soundVolume <= 0)
 			{
 				this.mod.printChat(
 					Ha3Utility.COLOR_RED, "Warning: ", Ha3Utility.COLOR_WHITE,
-					"MAtmos cannot run yet because sounds are turned off in your game settings!");
+					"Sounds are turned off in your game settings!");
 				
-			}
-			else
-			{
-				this.mod.printChat(
-					Ha3Utility.COLOR_RED, "Warning: ", Ha3Utility.COLOR_WHITE,
-					"MAtmos cannot run because Minecraft sound engine may have crashed!");
 			}
 		}
 		
@@ -181,7 +162,7 @@ public class MAtUserControl
 		if (this.scroller.isRunning())
 		{
 			this.scroller.stop();
-			this.mod.getConfig().setProperty("globalvolume.scale", this.mod.getSoundManagerMaster().getVolume());
+			this.mod.getConfig().setProperty("globalvolume.scale", this.mod.getGlobalVolumeControl().getVolume());
 			this.mod.saveConfig();
 		}
 		
