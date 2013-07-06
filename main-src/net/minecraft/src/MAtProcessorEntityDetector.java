@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.src.Minecraft;
 import eu.ha3.matmos.engine.Data;
 
 /*
@@ -41,6 +40,7 @@ public class MAtProcessorEntityDetector
 	
 	private int maxel;
 	
+	@SuppressWarnings("unchecked")
 	public MAtProcessorEntityDetector(
 		MAtMod modIn, Data dataIn, String mindist, String prefix, String deltaSuffix, int max, int... radiis)
 	{
@@ -86,7 +86,7 @@ public class MAtProcessorEntityDetector
 		{
 			processor.process();
 		}
-		for (Map mappy : this.mappies)
+		for (Map<?, ?> mappy : this.mappies)
 		{
 			mappy.clear();
 		}

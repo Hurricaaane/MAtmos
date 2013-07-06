@@ -3,6 +3,8 @@ package net.minecraft.src;
 import java.util.HashSet;
 import java.util.Set;
 
+import eu.ha3.matmos.conv.MAtmosConvLogger;
+
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
                     Version 2, December 2004 
@@ -41,6 +43,6 @@ public class MAtCacheRegistry
 		Minecraft.getMinecraft().sndManager.addSound(path);
 		this.set.add(path);
 		
-		MAtMod.LOGGER.info("Cached sound " + path);
+		MAtmosConvLogger.info("Cached sound " + path);
 	}
 }

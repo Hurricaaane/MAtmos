@@ -22,11 +22,13 @@ public class MAtGuiMore extends GuiScreen
 	 * A reference to the screen object that created this. Used for navigating
 	 * between screens.
 	 */
+	@SuppressWarnings("unused")
 	private GuiScreen parentScreen;
 	
 	/** The title string that is displayed in the top-center of the screen. */
 	protected String screenTitle;
 	
+	@SuppressWarnings("unused")
 	private MAtMod mod;
 	
 	/** The ID of the button that has been pressed. */
