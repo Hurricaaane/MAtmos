@@ -162,7 +162,6 @@ public class MAtSoundManagerChild implements SoundRelay, CustomVolume
 		MAtmosConvLogger.info("Erasing token #" + token);
 		
 		MAtSoundStream stream = this.tokens.get(token);
-		stream.interruptStreaming();
 		stream.unallocate();
 		this.tokens.remove(token);
 		

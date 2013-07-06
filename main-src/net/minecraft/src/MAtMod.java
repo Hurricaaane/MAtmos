@@ -191,7 +191,7 @@ public class MAtMod extends HaddonImpl
 		}
 		else
 		{
-			MAtmosConvLogger.warning("The base Resource Manager is not a reloadable instance. "
+			MAtmosConvLogger.severe("The base Resource Manager is not a reloadable instance. "
 				+ "Unpredictable results will be caused by switching resource packs.");
 		}
 		

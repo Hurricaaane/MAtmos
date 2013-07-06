@@ -61,6 +61,11 @@ public class MAtSoundStream
 			return;
 		
 		SoundSystem sndSystem = this.refer.getSoundSystem();
+		if (sndSystem == null)
+		{
+			invalidSoundSystem();
+			return;
+		}
 		
 		if (!this.loopingIsSet)
 		{
@@ -115,16 +120,15 @@ public class MAtSoundStream
 		
 		MAtmosConvLogger.info("Initializing source: " + this.sourceName + " (" + this.path + ")");
 		
+		SoundSystem sndSystem = this.refer.getSoundSystem();
 		SoundPoolEntry poolEntry = this.refer.getSoundPoolEntryOf(this.path);
-		if (poolEntry != null)
+		if (sndSystem != null && poolEntry != null)
 		{
 			this.poolURL = poolEntry.func_110457_b();
 			this.path = poolEntry.func_110458_a();
 			
 			MAtmosConvLogger.info("Source: "
 				+ this.sourceName + " is being initialized with URL: " + poolEntry.func_110458_a().toString());
-			
-			SoundSystem sndSystem = this.refer.getSoundSystem();
 			
 			sndSystem.newStreamingSource(true, this.sourceName, this.poolURL, this.path, true, 0, 0, 0, 0, 0);
 			sndSystem.setTemporary(this.sourceName, false);
@@ -134,6 +138,10 @@ public class MAtSoundStream
 			sndSystem.activate(this.sourceName);
 			this.isValid = true;
 			
+		}
+		else if (sndSystem == null)
+		{
+			invalidSoundSystem();
 		}
 		
 		this.isInitialized = true;
@@ -178,7 +186,14 @@ public class MAtSoundStream
 		
 		float volume = this.playbackVolume * this.volume;
 		
-		this.refer.getSoundSystem().setVolume(this.sourceName, volume);
+		SoundSystem sndSystem = this.refer.getSoundSystem();
+		if (sndSystem == null)
+		{
+			invalidSoundSystem();
+			return;
+		}
+		
+		sndSystem.setVolume(this.sourceName, volume);
 		
 	}
 	
@@ -188,6 +203,11 @@ public class MAtSoundStream
 			return;
 		
 		SoundSystem sndSystem = this.refer.getSoundSystem();
+		if (sndSystem == null)
+		{
+			invalidSoundSystem();
+			return;
+		}
 		
 		if (fadeDuration <= 0f)
 		{
@@ -206,19 +226,15 @@ public class MAtSoundStream
 			return;
 		
 		SoundSystem sndSystem = this.refer.getSoundSystem();
+		if (sndSystem == null)
+		{
+			invalidSoundSystem();
+			return;
+		}
+		
 		sndSystem.pause(this.sourceName);
 		
 		this.isPaused = true;
-		
-	}
-	
-	public void interruptStreaming()
-	{
-		if (!this.isValid)
-			return;
-		
-		SoundSystem sndSystem = this.refer.getSoundSystem();
-		sndSystem.stop(this.sourceName);
 		
 	}
 	
@@ -231,9 +247,21 @@ public class MAtSoundStream
 			return;
 		
 		SoundSystem sndSystem = this.refer.getSoundSystem();
-		interruptStreaming();
+		if (sndSystem == null)
+		{
+			invalidSoundSystem();
+			return;
+		}
+		
+		sndSystem.stop(this.sourceName);
 		sndSystem.removeSource(this.sourceName);
 		
+	}
+	
+	private void invalidSoundSystem()
+	{
+		MAtmosConvLogger.warning("Tried to perform an operation on null SoundSystem");
+		Thread.dumpStack();
 	}
 	
 }
