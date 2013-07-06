@@ -82,7 +82,8 @@ public class ExpansionManager
 		}
 		catch (FileNotFoundException e)
 		{
-			MAtmosConvLogger.warning("Error with FileNotFound on ExpansionLoader (on file " + file.getAbsolutePath() + ").");
+			MAtmosConvLogger.warning("Error with FileNotFound on ExpansionLoader (on file "
+				+ file.getAbsolutePath() + ").");
 			
 		}
 		
@@ -253,4 +254,12 @@ public class ExpansionManager
 		
 	}
 	
+	public void neutralizeSoundManagers()
+	{
+		this.master = new SRCVNullObject();
+		for (Expansion exp : this.expansions.values())
+		{
+			exp.setSoundManager(new SRCVNullObject());
+		}
+	}
 }

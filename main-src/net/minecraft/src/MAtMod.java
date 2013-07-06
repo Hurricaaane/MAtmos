@@ -243,7 +243,7 @@ public class MAtMod extends HaddonImpl
 		if (isReady() && isRunning())
 		{
 			// Set a NullObject to the Master to dispose of all streams
-			this.expansionManager.setMaster(new MAtSoundManagerNullObject());
+			this.expansionManager.neutralizeSoundManagers();
 			
 			// Stop the mod to clear all reserved streams
 			stopRunning();
@@ -469,7 +469,7 @@ public class MAtMod extends HaddonImpl
 	@Override
 	public void func_110549_a(ResourceManager var1)
 	{
-		MAtmosConvLogger.info("Resource Manager needs to reload. Unpredictable effects");
+		MAtmosConvLogger.warning("ResourceManager has changed. Unintended side-effects results may happen.");
 		reloadWhileRunning();
 	}
 }
