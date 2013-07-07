@@ -233,8 +233,7 @@ public class MAtMod extends HaddonImpl
 		this.expansionManager.deactivate();
 		MAtmosConvLogger.fine("Stopped.");
 		
-		createDataDump();
-		
+		//createDataDump();
 	}
 	
 	private void createDataDump()
