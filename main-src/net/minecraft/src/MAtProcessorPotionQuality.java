@@ -1,5 +1,8 @@
 package net.minecraft.src;
 
+import java.util.Set;
+
+import eu.ha3.matmos.conv.MAtmosConvLogger;
 import eu.ha3.matmos.engine.IntegerData;
 
 /*
@@ -30,7 +33,9 @@ public abstract class MAtProcessorPotionQuality extends MAtProcessorModel
 	{
 		EntityPlayer player = mod().manager().getMinecraft().thePlayer;
 		
-		for (int i = 0; i < 32; i++)
+		Set<Integer> required = getRequired();
+		
+		for (Integer i : required)
 		{
 			setValue(i, 0);
 		}
@@ -41,7 +46,14 @@ public abstract class MAtProcessorPotionQuality extends MAtProcessorModel
 			int id = effect.getPotionID();
 			if (id < 32 && id >= 0)
 			{
-				setValue(id, getQuality(effect));
+				if (required.contains(id))
+				{
+					setValue(id, getQuality(effect));
+				}
+			}
+			else
+			{
+				MAtmosConvLogger.warning("Found potion effect which ID is " + id + "!!!");
 			}
 		}
 		

@@ -38,206 +38,379 @@ public class MAtProcessorFrequent extends MAtProcessorModel
 		int y = (int) Math.floor(player.posY);
 		int z = (int) Math.floor(player.posZ);
 		
-		int mx = (int) Math.round(player.motionX * 1000);
-		int my = (int) Math.round(player.motionY * 1000);
-		int mz = (int) Math.round(player.motionZ * 1000);
+		boolean mouseOverATile =
+			mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == EnumMovingObjectType.TILE;
 		
-		// Get the Sky Light value
-		setValue(0, w.getSavedLightValue(EnumSkyBlock.Sky, x, y, z));
-		
-		// Get the Artificial Light value
-		setValue(1, w.getSavedLightValue(EnumSkyBlock.Block, x, y, z));
-		
-		// Get the Block Light value
-		setValue(2, w.getBlockLightValue(x, y, z));
-		
-		// Get the World Time modulo 24KL
-		setValue(3, (int) (worldinfo.getWorldTime() % 24000L));
-		
-		// Get the Altitude (Y)
-		setValue(4, y);
-		
-		// 5 : (RELAXED)
-		
-		// Get if Is in Water
-		setValue(6, player.isInWater() ? 1 : 0);
-		
-		// Get if It's Raining
-		setValue(7, worldinfo.isRaining() ? 1 : 0);
-		
-		// Get if It's Thundering (regardless of rain)
-		setValue(8, worldinfo.isThundering() ? 1 : 0);
-		
-		// Get if the Current block player is on is exposed to the sky
-		setValue(9, w.canBlockSeeTheSky(x, y, z) ? 1 : 0);
-		
-		// Get if Player is un the Nether
-		setValue(10, player.dimension == -1 ? 1 : 0);
-		
-		// Get the Skylight level subtracted (the amount of light stripped from Skylight)
-		setValue(11, w.skylightSubtracted);
-		
-		// [12,18] (RELAXED)
-		
-		// Get if Player is inside of Water material
-		setValue(19, player.isWet() ? 1 : 0);
-		
-		// Get if Player X (Floored (Double) Player X, casted into to Integer)
-		setValue(20, x);
-		
-		// Get if Player Z (Floored (Double) Player Z, casted into to Integer)
-		setValue(21, z);
-		
-		// Get if Player is on Ground
-		setValue(22, player.onGround ? 1 : 0);
-		
-		// Get Player oxygen amount (Integer)
-		setValue(23, player.getAir());
-		
-		// Get Player health amount (Integer)
-		setValue(24, (int) Math.ceil(player.func_110143_aJ())); // HEALTH is now a float.
-		
-		// Get Player dimension (Integer)
-		setValue(25, player.dimension);
-		
-		setValue(26, w.canBlockSeeTheSky(x, y, z) && !(w.getTopSolidOrLiquidBlock(x, z) > y) ? 1 : 0);
-		setValue(27, w.getTopSolidOrLiquidBlock(x, z));
-		setValue(28, w.getTopSolidOrLiquidBlock(x, z) - y);
-		
-		// [29,31] : (RELAXED)
-		
-		setValue(32, player.inventory.getCurrentItem() != null ? player.inventory.getCurrentItem().itemID : -1);
-		//setValue( 32, player.getHeldItem() != null ? player.getHeldItem().itemID : -1 );
-		setValue(33, mx);
-		setValue(34, my);
-		setValue(35, mz);
-		setValue(
-			36, y >= 1 && y < mod().util().getWorldHeight()
-				? getTranslatedBlockId(mc.theWorld.getBlockId(x, y - 1, z)) : -1); //FIXME difference in Altitude notion
-		setValue(
-			37, y >= 2 && y < mod().util().getWorldHeight()
-				? getTranslatedBlockId(mc.theWorld.getBlockId(x, y - 2, z)) : -1); //FIXME difference in Altitude notion
-		setValue(38, (int) mod().util().getClientTick());
-		setValue(39, player.isBurning() ? 1 : 0); // XXX ERROR NOW IS A PRIVATE VALUE
-		setValue(40, (int) Math.floor(player.swingProgress * 16));
-		setValue(41, player.swingProgress != 0 ? 1 : 0); // is swinging
-		setValue(42, player.isJumping ? 1 : 0);
-		setValue(43, (int) (player.fallDistance * 1000));
-		setValue(44, player.isInWeb ? 1 : 0);
-		setValue(45, (int) Math.floor(Math.sqrt(mx * mx + mz * mz)));
-		setValue(46, player.inventory.currentItem);
-		setValue(47, mc.objectMouseOver != null ? 1 : 0);
-		setValue(48, mc.objectMouseOver != null ? mc.objectMouseOver.typeOfHit.ordinal() : -1);
-		setValue(49, player.isBurning() ? 1 : 0);
-		setValue(50, player.getTotalArmorValue());
-		setValue(51, player.foodStats.getFoodLevel()); //(getFoodStats())
-		setValue(52, (int) (player.foodStats.getSaturationLevel() * 1000)); //(getFoodStats())
-		setValue(53, 0); // TODO (Food Exhaustion Level)
-		setValue(54, (int) (player.experience * 1000));
-		setValue(55, player.experienceLevel);
-		setValue(56, player.experienceTotal);
-		setValue(57, player.isOnLadder() ? 1 : 0);
-		setValue(58, player.getItemInUseDuration());
-		// ---- / --- // / / setValue( 59, player.inventory.func_35157_d(Item.arrow.shiftedIndex) ? 1 : 0);
-		setValue(59, 0);
-		setValue(60, player.isBlocking() ? 1 : 0);
-		setValue(61, 72000 - player.getItemInUseDuration());
-		setValue(62, player.inventory.getCurrentItem() == null ? -1 : player.inventory.getCurrentItem().getItemDamage());
-		setValue(63, player.isSprinting() ? 1 : 0);
-		setValue(64, player.isSneaking() ? 1 : 0);
-		setValue(65, player.isAirBorne ? 1 : 0);
-		setValue(66, player.isUsingItem() ? 1 : 0);
-		setValue(67, player.isRiding() ? 1 : 0);
-		setValue(68, player.ridingEntity != null && player.ridingEntity.getClass() == EntityMinecartEmpty.class ? 1 : 0);
-		setValue(69, player.ridingEntity != null && player.ridingEntity.getClass() == EntityBoat.class ? 1 : 0);
-		setValue(70, mc.playerController != null && mc.playerController.isInCreativeMode() ? 1 : 0);
-		
-		int rmx = player.ridingEntity != null ? (int) Math.round(player.ridingEntity.motionX * 1000) : 0;
-		int rmy = player.ridingEntity != null ? (int) Math.round(player.ridingEntity.motionY * 1000) : 0;
-		int rmz = player.ridingEntity != null ? (int) Math.round(player.ridingEntity.motionZ * 1000) : 0;
-		
-		setValue(71, rmx);
-		setValue(72, rmy);
-		setValue(73, rmz);
-		setValue(74, player.ridingEntity != null ? (int) Math.floor(Math.sqrt(rmx * rmx + rmz * rmz)) : 0);
-		
-		// 75-85 relaxed server
-		
-		if (mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == EnumMovingObjectType.TILE)
+		for (Integer index : getRequired())
 		{
-			setValue(86, w.getBlockId(mc.objectMouseOver.blockX, mc.objectMouseOver.blockY, mc.objectMouseOver.blockZ));
-			setValue(
-				87, w.getBlockMetadata(mc.objectMouseOver.blockX, mc.objectMouseOver.blockY, mc.objectMouseOver.blockZ));
-		}
-		else
-		{
-			setValue(86, 0);
-			setValue(87, 0);
-			
-		}
-		
-		// 88 - moon phase
-		
-		setValue(89, player.inventory.armorInventory[0] != null ? player.inventory.armorInventory[0].itemID : -1);
-		setValue(90, player.inventory.armorInventory[1] != null ? player.inventory.armorInventory[1].itemID : -1);
-		setValue(91, player.inventory.armorInventory[2] != null ? player.inventory.armorInventory[2].itemID : -1);
-		setValue(92, player.inventory.armorInventory[3] != null ? player.inventory.armorInventory[3].itemID : -1);
-		
-		// 93 - ME BiomeID
-		
-		setValue(94, y >= 0 && y < mod().util().getWorldHeight()
-			? getTranslatedBlockId(mc.theWorld.getBlockId(x, y, z)) : -1); //FIXME difference in Altitude notion
-		setValue(
-			95,
-			y >= 0 && y < mod().util().getWorldHeight() - 1
-				? getTranslatedBlockId(mc.theWorld.getBlockId(x, y + 1, z)) : -1);
-		
-		ItemStack currentItem = player.inventory.getCurrentItem();
-		
-		setValue(96, currentItem != null ? currentItem.itemID : -1);
-		setValue(97, mc.currentScreen != null && mc.currentScreen instanceof GuiContainer ? 1 : 0);
-		
-		//
-		/*
-		for (int i = 0; i < 64; i++)
-		{
-			setValue(100 + i, 0);
-		}
-		
-		if (player.inventory.getCurrentItem() != null
-			&& player.inventory.getCurrentItem().getEnchantmentTagList() != null
-			&& player.inventory.getCurrentItem().getEnchantmentTagList().tagCount() > 0)
-		{
-			int total = player.inventory.getCurrentItem().getEnchantmentTagList().tagCount();
-			
-			NBTTagList enchantments = player.inventory.getCurrentItem().getEnchantmentTagList();
-			for (int i = 0; i < total; i++)
+			switch (index)
 			{
-				short id = ((NBTTagCompound) enchantments.tagAt(i)).getShort("id");
-				short lvl = ((NBTTagCompound) enchantments.tagAt(i)).getShort("lvl");
+			case 0:
+				// Get the Sky Light value
+				setValue(0, w.getSavedLightValue(EnumSkyBlock.Sky, x, y, z));
+				break;
+			
+			case 1:
+				// Get the Artificial Light value
+				setValue(1, w.getSavedLightValue(EnumSkyBlock.Block, x, y, z));
+				break;
+			
+			case 2:
+				// Get the Block Light value
+				setValue(2, w.getBlockLightValue(x, y, z));
+				break;
+			
+			case 3:
+				// Get the World Time modulo 24KL
+				setValue(3, (int) (worldinfo.getWorldTime() % 24000L));
+				break;
+			
+			case 4:
+				// Get the Altitude (Y)
+				setValue(4, y);
+				break;
+			
+			// 5 : (RELAXED) 
+			
+			case 6:
+				// Get if Is in Water
+				setValue(6, player.isInWater() ? 1 : 0);
+				break;
+			
+			case 7:
+				// Get if It's Raining
+				setValue(7, worldinfo.isRaining() ? 1 : 0);
+				break;
+			
+			case 8:
+				// Get if It's Thundering (regardless of rain)
+				setValue(8, worldinfo.isThundering() ? 1 : 0);
+				break;
+			
+			case 9:
+				// Get if the Current block player is on is exposed to the sky
+				setValue(9, w.canBlockSeeTheSky(x, y, z) ? 1 : 0);
+				break;
+			
+			case 10:
+				// Get if Player is un the Nether
+				setValue(10, player.dimension == -1 ? 1 : 0);
+				break;
+			
+			case 11:
+				// Get the Skylight level subtracted (the amount of light stripped from Skylight)
+				setValue(11, w.skylightSubtracted);
+				break;
+			
+			// [12,18] (RELAXED)
+			
+			case 19:
+				// Get if Player is inside of Water material
+				setValue(19, player.isWet() ? 1 : 0);
+				break;
+			
+			case 20:
+				// Get if Player X (Floored (Double) Player X, casted into to Integer)
+				setValue(20, x);
+				break;
+			
+			case 21:
+				// Get if Player Z (Floored (Double) Player Z, casted into to Integer)
+				setValue(21, z);
+				break;
+			
+			case 22:
+				// Get if Player is on Ground
+				setValue(22, player.onGround ? 1 : 0);
+				break;
+			
+			case 23:
+				// Get Player oxygen amount (Integer)
+				setValue(23, player.getAir());
+				break;
+			
+			case 24:
+				// Get Player health amount (Integer)
+				setValue(24, (int) Math.ceil(player.func_110143_aJ())); // HEALTH is now a float.
+				break;
+			
+			case 25:
+				// Get Player dimension (Integer)
+				setValue(25, player.dimension);
+				break;
+			
+			case 26:
+				setValue(26, w.canBlockSeeTheSky(x, y, z) && !(w.getTopSolidOrLiquidBlock(x, z) > y) ? 1 : 0);
+				break;
+			
+			case 27:
+				setValue(27, w.getTopSolidOrLiquidBlock(x, z));
+				break;
+			
+			case 28:
+				setValue(28, w.getTopSolidOrLiquidBlock(x, z) - y);
+				break;
+			
+			// [29,31] : (RELAXED)
+			
+			case 32:
+				setValue(32, player.inventory.getCurrentItem() != null ? player.inventory.getCurrentItem().itemID : -1);
+				//setValue( 32, player.getHeldItem() != null ? player.getHeldItem().itemID : -1 );
+				break;
+			
+			case 33:
+				setValue(33, (int) Math.round(player.motionX * 1000));
+				break;
+			
+			case 34:
+				setValue(34, (int) Math.round(player.motionY * 1000));
+				break;
+			
+			case 35:
+				setValue(35, (int) Math.round(player.motionZ * 1000));
+				break;
+			
+			case 36:
+				setValue(
+					36,
+					y >= 1 && y < mod().util().getWorldHeight() ? getTranslatedBlockId(mc.theWorld.getBlockId(
+						x, y - 1, z)) : -1); //FIXME difference in Altitude notion
+				break;
+			
+			case 37:
+				setValue(
+					37,
+					y >= 2 && y < mod().util().getWorldHeight() ? getTranslatedBlockId(mc.theWorld.getBlockId(
+						x, y - 2, z)) : -1); //FIXME difference in Altitude notion
+				break;
+			
+			case 38:
+				setValue(38, (int) mod().util().getClientTick());
+				break;
+			
+			case 39:
+				setValue(39, player.isBurning() ? 1 : 0); // XXX ERROR NOW IS A PRIVATE VALUE
+				break;
+			
+			case 40:
+				setValue(40, (int) Math.floor(player.swingProgress * 16));
+				break;
+			
+			case 41:
+				setValue(41, player.swingProgress != 0 ? 1 : 0); // is swinging
+				break;
+			
+			case 42:
+				setValue(42, player.isJumping ? 1 : 0);
+				break;
+			
+			case 43:
+				setValue(43, (int) (player.fallDistance * 1000));
+				break;
+			
+			case 44:
+				setValue(44, player.isInWeb ? 1 : 0);
+				break;
+			
+			case 45:
+				int mxx = (int) Math.round(player.motionX * 1000);
+				int mzz = (int) Math.round(player.motionZ * 1000);
 				
-				if (id < 64 && i >= 0)
-				{
-					setValue(100 + id, lvl);
-				}
+				setValue(45, (int) Math.floor(Math.sqrt(mxx * mxx + mzz * mzz)));
+				break;
+			
+			case 46:
+				setValue(46, player.inventory.currentItem);
+				break;
+			
+			case 47:
+				setValue(47, mc.objectMouseOver != null ? 1 : 0);
+				break;
+			
+			case 48:
+				setValue(48, mc.objectMouseOver != null ? mc.objectMouseOver.typeOfHit.ordinal() : -1);
+				break;
+			
+			case 49:
+				setValue(49, player.isBurning() ? 1 : 0);
+				break;
+			
+			case 50:
+				setValue(50, player.getTotalArmorValue());
+				break;
+			
+			case 51:
+				setValue(51, player.foodStats.getFoodLevel()); //(getFoodStats())
+				break;
+			
+			case 52:
+				setValue(52, (int) (player.foodStats.getSaturationLevel() * 1000)); //(getFoodStats())
+				break;
+			
+			case 53:
+				setValue(53, 0); // TODO (Food Exhaustion Level)
+				break;
+			
+			case 54:
+				setValue(54, (int) (player.experience * 1000));
+				break;
+			
+			case 55:
+				setValue(55, player.experienceLevel);
+				break;
+			
+			case 56:
+				setValue(56, player.experienceTotal);
+				break;
+			
+			case 57:
+				setValue(57, player.isOnLadder() ? 1 : 0);
+				break;
+			
+			case 58:
+				setValue(58, player.getItemInUseDuration());
+				break;
+			
+			case 59:
+				// ---- / --- // / / setValue( 59, player.inventory.func_35157_d(Item.arrow.shiftedIndex) ? 1 : 0);
+				setValue(59, 0);
+				break;
+			
+			case 60:
+				setValue(60, player.isBlocking() ? 1 : 0);
+				break;
+			
+			case 61:
+				setValue(61, 72000 - player.getItemInUseDuration());
+				break;
+			
+			case 62:
+				setValue(62, player.inventory.getCurrentItem() == null ? -1 : player.inventory
+					.getCurrentItem().getItemDamage());
+				break;
+			
+			case 63:
+				setValue(63, player.isSprinting() ? 1 : 0);
+				break;
+			
+			case 64:
+				setValue(64, player.isSneaking() ? 1 : 0);
+				break;
+			
+			case 65:
+				setValue(65, player.isAirBorne ? 1 : 0);
+				break;
+			
+			case 66:
+				setValue(66, player.isUsingItem() ? 1 : 0);
+				break;
+			
+			case 67:
+				setValue(67, player.isRiding() ? 1 : 0);
+				break;
+			
+			case 68:
+				setValue(68, player.ridingEntity != null && player.ridingEntity.getClass() == EntityMinecartEmpty.class
+					? 1 : 0);
+				break;
+			
+			case 69:
+				setValue(69, player.ridingEntity != null && player.ridingEntity.getClass() == EntityBoat.class ? 1 : 0);
+				break;
+			
+			case 70:
+				setValue(70, mc.playerController != null && mc.playerController.isInCreativeMode() ? 1 : 0);
+				break;
+			
+			case 71:
+				int rmx = player.ridingEntity != null ? (int) Math.round(player.ridingEntity.motionX * 1000) : 0;
+				setValue(71, rmx);
+				break;
+			
+			case 72:
+				int rmy = player.ridingEntity != null ? (int) Math.round(player.ridingEntity.motionY * 1000) : 0;
+				setValue(72, rmy);
+				break;
+			
+			case 73:
+				int rmz = player.ridingEntity != null ? (int) Math.round(player.ridingEntity.motionZ * 1000) : 0;
+				setValue(73, rmz);
+				break;
+			
+			case 74:
+				int rmxx = player.ridingEntity != null ? (int) Math.round(player.ridingEntity.motionX * 1000) : 0;
+				int rmzz = player.ridingEntity != null ? (int) Math.round(player.ridingEntity.motionZ * 1000) : 0;
+				setValue(74, player.ridingEntity != null ? (int) Math.floor(Math.sqrt(rmxx * rmxx + rmzz * rmzz)) : 0);
+				break;
+			
+			// 75-85 relaxed server
+			
+			case 86:
+				setValue(
+					86,
+					mouseOverATile ? w.getBlockId(
+						mc.objectMouseOver.blockX, mc.objectMouseOver.blockY, mc.objectMouseOver.blockZ) : 0);
+				break;
+			
+			case 87:
+				setValue(
+					87,
+					mouseOverATile ? w.getBlockMetadata(
+						mc.objectMouseOver.blockX, mc.objectMouseOver.blockY, mc.objectMouseOver.blockZ) : 0);
+				break;
+			
+			// 88 - moon phase
+			
+			case 89:
+				setValue(89, player.inventory.armorInventory[0] != null
+					? player.inventory.armorInventory[0].itemID : -1);
+				break;
+			
+			case 90:
+				setValue(90, player.inventory.armorInventory[1] != null
+					? player.inventory.armorInventory[1].itemID : -1);
+				break;
+			
+			case 91:
+				setValue(91, player.inventory.armorInventory[2] != null
+					? player.inventory.armorInventory[2].itemID : -1);
+				break;
+			
+			case 92:
+				setValue(92, player.inventory.armorInventory[3] != null
+					? player.inventory.armorInventory[3].itemID : -1);
+				break;
+			
+			// 93 - ME BiomeID
+			
+			case 94:
+				setValue(
+					94,
+					y >= 0 && y < mod().util().getWorldHeight()
+						? getTranslatedBlockId(mc.theWorld.getBlockId(x, y, z)) : -1); //FIXME difference in Altitude notion
+				break;
+			
+			case 95:
+				setValue(
+					95,
+					y >= 0 && y < mod().util().getWorldHeight() - 1 ? getTranslatedBlockId(mc.theWorld.getBlockId(
+						x, y + 1, z)) : -1);
+				break;
+			
+			case 96:
+				ItemStack currentItem = player.inventory.getCurrentItem();
+				setValue(96, currentItem != null ? currentItem.itemID : -1);
+				break;
+			
+			case 97:
+				setValue(97, mc.currentScreen != null && mc.currentScreen instanceof GuiContainer ? 1 : 0);
+				break;
+			
+			default:
+				break;
 			}
-		}*/
-		/*
-		for (int i = 0; i < 32; i++)
-		{
-			setValue(200 + i, 0);
+			
 		}
-		
-		for (Object oeffect : player.getActivePotionEffects())
-		{
-			PotionEffect effect = (PotionEffect) oeffect;
-			int id = effect.getPotionID();
-			if (id < 32 && id >= 0)
-			{
-				setValue(200 + id, 1 + effect.getAmplifier());
-			}
-		}*/
-		// Remember to increase the data size.
 		
 	}
 	

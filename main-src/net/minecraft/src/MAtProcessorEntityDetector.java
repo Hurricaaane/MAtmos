@@ -40,6 +40,8 @@ public class MAtProcessorEntityDetector
 	
 	private int maxel;
 	
+	private boolean isRequired;
+	
 	@SuppressWarnings("unchecked")
 	public MAtProcessorEntityDetector(
 		MAtMod modIn, IntegerData dataIn, String mindist, String prefix, String deltaSuffix, int max, int... radiis)
@@ -81,10 +83,15 @@ public class MAtProcessorEntityDetector
 	
 	public void refresh()
 	{
+		this.isRequired = false;
+		
 		this.mindistModel.process();
+		this.isRequired = this.mindistModel.isRequired();
+		
 		for (MAtProcessorModel processor : this.radiModels)
 		{
 			processor.process();
+			this.isRequired = this.isRequired || processor.isRequired();
 		}
 		for (Map<?, ?> mappy : this.mappies)
 		{
@@ -97,6 +104,9 @@ public class MAtProcessorEntityDetector
 	public void process()
 	{
 		refresh();
+		
+		if (!this.isRequired)
+			return;
 		
 		Minecraft mc = this.mod.manager().getMinecraft();
 		

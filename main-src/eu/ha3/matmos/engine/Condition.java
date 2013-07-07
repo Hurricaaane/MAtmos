@@ -248,8 +248,6 @@ public class Condition extends Switchable
 			this.version = newVersion;
 			
 			gotValue = sheet.get(this.key);
-			
-			System.out.println(this.nickname + " modified");
 		}
 		else
 		{

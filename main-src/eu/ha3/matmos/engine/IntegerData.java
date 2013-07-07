@@ -15,6 +15,8 @@ import javax.xml.transform.stream.StreamResult;
 
 import eu.ha3.matmos.engineinterfaces.Data;
 import eu.ha3.matmos.engineinterfaces.Sheet;
+import eu.ha3.matmos.experimental.Requestable;
+import eu.ha3.matmos.experimental.Requirements;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -32,15 +34,17 @@ import eu.ha3.matmos.engineinterfaces.Sheet;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class IntegerData implements Data
+public class IntegerData implements Data, Requestable
 {
 	private Map<String, Sheet<Integer>> sheets;
 	private int updateVersion;
+	private Requirements requirements;
 	
-	public IntegerData()
+	public IntegerData(Requirements requirements)
 	{
 		this.sheets = new LinkedHashMap<String, Sheet<Integer>>();
 		this.updateVersion = 0;
+		this.requirements = requirements;
 	}
 	
 	@Override
@@ -118,6 +122,12 @@ public class IntegerData implements Data
 		eventWriter.close();
 		
 		return serialized.getWriter().toString();
+	}
+	
+	@Override
+	public Requirements getRequirements()
+	{
+		return this.requirements;
 	}
 	
 }

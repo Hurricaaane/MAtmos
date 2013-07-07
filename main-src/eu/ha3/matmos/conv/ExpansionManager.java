@@ -11,6 +11,8 @@ import java.util.Map;
 
 import eu.ha3.matmos.engineinterfaces.Data;
 import eu.ha3.matmos.engineinterfaces.SoundRelay;
+import eu.ha3.matmos.experimental.Collation;
+import eu.ha3.matmos.experimental.CollationOfRequirements;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
@@ -39,10 +41,11 @@ public class ExpansionManager
 	private ReplicableSoundRelay master;
 	private Data data;
 	
+	private Collation collation;
+	
 	public ExpansionManager(File expansionsFolder, File userconfigFolder)
 	{
 		this.expansions = new HashMap<String, Expansion>();
-		//this.soundManagers = new ArrayList<MAtSoundManagerChild>();
 		
 		this.expansionsFolder = expansionsFolder;
 		this.userconfigFolder = userconfigFolder;
@@ -57,6 +60,8 @@ public class ExpansionManager
 			this.userconfigFolder.mkdirs();
 		}
 		
+		this.collation = new CollationOfRequirements();
+		
 	}
 	
 	public void createExpansionEntry(String userDefinedIdentifier)
@@ -70,6 +75,7 @@ public class ExpansionManager
 		
 		expansion.setSoundManager(soundManager);
 		expansion.setData(this.data);
+		expansion.setCollation(this.collation);
 		
 	}
 	
@@ -261,5 +267,10 @@ public class ExpansionManager
 		{
 			exp.setSoundManager(new SRCVNullObject());
 		}
+	}
+	
+	public Collation getCollation()
+	{
+		return this.collation;
 	}
 }

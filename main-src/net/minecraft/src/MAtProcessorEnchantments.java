@@ -1,5 +1,8 @@
 package net.minecraft.src;
 
+import java.util.Set;
+
+import eu.ha3.matmos.conv.MAtmosConvLogger;
 import eu.ha3.matmos.engine.IntegerData;
 
 /*
@@ -29,7 +32,10 @@ public abstract class MAtProcessorEnchantments extends MAtProcessorModel
 	protected void doProcess()
 	{
 		// Sets everything to 0 if no such armor
-		for (int i = 0; i < 64; i++)
+		
+		Set<Integer> required = getRequired();
+		
+		for (Integer i : required)
 		{
 			setValue(i, 0);
 		}
@@ -45,11 +51,18 @@ public abstract class MAtProcessorEnchantments extends MAtProcessorModel
 			for (int i = 0; i < total; i++)
 			{
 				short id = ((NBTTagCompound) enchantments.tagAt(i)).getShort("id");
-				short lvl = ((NBTTagCompound) enchantments.tagAt(i)).getShort("lvl");
 				
 				if (id < 64 && i >= 0)
 				{
-					setValue(id, lvl);
+					if (required.contains(i))
+					{
+						short lvl = ((NBTTagCompound) enchantments.tagAt(i)).getShort("lvl");
+						setValue(id, lvl);
+					}
+				}
+				else
+				{
+					MAtmosConvLogger.warning("Found enchantment which ID is " + id + "!!!");
 				}
 			}
 		}

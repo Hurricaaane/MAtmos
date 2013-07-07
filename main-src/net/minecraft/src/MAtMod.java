@@ -151,7 +151,7 @@ public class MAtMod extends HaddonImpl
 		
 		MAtmosConvLogger.info("Constructing.");
 		
-		this.dataGatherer.load();
+		this.dataGatherer.load(this.expansionManager.getCollation());
 		this.expansionManager.setMaster(this.soundManagerMaster);
 		this.expansionManager.setData(this.dataGatherer.getData());
 		

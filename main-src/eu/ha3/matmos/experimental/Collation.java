@@ -16,7 +16,7 @@ package eu.ha3.matmos.experimental;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public interface Collation
+public interface Collation extends Requirements // Extends Requirements is required
 {
 	/**
 	 * Add a Requirements to this collation. This causes the collation to
@@ -26,7 +26,7 @@ public interface Collation
 	 * @param req
 	 */
 	public void addRequirements(String owner, Requirements req);
-
+	
 	/**
 	 * Removes a Requirements from this collation. This causes the collation to
 	 * recompute, unless the name does not exist.

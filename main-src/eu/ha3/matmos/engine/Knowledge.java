@@ -18,6 +18,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import eu.ha3.matmos.engineinterfaces.Data;
 import eu.ha3.matmos.engineinterfaces.SoundRelay;
+import eu.ha3.matmos.experimental.FlatRequirements;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -60,7 +61,7 @@ public class Knowledge
 	
 	public Knowledge()
 	{
-		this.data = new IntegerData();
+		this.data = new IntegerData(new FlatRequirements());
 		this.soundManager = null;
 		
 		this.dataLastVersion = 0;

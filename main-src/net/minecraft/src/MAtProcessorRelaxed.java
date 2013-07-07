@@ -7,6 +7,7 @@ import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import javax.naming.directory.Attributes;
 import javax.naming.directory.InitialDirContext;
@@ -86,87 +87,129 @@ public class MAtProcessorRelaxed extends MAtProcessorModel
 		Minecraft mc = mod().manager().getMinecraft();
 		World w = mc.theWorld;
 		WorldInfo worldinfo = w.worldInfo;
-		EntityPlayerSP player = mc.thePlayer;
 		
-		int x = MathHelper.floor_double(player.posX);
-		int z = MathHelper.floor_double(player.posZ);
+		Set<Integer> required = getRequired();
 		
-		Chunk chunk = mc.theWorld.getChunkFromBlockCoords(x, z);
-		BiomeGenBase biome = chunk.getBiomeGenForWorldCoords(x & 15, z & 15, mc.theWorld.getWorldChunkManager());
-		
-		Integer biomeInt = this.deprecatedBiomeHash.get(biome.biomeName);
-		
-		if (biomeInt == null)
+		// Dear Princess Celestia
+		// i am so alone
+		if (required.contains(75)
+			|| required.contains(76) || required.contains(77) || required.contains(78) || required.contains(79)
+			|| required.contains(80))
 		{
-			biomeInt = -1;
-		}
-		
-		setValue(5, worldinfo.getDimension());
-		
-		setValue(12, w.isRemote ? 1 : 0);
-		setValue(13, 1 + this.random.nextInt(100)); // DICE A
-		setValue(14, 1 + this.random.nextInt(100)); // DICE B
-		setValue(15, 1 + this.random.nextInt(100)); // DICE C
-		setValue(16, 1 + this.random.nextInt(100)); // DICE D
-		setValue(17, 1 + this.random.nextInt(100)); // DICE E
-		setValue(18, 1 + this.random.nextInt(100)); // DICE F
-		
-		setValue(29, biomeInt);
-		setValue(30, (int) (w.getSeed() >> 32));
-		setValue(31, (int) (w.getSeed() & 0xFFFFFFFF));
-		
-		//ServerData serverData = mc.getServerData();
-		ServerData serverData = null;
-		try
-		{
-			serverData =
-				(ServerData) mod().util().getPrivateValueLiteral(Minecraft.class, Minecraft.getMinecraft(), "Q", 5);
-		}
-		catch (PrivateAccessException e)
-		{
-			e.printStackTrace();
-		}
-		if (serverData != null && serverData.serverIP != null)
-		{
-			String playerIp = serverData.serverIP;
-			
-			computeServerIP(playerIp);
-			
-			String MOTDsec = serverData.serverMOTD;
-			String NAMEsec = serverData.serverName;
-			
-			if (MOTDsec == null)
+			ServerData serverData = null;
+			try
 			{
-				MOTDsec = "";
+				serverData =
+					(ServerData) mod().util().getPrivateValueLiteral(Minecraft.class, Minecraft.getMinecraft(), "Q", 5);
 			}
-			if (NAMEsec == null)
+			catch (PrivateAccessException e)
 			{
-				NAMEsec = "";
+				e.printStackTrace();
 			}
-			
-			setValue(75, 1);
-			setValue(76, serverData.serverIP.toLowerCase(Locale.ENGLISH).hashCode());
-			setValue(77, MOTDsec.hashCode());
-			setValue(78, NAMEsec.hashCode());
-			setValue(79, this.serverAddresses.get(playerIp));
-			setValue(80, this.serverPorts.get(playerIp));
-			
+			if (serverData != null && serverData.serverIP != null)
+			{
+				String playerIp = serverData.serverIP;
+				
+				computeServerIP(playerIp);
+				
+				String MOTDsec = serverData.serverMOTD;
+				String NAMEsec = serverData.serverName;
+				
+				if (MOTDsec == null)
+				{
+					MOTDsec = "";
+				}
+				if (NAMEsec == null)
+				{
+					NAMEsec = "";
+				}
+				
+				setValue(75, 1);
+				setValue(76, serverData.serverIP.toLowerCase(Locale.ENGLISH).hashCode());
+				setValue(77, MOTDsec.hashCode());
+				setValue(78, NAMEsec.hashCode());
+				setValue(79, this.serverAddresses.get(playerIp));
+				setValue(80, this.serverPorts.get(playerIp));
+				
+			}
+			else
+			{
+				setValue(75, 0);
+				setValue(76, 0);
+				setValue(77, 0);
+				setValue(78, 0);
+				setValue(79, 0);
+				setValue(80, 0);
+			}
 		}
-		else
+		
+		for (Integer index : required)
 		{
-			setValue(75, 0);
-			setValue(76, 0);
-			setValue(77, 0);
-			setValue(78, 0);
-			setValue(79, 0);
-			setValue(80, 0);
+			switch (index)
+			{
+			case 5:
+				setValue(5, worldinfo.getDimension());
+				break;
+			
+			case 12:
+				setValue(12, w.isRemote ? 1 : 0);
+				break;
+			
+			case 13:
+				setValue(13, 1 + this.random.nextInt(100)); // DICE A
+				break;
+			
+			case 14:
+				setValue(14, 1 + this.random.nextInt(100)); // DICE B
+				break;
+			
+			case 15:
+				setValue(15, 1 + this.random.nextInt(100)); // DICE C
+				break;
+			
+			case 16:
+				setValue(16, 1 + this.random.nextInt(100)); // DICE D
+				break;
+			
+			case 17:
+				setValue(17, 1 + this.random.nextInt(100)); // DICE E
+				break;
+			
+			case 18:
+				setValue(18, 1 + this.random.nextInt(100)); // DICE F
+				break;
+			
+			case 29:
+				Integer biomeInt = this.deprecatedBiomeHash.get(calculateBiome().biomeName);
+				if (biomeInt == null)
+				{
+					biomeInt = -1;
+				}
+				setValue(29, biomeInt);
+				break;
+			
+			case 30:
+				setValue(30, (int) (w.getSeed() >> 32));
+				break;
+			
+			case 31:
+				setValue(31, (int) (w.getSeed() & 0xFFFFFFFF));
+				break;
+			
+			case 88:
+				// In Minecraft 1.6.1, the moon phase is an oscillating float
+				// instead of a linear incremental time counter
+				setValue(88, (int) (w.getMoonPhase() * 4));
+				break;
+			
+			case 93:
+				setValue(93, calculateBiome().biomeID);
+				break;
+			
+			default:
+				break;
+			}
 		}
-		
-		// In Minecraft 1.6.1, the moon phase is an oscillating float
-		// instead of a linear incremental time counter
-		setValue(88, (int) (w.getMoonPhase() * 4));
-		
-		setValue(93, biome.biomeID);
 		
 	}
 	
@@ -265,6 +308,17 @@ public class MAtProcessorRelaxed extends MAtProcessorModel
 		{
 			return par1;
 		}
+	}
+	
+	private BiomeGenBase calculateBiome()
+	{
+		Minecraft mc = mod().manager().getMinecraft();
+		EntityPlayerSP player = mc.thePlayer;
+		int x = MathHelper.floor_double(player.posX);
+		int z = MathHelper.floor_double(player.posZ);
+		
+		Chunk chunk = mc.theWorld.getChunkFromBlockCoords(x, z);
+		return chunk.getBiomeGenForWorldCoords(x & 15, z & 15, mc.theWorld.getWorldChunkManager());
 	}
 	
 }

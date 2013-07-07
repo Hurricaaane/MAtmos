@@ -1,6 +1,5 @@
 package net.minecraft.src;
 
-import net.minecraft.src.Minecraft;
 import eu.ha3.matmos.engine.IntegerData;
 
 /*

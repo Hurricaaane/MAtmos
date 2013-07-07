@@ -7,6 +7,7 @@ import eu.ha3.matmos.conv.ProcessorModel;
 import eu.ha3.matmos.engine.GenericSheet;
 import eu.ha3.matmos.engine.IntegerData;
 import eu.ha3.matmos.engineinterfaces.Data;
+import eu.ha3.matmos.experimental.Requirements;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -95,7 +96,6 @@ public class MAtDataGatherer
 	public MAtDataGatherer(MAtMod mAtmosHaddon)
 	{
 		this.mod = mAtmosHaddon;
-		
 	}
 	
 	private void resetRegulators()
@@ -104,14 +104,14 @@ public class MAtDataGatherer
 		this.cyclicTick = 0;
 	}
 	
-	public void load()
+	public void load(Requirements globalRequirements)
 	{
 		resetRegulators();
 		
 		this.additionalRelaxedProcessors = new ArrayList<ProcessorModel>();
 		this.additionalFrequentProcessors = new ArrayList<ProcessorModel>();
 		
-		this.data = new IntegerData();
+		this.data = new IntegerData(globalRequirements);
 		prepareSheets();
 		
 		this.largeScanner = new MAtScanVolumetricModel(this.mod);

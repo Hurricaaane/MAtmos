@@ -31,6 +31,9 @@ import eu.ha3.matmos.engine.MAtmosException;
 import eu.ha3.matmos.engine.UtilityLoader;
 import eu.ha3.matmos.engineinterfaces.Data;
 import eu.ha3.matmos.engineinterfaces.SoundRelay;
+import eu.ha3.matmos.experimental.Collation;
+import eu.ha3.matmos.experimental.RequiremForAKnowledge;
+import eu.ha3.matmos.experimental.Requirements;
 import eu.ha3.util.property.simple.ConfigProperty;
 
 /*
@@ -73,6 +76,9 @@ public class Expansion implements CustomVolume
 	private ConfigProperty myConfiguration;
 	private String friendlyName;
 	private boolean isBuilding;
+	
+	private Requirements requirements;
+	private Collation collation;
 	
 	public Expansion(String userDefinedIdentifier, File configurationSource)
 	{
@@ -240,6 +246,8 @@ public class Expansion implements CustomVolume
 			// loadKnowledge returns the validity of the knowledge
 			this.isReady = UtilityLoader.getInstance().loadKnowledge(this.knowledge, this.document, false);
 			
+			this.requirements = new RequiremForAKnowledge(this.knowledge);
+			
 		}
 		catch (MAtmosException e)
 		{
@@ -375,6 +383,7 @@ public class Expansion implements CustomVolume
 		if (this.isReady)
 		{
 			this.knowledge.turnOn();
+			this.collation.addRequirements(this.userDefinedIdentifier, this.requirements);
 		}
 		
 	}
@@ -385,6 +394,7 @@ public class Expansion implements CustomVolume
 			return;
 		
 		this.knowledge.turnOff();
+		this.collation.removeRequirements(this.userDefinedIdentifier);
 		
 	}
 	
@@ -452,7 +462,13 @@ public class Expansion implements CustomVolume
 	{
 		turnOff();
 		this.knowledge.patchKnowledge();
+		this.collation.removeRequirements(this.userDefinedIdentifier);
 		this.isReady = false;
+	}
+	
+	public void setCollation(Collation collation)
+	{
+		this.collation = collation;
 	}
 	
 }
