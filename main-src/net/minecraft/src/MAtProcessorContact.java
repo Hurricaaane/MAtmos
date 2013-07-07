@@ -1,7 +1,7 @@
 package net.minecraft.src;
 
 import net.minecraft.src.Minecraft;
-import eu.ha3.matmos.engine.Data;
+import eu.ha3.matmos.engine.IntegerData;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -23,7 +23,7 @@ public class MAtProcessorContact extends MAtProcessorModel
 {
 	private int contactSum[];
 	
-	public MAtProcessorContact(MAtMod modIn, Data dataIn, String normalNameIn, String deltaNameIn)
+	public MAtProcessorContact(MAtMod modIn, IntegerData dataIn, String normalNameIn, String deltaNameIn)
 	{
 		super(modIn, dataIn, normalNameIn, deltaNameIn);
 		this.contactSum = new int[MAtDataGatherer.COUNT_WORLD_BLOCKS];

@@ -3,7 +3,7 @@ package net.minecraft.src;
 import java.io.File;
 import java.io.IOException;
 
-import eu.ha3.matmos.engine.Data;
+import eu.ha3.matmos.engine.IntegerData;
 import eu.ha3.util.property.simple.ConfigProperty;
 import eu.ha3.util.property.simple.PropertyMissingException;
 import eu.ha3.util.property.simple.PropertyTypeException;
@@ -31,7 +31,7 @@ public class MAtProcessorCVARS extends MAtProcessorModel
 	
 	private ConfigProperty config;
 	
-	public MAtProcessorCVARS(MAtMod modIn, Data dataIn, String normalNameIn, String deltaNameIn)
+	public MAtProcessorCVARS(MAtMod modIn, IntegerData dataIn, String normalNameIn, String deltaNameIn)
 	{
 		super(modIn, dataIn, normalNameIn, deltaNameIn);
 		this.defaultsConfig = new File(mod().util().getMinecraftDir(), "matmos/dataconfigvars_defaults.cfg");

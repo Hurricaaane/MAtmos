@@ -119,7 +119,7 @@ public class Dynamic extends Switchable
 			String sheet = iterSheets.next();
 			Integer key = iterKeys.next();
 			
-			this.value = this.value + this.knowledge.data.sheets.get(sheet)[key];
+			this.value = this.value + this.knowledge.getData().getSheet(sheet).get(key);
 			
 		}
 		
@@ -136,9 +136,9 @@ public class Dynamic extends Switchable
 			String sheet = iterSheets.next();
 			Integer key = iterKeys.next();
 			
-			if (this.knowledge.data.sheets.containsKey(sheet))
+			if (this.knowledge.getData().getSheet(sheet) != null)
 			{
-				if (!(key >= 0 && key < this.knowledge.data.sheets.get(sheet).length))
+				if (!(key >= 0 && key < this.knowledge.getData().getSheet(sheet).getSize()))
 					return false;
 				
 			}

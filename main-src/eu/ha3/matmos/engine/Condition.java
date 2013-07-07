@@ -164,9 +164,9 @@ public class Condition extends Switchable
 		boolean valid = false;
 		if (!isDynamic())
 		{
-			if (this.knowledge.data.sheets.containsKey(this.sheet))
+			if (this.knowledge.getData().getSheet(this.sheet) != null)
 			{
-				if (this.key >= 0 && this.key < this.knowledge.data.sheets.get(this.sheet).length)
+				if (this.key >= 0 && this.key < this.knowledge.getData().getSheet(this.sheet).getSize())
 				{
 					valid = true;
 					
@@ -177,7 +177,7 @@ public class Condition extends Switchable
 		}
 		else
 		{
-			if (this.knowledge.dynamics.containsKey(this.dynamicKey))
+			if (this.knowledge.getDynamicsKeySet().contains(this.dynamicKey))
 			{
 				valid = true;
 				
@@ -186,7 +186,7 @@ public class Condition extends Switchable
 		}
 		if (valid && (this.conditionType == 6 || this.conditionType == 7))
 		{
-			valid = this.knowledge.lists.containsKey(this.list);
+			valid = this.knowledge.getListsKeySet().contains(this.list);
 			
 		}
 		
@@ -236,11 +236,11 @@ public class Condition extends Switchable
 		
 		if (!isDynamic())
 		{
-			gotValue = this.knowledge.data.sheets.get(this.sheet)[this.key];
+			gotValue = this.knowledge.getData().getSheet(this.sheet).get(this.key);
 		}
 		else
 		{
-			gotValue = this.knowledge.dynamics.get(this.dynamicKey).value;
+			gotValue = this.knowledge.getDynamic(this.dynamicKey).value;
 		}
 		
 		if (this.conditionType == 0)
@@ -262,10 +262,10 @@ public class Condition extends Switchable
 			return gotValue <= this.constant;
 		
 		else if (this.conditionType == 6)
-			return this.knowledge.lists.get(this.list).contains(gotValue);
+			return this.knowledge.getList(this.list).contains(gotValue);
 		
 		else if (this.conditionType == 7)
-			return !this.knowledge.lists.get(this.list).contains(gotValue);
+			return !this.knowledge.getList(this.list).contains(gotValue);
 		
 		else
 			return false;

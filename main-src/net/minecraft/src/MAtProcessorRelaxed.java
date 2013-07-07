@@ -11,7 +11,7 @@ import java.util.Random;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.InitialDirContext;
 
-import eu.ha3.matmos.engine.Data;
+import eu.ha3.matmos.engine.IntegerData;
 import eu.ha3.mc.haddon.PrivateAccessException;
 
 /*
@@ -38,7 +38,7 @@ public class MAtProcessorRelaxed extends MAtProcessorModel
 	private Map<String, Integer> serverAddresses;
 	private Map<String, Integer> serverPorts;
 	
-	public MAtProcessorRelaxed(MAtMod modIn, Data dataIn, String normalNameIn, String deltaNameIn)
+	public MAtProcessorRelaxed(MAtMod modIn, IntegerData dataIn, String normalNameIn, String deltaNameIn)
 	{
 		super(modIn, dataIn, normalNameIn, deltaNameIn);
 		

@@ -1,6 +1,8 @@
 package net.minecraft.src;
 
-import eu.ha3.matmos.engine.Data;
+import eu.ha3.matmos.engine.GenericSheet;
+import eu.ha3.matmos.engine.IntegerData;
+import eu.ha3.matmos.engineinterfaces.Sheet;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -20,7 +22,7 @@ import eu.ha3.matmos.engine.Data;
 
 public class MAtPipelineIDAccumulator extends MAtScanCoordsPipeline
 {
-	private int[] tempnormal;
+	private Sheet<Integer> tempnormal;
 	private int count;
 	
 	private String normalName;
@@ -28,11 +30,11 @@ public class MAtPipelineIDAccumulator extends MAtScanCoordsPipeline
 	
 	private int proportionnalTotal;
 	
-	MAtPipelineIDAccumulator(
-		MAtMod mod, Data dataIn, String normalNameIn, String proportionnalNameIn, int proportionnalTotalIn)
+	public MAtPipelineIDAccumulator(
+		MAtMod mod, IntegerData dataIn, String normalNameIn, String proportionnalNameIn, int proportionnalTotalIn)
 	{
 		super(mod, dataIn);
-		this.tempnormal = new int[MAtDataGatherer.COUNT_WORLD_BLOCKS];
+		this.tempnormal = new GenericSheet<Integer>(MAtDataGatherer.COUNT_WORLD_BLOCKS, 0);
 		
 		this.normalName = normalNameIn;
 		this.proportionnalName = proportionnalNameIn;
@@ -44,22 +46,20 @@ public class MAtPipelineIDAccumulator extends MAtScanCoordsPipeline
 	void doBegin()
 	{
 		this.count = 0;
-		for (int i = 0; i < this.tempnormal.length; i++)
+		for (int i = 0; i < this.tempnormal.getSize(); i++)
 		{
-			this.tempnormal[i] = 0;
-			
+			this.tempnormal.set(i, 0);
 		}
-		
 	}
 	
 	@Override
 	void doInput(long x, long y, long z)
 	{
 		int id = mod().manager().getMinecraft().theWorld.getBlockId((int) x, (int) y, (int) z);
-		if (id >= this.tempnormal.length || id < 0)
+		if (id >= this.tempnormal.getSize() || id < 0)
 			return; /// Do not count
 			
-		this.tempnormal[id] = this.tempnormal[id] + 1;
+		this.tempnormal.set(id, this.tempnormal.get(id) + 1);
 		
 		this.count++;
 		
@@ -68,29 +68,25 @@ public class MAtPipelineIDAccumulator extends MAtScanCoordsPipeline
 	@Override
 	void doFinish()
 	{
-		int[] normal = null;
-		int[] proportionnal = null;
+		Sheet<Integer> normal = null;
+		Sheet<Integer> proportionnal = null;
 		
-		normal = data().sheets.get(this.normalName);
+		normal = data().getSheet(this.normalName);
 		
 		if (this.proportionnalName != null)
 		{
-			proportionnal = data().sheets.get(this.proportionnalName);
+			proportionnal = data().getSheet(this.proportionnalName);
 		}
 		
-		for (int i = 0; i < this.tempnormal.length; i++)
+		for (int i = 0; i < this.tempnormal.getSize(); i++)
 		{
-			normal[i] = this.tempnormal[i];
+			normal.set(i, this.tempnormal.get(i));
 			
 			if (this.proportionnalName != null)
 			{
-				proportionnal[i] = (int) (this.proportionnalTotal * this.tempnormal[i] / (float) this.count);
+				proportionnal.set(i, (int) (this.proportionnalTotal * this.tempnormal.get(i) / (float) this.count));
 			}
 			
 		}
-		
-		//data().flagUpdate(); // TODO Is this a good place to do it ?
-		
 	}
-	
 }

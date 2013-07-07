@@ -9,8 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import eu.ha3.matmos.engine.Data;
-import eu.ha3.matmos.engine.SoundRelay;
+import eu.ha3.matmos.engineinterfaces.Data;
+import eu.ha3.matmos.engineinterfaces.SoundRelay;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE

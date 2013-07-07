@@ -7,7 +7,6 @@ import java.util.List;
 import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLStreamException;
 
-
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
                     Version 2, December 2004 
@@ -308,7 +307,7 @@ public class Machine extends Switchable
 		{
 			String cset = iterAnyallows.next();
 			
-			if (!this.knowledge.sets.containsKey(cset))
+			if (!this.knowledge.getConditionSetsKeySet().contains(cset))
 				return false;
 			
 		}
@@ -318,7 +317,7 @@ public class Machine extends Switchable
 		{
 			String cset = iterAnyrestricts.next();
 			
-			if (!this.knowledge.sets.containsKey(cset))
+			if (!this.knowledge.getConditionSetsKeySet().contains(cset))
 				return false;
 			
 		}
@@ -384,7 +383,7 @@ public class Machine extends Switchable
 		{
 			String cset = iterAnyallows.next();
 			
-			if (this.knowledge.sets.get(cset).isTrue())
+			if (this.knowledge.getConditionSet(cset).isTrue())
 			{
 				isTrue = true; // If any Allows is true, it's true (exit the loop)
 				
@@ -399,7 +398,7 @@ public class Machine extends Switchable
 		{
 			String cset = iterAnyrestricts.next();
 			
-			if (this.knowledge.sets.get(cset).isTrue())
+			if (this.knowledge.getConditionSet(cset).isTrue())
 			{
 				isTrue = false; // If any Restrict is true, it's false
 				

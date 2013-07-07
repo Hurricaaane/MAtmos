@@ -193,20 +193,20 @@ public class MAtUserControl
 			}
 			else
 			{
-				if (this.mod.getConfig().getBoolean("reversed.controls"))
-				{
-					this.mod.printChat(
-						Ha3Utility.COLOR_BRIGHTGREEN, "Loading...", Ha3Utility.COLOR_YELLOW, " (Hold ",
-						Ha3Utility.COLOR_WHITE, getKeyBindingMainFriendlyName() + " down", Ha3Utility.COLOR_YELLOW,
-						" to tweak the volume)");
-				}
-				else
-				{
-					this.mod.printChat(
-						Ha3Utility.COLOR_BRIGHTGREEN, "Loading...", Ha3Utility.COLOR_YELLOW, " (Press ",
-						Ha3Utility.COLOR_WHITE, getKeyBindingMainFriendlyName() + "", Ha3Utility.COLOR_YELLOW,
-						" to tweak the volume)");
-				}
+				//if (this.mod.getConfig().getBoolean("reversed.controls"))
+				//{
+				this.mod.printChat(
+					Ha3Utility.COLOR_BRIGHTGREEN, "Loading...", Ha3Utility.COLOR_YELLOW, " (Hold ",
+					Ha3Utility.COLOR_WHITE, getKeyBindingMainFriendlyName() + " down", Ha3Utility.COLOR_YELLOW,
+					" to tweak the volume)");
+				//}
+				//else
+				//{
+				//	this.mod.printChat(
+				//		Ha3Utility.COLOR_BRIGHTGREEN, "Loading...", Ha3Utility.COLOR_YELLOW, " (Press ",
+				//		Ha3Utility.COLOR_WHITE, getKeyBindingMainFriendlyName() + "", Ha3Utility.COLOR_YELLOW,
+				//		" to tweak the volume)");
+				//}
 			}
 			
 			this.loadingCount++;

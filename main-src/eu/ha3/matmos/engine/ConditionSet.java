@@ -51,7 +51,7 @@ public class ConditionSet extends Switchable
 		{
 			String condition = iterConditions.next();
 			
-			if (!this.knowledge.conditions.containsKey(condition))
+			if (!this.knowledge.getConditionsKeySet().contains(condition))
 				return false;
 			
 		}
@@ -166,7 +166,7 @@ public class ConditionSet extends Switchable
 		{
 			Entry<String, Boolean> condition = iterConditions.next();
 			
-			if (condition.getValue() != this.knowledge.conditions.get(condition.getKey()).isTrue())
+			if (condition.getValue() != this.knowledge.getCondition(condition.getKey()).isTrue())
 			{
 				isTrue = false;
 				

@@ -5,7 +5,6 @@ import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.XMLEvent;
 
-
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
                     Version 2, December 2004 
@@ -90,7 +89,7 @@ public class Stream extends Descriptible
 		if (this.firstCall)
 			return;
 		
-		this.machine.knowledge.soundManager.eraseStreamingToken(this.token);
+		this.machine.knowledge.getSoundManager().eraseStreamingToken(this.token);
 		this.isPlaying = false;
 		
 		this.token = -1;
@@ -111,23 +110,23 @@ public class Stream extends Descriptible
 				
 				if (this.firstCall)
 				{
-					this.token = this.machine.knowledge.soundManager.getNewStreamingToken();
+					this.token = this.machine.knowledge.getSoundManager().getNewStreamingToken();
 					
 					// FIXME: Blatent crash prevention: Find new implementation
-					if (this.machine.knowledge.soundManager.setupStreamingToken(
+					if (this.machine.knowledge.getSoundManager().setupStreamingToken(
 						this.token, this.path, this.volume, this.pitch))
 					{
 						this.firstCall = false;
-						this.machine.knowledge.soundManager.startStreaming(this.token, this.fadeInTime, this.isLooping
-							? 0 : 1);
+						this.machine.knowledge.getSoundManager().startStreaming(
+							this.token, this.fadeInTime, this.isLooping ? 0 : 1);
 						
 					}
 					
 				}
 				else
 				{
-					this.machine.knowledge.soundManager.startStreaming(this.token, this.fadeInTime, this.isLooping
-						? 0 : 1);
+					this.machine.knowledge.getSoundManager().startStreaming(
+						this.token, this.fadeInTime, this.isLooping ? 0 : 1);
 					
 				}
 				
@@ -142,11 +141,11 @@ public class Stream extends Descriptible
 				
 				if (!this.isUsingPause)
 				{
-					this.machine.knowledge.soundManager.stopStreaming(this.token, this.fadeOutTime);
+					this.machine.knowledge.getSoundManager().stopStreaming(this.token, this.fadeOutTime);
 				}
 				else
 				{
-					this.machine.knowledge.soundManager.pauseStreaming(this.token, this.fadeOutTime);
+					this.machine.knowledge.getSoundManager().pauseStreaming(this.token, this.fadeOutTime);
 				}
 				
 			}

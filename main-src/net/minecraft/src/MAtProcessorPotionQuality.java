@@ -1,6 +1,6 @@
 package net.minecraft.src;
 
-import eu.ha3.matmos.engine.Data;
+import eu.ha3.matmos.engine.IntegerData;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -20,7 +20,7 @@ import eu.ha3.matmos.engine.Data;
 
 public abstract class MAtProcessorPotionQuality extends MAtProcessorModel
 {
-	public MAtProcessorPotionQuality(MAtMod modIn, Data dataIn, String normalNameIn, String deltaNameIn)
+	public MAtProcessorPotionQuality(MAtMod modIn, IntegerData dataIn, String normalNameIn, String deltaNameIn)
 	{
 		super(modIn, dataIn, normalNameIn, deltaNameIn);
 	}

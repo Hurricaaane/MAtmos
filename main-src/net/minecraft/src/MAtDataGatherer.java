@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import eu.ha3.matmos.conv.ProcessorModel;
-import eu.ha3.matmos.engine.Data;
+import eu.ha3.matmos.engine.GenericSheet;
+import eu.ha3.matmos.engine.IntegerData;
+import eu.ha3.matmos.engineinterfaces.Data;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -81,7 +83,7 @@ public class MAtDataGatherer
 	private List<ProcessorModel> additionalRelaxedProcessors;
 	private List<ProcessorModel> additionalFrequentProcessors;
 	
-	private Data data;
+	private IntegerData data;
 	
 	private int cyclicTick;
 	
@@ -109,7 +111,7 @@ public class MAtDataGatherer
 		this.additionalRelaxedProcessors = new ArrayList<ProcessorModel>();
 		this.additionalFrequentProcessors = new ArrayList<ProcessorModel>();
 		
-		this.data = new Data();
+		this.data = new IntegerData();
 		prepareSheets();
 		
 		this.largeScanner = new MAtScanVolumetricModel(this.mod);
@@ -312,7 +314,7 @@ public class MAtDataGatherer
 	
 	private void createSheet(String name, int count)
 	{
-		this.data.sheets.put(name, new int[count]);
+		this.data.setSheet(name, new GenericSheet<Integer>(count, 0));
 	}
 	
 }

@@ -25,12 +25,12 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import eu.ha3.easy.TimeStatistic;
-import eu.ha3.matmos.engine.Data;
 import eu.ha3.matmos.engine.Event;
 import eu.ha3.matmos.engine.Knowledge;
 import eu.ha3.matmos.engine.MAtmosException;
-import eu.ha3.matmos.engine.SoundRelay;
 import eu.ha3.matmos.engine.UtilityLoader;
+import eu.ha3.matmos.engineinterfaces.Data;
+import eu.ha3.matmos.engineinterfaces.SoundRelay;
 import eu.ha3.util.property.simple.ConfigProperty;
 
 /*

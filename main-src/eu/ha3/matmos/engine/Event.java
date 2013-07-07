@@ -24,7 +24,7 @@ import javax.xml.stream.XMLStreamException;
 
 public class Event extends Descriptible
 {
-	Knowledge knowledge;
+	private Knowledge knowledge;
 	
 	public ArrayList<String> paths;
 	
@@ -35,7 +35,7 @@ public class Event extends Descriptible
 	
 	public int metaSound;
 	
-	Event(Knowledge knowledgeIn)
+	public Event(Knowledge knowledgeIn)
 	{
 		this.paths = new ArrayList<String>();
 		this.knowledge = knowledgeIn;
@@ -46,7 +46,6 @@ public class Event extends Descriptible
 		this.pitchMax = 1F;
 		
 		this.metaSound = 0;
-		
 	}
 	
 	void setKnowledge(Knowledge knowledgeIn)
@@ -59,7 +58,7 @@ public class Event extends Descriptible
 	{
 		for (Iterator<String> iter = this.paths.iterator(); iter.hasNext();)
 		{
-			this.knowledge.soundManager.cacheSound(iter.next());
+			this.knowledge.getSoundManager().cacheSound(iter.next());
 			
 		}
 		
@@ -70,21 +69,17 @@ public class Event extends Descriptible
 		if (this.paths.isEmpty())
 			return;
 		
-		//float volume = volMin + knowledge.random.nextFloat() * (volMax - volMin);
-		//float pitch = pitchMin + knowledge.random.nextFloat() * (pitchMax - pitchMin);
-		
 		float volume = this.volMax - this.volMin;
 		float pitch = this.pitchMax - this.pitchMin;
-		volume = this.volMin + (volume > 0 ? this.knowledge.random.nextFloat() * volume : 0);
-		pitch = this.pitchMin + (pitch > 0 ? this.knowledge.random.nextFloat() * pitch : 0);
+		volume = this.volMin + (volume > 0 ? this.knowledge.getRNG().nextFloat() * volume : 0);
+		pitch = this.pitchMin + (pitch > 0 ? this.knowledge.getRNG().nextFloat() * pitch : 0);
 		
-		String path = this.paths.get(this.knowledge.random.nextInt(this.paths.size()));
+		String path = this.paths.get(this.knowledge.getRNG().nextInt(this.paths.size()));
 		
 		volume = volume * volMod;
 		pitch = pitch * pitchMod;
 		
-		this.knowledge.soundManager.playSound(path, volume, pitch, this.metaSound);
-		
+		this.knowledge.getSoundManager().playSound(path, volume, pitch, this.metaSound);
 	}
 	
 	@Override

@@ -65,9 +65,9 @@ public class TimedEvent extends Descriptible
 		if (this.machine.knowledge.getTimeMillis() < this.nextPlayTime)
 			return;
 		
-		if (this.machine.knowledge.events.containsKey(this.event))
+		if (this.machine.knowledge.getEventsKeySet().contains(this.event))
 		{
-			this.machine.knowledge.events.get(this.event).playSound(this.volMod, this.pitchMod);
+			this.machine.knowledge.getEvent(this.event).playSound(this.volMod, this.pitchMod);
 		}
 		
 		if (this.delayMin == this.delayMax && this.delayMin > 0)
@@ -83,7 +83,7 @@ public class TimedEvent extends Descriptible
 		{
 			this.nextPlayTime =
 				this.machine.knowledge.getTimeMillis()
-					+ (long) ((this.delayMin + this.machine.knowledge.random.nextFloat()
+					+ (long) ((this.delayMin + this.machine.knowledge.getRNG().nextFloat()
 						* (this.delayMax - this.delayMin)) * 1000);
 		}
 		
@@ -95,7 +95,7 @@ public class TimedEvent extends Descriptible
 		{
 			this.nextPlayTime =
 				this.machine.knowledge.getTimeMillis()
-					+ (long) (this.machine.knowledge.random.nextFloat() * this.delayMax * 1000);
+					+ (long) (this.machine.knowledge.getRNG().nextFloat() * this.delayMax * 1000);
 		}
 		else
 		{

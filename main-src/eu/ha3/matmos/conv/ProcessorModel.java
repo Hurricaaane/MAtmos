@@ -1,6 +1,7 @@
 package eu.ha3.matmos.conv;
 
-import eu.ha3.matmos.engine.Data;
+import eu.ha3.matmos.engine.IntegerData;
+import eu.ha3.matmos.engineinterfaces.Sheet;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -20,15 +21,15 @@ import eu.ha3.matmos.engine.Data;
 
 public abstract class ProcessorModel
 {
-	private Data data;
+	private IntegerData data;
 	
 	private String normalName;
 	private String deltaName;
 	
-	private int[] normalSheet;
-	private int[] deltaSheet;
+	private Sheet<Integer> normalSheet;
+	private Sheet<Integer> deltaSheet;
 	
-	public ProcessorModel(Data dataIn, String normalNameIn, String deltaNameIn)
+	public ProcessorModel(IntegerData dataIn, String normalNameIn, String deltaNameIn)
 	{
 		this.data = dataIn;
 		this.normalName = normalNameIn;
@@ -36,7 +37,7 @@ public abstract class ProcessorModel
 		
 	}
 	
-	public Data data()
+	public IntegerData data()
 	{
 		return this.data;
 		
@@ -46,10 +47,10 @@ public abstract class ProcessorModel
 	
 	public void process()
 	{
-		this.normalSheet = data().sheets.get(this.normalName);
+		this.normalSheet = data().getSheet(this.normalName);
 		if (this.deltaName != null)
 		{
-			this.deltaSheet = data().sheets.get(this.deltaName);
+			this.deltaSheet = data().getSheet(this.deltaName);
 		}
 		
 		doProcess();
@@ -58,12 +59,12 @@ public abstract class ProcessorModel
 	
 	public void setValue(int index, int newValue)
 	{
-		int previousValue = this.normalSheet[index];
-		this.normalSheet[index] = newValue;
+		int previousValue = this.normalSheet.get(index);
+		this.normalSheet.set(index, newValue);
 		
 		if (this.deltaName != null)
 		{
-			this.deltaSheet[index] = newValue - previousValue;
+			this.deltaSheet.set(index, newValue - previousValue);
 		}
 		
 	}

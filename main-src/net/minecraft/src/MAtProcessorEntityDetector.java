@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import eu.ha3.matmos.engine.Data;
+import eu.ha3.matmos.engine.IntegerData;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -42,7 +42,7 @@ public class MAtProcessorEntityDetector
 	
 	@SuppressWarnings("unchecked")
 	public MAtProcessorEntityDetector(
-		MAtMod modIn, Data dataIn, String mindist, String prefix, String deltaSuffix, int max, int... radiis)
+		MAtMod modIn, IntegerData dataIn, String mindist, String prefix, String deltaSuffix, int max, int... radiis)
 	{
 		this.mod = modIn;
 		

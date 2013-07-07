@@ -13,6 +13,9 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.XMLEvent;
 import javax.xml.transform.stream.StreamResult;
 
+import eu.ha3.matmos.engineinterfaces.Data;
+import eu.ha3.matmos.engineinterfaces.Sheet;
+
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
                     Version 2, December 2004 
@@ -29,24 +32,42 @@ import javax.xml.transform.stream.StreamResult;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class Data
+public class IntegerData implements Data
 {
-	public Map<String, int[]> sheets;
-	public int updateVersion;
+	private Map<String, Sheet<Integer>> sheets;
+	private int updateVersion;
 	
-	public Data()
+	public IntegerData()
 	{
-		this.sheets = new LinkedHashMap<String, int[]>();
+		this.sheets = new LinkedHashMap<String, Sheet<Integer>>();
 		this.updateVersion = 0;
-		
 	}
 	
+	@Override
 	public void flagUpdate()
 	{
 		this.updateVersion = this.updateVersion + 1;
-		
 	}
 	
+	@Override
+	public int getVersion()
+	{
+		return this.updateVersion;
+	}
+	
+	@Override
+	public Sheet<Integer> getSheet(String name)
+	{
+		return this.sheets.get(name);
+	}
+	
+	@Override
+	public void setSheet(String name, Sheet<Integer> sheet)
+	{
+		this.sheets.put(name, sheet);
+	}
+	
+	@Override
 	public String createXML() throws XMLStreamException
 	{
 		StreamResult serialized = new StreamResult(new StringWriter());
@@ -63,27 +84,26 @@ public class Data
 		eventWriter.add(eventFactory.createStartDocument());
 		eventWriter.add(ret);
 		eventWriter.add(eventFactory.createStartElement("", "", "contents"));
-		for (Iterator<Entry<String, int[]>> iter = this.sheets.entrySet().iterator(); iter.hasNext();)
+		for (Iterator<Entry<String, Sheet<Integer>>> iter = this.sheets.entrySet().iterator(); iter.hasNext();)
 		{
-			Entry<String, int[]> entry = iter.next();
+			Entry<String, Sheet<Integer>> entry = iter.next();
+			
+			int size = entry.getValue().getSize();
 			
 			eventWriter.add(ret);
 			eventWriter.add(eventFactory.createStartElement("", "", "sheet"));
 			eventWriter.add(eventFactory.createAttribute("name", entry.getKey()));
-			eventWriter.add(eventFactory.createAttribute("size", entry.getValue().length + ""));
+			eventWriter.add(eventFactory.createAttribute("size", size + ""));
 			eventWriter.add(ret);
 			
-			int i = 0;
-			for (Integer idter : entry.getValue())
+			for (int i = 0; i < size; i++)
 			{
 				eventWriter.add(tab);
 				eventWriter.add(eventFactory.createStartElement("", "", "key"));
 				eventWriter.add(eventFactory.createAttribute("id", i + ""));
-				eventWriter.add(eventFactory.createCharacters(idter.toString()));
+				eventWriter.add(eventFactory.createCharacters(entry.getValue().get(i).toString()));
 				eventWriter.add(eventFactory.createEndElement("", "", "key"));
 				eventWriter.add(ret);
-				
-				i++;
 				
 			}
 			

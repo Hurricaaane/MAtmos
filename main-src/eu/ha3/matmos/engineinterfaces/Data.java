@@ -1,7 +1,7 @@
-package net.minecraft.src;
+package eu.ha3.matmos.engineinterfaces;
 
-import eu.ha3.matmos.conv.ProcessorModel;
-import eu.ha3.matmos.engine.IntegerData;
+import javax.xml.stream.XMLStreamException;
+
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -19,19 +19,17 @@ import eu.ha3.matmos.engine.IntegerData;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public abstract class MAtProcessorModel extends ProcessorModel
+public interface Data
 {
-	private MAtMod mod;
 	
-	public MAtProcessorModel(MAtMod modIn, IntegerData dataIn, String normalNameIn, String deltaNameIn)
-	{
-		super(dataIn, normalNameIn, deltaNameIn);
-		this.mod = modIn;
-		
-	}
+	public abstract void flagUpdate();
 	
-	public MAtMod mod()
-	{
-		return this.mod;
-	}
+	public abstract int getVersion();
+	
+	public abstract Sheet<Integer> getSheet(String name);
+	
+	public abstract void setSheet(String name, Sheet<Integer> sheet);
+	
+	public abstract String createXML() throws XMLStreamException;
+	
 }

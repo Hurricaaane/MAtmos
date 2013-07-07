@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
@@ -14,6 +15,9 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.XMLEvent;
 import javax.xml.transform.stream.StreamResult;
+
+import eu.ha3.matmos.engineinterfaces.Data;
+import eu.ha3.matmos.engineinterfaces.SoundRelay;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -36,27 +40,27 @@ import javax.xml.transform.stream.StreamResult;
  */
 public class Knowledge
 {
-	LinkedHashMap<String, Dynamic> dynamics;
-	LinkedHashMap<String, SugarList> lists;
+	private Map<String, Dynamic> dynamics;
+	private Map<String, SugarList> lists;
 	
-	LinkedHashMap<String, Condition> conditions;
-	LinkedHashMap<String, ConditionSet> sets;
-	LinkedHashMap<String, Machine> machines;
+	private Map<String, Condition> conditions;
+	private Map<String, ConditionSet> sets;
+	private Map<String, Machine> machines;
 	
-	LinkedHashMap<String, Event> events;
+	private Map<String, Event> events;
 	
-	Data data;
-	SoundRelay soundManager;
-	RunningClock clock;
+	private Data data;
+	private SoundRelay soundManager;
+	private RunningClock clock;
 	
 	private boolean isRunning;
-	int dataLastVersion;
+	private int dataLastVersion;
 	
-	Random random;
+	private Random random;
 	
 	public Knowledge()
 	{
-		this.data = new Data();
+		this.data = new IntegerData();
 		this.soundManager = null;
 		
 		this.dataLastVersion = 0;
@@ -70,14 +74,14 @@ public class Knowledge
 		
 	}
 	
+	public Random getRNG()
+	{
+		return this.random;
+	}
+	
 	/**
 	 * Closes the Knowledge, annihilates all references to libraries of objects
-	 * from the current knowledge, and instantiates new ones.<br>
-	 * <br>
-	 * This does not clear the previously stored libraries, in order to preserve
-	 * the integrity of keyrings.<br>
-	 * This renews the library by creating a new object, so any referenced
-	 * library from another object will keep its integrity.
+	 * from the current knowledge, and instantiates new ones.
 	 * 
 	 */
 	public void patchKnowledge()
@@ -103,7 +107,7 @@ public class Knowledge
 		if (this.isRunning)
 			return;
 		
-		reclaimKeyring();
+		ensureChildrenBound();
 		this.isRunning = true;
 		
 		// FIXME Why do i have to do that -> look at the UML sheet
@@ -175,10 +179,7 @@ public class Knowledge
 		
 	}
 	
-	/**
-	 * Makes sure referenced database uses this knowledge.
-	 */
-	public void reclaimKeyring()
+	private void ensureChildrenBound()
 	{
 		turnOff();
 		
@@ -208,27 +209,6 @@ public class Knowledge
 		{
 			event.setKnowledge(this);
 		}
-		
-	}
-	
-	/**
-	 * Gets from originalKnowledge a keyring of the database referencing the
-	 * original database objects.
-	 */
-	@SuppressWarnings("unchecked")
-	public void retreiveKeyring(Knowledge originalKnowledge)
-	{
-		if (originalKnowledge.isRunning)
-			return;
-		
-		this.dynamics = (LinkedHashMap<String, Dynamic>) originalKnowledge.dynamics.clone();
-		this.lists = (LinkedHashMap<String, SugarList>) originalKnowledge.lists.clone();
-		this.conditions = (LinkedHashMap<String, Condition>) originalKnowledge.conditions.clone();
-		this.sets = (LinkedHashMap<String, ConditionSet>) originalKnowledge.sets.clone();
-		this.machines = (LinkedHashMap<String, Machine>) originalKnowledge.machines.clone();
-		this.events = (LinkedHashMap<String, Event>) originalKnowledge.events.clone();
-		reclaimKeyring();
-		
 	}
 	
 	public int purgeUnused()
@@ -306,7 +286,11 @@ public class Knowledge
 	public void setSoundManager(SoundRelay soundManagerIn)
 	{
 		this.soundManager = soundManagerIn;
-		
+	}
+	
+	public SoundRelay getSoundManager()
+	{
+		return this.soundManager;
 	}
 	
 	public void cacheSounds()
@@ -329,10 +313,14 @@ public class Knowledge
 		applySheetFlagNeedsTesting();
 	}
 	
+	public Data getData()
+	{
+		return this.data;
+	}
+	
 	public long getTimeMillis()
 	{
 		return this.clock.getMilliseconds();
-		
 	}
 	
 	void applySheetFlagNeedsTesting()
@@ -743,10 +731,10 @@ public class Knowledge
 		if (!this.isRunning)
 			return;
 		
-		if (this.dataLastVersion != this.data.updateVersion)
+		if (this.dataLastVersion != this.data.getVersion())
 		{
 			evaluate();
-			this.dataLastVersion = this.data.updateVersion;
+			this.dataLastVersion = this.data.getVersion();
 			
 		}
 		
@@ -754,7 +742,7 @@ public class Knowledge
 	
 	void evaluate()
 	{
-		if (!this.isRunning) // The keyring may not be reclaimed: If running then it must have been reclaimed. Do not perform if not running.
+		if (!this.isRunning)
 			return;
 		
 		for (Dynamic dynamic : this.dynamics.values())
