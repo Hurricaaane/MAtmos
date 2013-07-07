@@ -38,7 +38,7 @@ public class GenericSheet<T> implements Sheet<T>
 		for (int i = 0; i < count; i++)
 		{
 			this.values.add(defaultValue);
-			this.versions.add(-1);
+			this.versions.add(0);
 		}
 	}
 	

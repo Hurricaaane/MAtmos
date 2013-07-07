@@ -3,6 +3,8 @@ package eu.ha3.matmos.engine;
 import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLStreamException;
 
+import eu.ha3.matmos.engineinterfaces.Sheet;
+
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
                     Version 2, December 2004 
@@ -27,6 +29,8 @@ public class Condition extends Switchable
 	private int conditionType = 0;
 	private int constant = 0;
 	private String list = "";
+	
+	private int version = -1;
 	
 	private boolean isTrueEvaluated;
 	
@@ -207,7 +211,6 @@ public class Condition extends Switchable
 			//MAtmosEngine.logger; //TODO Logger
 			MAtmosLogger.LOGGER.finer(new StringBuilder("C:")
 				.append(this.nickname).append(this.isTrueEvaluated ? " now On." : " now Off.").toString());
-			
 		}
 		
 		return this.isTrueEvaluated;
@@ -236,7 +239,17 @@ public class Condition extends Switchable
 		
 		if (!isDynamic())
 		{
-			gotValue = this.knowledge.getData().getSheet(this.sheet).get(this.key);
+			Sheet<Integer> sheet = this.knowledge.getData().getSheet(this.sheet);
+			int newVersion = sheet.getVersionOf(this.key);
+			
+			if (sheet.getVersionOf(this.key) == this.version)
+				return this.isTrueEvaluated;
+			
+			this.version = newVersion;
+			
+			gotValue = sheet.get(this.key);
+			
+			System.out.println(this.nickname + " modified");
 		}
 		else
 		{
