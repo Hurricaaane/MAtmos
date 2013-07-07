@@ -44,4 +44,13 @@ public interface Sheet<T>
 	 */
 	public int getSize();
 	
+	/**
+	 * Returns a number that changes every time the value is changed to a
+	 * different value (as opposed to set).
+	 * 
+	 * @param pos
+	 * @return
+	 */
+	public int getVersionOf(int pos);
+	
 }

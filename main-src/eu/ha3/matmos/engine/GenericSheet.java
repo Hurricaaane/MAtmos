@@ -26,14 +26,19 @@ public class GenericSheet<T> implements Sheet<T>
 	private final List<T> values;
 	private final int count;
 	
+	private final List<Integer> versions;
+	
 	public GenericSheet(int count, T defaultValue)
 	{
 		this.values = new ArrayList<T>(count);
 		this.count = count;
 		
+		this.versions = new ArrayList<Integer>(count);
+		
 		for (int i = 0; i < count; i++)
 		{
 			this.values.add(defaultValue);
+			this.versions.add(-1);
 		}
 	}
 	
@@ -46,12 +51,22 @@ public class GenericSheet<T> implements Sheet<T>
 	@Override
 	public void set(int pos, T value)
 	{
-		this.values.set(pos, value);
+		if (!value.equals(this.values.get(pos)))
+		{
+			this.values.set(pos, value);
+			this.versions.set(pos, this.versions.get(pos) + 1);
+		}
 	}
 	
 	@Override
 	public int getSize()
 	{
 		return this.count;
+	}
+	
+	@Override
+	public int getVersionOf(int pos)
+	{
+		return this.versions.get(pos);
 	}
 }
