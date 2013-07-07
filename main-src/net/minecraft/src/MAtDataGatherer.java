@@ -200,7 +200,9 @@ public class MAtDataGatherer
 			long y = (long) Math.floor(player.posY);
 			long z = (long) Math.floor(player.posZ);
 			
-			if (this.cyclicTick % 256 == 0)
+			if (this.cyclicTick % 256 == 0
+				&& (this.data.getRequirements().isRequired(LARGESCAN) || this.data.getRequirements().isRequired(
+					LARGESCAN_THOUSAND)))
 			{
 				if (this.lastLargeScanPassed >= MAX_LARGESCAN_PASS
 					|| Math.abs(x - this.lastLargeScanX) > 16 || Math.abs(y - this.lastLargeScanY) > 8
@@ -220,7 +222,12 @@ public class MAtDataGatherer
 				}
 				
 			}
-			this.smallScanner.startScan(x, y, z, 16, 8, 16, 2048, null);
+			
+			if (this.data.getRequirements().isRequired(SMALLSCAN)
+				|| this.data.getRequirements().isRequired(SMALLSCAN_THOUSAND))
+			{
+				this.smallScanner.startScan(x, y, z, 16, 8, 16, 2048, null);
+			}
 			this.relaxedProcessor.process();
 			
 			for (ProcessorModel processor : this.additionalRelaxedProcessors)
