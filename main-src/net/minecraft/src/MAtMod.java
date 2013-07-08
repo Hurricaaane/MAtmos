@@ -46,6 +46,7 @@ public class MAtMod extends HaddonImpl
 	
 	private ExpansionManager expansionManager;
 	
+	private boolean dataRoll;
 	private Ha3SoundCommunicator sndComm;
 	private MAtUserControl userControl;
 	private MAtDataGatherer dataGatherer;
@@ -318,6 +319,12 @@ public class MAtMod extends HaddonImpl
 		this.userControl.tickRoutine();
 		if (this.isRunning)
 		{
+			if (!this.dataRoll)
+			{
+				this.dataRoll = true;
+				this.dataGatherer.dataRoll();
+			}
+			
 			this.dataGatherer.tickRoutine();
 			this.expansionManager.dataRoutine();
 		}

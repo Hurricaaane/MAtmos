@@ -2,7 +2,10 @@ package net.minecraft.src;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
+import eu.ha3.easy.TimeStatistic;
+import eu.ha3.matmos.conv.MAtmosConvLogger;
 import eu.ha3.matmos.conv.ProcessorModel;
 import eu.ha3.matmos.engine.GenericSheet;
 import eu.ha3.matmos.engine.IntegerData;
@@ -322,6 +325,22 @@ public class MAtDataGatherer
 	private void createSheet(String name, int count)
 	{
 		this.data.setSheet(name, new GenericSheet<Integer>(count, 0));
+	}
+	
+	public void dataRoll()
+	{
+		TimeStatistic timeStatistic = new TimeStatistic(Locale.ENGLISH);
+		tickRoutine();
+		MAtmosConvLogger
+			.info("Took " + timeStatistic.getSecondsAsString(3) + " seconds to perform delta tick routine.");
+		
+		timeStatistic = new TimeStatistic(Locale.ENGLISH);
+		while (this.largeScanner.routine())
+		{
+		}
+		this.smallScanner.routine();
+		MAtmosConvLogger.info("Took " + timeStatistic.getSecondsAsString(3) + " seconds to perform data roll.");
+		
 	}
 	
 }
