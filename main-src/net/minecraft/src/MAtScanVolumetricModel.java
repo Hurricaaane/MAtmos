@@ -103,10 +103,10 @@ public class MAtScanVolumetricModel
 		
 	}
 	
-	public void routine()
+	public boolean routine()
 	{
 		if (!this.isScanning)
-			return;
+			return false;
 		
 		long ops = 0;
 		long x, y, z;
@@ -128,6 +128,7 @@ public class MAtScanVolumetricModel
 		{
 			scanDoneEvent();
 		}
+		return true;
 		
 	}
 	
