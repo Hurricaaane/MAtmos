@@ -1,4 +1,4 @@
-package eu.ha3.matmos.engineinterfaces;
+package eu.ha3.matmos.engine.interfaces;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 

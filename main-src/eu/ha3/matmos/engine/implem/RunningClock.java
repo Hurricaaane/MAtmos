@@ -1,4 +1,4 @@
-package eu.ha3.matmos.engine;
+package eu.ha3.matmos.engine.implem;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -16,8 +16,12 @@ package eu.ha3.matmos.engine;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-@SuppressWarnings("serial")
-public class MAtmosException extends Exception
+public class RunningClock
 {
+	public long getMilliseconds()
+	{
+		return System.currentTimeMillis();
+		
+	}
 	
 }

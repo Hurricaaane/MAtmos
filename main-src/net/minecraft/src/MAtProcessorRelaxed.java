@@ -12,7 +12,7 @@ import java.util.Set;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.InitialDirContext;
 
-import eu.ha3.matmos.engine.IntegerData;
+import eu.ha3.matmos.engine.implem.IntegerData;
 import eu.ha3.mc.haddon.PrivateAccessException;
 
 /*

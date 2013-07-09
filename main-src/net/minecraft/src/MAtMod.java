@@ -12,7 +12,7 @@ import eu.ha3.matmos.conv.CustomVolume;
 import eu.ha3.matmos.conv.Expansion;
 import eu.ha3.matmos.conv.ExpansionManager;
 import eu.ha3.matmos.conv.MAtmosConvLogger;
-import eu.ha3.matmos.engine.MAtmosLogger;
+import eu.ha3.matmos.engine.implem.MAtmosLogger;
 import eu.ha3.mc.haddon.SupportsFrameEvents;
 import eu.ha3.mc.haddon.SupportsKeyEvents;
 import eu.ha3.mc.haddon.SupportsTickEvents;

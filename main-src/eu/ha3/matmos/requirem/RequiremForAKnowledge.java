@@ -1,8 +1,8 @@
-package eu.ha3.matmos.experimental;
+package eu.ha3.matmos.requirem;
 
-import eu.ha3.matmos.engine.Condition;
-import eu.ha3.matmos.engine.Dynamic;
-import eu.ha3.matmos.engine.Knowledge;
+import eu.ha3.matmos.engine.implem.Condition;
+import eu.ha3.matmos.engine.implem.Dynamic;
+import eu.ha3.matmos.engine.implem.Knowledge;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 

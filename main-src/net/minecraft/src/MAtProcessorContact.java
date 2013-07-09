@@ -1,6 +1,6 @@
 package net.minecraft.src;
 
-import eu.ha3.matmos.engine.IntegerData;
+import eu.ha3.matmos.engine.implem.IntegerData;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 

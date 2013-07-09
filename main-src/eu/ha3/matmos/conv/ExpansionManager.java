@@ -9,10 +9,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import eu.ha3.matmos.engineinterfaces.Data;
-import eu.ha3.matmos.engineinterfaces.SoundRelay;
-import eu.ha3.matmos.experimental.Collation;
-import eu.ha3.matmos.experimental.CollationOfRequirements;
+import eu.ha3.matmos.engine.interfaces.Data;
+import eu.ha3.matmos.engine.interfaces.SoundRelay;
+import eu.ha3.matmos.requirem.Collation;
+import eu.ha3.matmos.requirem.CollationOfRequirements;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE

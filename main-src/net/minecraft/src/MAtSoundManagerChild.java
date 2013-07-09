@@ -6,7 +6,7 @@ import java.util.Map;
 import paulscode.sound.SoundSystem;
 import eu.ha3.matmos.conv.CustomVolume;
 import eu.ha3.matmos.conv.MAtmosConvLogger;
-import eu.ha3.matmos.engineinterfaces.SoundRelay;
+import eu.ha3.matmos.engine.interfaces.SoundRelay;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 

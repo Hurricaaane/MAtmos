@@ -3,8 +3,8 @@ package eu.ha3.matmos.conv;
 import java.util.HashSet;
 import java.util.Set;
 
-import eu.ha3.matmos.engine.IntegerData;
-import eu.ha3.matmos.engineinterfaces.Sheet;
+import eu.ha3.matmos.engine.implem.IntegerData;
+import eu.ha3.matmos.engine.interfaces.Sheet;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 

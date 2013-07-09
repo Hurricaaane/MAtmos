@@ -3,7 +3,7 @@ package net.minecraft.src;
 import java.io.File;
 import java.io.IOException;
 
-import eu.ha3.matmos.engine.IntegerData;
+import eu.ha3.matmos.engine.implem.IntegerData;
 import eu.ha3.util.property.simple.ConfigProperty;
 import eu.ha3.util.property.simple.PropertyMissingException;
 import eu.ha3.util.property.simple.PropertyTypeException;

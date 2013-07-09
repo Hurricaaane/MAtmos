@@ -1,4 +1,4 @@
-package eu.ha3.matmos.engine;
+package eu.ha3.matmos.requirem;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -16,12 +16,7 @@ package eu.ha3.matmos.engine;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class RunningClock
+public interface Requestable
 {
-	public long getMilliseconds()
-	{
-		return System.currentTimeMillis();
-		
-	}
-	
+	public Requirements getRequirements();
 }

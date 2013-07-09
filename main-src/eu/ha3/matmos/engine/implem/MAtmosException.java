@@ -1,4 +1,4 @@
-package eu.ha3.matmos.experimental;
+package eu.ha3.matmos.engine.implem;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -16,7 +16,8 @@ package eu.ha3.matmos.experimental;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public interface Requestable
+@SuppressWarnings("serial")
+public class MAtmosException extends Exception
 {
-	public Requirements getRequirements();
+	
 }

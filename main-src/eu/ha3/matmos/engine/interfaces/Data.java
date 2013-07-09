@@ -1,6 +1,7 @@
-package eu.ha3.matmos.engine;
+package eu.ha3.matmos.engine.interfaces;
 
-import java.util.logging.Logger;
+import javax.xml.stream.XMLStreamException;
+
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -18,7 +19,17 @@ import java.util.logging.Logger;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class MAtmosLogger
+public interface Data
 {
-	final public static Logger LOGGER = Logger.getLogger("eu.ha3.matmos.engine");
+	
+	public abstract void flagUpdate();
+	
+	public abstract int getVersion();
+	
+	public abstract Sheet<Integer> getSheet(String name);
+	
+	public abstract void setSheet(String name, Sheet<Integer> sheet);
+	
+	public abstract String createXML() throws XMLStreamException;
+	
 }

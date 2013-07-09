@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import eu.ha3.matmos.engine.IntegerData;
+import eu.ha3.matmos.engine.implem.IntegerData;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 

@@ -1,6 +1,6 @@
 package eu.ha3.matmos.conv;
 
-import eu.ha3.matmos.engineinterfaces.SoundRelay;
+import eu.ha3.matmos.engine.interfaces.SoundRelay;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 

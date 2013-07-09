@@ -7,10 +7,10 @@ import java.util.Locale;
 import eu.ha3.easy.TimeStatistic;
 import eu.ha3.matmos.conv.MAtmosConvLogger;
 import eu.ha3.matmos.conv.ProcessorModel;
-import eu.ha3.matmos.engine.GenericSheet;
-import eu.ha3.matmos.engine.IntegerData;
-import eu.ha3.matmos.engineinterfaces.Data;
-import eu.ha3.matmos.experimental.Requirements;
+import eu.ha3.matmos.engine.implem.GenericSheet;
+import eu.ha3.matmos.engine.implem.IntegerData;
+import eu.ha3.matmos.engine.interfaces.Data;
+import eu.ha3.matmos.requirem.Requirements;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 

@@ -1,9 +1,9 @@
-package eu.ha3.matmos.engine;
+package eu.ha3.matmos.engine.implem;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import eu.ha3.matmos.engineinterfaces.Sheet;
+import eu.ha3.matmos.engine.interfaces.Sheet;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
