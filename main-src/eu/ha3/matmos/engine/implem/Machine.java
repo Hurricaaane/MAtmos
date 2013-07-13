@@ -7,6 +7,8 @@ import java.util.List;
 import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLStreamException;
 
+import eu.ha3.matmos.conv.MAtmosConvLogger;
+
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
                     Version 2, December 2004 
@@ -349,7 +351,7 @@ public class Machine extends Switchable
 			}
 			
 			//MAtmosEngine.logger; //TODO Logger
-			MAtmosLogger.LOGGER.fine(new StringBuilder("M:")
+			MAtmosConvLogger.fine(new StringBuilder("M:")
 				.append(this.nickname).append(this.switchedOn ? " now On." : " now Off.").toString());
 			
 		}

@@ -5,14 +5,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
-import java.util.logging.Level;
 
 import eu.ha3.easy.TimeStatistic;
 import eu.ha3.matmos.conv.CustomVolume;
 import eu.ha3.matmos.conv.Expansion;
 import eu.ha3.matmos.conv.ExpansionManager;
 import eu.ha3.matmos.conv.MAtmosConvLogger;
-import eu.ha3.matmos.engine.implem.MAtmosLogger;
 import eu.ha3.mc.haddon.SupportsFrameEvents;
 import eu.ha3.mc.haddon.SupportsKeyEvents;
 import eu.ha3.mc.haddon.SupportsTickEvents;
@@ -68,8 +66,7 @@ public class MAtMod extends HaddonImpl
 		// for convenience, so nothing is initialized.
 		
 		this.phase = MAtModPhase.NOT_INITIALIZED;
-		
-		MAtmosLogger.LOGGER.setLevel(Level.OFF);
+		MAtmosConvLogger.setRefinedness(MAtmosConvLogger.FINE);
 	}
 	
 	// Operations
@@ -92,8 +89,8 @@ public class MAtMod extends HaddonImpl
 		this.userControl = new MAtUserControl(this);
 		this.dataGatherer = new MAtDataGatherer(this);
 		this.expansionManager =
-			new ExpansionManager(new File(util().getMinecraftDir(), "matmos/expansions_r25/"), new File(util()
-				.getMinecraftDir(), "matmos/expansions_r12_userconfig/"));
+			new ExpansionManager("expansions_r25/", new File(
+				util().getMinecraftDir(), "matmos/expansions_r12_userconfig/"));
 		this.updateNotifier = new MAtUpdateNotifier(this);
 		
 		manager().hookFrameEvents(true);
@@ -234,7 +231,7 @@ public class MAtMod extends HaddonImpl
 		this.expansionManager.deactivate();
 		MAtmosConvLogger.fine("Stopped.");
 		
-		//createDataDump();
+		createDataDump();
 	}
 	
 	private void createDataDump()

@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.src.MAtCacheRegistry;
+import net.minecraft.src.Minecraft;
 import eu.ha3.matmos.engine.interfaces.Data;
 import eu.ha3.matmos.engine.interfaces.SoundRelay;
 import eu.ha3.matmos.requirem.Collation;
@@ -35,25 +37,22 @@ public class ExpansionManager
 	private Map<String, Expansion> expansions;
 	//private List<MAtSoundManagerChild> soundManagers;
 	
-	private File expansionsFolder;
+	private String expansionsSubdir;
 	private File userconfigFolder;
 	private boolean isActivated;
 	private ReplicableSoundRelay master;
 	private Data data;
 	
 	private Collation collation;
+	private MAtCacheRegistry cacheRegistry;
 	
-	public ExpansionManager(File expansionsFolder, File userconfigFolder)
+	public ExpansionManager(String expansionsSubdir, File userconfigFolder)
 	{
 		this.expansions = new HashMap<String, Expansion>();
+		this.cacheRegistry = new MAtCacheRegistry();
 		
-		this.expansionsFolder = expansionsFolder;
+		this.expansionsSubdir = expansionsSubdir;
 		this.userconfigFolder = userconfigFolder;
-		
-		if (!this.expansionsFolder.exists())
-		{
-			this.expansionsFolder.mkdirs();
-		}
 		
 		if (!this.userconfigFolder.exists())
 		{
@@ -208,7 +207,7 @@ public class ExpansionManager
 		clearExpansions();
 		
 		List<File> offline = new ArrayList<File>();
-		gatherOffline(this.expansionsFolder, offline);
+		gatherOffline(new File(Minecraft.getMinecraft().mcDataDir, "mods/"), offline);
 		
 		createExpansionEntries(offline);
 		
@@ -229,24 +228,66 @@ public class ExpansionManager
 		
 	}
 	
-	private void gatherOffline(File file, List<File> files)
+	private void gatherOffline(File modsDir, List<File> files)
 	{
-		if (!file.exists())
+		if (!modsDir.exists())
 			return;
 		
-		for (File individual : file.listFiles())
+		for (File mod : modsDir.listFiles())
 		{
-			if (individual.isDirectory())
+			if (mod.isDirectory() && mod.getName().startsWith("matmos_"))
 			{
-			}
-			else if (individual.getName().endsWith(".xml"))
-			{
-				files.add(individual);
+				File expansionFolder = new File(mod, this.expansionsSubdir);
+				if (expansionFolder.isDirectory() && expansionFolder.exists())
+				{
+					for (File individual : expansionFolder.listFiles())
+					{
+						if (individual.isDirectory())
+						{
+						}
+						else if (individual.getName().endsWith(".xml"))
+						{
+							files.add(individual);
+							
+						}
+						
+					}
+				}
 				
+				File soundFolder = new File(mod, "assets/minecraft/sound/");
+				if (soundFolder.exists())
+				{
+					loadResource(soundFolder, "");
+				}
 			}
-			
 		}
 		
+	}
+	
+	private void loadResource(File par1File, String root)
+	{
+		File[] filesInThisDir = par1File.listFiles();
+		int fileCount = filesInThisDir.length;
+		
+		for (int i = 0; i < fileCount; ++i)
+		{
+			File file = filesInThisDir[i];
+			
+			if (file.isDirectory())
+			{
+				loadResource(file, root + file.getName() + "/");
+			}
+			else
+			{
+				try
+				{
+					this.cacheRegistry.cacheSound(root + file.getName());
+				}
+				catch (Exception e)
+				{
+				}
+			}
+		}
 	}
 	
 	public void setMaster(ReplicableSoundRelay master)

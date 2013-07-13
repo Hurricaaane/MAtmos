@@ -3,6 +3,7 @@ package eu.ha3.matmos.engine.implem;
 import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLStreamException;
 
+import eu.ha3.matmos.conv.MAtmosConvLogger;
 import eu.ha3.matmos.engine.interfaces.Sheet;
 
 /*
@@ -209,7 +210,7 @@ public class Condition extends Switchable
 		if (pre != this.isTrueEvaluated)
 		{
 			//MAtmosEngine.logger; //TODO Logger
-			MAtmosLogger.LOGGER.finer(new StringBuilder("C:")
+			MAtmosConvLogger.fine(new StringBuilder("C:")
 				.append(this.nickname).append(this.isTrueEvaluated ? " now On." : " now Off.").toString());
 		}
 		

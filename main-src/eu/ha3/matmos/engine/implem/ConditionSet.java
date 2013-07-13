@@ -8,6 +8,8 @@ import java.util.Map.Entry;
 import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLStreamException;
 
+import eu.ha3.matmos.conv.MAtmosConvLogger;
+
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
                     Version 2, December 2004 
@@ -132,7 +134,7 @@ public class ConditionSet extends Switchable
 		if (pre != this.isTrueEvaluated)
 		{
 			//MAtmosEngine.logger; //TODO Logger
-			MAtmosLogger.LOGGER.finer(new StringBuilder("S:")
+			MAtmosConvLogger.fine(new StringBuilder("S:")
 				.append(this.nickname).append(this.isTrueEvaluated ? " now On." : " now Off.").toString());
 			
 		}

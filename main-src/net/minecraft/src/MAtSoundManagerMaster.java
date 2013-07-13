@@ -41,7 +41,7 @@ public class MAtSoundManagerMaster implements ReplicableSoundRelay, CustomVolume
 	
 	private Random random;
 	
-	private MAtCacheRegistry cacheRegistry;
+	//private MAtCacheRegistry cacheRegistry;
 	
 	public MAtSoundManagerMaster(MAtMod mAtmosHaddon)
 	{
@@ -55,7 +55,7 @@ public class MAtSoundManagerMaster implements ReplicableSoundRelay, CustomVolume
 		this.settingsVolume = 0F;
 		this.random = new Random();
 		
-		this.cacheRegistry = new MAtCacheRegistry();
+		//this.cacheRegistry = new MAtCacheRegistry();
 		
 	}
 	
@@ -82,7 +82,7 @@ public class MAtSoundManagerMaster implements ReplicableSoundRelay, CustomVolume
 	public void cacheSound(String path)
 	{
 		getSound(path);
-		this.cacheRegistry.cacheSound(path);
+		//this.cacheRegistry.cacheSound(path);
 	}
 	
 	public String getSound(String soundPath)
