@@ -75,7 +75,7 @@ public class MAtMod extends HaddonImpl
 	public void onLoad()
 	{
 		// Look for installation errors (1)
-		if (!new File(util().getMinecraftDir(), "matmos/").exists())
+		if (!new File(util().getMinecraftDir(), "mods/matmos/").exists())
 		{
 			this.isFatalError = true;
 			manager().hookTickEvents(true);
@@ -90,7 +90,7 @@ public class MAtMod extends HaddonImpl
 		this.dataGatherer = new MAtDataGatherer(this);
 		this.expansionManager =
 			new ExpansionManager("expansions_r25/", new File(
-				util().getMinecraftDir(), "matmos/expansions_r12_userconfig/"));
+				util().getMinecraftDir(), "mods/matmos/expansions_r25_userconfig/"));
 		this.updateNotifier = new MAtUpdateNotifier(this);
 		
 		manager().hookFrameEvents(true);
