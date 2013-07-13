@@ -66,7 +66,7 @@ public class MAtMod extends HaddonImpl
 		// for convenience, so nothing is initialized.
 		
 		this.phase = MAtModPhase.NOT_INITIALIZED;
-		MAtmosConvLogger.setRefinedness(MAtmosConvLogger.FINE);
+		MAtmosConvLogger.setRefinedness(MAtmosConvLogger.INFO);
 	}
 	
 	// Operations

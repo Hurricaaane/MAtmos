@@ -140,7 +140,6 @@ public class MAtSoundManagerMaster implements ReplicableSoundRelay, CustomVolume
 			ny = ny + 2048;
 			this.mod.getSoundCommunicator().playSound(
 				equivalent, nx, ny, nz, soundEffectiveVolume, pitch, SoundSystemConfig.ATTENUATION_NONE, 0F);
-			System.out.println(equivalent);
 		}
 	}
 	
