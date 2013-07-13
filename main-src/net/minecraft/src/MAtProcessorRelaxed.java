@@ -86,7 +86,6 @@ public class MAtProcessorRelaxed extends MAtProcessorModel
 	{
 		Minecraft mc = mod().manager().getMinecraft();
 		World w = mc.theWorld;
-		WorldInfo worldinfo = w.worldInfo;
 		
 		Set<Integer> required = getRequired();
 		
@@ -148,7 +147,7 @@ public class MAtProcessorRelaxed extends MAtProcessorModel
 			switch (index)
 			{
 			case 5:
-				setValue(5, worldinfo.getDimension());
+				setValue(5, w.provider.dimensionId);
 				break;
 			
 			case 12:
@@ -197,9 +196,7 @@ public class MAtProcessorRelaxed extends MAtProcessorModel
 				break;
 			
 			case 88:
-				// In Minecraft 1.6.1, the moon phase is an oscillating float
-				// instead of a linear incremental time counter
-				setValue(88, (int) (w.getMoonPhase() * 4));
+				setValue(88, w.getMoonPhase());
 				break;
 			
 			case 93:
