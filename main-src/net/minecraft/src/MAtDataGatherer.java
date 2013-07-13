@@ -11,6 +11,7 @@ import eu.ha3.matmos.engine.implem.GenericSheet;
 import eu.ha3.matmos.engine.implem.IntegerData;
 import eu.ha3.matmos.engine.interfaces.Data;
 import eu.ha3.matmos.requirem.Requirements;
+import eu.ha3.mc.convenience.Ha3StaticUtilities;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -73,6 +74,8 @@ public class MAtDataGatherer
 	private ProcessorModel contactProcessor;
 	private ProcessorModel configVarsProcessor;
 	
+	private ProcessorModel weatherpony_seasons_api_Processor;
+	
 	private MAtProcessorEnchantments enchantmentsCurrentItem;
 	private MAtProcessorEnchantments enchantmentsArmor1;
 	private MAtProcessorEnchantments enchantmentsArmor2;
@@ -130,6 +133,13 @@ public class MAtDataGatherer
 		this.frequentProcessor = new MAtProcessorFrequent(this.mod, this.data, INSTANTS, DELTAS);
 		this.contactProcessor = new MAtProcessorContact(this.mod, this.data, CONTACTSCAN, null);
 		this.configVarsProcessor = new MAtProcessorCVARS(this.mod, this.data, CONFIGVARS, null);
+		
+		if (Ha3StaticUtilities.classExists("WeatherPony.Seasons.api.Season", this)
+			&& Ha3StaticUtilities.classExists("WeatherPony.Seasons.api.BiomeHelper", this))
+		{
+			this.weatherpony_seasons_api_Processor =
+				new MAtProcessorSeasonsModAPI(this.mod, this.data, "weatherpony_seasons_api", null);
+		}
 		
 		this.enchantmentsCurrentItem = new MAtProcessorEnchantments(this.mod, this.data, CURRENTITEM_E, null) {
 			@Override
@@ -233,6 +243,11 @@ public class MAtDataGatherer
 			}
 			this.relaxedProcessor.process();
 			
+			if (this.weatherpony_seasons_api_Processor != null)
+			{
+				this.weatherpony_seasons_api_Processor.process();
+			}
+			
 			for (ProcessorModel processor : this.additionalRelaxedProcessors)
 			{
 				processor.process();
@@ -319,6 +334,7 @@ public class MAtDataGatherer
 		createSheet("Detect10_Deltas", ENTITYIDS_MAX);
 		createSheet("Detect20_Deltas", ENTITYIDS_MAX);
 		createSheet("Detect50_Deltas", ENTITYIDS_MAX);
+		createSheet("weatherpony_seasons_api", 4);
 		
 	}
 	
