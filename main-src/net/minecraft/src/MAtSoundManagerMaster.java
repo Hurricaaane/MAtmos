@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Random;
 
 import paulscode.sound.SoundSystem;
+import paulscode.sound.SoundSystemConfig;
 import eu.ha3.matmos.conv.CustomVolume;
 import eu.ha3.matmos.conv.ReplicableSoundRelay;
 import eu.ha3.mc.haddon.PrivateAccessException;
@@ -92,9 +93,9 @@ public class MAtSoundManagerMaster implements ReplicableSoundRelay, CustomVolume
 		
 		String quant = soundPath.substring(0, soundPath.indexOf("."));
 		String dotted = quant.replaceAll("/", ".");
-		while (Character.isDigit(soundPath.charAt(soundPath.length() - 1)))
+		while (Character.isDigit(soundPath.charAt(dotted.length() - 1)))
 		{
-			soundPath = soundPath.substring(0, soundPath.length() - 1);
+			dotted = dotted.substring(0, dotted.length() - 1);
 		}
 		
 		this.soundequivalences.put(soundPath, dotted);
@@ -125,7 +126,8 @@ public class MAtSoundManagerMaster implements ReplicableSoundRelay, CustomVolume
 			ny = ny + this.random.nextFloat() * meta * 0.2F - meta * 0.01F;
 			nz = nz + (float) (Math.sin(angle) * meta);
 			
-			this.mod.getSoundCommunicator().playSound(equivalent, nx, ny, nz, soundEffectiveVolume, pitch, 0, 0F);
+			this.mod.getSoundCommunicator().playSound(
+				equivalent, nx, ny, nz, soundEffectiveVolume, pitch, SoundSystemConfig.ATTENUATION_NONE, 0F);
 		}
 		else
 		{
@@ -136,8 +138,9 @@ public class MAtSoundManagerMaster implements ReplicableSoundRelay, CustomVolume
 			//   ...and that somehow does the trick!
 			
 			ny = ny + 2048;
-			this.mod.getSoundCommunicator().playSound(equivalent, nx, ny, nz, soundEffectiveVolume, pitch, 0, 0F);
-			
+			this.mod.getSoundCommunicator().playSound(
+				equivalent, nx, ny, nz, soundEffectiveVolume, pitch, SoundSystemConfig.ATTENUATION_NONE, 0F);
+			System.out.println(equivalent);
 		}
 	}
 	
