@@ -137,6 +137,7 @@ public class MAtDataGatherer
 		if (Ha3StaticUtilities.classExists("WeatherPony.Seasons.api.Season", this)
 			&& Ha3StaticUtilities.classExists("WeatherPony.Seasons.api.BiomeHelper", this))
 		{
+			MAtmosConvLogger.info("WeatherPony.Seasons.api seems to be installed. Installing processor for Seasons.");
 			this.weatherpony_seasons_api_Processor =
 				new MAtProcessorSeasonsModAPI(this.mod, this.data, "weatherpony_seasons_api", null);
 		}
