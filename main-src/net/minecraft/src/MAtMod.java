@@ -75,7 +75,7 @@ public class MAtMod extends HaddonImpl
 	public void onLoad()
 	{
 		// Look for installation errors (1)
-		if (!new File(util().getMinecraftDir(), "mods/matmos/").exists())
+		if (!new File(util().getModsFolder(), "matmos/").exists())
 		{
 			this.isFatalError = true;
 			manager().hookTickEvents(true);
@@ -90,7 +90,7 @@ public class MAtMod extends HaddonImpl
 		this.dataGatherer = new MAtDataGatherer(this);
 		this.expansionManager =
 			new ExpansionManager("expansions_r25/", new File(
-				util().getMinecraftDir(), "mods/matmos/expansions_r25_userconfig/"));
+				util().getModsFolder(), "matmos/expansions_r25_userconfig/"), util().getModsFolder());
 		this.updateNotifier = new MAtUpdateNotifier(this);
 		
 		manager().hookFrameEvents(true);
@@ -112,7 +112,7 @@ public class MAtMod extends HaddonImpl
 		// Load configuration from source
 		try
 		{
-			this.config.setSource(new File(util().getMinecraftDir(), "matmos/userconfig.cfg").getCanonicalPath());
+			this.config.setSource(new File(util().getModsFolder(), "matmos/userconfig.cfg").getCanonicalPath());
 			this.config.load();
 		}
 		catch (IOException e)
@@ -243,7 +243,7 @@ public class MAtMod extends HaddonImpl
 		
 		try
 		{
-			File file = new File(util().getMinecraftDir(), "matmos/data_dump.xml");
+			File file = new File(util().getModsFolder(), "matmos/data_dump.xml");
 			file.createNewFile();
 			
 			FileWriter fw = new FileWriter(file);
@@ -299,7 +299,7 @@ public class MAtMod extends HaddonImpl
 		if (this.isFatalError)
 		{
 			printChat(Ha3Utility.COLOR_YELLOW, "A fatal error has occured. MAtmos will not load.");
-			if (!new File(util().getMinecraftDir(), "matmos/").exists())
+			if (!new File(util().getModsFolder(), "matmos/").exists())
 			{
 				printChat(Ha3Utility.COLOR_WHITE, "Are you sure you installed MAtmos correctly?");
 				printChat(

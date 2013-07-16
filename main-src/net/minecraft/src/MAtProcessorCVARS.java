@@ -34,8 +34,8 @@ public class MAtProcessorCVARS extends MAtProcessorModel
 	public MAtProcessorCVARS(MAtMod modIn, IntegerData dataIn, String normalNameIn, String deltaNameIn)
 	{
 		super(modIn, dataIn, normalNameIn, deltaNameIn);
-		this.defaultsConfig = new File(mod().util().getMinecraftDir(), "matmos/dataconfigvars_defaults.cfg");
-		this.userConfig = new File(mod().util().getMinecraftDir(), "matmos/dataconfigvars.cfg");
+		this.defaultsConfig = new File(mod().util().getModsFolder(), "matmos/dataconfigvars_defaults.cfg");
+		this.userConfig = new File(mod().util().getModsFolder(), "matmos/dataconfigvars.cfg");
 		
 		this.config = new ConfigProperty();
 		this.config.setSource(this.defaultsConfig.getAbsolutePath());

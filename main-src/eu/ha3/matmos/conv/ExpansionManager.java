@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 
 import net.minecraft.src.MAtCacheRegistry;
-import net.minecraft.src.Minecraft;
 import eu.ha3.matmos.engine.interfaces.Data;
 import eu.ha3.matmos.engine.interfaces.SoundRelay;
 import eu.ha3.matmos.requirem.Collation;
@@ -45,14 +44,17 @@ public class ExpansionManager
 	
 	private Collation collation;
 	private MAtCacheRegistry cacheRegistry;
+	private File modsFolder;
 	
-	public ExpansionManager(String expansionsSubdir, File userconfigFolder)
+	public ExpansionManager(String expansionsSubdir, File userconfigFolder, File modsFolder)
 	{
 		this.expansions = new HashMap<String, Expansion>();
 		this.cacheRegistry = new MAtCacheRegistry();
 		
 		this.expansionsSubdir = expansionsSubdir;
 		this.userconfigFolder = userconfigFolder;
+		
+		this.modsFolder = modsFolder;
 		
 		if (!this.userconfigFolder.exists())
 		{
@@ -207,7 +209,7 @@ public class ExpansionManager
 		clearExpansions();
 		
 		List<File> offline = new ArrayList<File>();
-		gatherOffline(new File(Minecraft.getMinecraft().mcDataDir, "mods/"), offline);
+		gatherOffline(this.modsFolder, offline);
 		
 		createExpansionEntries(offline);
 		
