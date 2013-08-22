@@ -58,7 +58,7 @@ public class MAtGuiMenu extends GuiScreen
 	
 	public MAtGuiMenu(GuiScreen par1GuiScreen, MAtMod matmos, int pageFromZero)
 	{
-		this.screenTitle = "Expansions";
+		this.screenTitle = "MAtmos Expansions";
 		this.buttonId = -1;
 		this.parentScreen = par1GuiScreen;
 		this.mod = matmos;
@@ -231,9 +231,10 @@ public class MAtGuiMenu extends GuiScreen
 			210, _LEFT, _SEPARATOR + _MIX * (this.IDS_PER_PAGE + 3), _AWID, _UNIT, this.mod.getConfig().getBoolean(
 				"start.enabled") ? "Start Enabled: ON" : "Start Enabled: OFF"));
 		
-		this.buttonList.add(new GuiButton(
-			211, _LEFT + _AWID + _GAP, _SEPARATOR + _MIX * (this.IDS_PER_PAGE + 3), _AWID, _UNIT, this.mod
-				.getConfig().getBoolean("reversed.controls") ? "Menu: Hold Down Key" : "Menu: Press Key"));
+		this.buttonList
+			.add(new GuiButton(
+				211, _LEFT + _AWID + _GAP, _SEPARATOR + _MIX * (this.IDS_PER_PAGE + 3), _AWID, _UNIT,
+				"Advanced options..."));
 		
 		final int _TURNOFFWIDTH = _WIDTH / 5;
 		
@@ -275,11 +276,7 @@ public class MAtGuiMenu extends GuiScreen
 		}
 		else if (par1GuiButton.id == 211)
 		{
-			this.mod
-				.getConfig().setProperty("reversed.controls", !this.mod.getConfig().getBoolean("reversed.controls"));
-			par1GuiButton.displayString =
-				this.mod.getConfig().getBoolean("reversed.controls") ? "Menu: Hold Down Key" : "Menu: Press Key";
-			this.mod.saveConfig();
+			this.mc.displayGuiScreen(new MAtGuiMore(this, this.mod));
 		}
 		else if (par1GuiButton.id == 212)
 		{
