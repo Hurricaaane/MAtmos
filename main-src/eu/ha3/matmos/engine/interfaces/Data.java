@@ -1,7 +1,6 @@
 package eu.ha3.matmos.engine.interfaces;
 
-import javax.xml.stream.XMLStreamException;
-
+import java.util.Set;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -21,15 +20,13 @@ import javax.xml.stream.XMLStreamException;
 
 public interface Data
 {
-	
 	public abstract void flagUpdate();
 	
 	public abstract int getVersion();
 	
+	public abstract Set<String> getSheetNames();
+	
 	public abstract Sheet<Integer> getSheet(String name);
 	
 	public abstract void setSheet(String name, Sheet<Integer> sheet);
-	
-	public abstract String createXML() throws XMLStreamException;
-	
 }

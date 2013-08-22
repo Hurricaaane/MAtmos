@@ -1,17 +1,8 @@
 package eu.ha3.matmos.engine.implem;
 
-import java.io.StringWriter;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Map.Entry;
-
-import javax.xml.stream.XMLEventFactory;
-import javax.xml.stream.XMLEventWriter;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.events.XMLEvent;
-import javax.xml.transform.stream.StreamResult;
+import java.util.Set;
 
 import eu.ha3.matmos.engine.interfaces.Data;
 import eu.ha3.matmos.engine.interfaces.Sheet;
@@ -71,7 +62,7 @@ public class IntegerData implements Data, Requestable
 		this.sheets.put(name, sheet);
 	}
 	
-	@Override
+	/*@Override
 	public String createXML() throws XMLStreamException
 	{
 		StreamResult serialized = new StreamResult(new StringWriter());
@@ -122,12 +113,18 @@ public class IntegerData implements Data, Requestable
 		eventWriter.close();
 		
 		return serialized.getWriter().toString();
-	}
+	}*/
 	
 	@Override
 	public Requirements getRequirements()
 	{
 		return this.requirements;
+	}
+	
+	@Override
+	public Set<String> getSheetNames()
+	{
+		return this.sheets.keySet();
 	}
 	
 }
