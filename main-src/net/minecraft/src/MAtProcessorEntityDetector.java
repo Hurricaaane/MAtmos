@@ -176,23 +176,25 @@ public class MAtProcessorEntityDetector
 		{
 			for (int rr = 0; rr < this.radi.length; rr++)
 			{
-				if (this.mappies[rr].containsKey(i))
+				if (this.radiModels[rr].isRequired())
+					if (this.mappies[rr].containsKey(i))
+					{
+						this.radiModels[rr].setValue(i, this.mappies[rr].get(i));
+					}
+					else
+					{
+						this.radiModels[rr].setValue(i, 0);
+					}
+			}
+			if (this.mindistModel.isRequired())
+				if (this.mindistMappy.containsKey(i))
 				{
-					this.radiModels[rr].setValue(i, this.mappies[rr].get(i));
+					this.mindistModel.setValue(i, (int) Math.floor(this.mindistMappy.get(i) * 1000));
 				}
 				else
 				{
-					this.radiModels[rr].setValue(i, 0);
+					this.mindistModel.setValue(i, Integer.MAX_VALUE);
 				}
-			}
-			if (this.mindistMappy.containsKey(i))
-			{
-				this.mindistModel.setValue(i, (int) Math.floor(this.mindistMappy.get(i) * 1000));
-			}
-			else
-			{
-				this.mindistModel.setValue(i, Integer.MAX_VALUE);
-			}
 			
 		}
 	}
