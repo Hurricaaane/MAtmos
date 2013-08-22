@@ -99,7 +99,7 @@ public class MAtProcessorRelaxed extends MAtProcessorModel
 			try
 			{
 				serverData =
-					(ServerData) mod().util().getPrivateValueLiteral(Minecraft.class, Minecraft.getMinecraft(), "Q", 5);
+					(ServerData) mod().util().getPrivateValueLiteral(Minecraft.class, Minecraft.getMinecraft(), "M", 6);
 			}
 			catch (PrivateAccessException e)
 			{
@@ -179,13 +179,23 @@ public class MAtProcessorRelaxed extends MAtProcessorModel
 				break;
 			
 			case 29:
-				Integer biomeInt = this.deprecatedBiomeHash.get(calculateBiome().biomeName);
-				if (biomeInt == null)
+			{
+				int biomei = mod().getConfig().getInteger("useroptions.biome.override");
+				if (biomei <= -1)
 				{
-					biomeInt = -1;
+					Integer biomeInt = this.deprecatedBiomeHash.get(calculateBiome().biomeName);
+					if (biomeInt == null)
+					{
+						biomeInt = -1;
+					}
+					setValue(29, biomeInt);
 				}
-				setValue(29, biomeInt);
+				else
+				{
+					setValue(29, biomei);
+				}
 				break;
+			}
 			
 			case 30:
 				setValue(30, (int) (w.getSeed() >> 32));
@@ -200,7 +210,17 @@ public class MAtProcessorRelaxed extends MAtProcessorModel
 				break;
 			
 			case 93:
-				setValue(93, calculateBiome().biomeID);
+			{
+				int biomej = mod().getConfig().getInteger("useroptions.biome.override");
+				if (biomej <= -1)
+				{
+					setValue(93, calculateBiome().biomeID);
+				}
+				else
+				{
+					setValue(93, biomej);
+				}
+			}
 				break;
 			
 			default:
