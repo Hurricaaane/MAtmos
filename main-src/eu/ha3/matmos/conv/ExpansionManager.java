@@ -237,7 +237,7 @@ public class ExpansionManager
 		
 		for (File mod : modsDir.listFiles())
 		{
-			if (mod.isDirectory() && mod.getName().startsWith("matmos_"))
+			if (mod.isDirectory()) //&& mod.getName().startsWith("matmos_"))
 			{
 				File expansionFolder = new File(mod, this.expansionsSubdir);
 				if (expansionFolder.isDirectory() && expansionFolder.exists())
