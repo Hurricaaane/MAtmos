@@ -3,14 +3,22 @@ package net.minecraft.src;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import eu.ha3.easy.TimeStatistic;
 import eu.ha3.matmos.conv.CustomVolume;
 import eu.ha3.matmos.conv.Expansion;
 import eu.ha3.matmos.conv.ExpansionManager;
 import eu.ha3.matmos.conv.MAtmosConvLogger;
+import eu.ha3.matmos.engine.interfaces.Sheet;
+import eu.ha3.mc.haddon.PrivateAccessException;
 import eu.ha3.mc.haddon.SupportsFrameEvents;
 import eu.ha3.mc.haddon.SupportsKeyEvents;
 import eu.ha3.mc.haddon.SupportsTickEvents;
@@ -36,8 +44,10 @@ public class MAtMod extends HaddonImpl
 	implements SupportsFrameEvents, SupportsTickEvents, SupportsKeyEvents, ResourceManagerReloadListener
 {
 	final static public MAtmosConvLogger LOGGER = new MAtmosConvLogger();
-	final static public int VERSION = 24; // Remember to change the thing on mod_Matmos
-	final static public String FOR = "1.5.2";
+	final static public int VERSION = 25; // Remember to change the thing on mod_Matmos
+	final static public String FOR = "1.6.2";
+	
+	private File matmosFolder;
 	
 	private MAtModPhase phase;
 	private ConfigProperty config;
@@ -57,6 +67,8 @@ public class MAtMod extends HaddonImpl
 	private boolean firstTickPassed;
 	private TimeStatistic timeStatistic;
 	
+	private boolean dumpReady = false;
+	
 	public MAtMod()
 	{
 		// This is the constructor, so don't do anything
@@ -74,12 +86,34 @@ public class MAtMod extends HaddonImpl
 	@Override
 	public void onLoad()
 	{
+		this.matmosFolder = new File(util().getModsFolder(), "matmos/");
+		
 		// Look for installation errors (1)
-		if (!new File(util().getModsFolder(), "matmos/").exists())
+		if (!this.matmosFolder.exists())
 		{
 			this.isFatalError = true;
 			manager().hookTickEvents(true);
 			return;
+		}
+		
+		try
+		{
+			@SuppressWarnings("unchecked")
+			List<ResourcePack> resourcePacks =
+				(List<ResourcePack>) util().getPrivateValueLiteral(Minecraft.class, Minecraft.getMinecraft(), "aq", 63);
+			
+			for (File file : new File(this.matmosFolder, "packs/").listFiles())
+			{
+				if (file.isDirectory())
+				{
+					MAtmosConvLogger.info("Adding resource pack at " + file.getAbsolutePath());
+					resourcePacks.add(new FolderResourcePack(file));
+				}
+			}
+		}
+		catch (PrivateAccessException e)
+		{
+			e.printStackTrace();
 		}
 		
 		this.timeStatistic = new TimeStatistic(Locale.ENGLISH);
@@ -90,7 +124,7 @@ public class MAtMod extends HaddonImpl
 		this.dataGatherer = new MAtDataGatherer(this);
 		this.expansionManager =
 			new ExpansionManager("expansions_r25/", new File(
-				util().getModsFolder(), "matmos/expansions_r25_userconfig/"), util().getModsFolder());
+				util().getModsFolder(), "matmos/expansions_r25_userconfig/"), new File(this.matmosFolder, "packs/"));
 		this.updateNotifier = new MAtUpdateNotifier(this);
 		
 		manager().hookFrameEvents(true);
@@ -98,11 +132,15 @@ public class MAtMod extends HaddonImpl
 		
 		// Create default configuration
 		this.config = new ConfigProperty();
-		this.config.setProperty("dump.enabled", true);
+		this.config.setProperty("world.height", 256);
+		this.config.setProperty("dump.sheets.enabled", false);
 		this.config.setProperty("start.enabled", true);
 		this.config.setProperty("reversed.controls", false);
 		this.config.setProperty("sound.autopreview", true);
 		this.config.setProperty("globalvolume.scale", 1f);
+		this.config.setProperty("useroptions.altitudes.high", true);
+		this.config.setProperty("useroptions.altitudes.low", true);
+		this.config.setProperty("useroptions.biome.override", -1);
 		this.config.setProperty("update_found.enabled", true);
 		this.config.setProperty("update_found.version", MAtMod.VERSION);
 		this.config.setProperty("update_found.display.remaining.value", 0);
@@ -149,7 +187,19 @@ public class MAtMod extends HaddonImpl
 		
 		MAtmosConvLogger.info("Constructing.");
 		
-		this.dataGatherer.load(this.expansionManager.getCollation());
+		if (!this.config.getBoolean("dump.sheets.enabled"))
+		{
+			this.dataGatherer.load(this.expansionManager.getCollation());
+		}
+		else
+		{
+			MAtCatchAllRequirements catchall = new MAtCatchAllRequirements();
+			this.dataGatherer.load(catchall);
+			catchall.setData(this.dataGatherer.getData());
+			
+			this.dumpReady = true;
+		}
+		
 		this.expansionManager.setMaster(this.soundManagerMaster);
 		this.expansionManager.setData(this.dataGatherer.getData());
 		
@@ -231,23 +281,67 @@ public class MAtMod extends HaddonImpl
 		this.expansionManager.deactivate();
 		MAtmosConvLogger.fine("Stopped.");
 		
-		createDataDump();
+		createDataDump(false);
 	}
 	
-	private void createDataDump()
+	public boolean isDumpReady()
 	{
-		if (!this.config.getBoolean("dump.enabled"))
+		return this.dumpReady;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void createDataDump(boolean force)
+	{
+		//if (!this.config.getBoolean("dump.sheets.enabled"))
+		//	return;
+		
+		if (!force && !isDumpReady())
+		{
+			if (this.config.getBoolean("dump.sheets.enabled"))
+			{
+				this.printChat("Warning: Data dumps requires Minecraft to be restarted, "
+					+ "because data dumps must be already enabled when Minecraft starts to work.");
+			}
 			return;
+		}
+		
+		if (force)
+		{
+			this.printChat(
+				Ha3Utility.COLOR_RED, "Warning: Generating PARTIAL data dumps will normally yield the value 0 "
+					+ "for every unused data by the currently loaded expansions."
+					+ " Only use PARTIAL data dumps to debug errors!");
+		}
 		
 		MAtmosConvLogger.fine("Dumping data.");
 		
+		@SuppressWarnings("rawtypes")
+		Map toJsonify = new LinkedHashMap();
+		@SuppressWarnings("rawtypes")
+		Map sheets = new LinkedHashMap();
+		for (String name : this.dataGatherer.getData().getSheetNames())
+		{
+			List<Integer> integers = new ArrayList<Integer>();
+			
+			Sheet<Integer> sheet = this.dataGatherer.getData().getSheet(name);
+			for (int i = 0; i < sheet.getSize(); i++)
+			{
+				integers.add(sheet.get(i));
+			}
+			sheets.put(name, integers);
+		}
+		toJsonify.put("sheets", sheets);
+		
+		Gson gson = new GsonBuilder().create();
+		String jason = gson.toJson(toJsonify);
+		
 		try
 		{
-			File file = new File(util().getModsFolder(), "matmos/data_dump.xml");
+			File file = new File(this.matmosFolder, "matmos_dump.json");
 			file.createNewFile();
 			
 			FileWriter fw = new FileWriter(file);
-			fw.write(this.dataGatherer.getData().createXML());
+			fw.write(jason);
 			fw.close();
 		}
 		catch (Exception e)
