@@ -202,19 +202,6 @@
 	<constant>0</constant>
 	<list></list>
 </condition>
-<condition name="In Aether (Assumption)">
-	<descriptible>
-		<nickname>In Aether (Assumption)</nickname>
-		<description>Detects the Aether, or any other world that uses dimension 3 as a parallel world.</description>
-		<icon></icon>
-		<meta></meta>
-	</descriptible>
-	<sheet>Instants</sheet>
-	<key>25</key>
-	<symbol>==</symbol>
-	<constant>3</constant>
-	<list></list>
-</condition>
 <condition name="In Nether">
 	<descriptible>
 		<nickname>In Nether</nickname>
@@ -540,6 +527,32 @@
 	<constant>512</constant>
 	<list></list>
 </condition>
+<condition name="User does not want high altitude ambiences">
+	<descriptible>
+		<nickname>User does not want high altitude ambiences</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<sheet>Options</sheet>
+	<key>0</key>
+	<symbol>==</symbol>
+	<constant>0</constant>
+	<list></list>
+</condition>
+<condition name="User does not want low altitude ambiences">
+	<descriptible>
+		<nickname>User does not want low altitude ambiences</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<sheet>Options</sheet>
+	<key>1</key>
+	<symbol>==</symbol>
+	<constant>0</constant>
+	<list></list>
+</condition>
 <condition name="Water 10% (L)">
 	<descriptible>
 		<nickname>Water 10% (L)</nickname>
@@ -668,8 +681,8 @@
 	</descriptible>
 	<truepart>Deep (16)</truepart>
 	<falsepart>Receive Sunlight</falsepart>
-	<falsepart>In Aether (Assumption)</falsepart>
 	<falsepart>In Nether</falsepart>
+	<falsepart>User does not want low altitude ambiences</falsepart>
 </set>
 <set name="Deep cave (32)">
 	<descriptible>
@@ -678,10 +691,10 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<falsepart>Receive Sunlight</falsepart>
-	<falsepart>In Aether (Assumption)</falsepart>
-	<falsepart>In Nether</falsepart>
 	<truepart>Deep (32)</truepart>
+	<falsepart>Receive Sunlight</falsepart>
+	<falsepart>In Nether</falsepart>
+	<falsepart>User does not want low altitude ambiences</falsepart>
 </set>
 <set name="Digging in the Nether">
 	<descriptible>
@@ -733,17 +746,9 @@
 		<meta></meta>
 	</descriptible>
 	<truepart>Air 30% (L)</truepart>
-	<falsepart>Sunlight lower than 5/15</falsepart>
 	<truepart>Highlands (96)</truepart>
-</set>
-<set name="In Aether">
-	<descriptible>
-		<nickname>In Aether</nickname>
-		<description>Dimension (player) = 3</description>
-		<icon></icon>
-		<meta></meta>
-	</descriptible>
-	<truepart>In Aether (Assumption)</truepart>
+	<falsepart>Sunlight lower than 5/15</falsepart>
+	<falsepart>User does not want high altitude ambiences</falsepart>
 </set>
 <set name="In Nether">
 	<descriptible>
@@ -770,8 +775,8 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<falsepart>Can rain on</falsepart>
 	<truepart>Sunlight lower than 10/15</truepart>
+	<falsepart>Can rain on</falsepart>
 </set>
 <set name="Is Raining">
 	<descriptible>
@@ -809,6 +814,24 @@
 	</descriptible>
 	<truepart>Manmade Town</truepart>
 </set>
+<set name="NO HIGH ALTITUDES">
+	<descriptible>
+		<nickname>NO HIGH ALTITUDES</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<truepart>User does not want high altitude ambiences</truepart>
+</set>
+<set name="NO LOW ALTITUDES">
+	<descriptible>
+		<nickname>NO LOW ALTITUDES</nickname>
+		<description></description>
+		<icon></icon>
+		<meta></meta>
+	</descriptible>
+	<truepart>User does not want low altitude ambiences</truepart>
+</set>
 <set name="Nearby fire (1) Firecamp">
 	<descriptible>
 		<nickname>Nearby fire (1) Firecamp</nickname>
@@ -817,8 +840,8 @@
 		<meta></meta>
 	</descriptible>
 	<truepart>Nearby fire (1)</truepart>
-	<falsepart>Nearby fire (12)</falsepart>
 	<truepart>Manmade Town</truepart>
+	<falsepart>Nearby fire (12)</falsepart>
 </set>
 <set name="Nearby fire (1) Not firecamp">
 	<descriptible>
@@ -908,11 +931,11 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<falsepart>Sunlight Maximum 15/15</falsepart>
 	<truepart>Receive Sunlight</truepart>
 	<truepart>Is Raining</truepart>
-	<falsepart>Can rain on</falsepart>
 	<truepart>Windows (8)</truepart>
+	<falsepart>Sunlight Maximum 15/15</falsepart>
+	<falsepart>Can rain on</falsepart>
 </set>
 <set name="Rock shelter">
 	<descriptible>
@@ -923,7 +946,6 @@
 	</descriptible>
 	<truepart>Rocks (24 S)</truepart>
 	<falsepart>Is Exposed to the Sky</falsepart>
-	<falsepart>Deep (32)</falsepart>
 </set>
 <set name="Thunderstorm indoor">
 	<descriptible>
@@ -947,8 +969,8 @@
 	</descriptible>
 	<truepart>Air 30% (L)</truepart>
 	<truepart>In Thunderstorm</truepart>
-	<falsepart>Sunlight lower than 5/15</falsepart>
 	<truepart>Is Raining</truepart>
+	<falsepart>Sunlight lower than 5/15</falsepart>
 </set>
 <set name="Time (0 - 6000)">
 	<descriptible>
@@ -966,8 +988,8 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<falsepart>Time (0 - 12000)</falsepart>
 	<truepart>Time (0 - 14000)</truepart>
+	<falsepart>Time (0 - 12000)</falsepart>
 </set>
 <set name="Time (12000 - 22000)">
 	<descriptible>
@@ -976,8 +998,8 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<falsepart>Time (0 - 12000)</falsepart>
 	<truepart>Time (0 - 22000)</truepart>
+	<falsepart>Time (0 - 12000)</falsepart>
 </set>
 <set name="Time (14000 - 22000)">
 	<descriptible>
@@ -986,8 +1008,8 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<falsepart>Time (0 - 14000)</falsepart>
 	<truepart>Time (0 - 22000)</truepart>
+	<falsepart>Time (0 - 14000)</falsepart>
 </set>
 <set name="Time (22000 - 23999)">
 	<descriptible>
@@ -1005,8 +1027,8 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<falsepart>Time (0 - 6000)</falsepart>
 	<truepart>Time (0 - 12000)</truepart>
+	<falsepart>Time (0 - 6000)</falsepart>
 </set>
 <set name="Wet cave">
 	<descriptible>
@@ -1035,15 +1057,15 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/matmos_hl/atmosphere/citadeloutsidefx1.ogg</path>
-	<path>sound3/matmos_hl/atmosphere/citadeloutsidefx2.ogg</path>
-	<path>sound3/matmos_hl/atmosphere/citadeloutsidefx3.ogg</path>
-	<path>sound3/matmos_hl/atmosphere/citadeloutsidefx4.ogg</path>
-	<path>sound3/matmos_hl/atmosphere/citadeloutsidefx5.ogg</path>
-	<path>sound3/matmos_hl/atmosphere/citadeloutsidefx6.ogg</path>
-	<path>sound3/matmos_hl/atmosphere/citadeloutsidefx7.ogg</path>
-	<path>sound3/matmos_hl/atmosphere/citadeloutsidefx8.ogg</path>
-	<path>sound3/matmos_hl/atmosphere/citadeloutsidefx9.ogg</path>
+	<path>matmos_hl/atmosphere/citadeloutsidefx1.ogg</path>
+	<path>matmos_hl/atmosphere/citadeloutsidefx2.ogg</path>
+	<path>matmos_hl/atmosphere/citadeloutsidefx3.ogg</path>
+	<path>matmos_hl/atmosphere/citadeloutsidefx4.ogg</path>
+	<path>matmos_hl/atmosphere/citadeloutsidefx5.ogg</path>
+	<path>matmos_hl/atmosphere/citadeloutsidefx6.ogg</path>
+	<path>matmos_hl/atmosphere/citadeloutsidefx7.ogg</path>
+	<path>matmos_hl/atmosphere/citadeloutsidefx8.ogg</path>
+	<path>matmos_hl/atmosphere/citadeloutsidefx9.ogg</path>
 	<volmin>1.0</volmin>
 	<volmax>1.0</volmax>
 	<pitchmin>0.5</pitchmin>
@@ -1057,9 +1079,9 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/matmos_hl/wind/wind_moan1.ogg</path>
-	<path>sound3/matmos_hl/wind/wind_moan2.ogg</path>
-	<path>sound3/matmos_hl/wind/wind_moan3.ogg</path>
+	<path>matmos_hl/wind/wind_moan1.ogg</path>
+	<path>matmos_hl/wind/wind_moan2.ogg</path>
+	<path>matmos_hl/wind/wind_moan3.ogg</path>
 	<volmin>0.7</volmin>
 	<volmax>1.0</volmax>
 	<pitchmin>0.1</pitchmin>
@@ -1073,12 +1095,12 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/matmos_hl/water/wave1.ogg</path>
-	<path>sound3/matmos_hl/water/wave2.ogg</path>
-	<path>sound3/matmos_hl/water/wave3.ogg</path>
-	<path>sound3/matmos_hl/water/wave4.ogg</path>
-	<path>sound3/matmos_hl/water/wave5.ogg</path>
-	<path>sound3/matmos_hl/water/wave6.ogg</path>
+	<path>matmos_hl/water/wave1.ogg</path>
+	<path>matmos_hl/water/wave2.ogg</path>
+	<path>matmos_hl/water/wave3.ogg</path>
+	<path>matmos_hl/water/wave4.ogg</path>
+	<path>matmos_hl/water/wave5.ogg</path>
+	<path>matmos_hl/water/wave6.ogg</path>
 	<volmin>1.0</volmin>
 	<volmax>1.0</volmax>
 	<pitchmin>0.9</pitchmin>
@@ -1092,16 +1114,16 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/matmos_hl/wildlife/chicka1.ogg</path>
-	<path>sound3/matmos_hl/wildlife/chicka2.ogg</path>
-	<path>sound3/matmos_hl/wildlife/chicka3.ogg</path>
-	<path>sound3/matmos_hl/wildlife/chirp1.ogg</path>
-	<path>sound3/matmos_hl/wildlife/chirp2.ogg</path>
-	<path>sound3/matmos_hl/wildlife/chirp3.ogg</path>
-	<path>sound3/matmos_hl/wildlife/flit1.ogg</path>
-	<path>sound3/matmos_hl/wildlife/squeek1.ogg</path>
-	<path>sound3/matmos_hl/wildlife/squeek2.ogg</path>
-	<path>sound3/matmos_hl/wildlife/squeek3.ogg</path>
+	<path>matmos_hl/wildlife/chicka1.ogg</path>
+	<path>matmos_hl/wildlife/chicka2.ogg</path>
+	<path>matmos_hl/wildlife/chicka3.ogg</path>
+	<path>matmos_hl/wildlife/chirp1.ogg</path>
+	<path>matmos_hl/wildlife/chirp2.ogg</path>
+	<path>matmos_hl/wildlife/chirp3.ogg</path>
+	<path>matmos_hl/wildlife/flit1.ogg</path>
+	<path>matmos_hl/wildlife/squeek1.ogg</path>
+	<path>matmos_hl/wildlife/squeek2.ogg</path>
+	<path>matmos_hl/wildlife/squeek3.ogg</path>
 	<volmin>1.0</volmin>
 	<volmax>1.0</volmax>
 	<pitchmin>0.9</pitchmin>
@@ -1115,9 +1137,9 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/matmos_hl/cave/rumble1.ogg</path>
-	<path>sound3/matmos_hl/cave/rumble2.ogg</path>
-	<path>sound3/matmos_hl/cave/rumble3.ogg</path>
+	<path>matmos_hl/cave/rumble1.ogg</path>
+	<path>matmos_hl/cave/rumble2.ogg</path>
+	<path>matmos_hl/cave/rumble3.ogg</path>
 	<volmin>0.3</volmin>
 	<volmax>0.6</volmax>
 	<pitchmin>0.9</pitchmin>
@@ -1131,7 +1153,7 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/note/snare.ogg</path>
+	<path>note/snare.ogg</path>
 	<volmin>1.0</volmin>
 	<volmax>1.0</volmax>
 	<pitchmin>0.9</pitchmin>
@@ -1145,7 +1167,7 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/note/snare.ogg</path>
+	<path>note/snare.ogg</path>
 	<volmin>1.0</volmin>
 	<volmax>1.0</volmax>
 	<pitchmin>0.85</pitchmin>
@@ -1159,13 +1181,13 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/matmos_hl/wildlife/coastbird1.ogg</path>
-	<path>sound3/matmos_hl/wildlife/coastbird2.ogg</path>
-	<path>sound3/matmos_hl/wildlife/coastbird3.ogg</path>
-	<path>sound3/matmos_hl/wildlife/coastbird4.ogg</path>
-	<path>sound3/matmos_hl/wildlife/coastbird5.ogg</path>
-	<path>sound3/matmos_hl/wildlife/coastbird6.ogg</path>
-	<path>sound3/matmos_hl/wildlife/coastbird7.ogg</path>
+	<path>matmos_hl/wildlife/coastbird1.ogg</path>
+	<path>matmos_hl/wildlife/coastbird2.ogg</path>
+	<path>matmos_hl/wildlife/coastbird3.ogg</path>
+	<path>matmos_hl/wildlife/coastbird4.ogg</path>
+	<path>matmos_hl/wildlife/coastbird5.ogg</path>
+	<path>matmos_hl/wildlife/coastbird6.ogg</path>
+	<path>matmos_hl/wildlife/coastbird7.ogg</path>
 	<volmin>1.0</volmin>
 	<volmax>1.0</volmax>
 	<pitchmin>0.9</pitchmin>
@@ -1179,7 +1201,7 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/note/harp.ogg</path>
+	<path>note/harp.ogg</path>
 	<volmin>1.0</volmin>
 	<volmax>1.0</volmax>
 	<pitchmin>1.5</pitchmin>
@@ -1193,10 +1215,10 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/matmos_hl/water/rain_drip1.ogg</path>
-	<path>sound3/matmos_hl/water/rain_drip2.ogg</path>
-	<path>sound3/matmos_hl/water/rain_drip3.ogg</path>
-	<path>sound3/matmos_hl/water/rain_drip4.ogg</path>
+	<path>matmos_hl/water/rain_drip1.ogg</path>
+	<path>matmos_hl/water/rain_drip2.ogg</path>
+	<path>matmos_hl/water/rain_drip3.ogg</path>
+	<path>matmos_hl/water/rain_drip4.ogg</path>
 	<volmin>0.7</volmin>
 	<volmax>1.0</volmax>
 	<pitchmin>0.9</pitchmin>
@@ -1210,7 +1232,7 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/matmos_hl/atmosphere/flame_thrower_fire_hit.ogg</path>
+	<path>matmos_hl/atmosphere/flame_thrower_fire_hit.ogg</path>
 	<volmin>0.5</volmin>
 	<volmax>0.7</volmax>
 	<pitchmin>0.3</pitchmin>
@@ -1224,7 +1246,7 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/matmos_hl/atmosphere/flame_thrower_fire_hit.ogg</path>
+	<path>matmos_hl/atmosphere/flame_thrower_fire_hit.ogg</path>
 	<volmin>1.0</volmin>
 	<volmax>0.7</volmax>
 	<pitchmin>0.7</pitchmin>
@@ -1238,9 +1260,9 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/matmos_hl/water/lake1.ogg</path>
-	<path>sound3/matmos_hl/water/lake2.ogg</path>
-	<path>sound3/matmos_hl/water/lake3.ogg</path>
+	<path>matmos_hl/water/lake1.ogg</path>
+	<path>matmos_hl/water/lake2.ogg</path>
+	<path>matmos_hl/water/lake3.ogg</path>
 	<volmin>0.5</volmin>
 	<volmax>1.0</volmax>
 	<pitchmin>0.9</pitchmin>
@@ -1254,14 +1276,14 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/matmos_hl/wildlife/critter1.ogg</path>
-	<path>sound3/matmos_hl/wildlife/critter2.ogg</path>
-	<path>sound3/matmos_hl/wildlife/critter3.ogg</path>
-	<path>sound3/matmos_hl/wildlife/critter4.ogg</path>
-	<path>sound3/matmos_hl/wildlife/critter5.ogg</path>
-	<path>sound3/matmos_hl/wildlife/critter6.ogg</path>
-	<path>sound3/matmos_hl/wildlife/critter7.ogg</path>
-	<path>sound3/matmos_hl/wildlife/critter8.ogg</path>
+	<path>matmos_hl/wildlife/critter1.ogg</path>
+	<path>matmos_hl/wildlife/critter2.ogg</path>
+	<path>matmos_hl/wildlife/critter3.ogg</path>
+	<path>matmos_hl/wildlife/critter4.ogg</path>
+	<path>matmos_hl/wildlife/critter5.ogg</path>
+	<path>matmos_hl/wildlife/critter6.ogg</path>
+	<path>matmos_hl/wildlife/critter7.ogg</path>
+	<path>matmos_hl/wildlife/critter8.ogg</path>
 	<volmin>0.5</volmin>
 	<volmax>1.0</volmax>
 	<pitchmin>1.0</pitchmin>
@@ -1275,12 +1297,12 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/matmos_hl/weather/rainonwindow1.ogg</path>
-	<path>sound3/matmos_hl/weather/rainonwindow2.ogg</path>
-	<path>sound3/matmos_hl/weather/rainonwindow3.ogg</path>
-	<path>sound3/matmos_hl/weather/rainonwindow4.ogg</path>
-	<path>sound3/matmos_hl/weather/rainonwindow5.ogg</path>
-	<path>sound3/matmos_hl/weather/rainonwindow6.ogg</path>
+	<path>matmos_hl/weather/rainonwindow1.ogg</path>
+	<path>matmos_hl/weather/rainonwindow2.ogg</path>
+	<path>matmos_hl/weather/rainonwindow3.ogg</path>
+	<path>matmos_hl/weather/rainonwindow4.ogg</path>
+	<path>matmos_hl/weather/rainonwindow5.ogg</path>
+	<path>matmos_hl/weather/rainonwindow6.ogg</path>
 	<volmin>1.0</volmin>
 	<volmax>1.0</volmax>
 	<pitchmin>0.95</pitchmin>
@@ -1294,12 +1316,12 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/matmos_hl/atmosphere/cave_hit1.ogg</path>
-	<path>sound3/matmos_hl/atmosphere/cave_hit2.ogg</path>
-	<path>sound3/matmos_hl/atmosphere/cave_hit3.ogg</path>
-	<path>sound3/matmos_hl/atmosphere/cave_hit4.ogg</path>
-	<path>sound3/matmos_hl/atmosphere/cave_hit5.ogg</path>
-	<path>sound3/matmos_hl/atmosphere/cave_hit6.ogg</path>
+	<path>matmos_hl/atmosphere/cave_hit1.ogg</path>
+	<path>matmos_hl/atmosphere/cave_hit2.ogg</path>
+	<path>matmos_hl/atmosphere/cave_hit3.ogg</path>
+	<path>matmos_hl/atmosphere/cave_hit4.ogg</path>
+	<path>matmos_hl/atmosphere/cave_hit5.ogg</path>
+	<path>matmos_hl/atmosphere/cave_hit6.ogg</path>
 	<volmin>1.0</volmin>
 	<volmax>0.7</volmax>
 	<pitchmin>0.7</pitchmin>
@@ -1313,12 +1335,12 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/matmos_hl/atmosphere/cave_hit1.ogg</path>
-	<path>sound3/matmos_hl/atmosphere/cave_hit2.ogg</path>
-	<path>sound3/matmos_hl/atmosphere/cave_hit3.ogg</path>
-	<path>sound3/matmos_hl/atmosphere/cave_hit4.ogg</path>
-	<path>sound3/matmos_hl/atmosphere/cave_hit5.ogg</path>
-	<path>sound3/matmos_hl/atmosphere/cave_hit6.ogg</path>
+	<path>matmos_hl/atmosphere/cave_hit1.ogg</path>
+	<path>matmos_hl/atmosphere/cave_hit2.ogg</path>
+	<path>matmos_hl/atmosphere/cave_hit3.ogg</path>
+	<path>matmos_hl/atmosphere/cave_hit4.ogg</path>
+	<path>matmos_hl/atmosphere/cave_hit5.ogg</path>
+	<path>matmos_hl/atmosphere/cave_hit6.ogg</path>
 	<volmin>1.0</volmin>
 	<volmax>0.7</volmax>
 	<pitchmin>0.4</pitchmin>
@@ -1332,11 +1354,11 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/matmos_hl/wildlife/seagulls_ambient1.ogg</path>
-	<path>sound3/matmos_hl/wildlife/seagulls_ambient2.ogg</path>
-	<path>sound3/matmos_hl/wildlife/seagulls_ambient3.ogg</path>
-	<path>sound3/matmos_hl/wildlife/seagulls_ambient4.ogg</path>
-	<path>sound3/matmos_hl/wildlife/seagulls_ambient5.ogg</path>
+	<path>matmos_hl/wildlife/seagulls_ambient1.ogg</path>
+	<path>matmos_hl/wildlife/seagulls_ambient2.ogg</path>
+	<path>matmos_hl/wildlife/seagulls_ambient3.ogg</path>
+	<path>matmos_hl/wildlife/seagulls_ambient4.ogg</path>
+	<path>matmos_hl/wildlife/seagulls_ambient5.ogg</path>
 	<volmin>1.0</volmin>
 	<volmax>1.0</volmax>
 	<pitchmin>0.9</pitchmin>
@@ -1350,10 +1372,10 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/matmos_hl/weather/thunder1.ogg</path>
-	<path>sound3/matmos_hl/weather/thunder2.ogg</path>
-	<path>sound3/matmos_hl/weather/thunder3.ogg</path>
-	<path>sound3/matmos_hl/weather/thunder4.ogg</path>
+	<path>matmos_hl/weather/thunder1.ogg</path>
+	<path>matmos_hl/weather/thunder2.ogg</path>
+	<path>matmos_hl/weather/thunder3.ogg</path>
+	<path>matmos_hl/weather/thunder4.ogg</path>
 	<volmin>0.4</volmin>
 	<volmax>0.7</volmax>
 	<pitchmin>0.7</pitchmin>
@@ -1367,7 +1389,7 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/matmos_hl/atmosphere/plaza_amb.ogg</path>
+	<path>matmos_hl/atmosphere/plaza_amb.ogg</path>
 	<volmin>0.2</volmin>
 	<volmax>0.6</volmax>
 	<pitchmin>0.9</pitchmin>
@@ -1381,10 +1403,10 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/matmos_hl/wind/treewind1.ogg</path>
-	<path>sound3/matmos_hl/wind/treewind2.ogg</path>
-	<path>sound3/matmos_hl/wind/treewind3.ogg</path>
-	<path>sound3/matmos_hl/wind/treewind4.ogg</path>
+	<path>matmos_hl/wind/treewind1.ogg</path>
+	<path>matmos_hl/wind/treewind2.ogg</path>
+	<path>matmos_hl/wind/treewind3.ogg</path>
+	<path>matmos_hl/wind/treewind4.ogg</path>
 	<volmin>0.7</volmin>
 	<volmax>1.0</volmax>
 	<pitchmin>0.9</pitchmin>
@@ -1398,9 +1420,9 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/matmos_hl/wind/wind_hit1.ogg</path>
-	<path>sound3/matmos_hl/wind/wind_hit2.ogg</path>
-	<path>sound3/matmos_hl/wind/wind_hit3.ogg</path>
+	<path>matmos_hl/wind/wind_hit1.ogg</path>
+	<path>matmos_hl/wind/wind_hit2.ogg</path>
+	<path>matmos_hl/wind/wind_hit3.ogg</path>
 	<volmin>1.0</volmin>
 	<volmax>1.0</volmax>
 	<pitchmin>0.8</pitchmin>
@@ -1414,7 +1436,7 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/matmos_hl/wind/windmill_wind_loop1.ogg</path>
+	<path>matmos_hl/wind/windmill_wind_loop1.ogg</path>
 	<volmin>1.0</volmin>
 	<volmax>1.0</volmax>
 	<pitchmin>0.8</pitchmin>
@@ -1428,7 +1450,7 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/note/pling.ogg</path>
+	<path>note/pling.ogg</path>
 	<volmin>1.0</volmin>
 	<volmax>1.0</volmax>
 	<pitchmin>0.9</pitchmin>
@@ -1442,7 +1464,7 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/note/pling.ogg</path>
+	<path>note/pling.ogg</path>
 	<volmin>1.0</volmin>
 	<volmax>1.0</volmax>
 	<pitchmin>0.6</pitchmin>
@@ -1456,16 +1478,16 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/matmos_hl/wildlife/chirp1.ogg</path>
-	<path>sound3/matmos_hl/wildlife/chirp2.ogg</path>
-	<path>sound3/matmos_hl/wildlife/chirp3.ogg</path>
-	<path>sound3/matmos_hl/wildlife/chirp1.ogg</path>
-	<path>sound3/matmos_hl/wildlife/chirp2.ogg</path>
-	<path>sound3/matmos_hl/wildlife/chirp3.ogg</path>
-	<path>sound3/matmos_hl/wildlife/flit1.ogg</path>
-	<path>sound3/matmos_hl/wildlife/squeek1.ogg</path>
-	<path>sound3/matmos_hl/wildlife/squeek2.ogg</path>
-	<path>sound3/matmos_hl/wildlife/squeek3.ogg</path>
+	<path>matmos_hl/wildlife/chirp1.ogg</path>
+	<path>matmos_hl/wildlife/chirp2.ogg</path>
+	<path>matmos_hl/wildlife/chirp3.ogg</path>
+	<path>matmos_hl/wildlife/chirp1.ogg</path>
+	<path>matmos_hl/wildlife/chirp2.ogg</path>
+	<path>matmos_hl/wildlife/chirp3.ogg</path>
+	<path>matmos_hl/wildlife/flit1.ogg</path>
+	<path>matmos_hl/wildlife/squeek1.ogg</path>
+	<path>matmos_hl/wildlife/squeek2.ogg</path>
+	<path>matmos_hl/wildlife/squeek3.ogg</path>
 	<volmin>1.0</volmin>
 	<volmax>1.0</volmax>
 	<pitchmin>0.9</pitchmin>
@@ -1860,7 +1882,6 @@
 	<allow>Highlands (96, Visible)</allow>
 	<restrict>Manmade Town</restrict>
 	<restrict>Is Underwater</restrict>
-	<restrict>In Aether</restrict>
 	<eventtimed>
 		<eventname>Wind, trees</eventname>
 		<delaymin>2.0</delaymin>

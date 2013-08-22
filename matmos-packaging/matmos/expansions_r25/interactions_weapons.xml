@@ -424,8 +424,8 @@
 	</descriptible>
 	<truepart>Interact Sword Sharp</truepart>
 	<truepart>Interact Target</truepart>
-	<truepart>Interact Hit</truepart>
 	<falsepart>Is looking at an interactible</falsepart>
+	<truepart>Interact Hit</truepart>
 </set>
 <set name="Interact Sword Sharp Swing">
 	<descriptible>
@@ -447,8 +447,8 @@
 	</descriptible>
 	<truepart>Interact Target</truepart>
 	<truepart>Interact Sword Soft</truepart>
-	<truepart>Interact Hit</truepart>
 	<falsepart>Is looking at an interactible</falsepart>
+	<truepart>Interact Hit</truepart>
 </set>
 <set name="Interact Sword Soft Swing">
 	<descriptible>
@@ -468,9 +468,9 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
+	<falsepart>Interact Target</falsepart>
 	<truepart>Interact Tool Sharp</truepart>
 	<truepart>Interact Swing</truepart>
-	<falsepart>Interact Target</falsepart>
 </set>
 <set name="Interact Tool Soft Swing to Miss">
 	<descriptible>
@@ -479,9 +479,9 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
+	<falsepart>Interact Target</falsepart>
 	<truepart>Interact Tool Soft</truepart>
 	<truepart>Interact Swing</truepart>
-	<falsepart>Interact Target</falsepart>
 </set>
 <set name="Is out of water">
 	<descriptible>
@@ -508,10 +508,10 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/matmos_interactions/water_underwater_a.ogg</path>
-	<path>sound3/matmos_interactions/water_underwater_b.ogg</path>
-	<path>sound3/matmos_interactions/water_underwater_c.ogg</path>
-	<path>sound3/matmos_interactions/water_underwater_d.ogg</path>
+	<path>matmos_interactions/water_underwater_a.ogg</path>
+	<path>matmos_interactions/water_underwater_b.ogg</path>
+	<path>matmos_interactions/water_underwater_c.ogg</path>
+	<path>matmos_interactions/water_underwater_d.ogg</path>
 	<volmin>1.4</volmin>
 	<volmax>1.5</volmax>
 	<pitchmin>0.7</pitchmin>
@@ -525,9 +525,9 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/matmos_interactions/bow_flame_a.ogg</path>
-	<path>sound3/matmos_interactions/bow_flame_b.ogg</path>
-	<path>sound3/matmos_interactions/bow_flame_c.ogg</path>
+	<path>matmos_interactions/bow_flame_a.ogg</path>
+	<path>matmos_interactions/bow_flame_b.ogg</path>
+	<path>matmos_interactions/bow_flame_c.ogg</path>
 	<volmin>1.0</volmin>
 	<volmax>1.0</volmax>
 	<pitchmin>0.9</pitchmin>
@@ -541,11 +541,11 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/matmos_interactions/bow_stretch_a.ogg</path>
-	<path>sound3/matmos_interactions/bow_stretch_b.ogg</path>
-	<path>sound3/matmos_interactions/bow_stretch_c.ogg</path>
-	<path>sound3/matmos_interactions/bow_stretch_d.ogg</path>
-	<path>sound3/matmos_interactions/bow_stretch_e.ogg</path>
+	<path>matmos_interactions/bow_stretch_a.ogg</path>
+	<path>matmos_interactions/bow_stretch_b.ogg</path>
+	<path>matmos_interactions/bow_stretch_c.ogg</path>
+	<path>matmos_interactions/bow_stretch_d.ogg</path>
+	<path>matmos_interactions/bow_stretch_e.ogg</path>
 	<volmin>1.0</volmin>
 	<volmax>1.0</volmax>
 	<pitchmin>0.8</pitchmin>
@@ -559,9 +559,9 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/matmos_interactions/crit_emit_a.ogg</path>
-	<path>sound3/matmos_interactions/crit_emit_b.ogg</path>
-	<path>sound3/matmos_interactions/crit_emit_c.ogg</path>
+	<path>matmos_interactions/crit_emit_a.ogg</path>
+	<path>matmos_interactions/crit_emit_b.ogg</path>
+	<path>matmos_interactions/crit_emit_c.ogg</path>
 	<volmin>1.0</volmin>
 	<volmax>1.0</volmax>
 	<pitchmin>0.9</pitchmin>
@@ -575,7 +575,7 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/matmos_interactions/generic_draw.ogg</path>
+	<path>matmos_interactions/generic_draw.ogg</path>
 	<volmin>1.0</volmin>
 	<volmax>1.0</volmax>
 	<pitchmin>0.7</pitchmin>
@@ -589,10 +589,10 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/matmos_interactions/sword_hit_a.ogg</path>
-	<path>sound3/matmos_interactions/sword_hit_b.ogg</path>
-	<path>sound3/matmos_interactions/sword_hit_c.ogg</path>
-	<path>sound3/matmos_interactions/sword_hit_d.ogg</path>
+	<path>matmos_interactions/sword_hit_a.ogg</path>
+	<path>matmos_interactions/sword_hit_b.ogg</path>
+	<path>matmos_interactions/sword_hit_c.ogg</path>
+	<path>matmos_interactions/sword_hit_d.ogg</path>
 	<volmin>1.0</volmin>
 	<volmax>1.0</volmax>
 	<pitchmin>0.95</pitchmin>
@@ -606,15 +606,15 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/matmos_interactions/sword_attack_a.ogg</path>
-	<path>sound3/matmos_interactions/sword_attack_b.ogg</path>
-	<path>sound3/matmos_interactions/sword_attack_c.ogg</path>
-	<path>sound3/matmos_interactions/sword_attack_d.ogg</path>
-	<path>sound3/matmos_interactions/sword_attack_e.ogg</path>
-	<path>sound3/matmos_interactions/sword_attack_f.ogg</path>
-	<path>sound3/matmos_interactions/sword_attack_g.ogg</path>
-	<path>sound3/matmos_interactions/sword_attack_h.ogg</path>
-	<path>sound3/matmos_interactions/sword_attack_i.ogg</path>
+	<path>matmos_interactions/sword_attack_a.ogg</path>
+	<path>matmos_interactions/sword_attack_b.ogg</path>
+	<path>matmos_interactions/sword_attack_c.ogg</path>
+	<path>matmos_interactions/sword_attack_d.ogg</path>
+	<path>matmos_interactions/sword_attack_e.ogg</path>
+	<path>matmos_interactions/sword_attack_f.ogg</path>
+	<path>matmos_interactions/sword_attack_g.ogg</path>
+	<path>matmos_interactions/sword_attack_h.ogg</path>
+	<path>matmos_interactions/sword_attack_i.ogg</path>
 	<volmin>1.0</volmin>
 	<volmax>1.0</volmax>
 	<pitchmin>0.9</pitchmin>
@@ -628,11 +628,11 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/matmos_interactions/blunt_hit_a.ogg</path>
-	<path>sound3/matmos_interactions/blunt_hit_b.ogg</path>
-	<path>sound3/matmos_interactions/blunt_hit_c.ogg</path>
-	<path>sound3/matmos_interactions/blunt_hit_d.ogg</path>
-	<path>sound3/matmos_interactions/blunt_hit_e.ogg</path>
+	<path>matmos_interactions/blunt_hit_a.ogg</path>
+	<path>matmos_interactions/blunt_hit_b.ogg</path>
+	<path>matmos_interactions/blunt_hit_c.ogg</path>
+	<path>matmos_interactions/blunt_hit_d.ogg</path>
+	<path>matmos_interactions/blunt_hit_e.ogg</path>
 	<volmin>1.0</volmin>
 	<volmax>1.0</volmax>
 	<pitchmin>1.3</pitchmin>
@@ -646,11 +646,11 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/matmos_interactions/blunt_attack_a.ogg</path>
-	<path>sound3/matmos_interactions/blunt_attack_b.ogg</path>
-	<path>sound3/matmos_interactions/blunt_attack_c.ogg</path>
-	<path>sound3/matmos_interactions/blunt_attack_d.ogg</path>
-	<path>sound3/matmos_interactions/blunt_attack_e.ogg</path>
+	<path>matmos_interactions/blunt_attack_a.ogg</path>
+	<path>matmos_interactions/blunt_attack_b.ogg</path>
+	<path>matmos_interactions/blunt_attack_c.ogg</path>
+	<path>matmos_interactions/blunt_attack_d.ogg</path>
+	<path>matmos_interactions/blunt_attack_e.ogg</path>
 	<volmin>1.0</volmin>
 	<volmax>1.0</volmax>
 	<pitchmin>1.5</pitchmin>
@@ -664,7 +664,7 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/matmos_interactions/tool_swing.ogg</path>
+	<path>matmos_interactions/tool_swing.ogg</path>
 	<volmin>1.0</volmin>
 	<volmax>1.0</volmax>
 	<pitchmin>0.95</pitchmin>
@@ -678,11 +678,11 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/matmos_interactions/blunt_attack_a.ogg</path>
-	<path>sound3/matmos_interactions/blunt_attack_b.ogg</path>
-	<path>sound3/matmos_interactions/blunt_attack_c.ogg</path>
-	<path>sound3/matmos_interactions/blunt_attack_d.ogg</path>
-	<path>sound3/matmos_interactions/blunt_attack_e.ogg</path>
+	<path>matmos_interactions/blunt_attack_a.ogg</path>
+	<path>matmos_interactions/blunt_attack_b.ogg</path>
+	<path>matmos_interactions/blunt_attack_c.ogg</path>
+	<path>matmos_interactions/blunt_attack_d.ogg</path>
+	<path>matmos_interactions/blunt_attack_e.ogg</path>
 	<volmin>1.0</volmin>
 	<volmax>1.0</volmax>
 	<pitchmin>1.5</pitchmin>
@@ -696,10 +696,10 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/matmos_interactions/water_underwater_a.ogg</path>
-	<path>sound3/matmos_interactions/water_underwater_b.ogg</path>
-	<path>sound3/matmos_interactions/water_underwater_c.ogg</path>
-	<path>sound3/matmos_interactions/water_underwater_d.ogg</path>
+	<path>matmos_interactions/water_underwater_a.ogg</path>
+	<path>matmos_interactions/water_underwater_b.ogg</path>
+	<path>matmos_interactions/water_underwater_c.ogg</path>
+	<path>matmos_interactions/water_underwater_d.ogg</path>
 	<volmin>1.3</volmin>
 	<volmax>1.4</volmax>
 	<pitchmin>0.6</pitchmin>
@@ -713,10 +713,10 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/matmos_interactions/water_underwater_a.ogg</path>
-	<path>sound3/matmos_interactions/water_underwater_b.ogg</path>
-	<path>sound3/matmos_interactions/water_underwater_c.ogg</path>
-	<path>sound3/matmos_interactions/water_underwater_d.ogg</path>
+	<path>matmos_interactions/water_underwater_a.ogg</path>
+	<path>matmos_interactions/water_underwater_b.ogg</path>
+	<path>matmos_interactions/water_underwater_c.ogg</path>
+	<path>matmos_interactions/water_underwater_d.ogg</path>
 	<volmin>1.3</volmin>
 	<volmax>1.4</volmax>
 	<pitchmin>1.7</pitchmin>
@@ -730,11 +730,11 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/matmos_interactions/blunt_attack_a.ogg</path>
-	<path>sound3/matmos_interactions/blunt_attack_b.ogg</path>
-	<path>sound3/matmos_interactions/blunt_attack_c.ogg</path>
-	<path>sound3/matmos_interactions/blunt_attack_d.ogg</path>
-	<path>sound3/matmos_interactions/blunt_attack_e.ogg</path>
+	<path>matmos_interactions/blunt_attack_a.ogg</path>
+	<path>matmos_interactions/blunt_attack_b.ogg</path>
+	<path>matmos_interactions/blunt_attack_c.ogg</path>
+	<path>matmos_interactions/blunt_attack_d.ogg</path>
+	<path>matmos_interactions/blunt_attack_e.ogg</path>
 	<volmin>1.0</volmin>
 	<volmax>1.0</volmax>
 	<pitchmin>1.5</pitchmin>

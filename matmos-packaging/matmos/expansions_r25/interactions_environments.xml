@@ -362,7 +362,7 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/matmos_interactions/water_divein.ogg</path>
+	<path>matmos_interactions/water_divein.ogg</path>
 	<volmin>1.0</volmin>
 	<volmax>1.0</volmax>
 	<pitchmin>0.9</pitchmin>
@@ -376,8 +376,8 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/damage/fallbig1.ogg</path>
-	<path>sound3/damage/fallbig2.ogg</path>
+	<path>damage/fallbig1.ogg</path>
+	<path>damage/fallbig2.ogg</path>
 	<volmin>1.0</volmin>
 	<volmax>1.0</volmax>
 	<pitchmin>0.8</pitchmin>
@@ -391,7 +391,7 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/matmos_interactions/water_jumpin.ogg</path>
+	<path>matmos_interactions/water_jumpin.ogg</path>
 	<volmin>1.0</volmin>
 	<volmax>1.0</volmax>
 	<pitchmin>0.9</pitchmin>
@@ -405,10 +405,10 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/matmos_interactions/water_underwater_a.ogg</path>
-	<path>sound3/matmos_interactions/water_underwater_b.ogg</path>
-	<path>sound3/matmos_interactions/water_underwater_c.ogg</path>
-	<path>sound3/matmos_interactions/water_underwater_d.ogg</path>
+	<path>matmos_interactions/water_underwater_a.ogg</path>
+	<path>matmos_interactions/water_underwater_b.ogg</path>
+	<path>matmos_interactions/water_underwater_c.ogg</path>
+	<path>matmos_interactions/water_underwater_d.ogg</path>
 	<volmin>1.0</volmin>
 	<volmax>1.0</volmax>
 	<pitchmin>1.3</pitchmin>
@@ -422,10 +422,10 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/matmos_interactions/water_underwater_a.ogg</path>
-	<path>sound3/matmos_interactions/water_underwater_b.ogg</path>
-	<path>sound3/matmos_interactions/water_underwater_c.ogg</path>
-	<path>sound3/matmos_interactions/water_underwater_d.ogg</path>
+	<path>matmos_interactions/water_underwater_a.ogg</path>
+	<path>matmos_interactions/water_underwater_b.ogg</path>
+	<path>matmos_interactions/water_underwater_c.ogg</path>
+	<path>matmos_interactions/water_underwater_d.ogg</path>
 	<volmin>1.0</volmin>
 	<volmax>1.0</volmax>
 	<pitchmin>0.9</pitchmin>
@@ -439,7 +439,7 @@
 		<icon></icon>
 		<meta></meta>
 	</descriptible>
-	<path>sound3/matmos_interactions/water_divein.ogg</path>
+	<path>matmos_interactions/water_divein.ogg</path>
 	<volmin>1.0</volmin>
 	<volmax>1.0</volmax>
 	<pitchmin>0.9</pitchmin>
@@ -456,7 +456,7 @@
 	<allow>Contact Lava (on)</allow>
 	<allow>Contact Lava Flowing (on)</allow>
 	<stream>
-		<path>sound3/matmos_interactions/fire_burst.ogg</path>
+		<path>matmos_interactions/fire_burst.ogg</path>
 		<volume>1.0</volume>
 		<pitch>1.0</pitch>
 		<fadeintime>0.0</fadeintime>
@@ -528,7 +528,7 @@
 	</descriptible>
 	<allow>Falling more than 4 blocks</allow>
 	<stream>
-		<path>sound3/matmos_interactions/speed_wind.ogg</path>
+		<path>matmos_interactions/speed_wind.ogg</path>
 		<volume>1.0</volume>
 		<pitch>1.0</pitch>
 		<fadeintime>4.0</fadeintime>
@@ -567,7 +567,7 @@
 	<allow>High Speeds</allow>
 	<restrict>Under Water</restrict>
 	<stream>
-		<path>sound3/matmos_interactions/speed_wind.ogg</path>
+		<path>matmos_interactions/speed_wind.ogg</path>
 		<volume>0.05</volume>
 		<pitch>1.0</pitch>
 		<fadeintime>0.5</fadeintime>
@@ -596,7 +596,7 @@
 		<pitchmod>1.0</pitchmod>
 	</eventtimed>
 	<stream>
-		<path>sound3/matmos_interactions/water_underwater_loop.ogg</path>
+		<path>matmos_interactions/water_underwater_loop.ogg</path>
 		<volume>0.5</volume>
 		<pitch>1.0</pitch>
 		<fadeintime>0.0</fadeintime>
