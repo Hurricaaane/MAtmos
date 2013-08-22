@@ -51,6 +51,8 @@ public class MAtDataGatherer
 	final static String ARMOR3_E = "Armor3Enchantments";
 	final static String ARMOR4_E = "Armor4Enchantments";
 	
+	final static String OPTIONS = "Options";
+	
 	final static int COUNT_WORLD_BLOCKS = 4096;
 	final static int COUNT_INSTANTS = 128;
 	final static int COUNT_CONFIGVARS = 256;
@@ -73,6 +75,7 @@ public class MAtDataGatherer
 	private ProcessorModel frequentProcessor;
 	private ProcessorModel contactProcessor;
 	private ProcessorModel configVarsProcessor;
+	private ProcessorModel optionsProcessor;
 	
 	private ProcessorModel weatherpony_seasons_api_Processor;
 	
@@ -133,6 +136,7 @@ public class MAtDataGatherer
 		this.frequentProcessor = new MAtProcessorFrequent(this.mod, this.data, INSTANTS, DELTAS);
 		this.contactProcessor = new MAtProcessorContact(this.mod, this.data, CONTACTSCAN, null);
 		this.configVarsProcessor = new MAtProcessorCVARS(this.mod, this.data, CONFIGVARS, null);
+		this.optionsProcessor = new MAtProcessorOptions(this.mod, this.data, OPTIONS, null);
 		
 		if (Ha3StaticUtilities.classExists("WeatherPony.Seasons.api.Season", this)
 			&& Ha3StaticUtilities.classExists("WeatherPony.Seasons.api.BiomeHelper", this))
@@ -205,7 +209,40 @@ public class MAtDataGatherer
 		
 	}
 	
+	private boolean anticrash = true;
+	
 	public void tickRoutine()
+	{
+		try
+		{
+			tickRoutineThrowsStupidProgrammingErrors();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			
+			if (this.anticrash)
+			{
+				this.anticrash = false;
+				this.mod.printChat(Ha3Utility.COLOR_RED, "MAtmos is crashing: ", Ha3Utility.COLOR_WHITE, e
+					.getClass().getName(), ": ", e.getCause());
+				
+				int i = 0;
+				for (StackTraceElement x : e.getStackTrace())
+				{
+					if (i <= 5 || x.toString().contains("MAt") || x.toString().contains("eu.ha3.matmos."))
+					{
+						this.mod.printChat(Ha3Utility.COLOR_WHITE, x.toString());
+					}
+					i++;
+				}
+				
+				this.mod.printChat(Ha3Utility.COLOR_RED, "Please report this issue :(");
+			}
+		}
+	}
+	
+	public void tickRoutineThrowsStupidProgrammingErrors()
 	{
 		if (this.cyclicTick % 64 == 0)
 		{
@@ -253,6 +290,7 @@ public class MAtDataGatherer
 			{
 				processor.process();
 			}
+			this.optionsProcessor.process();
 			
 			this.data.flagUpdate();
 			
@@ -286,14 +324,12 @@ public class MAtDataGatherer
 		if (this.cyclicTick % 2048 == 0)
 		{
 			this.configVarsProcessor.process();
-			
 		}
 		
 		this.largeScanner.routine();
 		this.smallScanner.routine();
 		
 		this.cyclicTick = this.cyclicTick + 1;
-		
 	}
 	
 	private void prepareSheets()
@@ -336,6 +372,8 @@ public class MAtDataGatherer
 		createSheet("Detect20_Deltas", ENTITYIDS_MAX);
 		createSheet("Detect50_Deltas", ENTITYIDS_MAX);
 		createSheet("weatherpony_seasons_api", 4);
+		
+		createSheet("Options", 16);
 		
 	}
 	
