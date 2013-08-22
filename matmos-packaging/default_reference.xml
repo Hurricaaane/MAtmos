@@ -10,6 +10,8 @@
 	<sheet name="SpecialLarge">spelarge</sheet>
 	<sheet name="SpecialSmall">spesmall</sheet>
 	<sheet name="ConfigVars">configvars</sheet>
+	<sheet name="Options">options</sheet>
+	<sheet name="weatherpony_seasons_api">weatherpony_seasons_api</sheet>
 	<sheet name="CurrentItemEnchantments">enchantments</sheet>
 	<sheet name="Armor1Enchantments">enchantments</sheet>
 	<sheet name="Armor2Enchantments">enchantments</sheet>
@@ -118,6 +120,11 @@
 		<data id="91">Armor slot 3 (Chest)</data>
 		<data id="92">Armor slot 4 (Head)</data>
 		<data id="93">Minecraft-encoded Biome ID</data>
+		<data id="94">Block inside</data>
+		<data id="95">Block over</data>
+		<data id="96">DO NOT USE</data>
+		<data id="97">Player is looking inside an Item GUI</data>
+		<data id="100">Player is riding a horse</data>
 		
 	</list>
 	
@@ -362,18 +369,19 @@
 		<data id="193">Pillar (Aether)</data>
 	</list>
 	
-	<list name="spelarge" id_max="19">
-		<data id="0">Closest sign magic number</data>
-		<data id="1">Closest sign AOE number</data>
-	</list>
-	
-	<list name="spesmall" id_max="19">
-		<data id="0">Unused sheet.</data>
-	</list>
-	
 	<list name="configvars" id_max="255">
 		<data id="0">Negated altitude where it starts to get windy</data>
 		<data id="1">Negated altitude where it's REALLY windy</data>
+	</list>
+	
+	<list name="options" id_max="15">
+		<data id="0">User wants high altitude sounds</data>
+		<data id="1">User wants low altitude sounds</data>
+	</list>
+	
+	<list name="weatherpony_seasons_api" id_max="1">
+		<data id="0">Is seasons mod API installed</data>
+		<data id="1">0NoSeason 1Spring 2Summer 3Autumn 4Winter</data>
 	</list>
 	
 	<list name="entities" id_max="255">
@@ -382,6 +390,7 @@
 		<data id="1">Dropped item</data>
 		<data id="2">Experience Orb</data>
 		
+		<data id="8">Lead knot</data>
 		<data id="9">Painting</data>
 		<data id="10">Arrow (shot)</data>
 		<data id="11">Snowball (thrown)</data>
@@ -432,6 +441,7 @@
 		<data id="97">Snow Golem</data>
 		<data id="98">Ocelot</data>
 		<data id="99">Iron Golem</data>
+		<data id="100">Horse</data>
 		<data id="120">Villager</data>
 		<data id="200">Ender Crystal</data>
 		
