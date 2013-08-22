@@ -212,7 +212,7 @@ public class MAtSoundManagerMaster implements ReplicableSoundRelay, CustomVolume
 		{
 			// soundPoolSounds
 			return ((SoundPool) this.mod.util().getPrivateValueLiteral(
-				net.minecraft.src.SoundManager.class, this.mod.manager().getMinecraft().sndManager, "b", 3))
+				net.minecraft.src.SoundManager.class, this.mod.manager().getMinecraft().sndManager, "d", 3))
 				.getRandomSoundFromSoundPool(getSound(path));
 		}
 		catch (PrivateAccessException e)
