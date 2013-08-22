@@ -406,6 +406,12 @@ public class MAtProcessorFrequent extends MAtProcessorModel
 				setValue(97, mc.currentScreen != null && mc.currentScreen instanceof GuiContainer ? 1 : 0);
 				break;
 			
+			// 98 99 UNUSED
+			
+			case 100:
+				setValue(100, player.ridingEntity != null && player.ridingEntity instanceof EntityHorse ? 1 : 0);
+				break;
+			
 			default:
 				break;
 			}
