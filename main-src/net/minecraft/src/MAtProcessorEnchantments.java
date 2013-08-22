@@ -50,11 +50,11 @@ public abstract class MAtProcessorEnchantments extends MAtProcessorModel
 			NBTTagList enchantments = item.getEnchantmentTagList();
 			for (int i = 0; i < total; i++)
 			{
-				short id = ((NBTTagCompound) enchantments.tagAt(i)).getShort("id");
+				int id = ((NBTTagCompound) enchantments.tagAt(i)).getShort("id");
 				
-				if (id < 64 && i >= 0)
+				if (id < 64 && id >= 0)
 				{
-					if (required.contains(i))
+					if (required.contains(id))
 					{
 						short lvl = ((NBTTagCompound) enchantments.tagAt(i)).getShort("lvl");
 						setValue(id, lvl);
