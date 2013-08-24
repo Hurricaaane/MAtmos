@@ -44,7 +44,7 @@ public class MAtMod extends HaddonImpl
 	implements SupportsFrameEvents, SupportsTickEvents, SupportsKeyEvents, ResourceManagerReloadListener
 {
 	final static public MAtmosConvLogger LOGGER = new MAtmosConvLogger();
-	final static public int VERSION = 25; // Remember to change the thing on mod_Matmos
+	final static public int VERSION = 26; // Remember to change the thing on mod_Matmos
 	final static public String FOR = "1.6.2";
 	
 	private File matmosFolder;
