@@ -3,6 +3,8 @@ package net.minecraft.src;
 import java.util.HashSet;
 import java.util.Set;
 
+import eu.ha3.matmos.conv.CacheRegistry;
+
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
                     Version 2, December 2004 
@@ -19,7 +21,7 @@ import java.util.Set;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class MAtCacheRegistry
+public class MAtCacheRegistry implements CacheRegistry
 {
 	private Set<String> set;
 	
@@ -28,11 +30,13 @@ public class MAtCacheRegistry
 		this.set = new HashSet<String>();
 	}
 	
+	@Override
 	public void clear()
 	{
 		this.set.clear();
 	}
 	
+	@Override
 	public void cacheSound(String path)
 	{
 		if (this.set.contains(path))

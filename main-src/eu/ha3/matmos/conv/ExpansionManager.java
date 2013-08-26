@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.src.MAtCacheRegistry;
 import eu.ha3.matmos.engine.interfaces.Data;
 import eu.ha3.matmos.engine.interfaces.SoundRelay;
 import eu.ha3.matmos.requirem.Collation;
@@ -43,13 +42,13 @@ public class ExpansionManager
 	private Data data;
 	
 	private Collation collation;
-	private MAtCacheRegistry cacheRegistry;
+	private CacheRegistry cacheRegistry;
 	private File modsFolder;
 	
-	public ExpansionManager(String expansionsSubdir, File userconfigFolder, File modsFolder)
+	public ExpansionManager(String expansionsSubdir, File userconfigFolder, File modsFolder, CacheRegistry registry)
 	{
 		this.expansions = new HashMap<String, Expansion>();
-		this.cacheRegistry = new MAtCacheRegistry();
+		this.cacheRegistry = registry;
 		
 		this.expansionsSubdir = expansionsSubdir;
 		this.userconfigFolder = userconfigFolder;

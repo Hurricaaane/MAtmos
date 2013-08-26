@@ -123,8 +123,9 @@ public class MAtMod extends HaddonImpl
 		this.userControl = new MAtUserControl(this);
 		this.dataGatherer = new MAtDataGatherer(this);
 		this.expansionManager =
-			new ExpansionManager("expansions_r25/", new File(
-				util().getModsFolder(), "matmos/expansions_r25_userconfig/"), new File(this.matmosFolder, "packs/"));
+			new ExpansionManager(
+				"expansions_r25/", new File(util().getModsFolder(), "matmos/expansions_r25_userconfig/"), new File(
+					this.matmosFolder, "packs/"), new MAtCacheRegistry());
 		this.updateNotifier = new MAtUpdateNotifier(this);
 		
 		manager().hookFrameEvents(true);
