@@ -43,17 +43,15 @@ public class ExpansionManager
 	
 	private Collation collation;
 	private CacheRegistry cacheRegistry;
-	private File modsFolder;
+	private File packsFolder;
 	
-	public ExpansionManager(String expansionsSubdir, File userconfigFolder, File modsFolder, CacheRegistry registry)
+	public ExpansionManager(String expansionsSubdir, File userconfigFolder, CacheRegistry registry)
 	{
 		this.expansions = new HashMap<String, Expansion>();
 		this.cacheRegistry = registry;
 		
 		this.expansionsSubdir = expansionsSubdir;
 		this.userconfigFolder = userconfigFolder;
-		
-		this.modsFolder = modsFolder;
 		
 		if (!this.userconfigFolder.exists())
 		{
@@ -62,6 +60,11 @@ public class ExpansionManager
 		
 		this.collation = new CollationOfRequirements();
 		
+	}
+	
+	public void setPacksFolder(File modsFolder)
+	{
+		this.packsFolder = modsFolder;
 	}
 	
 	public void createExpansionEntry(String userDefinedIdentifier)
@@ -208,7 +211,7 @@ public class ExpansionManager
 		clearExpansions();
 		
 		List<File> offline = new ArrayList<File>();
-		gatherOffline(this.modsFolder, offline);
+		gatherOffline(this.packsFolder, offline);
 		
 		createExpansionEntries(offline);
 		

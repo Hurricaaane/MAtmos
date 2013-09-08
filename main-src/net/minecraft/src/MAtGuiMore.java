@@ -77,17 +77,30 @@ public class MAtGuiMore extends GuiScreen
 			214, _LEFT + _MIX, _MIX * (3 + 1), _WIDTH - _MIX * 2, _UNIT, "Use custom world height: "
 				+ this.mod.getConfig().getInteger("world.height")));*/
 		
-		MAtGuiBiomeSlider slider =
+		MAtGuiBiomeSlider biomeSlider =
 			new MAtGuiBiomeSlider(this.mod, this.mod.getConfig().getInteger("useroptions.biome.override"));
-		HGuiSliderControl sliderControl =
+		HGuiSliderControl biomeControl =
 			new HGuiSliderControl(
-				214, _LEFT, _MIX * (3 + 1), _WIDTH, _UNIT, "", slider.calculateSliderLocation(this.mod
+				214, _LEFT, _MIX * (3 + 1), _WIDTH, _UNIT, "", biomeSlider.calculateSliderLocation(this.mod
 					.getConfig().getInteger("useroptions.biome.override")));
 		
-		sliderControl.setListener(slider);
-		sliderControl.setDisplayStringProvider(slider);
-		sliderControl.updateDisplayString();
-		this.buttonList.add(sliderControl);
+		biomeControl.setListener(biomeSlider);
+		biomeControl.setDisplayStringProvider(biomeSlider);
+		biomeControl.updateDisplayString();
+		this.buttonList.add(biomeControl);
+		
+		MAtSetSlider setSlider = new MAtSetSlider(this.mod, this.mod.getConfig().getString("totalconversion.name"));
+		if (setSlider.getMaxPossibilities() > 1)
+		{
+			HGuiSliderControl setControl =
+				new HGuiSliderControl(
+					214, _LEFT, _MIX * (4 + 1), _WIDTH, _UNIT, "", setSlider.calculateSliderLocation(this.mod
+						.getConfig().getString("totalconversion.name")));
+			setControl.setListener(setSlider);
+			setControl.setDisplayStringProvider(setSlider);
+			setControl.updateDisplayString();
+			this.buttonList.add(setControl);
+		}
 		
 		this.buttonList.add(new GuiButton(220, _LEFT + _MIX, _MIX * (5 + 1), _WIDTH - _MIX * 2, _UNIT, this.mod
 			.getConfig().getBoolean("dump.sheets.enabled")

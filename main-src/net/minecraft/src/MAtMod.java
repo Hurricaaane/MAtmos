@@ -48,6 +48,8 @@ public class MAtMod extends HaddonImpl
 	final static public String FOR = "1.6.2";
 	
 	private File matmosFolder;
+	private File packsFolder;
+	private String usingSet;
 	
 	private MAtModPhase phase;
 	private ConfigProperty config;
@@ -96,26 +98,6 @@ public class MAtMod extends HaddonImpl
 			return;
 		}
 		
-		try
-		{
-			@SuppressWarnings("unchecked")
-			List<ResourcePack> resourcePacks =
-				(List<ResourcePack>) util().getPrivateValueLiteral(Minecraft.class, Minecraft.getMinecraft(), "aq", 63);
-			
-			for (File file : new File(this.matmosFolder, "packs/").listFiles())
-			{
-				if (file.isDirectory())
-				{
-					MAtmosConvLogger.info("Adding resource pack at " + file.getAbsolutePath());
-					resourcePacks.add(new FolderResourcePack(file));
-				}
-			}
-		}
-		catch (PrivateAccessException e)
-		{
-			e.printStackTrace();
-		}
-		
 		this.timeStatistic = new TimeStatistic(Locale.ENGLISH);
 		
 		this.sndComm = new Ha3SoundCommunicator(this, "MAtmos_");
@@ -123,9 +105,8 @@ public class MAtMod extends HaddonImpl
 		this.userControl = new MAtUserControl(this);
 		this.dataGatherer = new MAtDataGatherer(this);
 		this.expansionManager =
-			new ExpansionManager(
-				"expansions_r25/", new File(util().getModsFolder(), "matmos/expansions_r25_userconfig/"), new File(
-					this.matmosFolder, "packs/"), new MAtCacheRegistry());
+			new ExpansionManager("expansions_r25/", new File(
+				util().getModsFolder(), "matmos/expansions_r25_userconfig/"), new MAtCacheRegistry());
 		this.updateNotifier = new MAtUpdateNotifier(this);
 		
 		manager().hookFrameEvents(true);
@@ -146,6 +127,7 @@ public class MAtMod extends HaddonImpl
 		this.config.setProperty("update_found.version", MAtMod.VERSION);
 		this.config.setProperty("update_found.display.remaining.value", 0);
 		this.config.setProperty("update_found.display.count.value", 3);
+		this.config.setProperty("totalconversion.name", "default");
 		this.config.commit();
 		
 		// Load configuration from source
@@ -162,6 +144,40 @@ public class MAtMod extends HaddonImpl
 		
 		this.updateNotifier.loadConfig(this.config);
 		
+		if (!this.config.getString("totalconversion.name").equals("default"))
+		{
+			this.usingSet = this.config.getString("totalconversion.name");
+			this.packsFolder = new File(this.matmosFolder, "sets/" + this.usingSet + "/");
+		}
+		
+		if (this.packsFolder == null || !this.packsFolder.exists() || !this.packsFolder.isDirectory())
+		{
+			this.usingSet = "default";
+			this.packsFolder = new File(this.matmosFolder, "sets/default/");
+			this.config.setProperty("totalconversion.name", "default");
+		}
+		
+		this.expansionManager.setPacksFolder(this.packsFolder);
+		try
+		{
+			@SuppressWarnings("unchecked")
+			List<ResourcePack> resourcePacks =
+				(List<ResourcePack>) util().getPrivateValueLiteral(Minecraft.class, Minecraft.getMinecraft(), "aq", 63);
+			
+			for (File file : this.packsFolder.listFiles())
+			{
+				if (file.isDirectory())
+				{
+					MAtmosConvLogger.info("Adding resource pack at " + file.getAbsolutePath());
+					resourcePacks.add(new FolderResourcePack(file));
+				}
+			}
+		}
+		catch (PrivateAccessException e)
+		{
+			e.printStackTrace();
+		}
+		
 		createSoundManagerMaster();
 		
 		// This registers stuff to Minecraft (key bindings...)
@@ -175,6 +191,16 @@ public class MAtMod extends HaddonImpl
 			initializeAndEnable();
 		}
 		
+	}
+	
+	public File getMAtmosFolder()
+	{
+		return this.matmosFolder;
+	}
+	
+	public String getLoadedSet()
+	{
+		return this.usingSet;
 	}
 	
 	public void initializeAndEnable()
