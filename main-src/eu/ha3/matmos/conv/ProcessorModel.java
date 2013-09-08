@@ -22,7 +22,7 @@ import eu.ha3.matmos.engine.interfaces.Sheet;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public abstract class ProcessorModel
+public abstract class ProcessorModel implements Processor
 {
 	private IntegerData data;
 	
@@ -53,6 +53,7 @@ public abstract class ProcessorModel
 	
 	protected abstract void doProcess();
 	
+	@Override
 	public void process()
 	{
 		this.normalRequired = this.data.getRequirements().isRequired(this.normalName);

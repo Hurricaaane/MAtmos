@@ -182,9 +182,9 @@ public class MAtMod extends HaddonImpl
 		if (this.phase != MAtModPhase.NOT_YET_ENABLED)
 			return;
 		
-		this.timeStatistic = new TimeStatistic(Locale.ENGLISH);
-		
 		this.phase = MAtModPhase.CONSTRUCTING;
+		
+		this.timeStatistic = new TimeStatistic(Locale.ENGLISH);
 		
 		MAtmosConvLogger.info("Constructing.");
 		
@@ -206,11 +206,11 @@ public class MAtMod extends HaddonImpl
 		
 		this.expansionManager.loadExpansions();
 		
-		ResourceManager resMan = manager().getMinecraft().func_110442_L();
+		ResourceManager resMan = manager().getMinecraft().getResourceManager();
 		if (resMan instanceof ReloadableResourceManager)
 		{
 			MAtmosConvLogger.info("Adding resource reloading listener");
-			((ReloadableResourceManager) resMan).func_110542_a(this);
+			((ReloadableResourceManager) resMan).registerReloadListener(this);
 		}
 		else
 		{
@@ -430,7 +430,7 @@ public class MAtMod extends HaddonImpl
 	
 	// ResourceManagerReloadListener
 	@Override
-	public void func_110549_a(ResourceManager var1)
+	public void onReload(ResourceManager var1)
 	{
 		MAtmosConvLogger.warning("ResourceManager has changed. Unintended side-effects results may happen.");
 		

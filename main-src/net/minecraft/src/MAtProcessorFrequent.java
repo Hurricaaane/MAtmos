@@ -23,7 +23,6 @@ public class MAtProcessorFrequent extends MAtProcessorModel
 	public MAtProcessorFrequent(MAtMod modIn, IntegerData dataIn, String normalNameIn, String deltaNameIn)
 	{
 		super(modIn, dataIn, normalNameIn, deltaNameIn);
-		
 	}
 	
 	@Override
@@ -131,7 +130,7 @@ public class MAtProcessorFrequent extends MAtProcessorModel
 			
 			case 24:
 				// Get Player health amount (Integer)
-				setValue(24, (int) Math.ceil(player.func_110143_aJ())); // HEALTH is now a float.
+				setValue(24, (int) Math.ceil(player.getHealth())); // HEALTH is now a float.
 				break;
 			
 			case 25:

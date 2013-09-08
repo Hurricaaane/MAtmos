@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import eu.ha3.matmos.conv.Processor;
 import eu.ha3.matmos.engine.implem.IntegerData;
 
 /*
@@ -23,7 +24,7 @@ import eu.ha3.matmos.engine.implem.IntegerData;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class MAtProcessorEntityDetector
+public class MAtProcessorEntityDetector implements Processor
 {
 	private MAtMod mod;
 	
@@ -100,6 +101,7 @@ public class MAtProcessorEntityDetector
 		this.mindistMappy.clear();
 	}
 	
+	@Override
 	@SuppressWarnings("unchecked")
 	public void process()
 	{

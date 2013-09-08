@@ -44,7 +44,6 @@ public class MAtUserControl
 		
 		this.mod.manager().addKeyBinding(this.keyBindingMain, "MAtmos");
 		this.keyManager.addKeyBinding(this.keyBindingMain, new MAtKeyMain(this));
-		
 	}
 	
 	public String getKeyBindingMainFriendlyName()
@@ -65,23 +64,17 @@ public class MAtUserControl
 			this.mod.getGlobalVolumeControl().setVolume(this.scroller.getValue());
 			
 		}
-		
 	}
 	
 	public void frameRoutine(float fspan)
 	{
 		this.scroller.draw(fspan);
-		
 	}
 	
 	public void communicateKeyBindingEvent(KeyBinding event)
 	{
 		this.keyManager.handleKeyDown(event);
 		
-	}
-	
-	public void signalPress()
-	{
 	}
 	
 	public void printUnusualMessages()
@@ -121,16 +114,9 @@ public class MAtUserControl
 		{
 			displayMenu();
 		}
-		else
+		else if (this.mod.isRunning())
 		{
-			if (this.mod.isRunning())
-			{
-				this.scroller.start();
-			}
-			else
-			{
-				//whenWantsToggle();
-			}
+			this.scroller.start();
 		}
 		
 	}
@@ -154,7 +140,6 @@ public class MAtUserControl
 		}
 		
 		printUnusualMessages();
-		
 	}
 	
 	public void endHold()
@@ -166,11 +151,7 @@ public class MAtUserControl
 			this.mod.saveConfig();
 		}
 		
-		//if (this.mod.getConfig().getBoolean("reversed.controls"))
-		//{
 		whenWantsForcing();
-		//}
-		
 		printUnusualMessages();
 		
 	}
@@ -193,20 +174,10 @@ public class MAtUserControl
 			}
 			else
 			{
-				//if (this.mod.getConfig().getBoolean("reversed.controls"))
-				//{
 				this.mod.printChat(
 					Ha3Utility.COLOR_BRIGHTGREEN, "Loading...", Ha3Utility.COLOR_YELLOW, " (Hold ",
 					Ha3Utility.COLOR_WHITE, getKeyBindingMainFriendlyName() + " down", Ha3Utility.COLOR_YELLOW,
 					" to tweak the volume)");
-				//}
-				//else
-				//{
-				//	this.mod.printChat(
-				//		Ha3Utility.COLOR_BRIGHTGREEN, "Loading...", Ha3Utility.COLOR_YELLOW, " (Press ",
-				//		Ha3Utility.COLOR_WHITE, getKeyBindingMainFriendlyName() + "", Ha3Utility.COLOR_YELLOW,
-				//		" to tweak the volume)");
-				//}
 			}
 			
 			this.loadingCount++;
@@ -229,15 +200,6 @@ public class MAtUserControl
 		this.mod.initializeAndEnable();
 		this.mod.printChat(Ha3Utility.COLOR_BRIGHTGREEN, "Loading for the first time ("
 			+ stat.getSecondsAsString(2) + "s)");
-		
-		if (this.mod.manager().getMinecraft().gameSettings.soundVolume <= 0)
-		{
-			this.mod.printChat(
-				Ha3Utility.COLOR_RED, "Warning: ", Ha3Utility.COLOR_WHITE,
-				"Sounds are turned off in your game settings!");
-			
-		}
-		
 	}
 	
 	private void whenWantsForcing()
@@ -263,7 +225,6 @@ public class MAtUserControl
 				.manager().getMinecraft()
 				.displayGuiScreen(new MAtGuiMenu((GuiScreen) this.mod.util().getCurrentScreen(), this.mod));
 		}
-		
 	}
 	
 }

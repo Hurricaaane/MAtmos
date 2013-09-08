@@ -1,11 +1,12 @@
 package net.minecraft.src;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Locale;
+import java.util.Set;
 
 import eu.ha3.easy.TimeStatistic;
 import eu.ha3.matmos.conv.MAtmosConvLogger;
+import eu.ha3.matmos.conv.Processor;
 import eu.ha3.matmos.conv.ProcessorModel;
 import eu.ha3.matmos.engine.implem.GenericSheet;
 import eu.ha3.matmos.engine.implem.IntegerData;
@@ -71,31 +72,16 @@ public class MAtDataGatherer
 	private MAtScanCoordsPipeline largePipeline;
 	private MAtScanCoordsPipeline smallPipeline;
 	
+	private Set<Processor> frequent;
+	
 	private ProcessorModel relaxedProcessor;
-	private ProcessorModel frequentProcessor;
-	private ProcessorModel contactProcessor;
 	private ProcessorModel configVarsProcessor;
 	private ProcessorModel optionsProcessor;
-	
 	private ProcessorModel weatherpony_seasons_api_Processor;
-	
-	private MAtProcessorEnchantments enchantmentsCurrentItem;
-	private MAtProcessorEnchantments enchantmentsArmor1;
-	private MAtProcessorEnchantments enchantmentsArmor2;
-	private MAtProcessorEnchantments enchantmentsArmor3;
-	private MAtProcessorEnchantments enchantmentsArmor4;
-	
-	private MAtProcessorPotionQuality potionPowerProcessor;
-	private MAtProcessorPotionQuality potionDurationProcessor;
-	
-	private MAtProcessorEntityDetector detect;
-	
-	private List<ProcessorModel> additionalRelaxedProcessors;
-	private List<ProcessorModel> additionalFrequentProcessors;
 	
 	private IntegerData data;
 	
-	private int cyclicTick;
+	private int ticksPassed;
 	
 	private long lastLargeScanX;
 	private long lastLargeScanY;
@@ -105,20 +91,18 @@ public class MAtDataGatherer
 	public MAtDataGatherer(MAtMod mAtmosHaddon)
 	{
 		this.mod = mAtmosHaddon;
+		this.frequent = new LinkedHashSet<Processor>();
 	}
 	
 	private void resetRegulators()
 	{
 		this.lastLargeScanPassed = MAX_LARGESCAN_PASS;
-		this.cyclicTick = 0;
+		this.ticksPassed = 0;
 	}
 	
 	public void load(Requirements globalRequirements)
 	{
 		resetRegulators();
-		
-		this.additionalRelaxedProcessors = new ArrayList<ProcessorModel>();
-		this.additionalFrequentProcessors = new ArrayList<ProcessorModel>();
 		
 		this.data = new IntegerData(globalRequirements);
 		prepareSheets();
@@ -133,8 +117,6 @@ public class MAtDataGatherer
 		this.smallScanner.setPipeline(this.smallPipeline);
 		
 		this.relaxedProcessor = new MAtProcessorRelaxed(this.mod, this.data, INSTANTS, DELTAS);
-		this.frequentProcessor = new MAtProcessorFrequent(this.mod, this.data, INSTANTS, DELTAS);
-		this.contactProcessor = new MAtProcessorContact(this.mod, this.data, CONTACTSCAN, null);
 		this.configVarsProcessor = new MAtProcessorCVARS(this.mod, this.data, CONFIGVARS, null);
 		this.optionsProcessor = new MAtProcessorOptions(this.mod, this.data, OPTIONS, null);
 		
@@ -146,60 +128,61 @@ public class MAtDataGatherer
 				new MAtProcessorSeasonsModAPI(this.mod, this.data, "weatherpony_seasons_api", null);
 		}
 		
-		this.enchantmentsCurrentItem = new MAtProcessorEnchantments(this.mod, this.data, CURRENTITEM_E, null) {
+		this.frequent.add(new MAtProcessorFrequent(this.mod, this.data, INSTANTS, DELTAS));
+		this.frequent.add(new MAtProcessorContact(this.mod, this.data, CONTACTSCAN, null));
+		this.frequent.add(new MAtProcessorEnchantments(this.mod, this.data, CURRENTITEM_E, null) {
 			@Override
 			protected ItemStack getItem(EntityPlayer player)
 			{
 				return player.inventory.getCurrentItem();
 			}
-		};
-		this.enchantmentsArmor1 = new MAtProcessorEnchantments(this.mod, this.data, ARMOR1_E, null) {
+		});
+		this.frequent.add(new MAtProcessorEnchantments(this.mod, this.data, ARMOR1_E, null) {
 			@Override
 			protected ItemStack getItem(EntityPlayer player)
 			{
 				return player.inventory.armorInventory[0];
 			}
-		};
-		this.enchantmentsArmor2 = new MAtProcessorEnchantments(this.mod, this.data, ARMOR2_E, null) {
+		});
+		this.frequent.add(new MAtProcessorEnchantments(this.mod, this.data, ARMOR2_E, null) {
 			@Override
 			protected ItemStack getItem(EntityPlayer player)
 			{
 				return player.inventory.armorInventory[1];
 			}
-		};
-		this.enchantmentsArmor3 = new MAtProcessorEnchantments(this.mod, this.data, ARMOR3_E, null) {
+		});
+		this.frequent.add(new MAtProcessorEnchantments(this.mod, this.data, ARMOR3_E, null) {
 			@Override
 			protected ItemStack getItem(EntityPlayer player)
 			{
 				return player.inventory.armorInventory[2];
 			}
-		};
-		this.enchantmentsArmor4 = new MAtProcessorEnchantments(this.mod, this.data, ARMOR4_E, null) {
+		});
+		this.frequent.add(new MAtProcessorEnchantments(this.mod, this.data, ARMOR4_E, null) {
 			@Override
 			protected ItemStack getItem(EntityPlayer player)
 			{
 				return player.inventory.armorInventory[3];
 			}
-		};
+		});
 		
-		this.potionPowerProcessor = new MAtProcessorPotionQuality(this.mod, this.data, POTIONPOWER, null) {
+		this.frequent.add(new MAtProcessorPotionQuality(this.mod, this.data, POTIONPOWER, null) {
 			@Override
 			protected int getQuality(PotionEffect effect)
 			{
 				return effect.getAmplifier() + 1;
 			}
-		};
-		this.potionDurationProcessor = new MAtProcessorPotionQuality(this.mod, this.data, POTIONDURATION, null) {
+		});
+		this.frequent.add(new MAtProcessorPotionQuality(this.mod, this.data, POTIONDURATION, null) {
 			@Override
 			protected int getQuality(PotionEffect effect)
 			{
 				return effect.getDuration();
 			}
-		};
+		});
 		
-		this.detect =
-			new MAtProcessorEntityDetector(
-				this.mod, this.data, "DetectMinDist", "Detect", "_Deltas", ENTITYIDS_MAX, 2, 5, 10, 20, 50);
+		this.frequent.add(new MAtProcessorEntityDetector(
+			this.mod, this.data, "DetectMinDist", "Detect", "_Deltas", ENTITYIDS_MAX, 2, 5, 10, 20, 50));
 		
 	}
 	
@@ -244,14 +227,14 @@ public class MAtDataGatherer
 	
 	public void tickRoutineThrowsStupidProgrammingErrors()
 	{
-		if (this.cyclicTick % 64 == 0)
+		if (this.ticksPassed % 64 == 0)
 		{
 			EntityPlayer player = this.mod.manager().getMinecraft().thePlayer;
 			long x = (long) Math.floor(player.posX);
 			long y = (long) Math.floor(player.posY);
 			long z = (long) Math.floor(player.posZ);
 			
-			if (this.cyclicTick % 256 == 0
+			if (this.ticksPassed % 256 == 0
 				&& (this.data.getRequirements().isRequired(LARGESCAN) || this.data.getRequirements().isRequired(
 					LARGESCAN_THOUSAND)))
 			{
@@ -286,42 +269,22 @@ public class MAtDataGatherer
 				this.weatherpony_seasons_api_Processor.process();
 			}
 			
-			for (ProcessorModel processor : this.additionalRelaxedProcessors)
-			{
-				processor.process();
-			}
 			this.optionsProcessor.process();
 			
 			this.data.flagUpdate();
-			
 		}
-		//if (this.cyclicTick % 1 == 0) // XXX
+		
 		if (true)
 		{
-			this.contactProcessor.process();
-			this.frequentProcessor.process();
-			
-			this.enchantmentsCurrentItem.process();
-			this.enchantmentsArmor1.process();
-			this.enchantmentsArmor2.process();
-			this.enchantmentsArmor3.process();
-			this.enchantmentsArmor4.process();
-			
-			this.potionPowerProcessor.process();
-			this.potionDurationProcessor.process();
-			
-			this.detect.process();
-			
-			for (ProcessorModel processor : this.additionalFrequentProcessors)
+			for (Processor model : this.frequent)
 			{
-				processor.process();
+				model.process();
 			}
 			
 			this.data.flagUpdate();
-			
 		}
 		
-		if (this.cyclicTick % 2048 == 0)
+		if (this.ticksPassed % 2048 == 0)
 		{
 			this.configVarsProcessor.process();
 		}
@@ -329,7 +292,7 @@ public class MAtDataGatherer
 		this.largeScanner.routine();
 		this.smallScanner.routine();
 		
-		this.cyclicTick = this.cyclicTick + 1;
+		this.ticksPassed = this.ticksPassed + 1;
 	}
 	
 	private void prepareSheets()

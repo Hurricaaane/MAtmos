@@ -22,17 +22,15 @@ public class MAtKeyMain implements Ha3KeyActions
 {
 	private MAtUserControl userControl;
 	
-	MAtKeyMain(MAtUserControl userControlIn)
+	public MAtKeyMain(MAtUserControl userControlIn)
 	{
 		this.userControl = userControlIn;
-		
 	}
 	
 	@Override
 	public void doBefore()
 	{
 		// OK, do nothing.
-		
 	}
 	
 	private boolean isHolding;
@@ -40,20 +38,12 @@ public class MAtKeyMain implements Ha3KeyActions
 	@Override
 	public void doDuring(int curTime)
 	{
-		/*if (curTime == 1)
-		{
-			this.userControl.signalPress();
-			
-		}*/
-		
 		if (curTime >= 7 && !this.isHolding)
 		{
 			this.isHolding = true;
 			
 			this.userControl.beginHold();
-			
 		}
-		
 	}
 	
 	@Override
@@ -62,17 +52,13 @@ public class MAtKeyMain implements Ha3KeyActions
 		if (curTime < 6)
 		{
 			this.userControl.signalShortPress();
-			
-		} // Omit frame 7 : not anymore
+		}
 		else if (this.isHolding)
-		//if (curTime >= 7)
 		{
 			this.isHolding = false;
 			
 			this.userControl.endHold();
-			
 		}
-		
 	}
 	
 }
