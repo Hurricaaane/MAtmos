@@ -144,6 +144,21 @@ public class MAtMod extends HaddonImpl
 		
 		this.updateNotifier.loadConfig(this.config);
 		
+		for (File file : new File(this.matmosFolder, "sets/").listFiles())
+		{
+			if (file.isDirectory()
+				&& new File(file, "mat_set.json").exists() && new File(file, "autostart.token").exists()
+				&& new File(file, "autostart.token").isFile())
+			{
+				MAtmosConvLogger.info("Found autostart token in valid expansion set: " + file.getName());
+				
+				new File(file, "autostart.token").delete();
+				
+				this.config.setProperty("totalconversion.name", file.getName());
+				saveConfig();
+			}
+		}
+		
 		if (!this.config.getString("totalconversion.name").equals("default"))
 		{
 			this.usingSet = this.config.getString("totalconversion.name");

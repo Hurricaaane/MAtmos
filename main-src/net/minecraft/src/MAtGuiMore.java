@@ -89,7 +89,7 @@ public class MAtGuiMore extends GuiScreen
 		biomeControl.updateDisplayString();
 		this.buttonList.add(biomeControl);
 		
-		MAtSetSlider setSlider = new MAtSetSlider(this.mod, this.mod.getConfig().getString("totalconversion.name"));
+		MAtGuiSetSlider setSlider = new MAtGuiSetSlider(this.mod, this.mod.getConfig().getString("totalconversion.name"));
 		if (setSlider.getMaxPossibilities() > 1)
 		{
 			HGuiSliderControl setControl =

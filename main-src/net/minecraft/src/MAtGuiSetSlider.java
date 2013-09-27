@@ -25,13 +25,13 @@ import eu.ha3.mc.gui.HSliderListener;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class MAtSetSlider implements HDisplayStringProvider, HSliderListener
+public class MAtGuiSetSlider implements HDisplayStringProvider, HSliderListener
 {
 	final protected MAtMod mod;
 	private List<String> possibilities;
 	private int currentIndex;
 	
-	public MAtSetSlider(MAtMod mod, String fromConfig)
+	public MAtGuiSetSlider(MAtMod mod, String fromConfig)
 	{
 		this.mod = mod;
 		
