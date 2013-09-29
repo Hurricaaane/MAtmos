@@ -39,10 +39,11 @@ public class MAtUserControl implements Ha3HoldActions
 	private Ha3KeyManager keyManager;
 	private MAtScroller scroller;
 	
+	private int loadingCount;
+	
 	public MAtUserControl(MAtMod mAtmosHaddon)
 	{
 		this.mod = mAtmosHaddon;
-		
 	}
 	
 	public void load()
@@ -72,7 +73,6 @@ public class MAtUserControl implements Ha3HoldActions
 		if (this.scroller.isRunning())
 		{
 			this.mod.getGlobalVolumeControl().setVolume(this.scroller.getValue());
-			
 		}
 	}
 	
@@ -94,11 +94,11 @@ public class MAtUserControl implements Ha3HoldActions
 			MAtModPhase phase = this.mod.getPhase();
 			if (!this.mod.isFatalError())
 			{
-				this.mod.printChat(Ha3Utility.COLOR_GOLD, "MAtmos is not loaded.");
+				this.mod.getChatter().printChat(Ha3Utility.COLOR_GOLD, "MAtmos is not loaded.");
 			}
 			else if (phase == MAtModPhase.NOT_INITIALIZED)
 			{
-				this.mod.printChat(
+				this.mod.getChatter().printChat(
 					Ha3Utility.COLOR_GOLD, "MAtmos will not load due to a fatal error. ", Ha3Utility.COLOR_GRAY,
 					"(Some MAtmos modules are not initialized)");
 			}
@@ -107,7 +107,7 @@ public class MAtUserControl implements Ha3HoldActions
 		{
 			if (Minecraft.getMinecraft().gameSettings.soundVolume <= 0)
 			{
-				this.mod.printChat(
+				this.mod.getChatter().printChat(
 					Ha3Utility.COLOR_RED, "Warning: ", Ha3Utility.COLOR_WHITE,
 					"Sounds are turned off in your game settings!");
 				
@@ -115,8 +115,6 @@ public class MAtUserControl implements Ha3HoldActions
 		}
 		
 	}
-	
-	private int loadingCount;
 	
 	@Override
 	public void beginHold()
@@ -174,7 +172,7 @@ public class MAtUserControl implements Ha3HoldActions
 		if (this.mod.isRunning())
 		{
 			this.mod.stopRunning();
-			this.mod.printChat(
+			this.mod.getChatter().printChat(
 				Ha3Utility.COLOR_YELLOW, "Stopped. Press ", Ha3Utility.COLOR_WHITE, getKeyBindingMainFriendlyName(),
 				Ha3Utility.COLOR_YELLOW, " to re-enable.");
 			
@@ -183,11 +181,11 @@ public class MAtUserControl implements Ha3HoldActions
 		{
 			if (this.loadingCount != 0)
 			{
-				this.mod.printChat(Ha3Utility.COLOR_BRIGHTGREEN, "Loading...");
+				this.mod.getChatter().printChat(Ha3Utility.COLOR_BRIGHTGREEN, "Loading...");
 			}
 			else
 			{
-				this.mod.printChat(
+				this.mod.getChatter().printChat(
 					Ha3Utility.COLOR_BRIGHTGREEN, "Loading...", Ha3Utility.COLOR_YELLOW, " (Hold ",
 					Ha3Utility.COLOR_WHITE, getKeyBindingMainFriendlyName() + " down", Ha3Utility.COLOR_YELLOW,
 					" to tweak the volume)");
@@ -211,8 +209,8 @@ public class MAtUserControl implements Ha3HoldActions
 		
 		TimeStatistic stat = new TimeStatistic();
 		this.mod.initializeAndEnable();
-		this.mod.printChat(Ha3Utility.COLOR_BRIGHTGREEN, "Loading for the first time ("
-			+ stat.getSecondsAsString(2) + "s)");
+		this.mod.getChatter().printChat(
+			Ha3Utility.COLOR_BRIGHTGREEN, "Loading for the first time (" + stat.getSecondsAsString(2) + "s)");
 	}
 	
 	private void whenWantsForcing()
@@ -221,8 +219,8 @@ public class MAtUserControl implements Ha3HoldActions
 		{
 			TimeStatistic stat = new TimeStatistic();
 			this.mod.reloadAndStart();
-			this.mod.printChat(Ha3Utility.COLOR_BRIGHTGREEN, "Reloading expansions ("
-				+ stat.getSecondsAsString(2) + "s)");
+			this.mod.getChatter().printChat(
+				Ha3Utility.COLOR_BRIGHTGREEN, "Reloading expansions (" + stat.getSecondsAsString(2) + "s)");
 		}
 		else if (this.mod.getPhase() == MAtModPhase.NOT_YET_ENABLED)
 		{

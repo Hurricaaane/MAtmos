@@ -1,8 +1,5 @@
 package eu.ha3.matmos.game.gui;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import eu.ha3.matmos.game.system.MAtMod;
@@ -36,21 +33,7 @@ public class MAtGuiSetSlider implements HDisplayStringProvider, HSliderListener
 	{
 		this.mod = mod;
 		
-		this.possibilities = new ArrayList<String>();
-		for (File file : new File(this.mod.getMAtmosFolder(), "sets/").listFiles())
-		{
-			if (file.isDirectory() && new File(file, "mat_set.json").exists())
-			{
-				this.possibilities.add(file.getName());
-			}
-		}
-		Collections.sort(this.possibilities);
-		
-		this.possibilities.remove("default");
-		this.possibilities.add(0, "default");
-		this.possibilities.remove(this.mod.getLoadedSet());
-		this.possibilities.add(0, this.mod.getLoadedSet());
-		
+		this.possibilities = mod.getTotalConversionsSpecialSort();
 		this.currentIndex = this.possibilities.indexOf(fromConfig);
 	}
 	

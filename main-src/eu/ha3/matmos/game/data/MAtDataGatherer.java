@@ -213,20 +213,21 @@ public class MAtDataGatherer
 			if (this.anticrash)
 			{
 				this.anticrash = false;
-				this.mod.printChat(Ha3Utility.COLOR_RED, "MAtmos is crashing: ", Ha3Utility.COLOR_WHITE, e
-					.getClass().getName(), ": ", e.getCause());
+				this.mod.getChatter().printChat(
+					Ha3Utility.COLOR_RED, "MAtmos is crashing: ", Ha3Utility.COLOR_WHITE, e.getClass().getName(), ": ",
+					e.getCause());
 				
 				int i = 0;
 				for (StackTraceElement x : e.getStackTrace())
 				{
 					if (i <= 5 || x.toString().contains("MAt") || x.toString().contains("eu.ha3.matmos."))
 					{
-						this.mod.printChat(Ha3Utility.COLOR_WHITE, x.toString());
+						this.mod.getChatter().printChat(Ha3Utility.COLOR_WHITE, x.toString());
 					}
 					i++;
 				}
 				
-				this.mod.printChat(Ha3Utility.COLOR_RED, "Please report this issue :(");
+				this.mod.getChatter().printChat(Ha3Utility.COLOR_RED, "Please report this issue :(");
 			}
 		}
 	}
@@ -258,9 +259,7 @@ public class MAtDataGatherer
 				else
 				{
 					this.lastLargeScanPassed++;
-					
 				}
-				
 			}
 			
 			if (this.data.getRequirements().isRequired(SMALLSCAN)

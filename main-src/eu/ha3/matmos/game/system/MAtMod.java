@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -58,13 +59,16 @@ import eu.ha3.util.property.simple.ConfigProperty;
 public class MAtMod extends HaddonImpl
 	implements SupportsFrameEvents, SupportsTickEvents, SupportsKeyEvents, ResourceManagerReloadListener
 {
-	final static public MAtmosConvLogger LOGGER = new MAtmosConvLogger();
 	final static public int VERSION = 26; // Remember to change the thing on mod_Matmos
 	final static public String FOR = "1.6.2";
+	final static public String MOD_RAW_NAME = "MAtmos";
+	final static public String MOD_VERSIONNED_NAME = MOD_RAW_NAME + " r" + VERSION + " for " + FOR;
+	
+	final static public MAtmosConvLogger LOGGER = new MAtmosConvLogger();
 	
 	private File matmosFolder;
 	private File packsFolder;
-	private String usingSet;
+	private String usingTotalConversion;
 	
 	private MAtModPhase phase;
 	private ConfigProperty config;
@@ -86,6 +90,8 @@ public class MAtMod extends HaddonImpl
 	
 	private boolean dumpReady = false;
 	
+	private Chatter chatter;
+	
 	public MAtMod()
 	{
 		// This is the constructor, so don't do anything
@@ -95,26 +101,28 @@ public class MAtMod extends HaddonImpl
 		// for convenience, so nothing is initialized.
 		
 		this.phase = MAtModPhase.NOT_INITIALIZED;
+		
 		MAtmosConvLogger.setRefinedness(MAtmosConvLogger.INFO);
+		
 	}
 	
 	@Override
 	public void onLoad()
 	{
 		this.matmosFolder = new File(util().getModsFolder(), "matmos/");
+		this.chatter = new Chatter(this, MOD_RAW_NAME);
 		
-		// Look for installation errors (1)
+		manager().hookTickEvents(true);
+		
+		// Look for installation errors
 		if (!this.matmosFolder.exists())
 		{
 			this.isFatalError = true;
-			manager().hookTickEvents(true);
 			return;
 		}
 		
 		this.timeStatistic = new TimeStatistic(Locale.ENGLISH);
-		
 		this.sndComm = new Ha3SoundCommunicator(this, "MAtmos_");
-		
 		this.userControl = new MAtUserControl(this);
 		this.dataGatherer = new MAtDataGatherer(this);
 		this.expansionManager =
@@ -123,7 +131,6 @@ public class MAtMod extends HaddonImpl
 		this.updateNotifier = new MAtUpdateNotifier(this);
 		
 		manager().hookFrameEvents(true);
-		manager().hookTickEvents(true);
 		
 		// Create default configuration
 		this.config = new ConfigProperty();
@@ -157,35 +164,26 @@ public class MAtMod extends HaddonImpl
 		
 		this.updateNotifier.loadConfig(this.config);
 		
-		for (File file : new File(this.matmosFolder, "sets/").listFiles())
+		findTotalConversionAutostart();
+		setupTotalConversion();
+		appendResourcePacks();
+		createSoundManagerMaster();
+		
+		// This registers stuff to Minecraft (key bindings...)
+		this.userControl.load();
+		
+		MAtmosConvLogger.info("Took " + this.timeStatistic.getSecondsAsString(3) + " seconds to setup MAtmos base.");
+		
+		this.phase = MAtModPhase.NOT_YET_ENABLED;
+		if (this.config.getBoolean("start.enabled"))
 		{
-			if (file.isDirectory()
-				&& new File(file, "mat_set.json").exists() && new File(file, "autostart.token").exists()
-				&& new File(file, "autostart.token").isFile())
-			{
-				MAtmosConvLogger.info("Found autostart token in valid expansion set: " + file.getName());
-				
-				new File(file, "autostart.token").delete();
-				
-				this.config.setProperty("totalconversion.name", file.getName());
-				saveConfig();
-			}
+			initializeAndEnable();
 		}
 		
-		if (!this.config.getString("totalconversion.name").equals("default"))
-		{
-			this.usingSet = this.config.getString("totalconversion.name");
-			this.packsFolder = new File(this.matmosFolder, "sets/" + this.usingSet + "/");
-		}
-		
-		if (this.packsFolder == null || !this.packsFolder.exists() || !this.packsFolder.isDirectory())
-		{
-			this.usingSet = "default";
-			this.packsFolder = new File(this.matmosFolder, "sets/default/");
-			this.config.setProperty("totalconversion.name", "default");
-		}
-		
-		this.expansionManager.setPacksFolder(this.packsFolder);
+	}
+	
+	private void appendResourcePacks()
+	{
 		try
 		{
 			@SuppressWarnings("unchecked")
@@ -205,30 +203,41 @@ public class MAtMod extends HaddonImpl
 		{
 			e.printStackTrace();
 		}
-		
-		createSoundManagerMaster();
-		
-		// This registers stuff to Minecraft (key bindings...)
-		this.userControl.load();
-		
-		MAtmosConvLogger.info("Took " + this.timeStatistic.getSecondsAsString(3) + " seconds to setup MAtmos base.");
-		
-		this.phase = MAtModPhase.NOT_YET_ENABLED;
-		if (this.config.getBoolean("start.enabled"))
+	}
+	
+	private void setupTotalConversion()
+	{
+		if (!this.config.getString("totalconversion.name").equals("default"))
 		{
-			initializeAndEnable();
+			this.usingTotalConversion = this.config.getString("totalconversion.name");
+			this.packsFolder = new File(this.matmosFolder, "sets/" + this.usingTotalConversion + "/");
 		}
 		
+		if (this.packsFolder == null || !this.packsFolder.exists() || !this.packsFolder.isDirectory())
+		{
+			this.usingTotalConversion = "default";
+			this.packsFolder = new File(this.matmosFolder, "sets/default/");
+			this.config.setProperty("totalconversion.name", "default");
+		}
+		this.expansionManager.setPacksFolder(this.packsFolder);
 	}
 	
-	public File getMAtmosFolder()
+	private void findTotalConversionAutostart()
 	{
-		return this.matmosFolder;
-	}
-	
-	public String getLoadedSet()
-	{
-		return this.usingSet;
+		for (File file : new File(this.matmosFolder, "sets/").listFiles())
+		{
+			if (file.isDirectory()
+				&& new File(file, "mat_set.json").exists() && new File(file, "autostart.token").exists()
+				&& new File(file, "autostart.token").isFile())
+			{
+				MAtmosConvLogger.info("Found autostart token in valid expansion set: " + file.getName());
+				
+				new File(file, "autostart.token").delete();
+				
+				this.config.setProperty("totalconversion.name", file.getName());
+				saveConfig();
+			}
+		}
 	}
 	
 	public void initializeAndEnable()
@@ -303,7 +312,6 @@ public class MAtMod extends HaddonImpl
 		MAtmosConvLogger.info("Expansions loaded (" + stat.getSecondsAsString(1) + "s).");
 		
 		startRunning();
-		
 	}
 	
 	public void startRunning()
@@ -319,7 +327,6 @@ public class MAtMod extends HaddonImpl
 		MAtmosConvLogger.fine("Loading...");
 		this.expansionManager.activate();
 		MAtmosConvLogger.fine("Loaded.");
-		
 	}
 	
 	public void stopRunning()
@@ -347,14 +354,11 @@ public class MAtMod extends HaddonImpl
 	@SuppressWarnings("unchecked")
 	public void createDataDump(boolean force)
 	{
-		//if (!this.config.getBoolean("dump.sheets.enabled"))
-		//	return;
-		
 		if (!force && !isDumpReady())
 		{
 			if (this.config.getBoolean("dump.sheets.enabled"))
 			{
-				this.printChat("Warning: Data dumps requires Minecraft to be restarted, "
+				this.chatter.printChat("Warning: Data dumps requires Minecraft to be restarted, "
 					+ "because data dumps must be already enabled when Minecraft starts to work.");
 			}
 			return;
@@ -362,7 +366,7 @@ public class MAtMod extends HaddonImpl
 		
 		if (force)
 		{
-			this.printChat(
+			this.chatter.printChat(
 				Ha3Utility.COLOR_RED, "Warning: Generating PARTIAL data dumps will normally yield the value 0 "
 					+ "for every unused data by the currently loaded expansions."
 					+ " Only use PARTIAL data dumps to debug errors!");
@@ -447,19 +451,19 @@ public class MAtMod extends HaddonImpl
 		// Inform the user of fatal errors and shut down MAtmos (2)
 		if (this.isFatalError)
 		{
-			printChat(Ha3Utility.COLOR_YELLOW, "A fatal error has occured. MAtmos will not load.");
+			this.chatter.printChat(Ha3Utility.COLOR_YELLOW, "A fatal error has occured. MAtmos will not load.");
 			if (!new File(util().getModsFolder(), "matmos/").exists())
 			{
-				printChat(Ha3Utility.COLOR_WHITE, "Are you sure you installed MAtmos correctly?");
-				printChat(
-					Ha3Utility.COLOR_WHITE, "The folder called ", Ha3Utility.COLOR_YELLOW, ".minecraft/matmos/",
+				this.chatter.printChat(Ha3Utility.COLOR_WHITE, "Are you sure you installed MAtmos correctly?");
+				this.chatter.printChat(
+					Ha3Utility.COLOR_WHITE, "The folder at (.minecraft/)", Ha3Utility.COLOR_YELLOW,
+					Minecraft.getMinecraft().mcDataDir.toURI().relativize(this.matmosFolder.toURI()).getPath(),
 					Ha3Utility.COLOR_YELLOW, " was NOT found. This folder should exist on a normal installation.");
 				
 			}
 			manager().hookTickEvents(false);
 			manager().hookFrameEvents(false);
 			return;
-			
 		}
 		
 		this.userControl.tickRoutine();
@@ -497,13 +501,35 @@ public class MAtMod extends HaddonImpl
 			// Stop the mod to clear all reserved streams
 			stopRunning();
 			
-			// Sreate a new master and set it
+			// Create a new master and set it
 			createSoundManagerMaster();
 			this.expansionManager.setMaster(this.soundManagerMaster);
 			
 			// Restart the mod from scratch
 			reloadAndStart();
 		}
+	}
+	
+	// Status getters
+	
+	public MAtModPhase getPhase()
+	{
+		return this.phase;
+	}
+	
+	public boolean isFatalError()
+	{
+		return this.isFatalError;
+	}
+	
+	public boolean isReady()
+	{
+		return this.phase == MAtModPhase.READY;
+	}
+	
+	public boolean isRunning()
+	{
+		return this.isRunning;
 	}
 	
 	// Getters
@@ -528,45 +554,39 @@ public class MAtMod extends HaddonImpl
 		return this.sndComm;
 	}
 	
-	public MAtModPhase getPhase()
+	public Chatter getChatter()
 	{
-		return this.phase;
+		return this.chatter;
 	}
 	
-	public boolean isFatalError()
+	/**
+	 * Returns a list of all possible Total Conversions, sorted with the loaded
+	 * Total Conversion first, and "default" second if it is not already the
+	 * loaded Total Conversion.
+	 * 
+	 * @return
+	 */
+	public List<String> getTotalConversionsSpecialSort()
 	{
-		return this.isFatalError;
-	}
-	
-	public boolean isReady()
-	{
-		return this.phase == MAtModPhase.READY;
-	}
-	
-	public boolean isRunning()
-	{
-		return this.isRunning;
-	}
-	
-	// Utility functions
-	
-	public void printChat(Object... args)
-	{
-		printChat(new Object[] { Ha3Utility.COLOR_WHITE, "MAtmos: " }, args);
-	}
-	
-	public void printChatShort(Object... args)
-	{
-		printChat(new Object[] { Ha3Utility.COLOR_WHITE, "" }, args);
-	}
-	
-	protected void printChat(final Object[] in, Object... args)
-	{
-		Object[] dest = new Object[in.length + args.length];
-		System.arraycopy(in, 0, dest, 0, in.length);
-		System.arraycopy(args, 0, dest, in.length, args.length);
+		List<String> possibilities = new ArrayList<String>();
+		for (File file : new File(this.matmosFolder, "sets/").listFiles())
+		{
+			if (file.isDirectory() && new File(file, "mat_set.json").exists())
+			{
+				possibilities.add(file.getName());
+			}
+		}
+		Collections.sort(possibilities);
 		
-		util().printChat(dest);
+		// Make sure default is present and second
+		possibilities.remove("default");
+		possibilities.add(0, "default");
+		
+		// Make sure the loaded set is first
+		possibilities.remove(this.usingTotalConversion);
+		possibilities.add(0, this.usingTotalConversion);
+		
+		return null;
 	}
 	
 }

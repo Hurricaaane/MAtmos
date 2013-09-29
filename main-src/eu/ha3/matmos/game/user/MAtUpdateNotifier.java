@@ -60,7 +60,6 @@ public class MAtUpdateNotifier extends Thread// implements Ha3Personalizable
 			return;
 		
 		start();
-		
 	}
 	
 	@Override
@@ -130,21 +129,21 @@ public class MAtUpdateNotifier extends Thread// implements Ha3Personalizable
 					this.mod.getConfig().setProperty("update_found.display.remaining.value", this.displayRemaining);
 					
 					int vc = maxvn - MAtMod.VERSION;
-					this.mod.printChat(
+					this.mod.getChatter().printChat(
 						Ha3Utility.COLOR_GOLD, "A ", Ha3Utility.COLOR_WHITE, "r" + maxvn, Ha3Utility.COLOR_GOLD,
-						" update is available (You're ", Ha3Utility.COLOR_WHITE, vc, Ha3Utility.COLOR_GOLD, " version"
-							+ (vc > 1 ? "s" : "") + " late). http://matmos.ha3.eu/");
+						" update is available (You're ", Ha3Utility.COLOR_WHITE, vc, Ha3Utility.COLOR_GOLD,
+						" version" + (vc > 1 ? "s" : "") + " late). http://matmos.ha3.eu/");
 					
 					if (this.displayRemaining > 0)
 					{
-						this.mod.printChat(
+						this.mod.getChatter().printChat(
 							Ha3Utility.COLOR_GRAY, "This message will display ", Ha3Utility.COLOR_WHITE,
-							this.displayRemaining, Ha3Utility.COLOR_GRAY, " more time"
-								+ (this.displayRemaining > 1 ? "s" : "") + ".");
+							this.displayRemaining, Ha3Utility.COLOR_GRAY,
+							" more time" + (this.displayRemaining > 1 ? "s" : "") + ".");
 					}
 					else
 					{
-						this.mod.printChat(
+						this.mod.getChatter().printChat(
 							Ha3Utility.COLOR_GRAY, "You won't be notified anymore until a newer version.");
 					}
 					
