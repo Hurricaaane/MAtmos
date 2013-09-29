@@ -208,7 +208,9 @@ public class UtilityLoader
 			
 			if (nameNode != null)
 			{
-				descriptible.addCouple(nameNode.getNodeValue(), Integer.parseInt(eelt.getTextContent()));
+				// 1.7 DERAIL
+				descriptible.addCouple(
+					nameNode.getNodeValue(), Integer.toString(Integer.parseInt(eelt.getTextContent())));
 				
 			}
 			
@@ -270,7 +272,7 @@ public class UtilityLoader
 		
 		if (key != null)
 		{
-			descriptible.setKey(toInt(key));
+			descriptible.setKey(Integer.toString(toInt(key)));
 		}
 		
 		if (dynamickey != null && !dynamickey.equals(""))

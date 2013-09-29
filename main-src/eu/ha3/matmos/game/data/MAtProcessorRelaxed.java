@@ -95,13 +95,15 @@ public class MAtProcessorRelaxed extends MAtProcessorModel
 		Minecraft mc = Minecraft.getMinecraft();
 		World w = mc.theWorld;
 		
-		Set<Integer> required = getRequired();
+		Set<String> required = getRequired();
 		
 		// Dear Princess Celestia
 		// i am so alone
-		if (required.contains(75)
-			|| required.contains(76) || required.contains(77) || required.contains(78) || required.contains(79)
-			|| required.contains(80))
+		// 1.7 DERAIL
+		// XXX check me
+		if (required.contains("75")
+			|| required.contains("76") || required.contains("77") || required.contains("78") || required.contains("79")
+			|| required.contains("80"))
 		{
 			ServerData serverData = null;
 			try
@@ -150,8 +152,11 @@ public class MAtProcessorRelaxed extends MAtProcessorModel
 			}
 		}
 		
-		for (Integer index : required)
+		for (String sindex : required)
 		{
+			// 1.7 DERAIL
+			int index = Integer.parseInt(sindex);
+			
 			switch (index)
 			{
 			case 5:

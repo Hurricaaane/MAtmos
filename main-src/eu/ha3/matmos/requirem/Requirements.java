@@ -35,7 +35,7 @@ public interface Requirements
 	 * @param sheet
 	 * @return
 	 */
-	public abstract Set<Integer> getRequirementsFor(String sheet);
+	public abstract Set<String> getRequirementsFor(String sheet);
 	
 	/**
 	 * Tells if a sheet is required at all.

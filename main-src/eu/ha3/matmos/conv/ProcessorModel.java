@@ -35,7 +35,7 @@ public abstract class ProcessorModel implements Processor
 	private boolean normalRequired = false;
 	private boolean deltaRequired = false;
 	
-	private HashSet<Integer> requirementsSet;
+	private HashSet<String> requirementsSet;
 	
 	public ProcessorModel(IntegerData dataIn, String normalNameIn, String deltaNameIn)
 	{
@@ -43,7 +43,7 @@ public abstract class ProcessorModel implements Processor
 		this.normalName = normalNameIn;
 		this.deltaName = deltaNameIn;
 		
-		this.requirementsSet = new HashSet<Integer>();
+		this.requirementsSet = new HashSet<String>();
 	}
 	
 	public IntegerData data()
@@ -73,6 +73,12 @@ public abstract class ProcessorModel implements Processor
 	
 	public void setValue(int index, int newValue)
 	{
+		// 1.7 DERAIL
+		setValue(Integer.toString(index), newValue);
+	}
+	
+	public void setValue(String index, int newValue)
+	{
 		int previousValue = this.normalSheet.get(index);
 		this.normalSheet.set(index, newValue);
 		
@@ -92,7 +98,7 @@ public abstract class ProcessorModel implements Processor
 		return this.normalRequired || this.deltaRequired;
 	}
 	
-	public Set<Integer> getRequired()
+	public Set<String> getRequired()
 	{
 		if (this.deltaName == null)
 			return this.data.getRequirements().getRequirementsFor(this.normalName);

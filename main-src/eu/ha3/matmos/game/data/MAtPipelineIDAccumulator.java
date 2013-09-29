@@ -50,7 +50,8 @@ public class MAtPipelineIDAccumulator extends MAtScanCoordsPipeline
 		this.count = 0;
 		for (int i = 0; i < this.tempnormal.getSize(); i++)
 		{
-			this.tempnormal.set(i, 0);
+			// 1.7 DERAIL
+			this.tempnormal.set(Integer.toString(i), 0);
 		}
 	}
 	
@@ -61,7 +62,8 @@ public class MAtPipelineIDAccumulator extends MAtScanCoordsPipeline
 		if (id >= this.tempnormal.getSize() || id < 0)
 			return; /// Do not count
 			
-		this.tempnormal.set(id, this.tempnormal.get(id) + 1);
+		// 1.7 DERAIL
+		this.tempnormal.set(Integer.toString(id), this.tempnormal.get(Integer.toString(id)) + 1);
 		
 		this.count++;
 		
@@ -82,11 +84,12 @@ public class MAtPipelineIDAccumulator extends MAtScanCoordsPipeline
 		
 		for (int i = 0; i < this.tempnormal.getSize(); i++)
 		{
-			normal.set(i, this.tempnormal.get(i));
+			String iS = Integer.toString(i);
+			normal.set(iS, this.tempnormal.get(iS));
 			
 			if (this.proportionnalName != null)
 			{
-				proportionnal.set(i, (int) (this.proportionnalTotal * this.tempnormal.get(i) / (float) this.count));
+				proportionnal.set(iS, (int) (this.proportionnalTotal * this.tempnormal.get(iS) / (float) this.count));
 			}
 			
 		}

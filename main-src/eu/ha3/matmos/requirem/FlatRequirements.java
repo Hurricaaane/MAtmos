@@ -23,17 +23,17 @@ import java.util.Set;
 
 public class FlatRequirements implements Requirements
 {
-	protected final Map<String, Set<Integer>> sheets;
-	protected final Set<Integer> emptySet;
+	protected final Map<String, Set<String>> sheets;
+	protected final Set<String> emptySet;
 	
 	public FlatRequirements()
 	{
-		this.sheets = new HashMap<String, Set<Integer>>();
-		this.emptySet = new HashSet<Integer>();
+		this.sheets = new HashMap<String, Set<String>>();
+		this.emptySet = new HashSet<String>();
 	}
 	
 	@Override
-	public Set<Integer> getRequirementsFor(String sheet)
+	public Set<String> getRequirementsFor(String sheet)
 	{
 		if (this.sheets.containsKey(sheet))
 			return this.sheets.get(sheet);
@@ -62,7 +62,7 @@ public class FlatRequirements implements Requirements
 	{
 		if (!this.sheets.containsKey(sheet))
 		{
-			this.sheets.put(sheet, new HashSet<Integer>());
+			this.sheets.put(sheet, new HashSet<String>());
 		}
 	}
 	

@@ -28,7 +28,7 @@ import javax.xml.stream.events.XMLEvent;
 public class Dynamic extends Switchable
 {
 	private List<String> sheets;
-	private List<Integer> keys;
+	private List<String> keys;
 	
 	public int value;
 	
@@ -37,13 +37,13 @@ public class Dynamic extends Switchable
 		super(knowledgeIn);
 		
 		this.sheets = new ArrayList<String>();
-		this.keys = new ArrayList<Integer>();
+		this.keys = new ArrayList<String>();
 		
 		this.value = 0;
 		
 	}
 	
-	public void addCouple(String sheet, int key)
+	public void addCouple(String sheet, String key)
 	{
 		this.sheets.add(sheet);
 		this.keys.add(key);
@@ -66,7 +66,7 @@ public class Dynamic extends Switchable
 		
 	}
 	
-	public void setKey(int id, int key)
+	public void setKey(int id, String key)
 	{
 		this.keys.set(id, key);
 		flagNeedsTesting();
@@ -79,7 +79,7 @@ public class Dynamic extends Switchable
 		
 	}
 	
-	public List<Integer> getKeys()
+	public List<String> getKeys()
 	{
 		return this.keys;
 		
@@ -91,7 +91,7 @@ public class Dynamic extends Switchable
 		
 	}
 	
-	public int getKey(int id)
+	public String getKey(int id)
 	{
 		return this.keys.get(id);
 		
@@ -112,12 +112,12 @@ public class Dynamic extends Switchable
 			return;
 		
 		Iterator<String> iterSheets = this.sheets.iterator();
-		Iterator<Integer> iterKeys = this.keys.iterator();
+		Iterator<String> iterKeys = this.keys.iterator();
 		
 		while (iterSheets.hasNext())
 		{
 			String sheet = iterSheets.next();
-			Integer key = iterKeys.next();
+			String key = iterKeys.next();
 			
 			this.value = this.value + this.knowledge.getData().getSheet(sheet).get(key);
 			
@@ -129,20 +129,15 @@ public class Dynamic extends Switchable
 	protected boolean testIfValid()
 	{
 		Iterator<String> iterSheets = this.sheets.iterator();
-		Iterator<Integer> iterKeys = this.keys.iterator();
+		Iterator<String> iterKeys = this.keys.iterator();
 		
 		while (iterSheets.hasNext())
 		{
 			String sheet = iterSheets.next();
-			Integer key = iterKeys.next();
+			String key = iterKeys.next();
 			
-			if (this.knowledge.getData().getSheet(sheet) != null)
-			{
-				if (!(key >= 0 && key < this.knowledge.getData().getSheet(sheet).getSize()))
-					return false;
-				
-			}
-			else
+			if (this.knowledge.getData().getSheet(sheet) == null
+				|| !this.knowledge.getData().getSheet(sheet).containsKey(key))
 				return false;
 			
 		}

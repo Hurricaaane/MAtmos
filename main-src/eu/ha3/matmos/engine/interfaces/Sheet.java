@@ -22,19 +22,19 @@ public interface Sheet<T>
 	 * Get the value of a certain position. This should return a default value
 	 * if the position does not exist.
 	 * 
-	 * @param pos
+	 * @param key
 	 * @return
 	 */
-	public T get(int pos);
+	public T get(String key);
 	
 	/**
 	 * Sets the value of a certain position. This should return a default value
 	 * if the position does not exist.
 	 * 
-	 * @param pos
+	 * @param key
 	 * @return
 	 */
-	public void set(int pos, T value);
+	public void set(String key, T value);
 	
 	/**
 	 * Gets the maximum possible position + 1 of this sheet.
@@ -49,8 +49,16 @@ public interface Sheet<T>
 	 * different value (as opposed to set).<br>
 	 * Non-initialized positions start at 0.
 	 * 
-	 * @param pos
+	 * @param key
 	 * @return
 	 */
-	public int getVersionOf(int pos);
+	public int getVersionOf(String key);
+	
+	/**
+	 * Tells if this sheet contains a certain key.
+	 * 
+	 * @param key
+	 * @return
+	 */
+	public boolean containsKey(String key);
 }

@@ -1,7 +1,7 @@
 package eu.ha3.matmos.engine.implem;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import eu.ha3.matmos.engine.interfaces.Sheet;
 
@@ -23,38 +23,39 @@ import eu.ha3.matmos.engine.interfaces.Sheet;
 
 public class GenericSheet<T> implements Sheet<T>
 {
-	private final List<T> values;
+	private final Map<String, T> values;
 	private final int count;
 	
-	private final List<Integer> versions;
+	private final Map<String, Integer> versions;
 	
 	public GenericSheet(int count, T defaultValue)
 	{
-		this.values = new ArrayList<T>(count);
+		this.values = new LinkedHashMap<String, T>(count);
 		this.count = count;
 		
-		this.versions = new ArrayList<Integer>(count);
+		this.versions = new LinkedHashMap<String, Integer>(count);
 		
+		// 1.7 DERAIL
 		for (int i = 0; i < count; i++)
 		{
-			this.values.add(defaultValue);
-			this.versions.add(0);
+			this.values.put(Integer.toString(i), defaultValue);
+			this.versions.put(Integer.toString(i), 0);
 		}
 	}
 	
 	@Override
-	public T get(int pos)
+	public T get(String pos)
 	{
 		return this.values.get(pos);
 	}
 	
 	@Override
-	public void set(int pos, T value)
+	public void set(String pos, T value)
 	{
 		if (!value.equals(this.values.get(pos)))
 		{
-			this.values.set(pos, value);
-			this.versions.set(pos, this.versions.get(pos) + 1);
+			this.values.put(pos, value);
+			this.versions.put(pos, this.versions.get(pos) + 1);
 		}
 	}
 	
@@ -65,8 +66,14 @@ public class GenericSheet<T> implements Sheet<T>
 	}
 	
 	@Override
-	public int getVersionOf(int pos)
+	public int getVersionOf(String pos)
 	{
 		return this.versions.get(pos);
+	}
+	
+	@Override
+	public boolean containsKey(String key)
+	{
+		return this.values.containsKey(key);
 	}
 }

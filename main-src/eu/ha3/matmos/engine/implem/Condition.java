@@ -24,8 +24,10 @@ import eu.ha3.matmos.engine.interfaces.Sheet;
 
 public class Condition extends Switchable
 {
+	private boolean isDynamic;
+	
 	private String sheet = "";
-	private int key = 0;
+	private String key = "0";
 	private String dynamicKey = "";
 	private int conditionType = 0;
 	private int constant = 0;
@@ -47,8 +49,10 @@ public class Condition extends Switchable
 		
 	}
 	
-	public void setKey(int keyIn)
+	public void setKey(String keyIn)
 	{
+		this.isDynamic = false;
+		
 		this.key = keyIn;
 		flagNeedsTesting();
 		
@@ -56,7 +60,8 @@ public class Condition extends Switchable
 	
 	public void setDynamic(String dynamicKeyIn)
 	{
-		this.key = -1;
+		this.isDynamic = true;
+		
 		this.dynamicKey = dynamicKeyIn;
 		this.sheet = "";
 		flagNeedsTesting();
@@ -120,7 +125,7 @@ public class Condition extends Switchable
 	
 	public boolean isDynamic()
 	{
-		return this.key == -1;
+		return this.isDynamic;
 		
 	}
 	
@@ -130,7 +135,7 @@ public class Condition extends Switchable
 		
 	}
 	
-	public int getKey()
+	public String getKey()
 	{
 		return this.key;
 		
@@ -171,7 +176,7 @@ public class Condition extends Switchable
 		{
 			if (this.knowledge.getData().getSheet(this.sheet) != null)
 			{
-				if (this.key >= 0 && this.key < this.knowledge.getData().getSheet(this.sheet).getSize())
+				if (!this.key.equals("") && this.knowledge.getData().getSheet(this.sheet).containsKey(this.key))
 				{
 					valid = true;
 					

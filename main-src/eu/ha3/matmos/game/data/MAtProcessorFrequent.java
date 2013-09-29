@@ -53,8 +53,10 @@ public class MAtProcessorFrequent extends MAtProcessorModel
 		boolean mouseOverATile =
 			mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == EnumMovingObjectType.TILE;
 		
-		for (Integer index : getRequired())
+		for (String sindex : getRequired())
 		{
+			// 1.7 DERAIL
+			int index = Integer.parseInt(sindex);
 			switch (index)
 			{
 			case 0:

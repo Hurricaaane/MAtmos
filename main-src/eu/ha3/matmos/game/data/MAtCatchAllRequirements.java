@@ -28,11 +28,11 @@ import eu.ha3.matmos.requirem.Requirements;
 public class MAtCatchAllRequirements implements Collation
 {
 	private Data data;
-	private Map<String, Set<Integer>> sheetCache;
+	private Map<String, Set<String>> sheetCache;
 	
 	public MAtCatchAllRequirements()
 	{
-		this.sheetCache = new HashMap<String, Set<Integer>>();
+		this.sheetCache = new HashMap<String, Set<String>>();
 	}
 	
 	public void setData(Data data)
@@ -47,15 +47,15 @@ public class MAtCatchAllRequirements implements Collation
 	}
 	
 	@Override
-	public Set<Integer> getRequirementsFor(String sheet)
+	public Set<String> getRequirementsFor(String sheet)
 	{
 		if (this.sheetCache.containsKey(sheet))
 			return this.sheetCache.get(sheet);
 		
-		LinkedHashSet<Integer> all = new LinkedHashSet<Integer>();
+		LinkedHashSet<String> all = new LinkedHashSet<String>();
 		for (int i = 0; i < this.data.getSheet(sheet).getSize(); i++)
 		{
-			all.add(i);
+			all.add(Integer.toString(i));
 		}
 		
 		this.sheetCache.put(sheet, all);

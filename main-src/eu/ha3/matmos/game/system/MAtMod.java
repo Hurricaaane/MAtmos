@@ -385,7 +385,8 @@ public class MAtMod extends HaddonImpl
 			Sheet<Integer> sheet = this.dataGatherer.getData().getSheet(name);
 			for (int i = 0; i < sheet.getSize(); i++)
 			{
-				integers.add(sheet.get(i));
+				// 1.7 DERAIL
+				integers.add(sheet.get(Integer.toString(i)));
 			}
 			sheets.put(name, integers);
 		}

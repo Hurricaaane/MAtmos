@@ -37,9 +37,9 @@ public abstract class MAtProcessorPotionQuality extends MAtProcessorModel
 	{
 		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 		
-		Set<Integer> required = getRequired();
+		Set<String> required = getRequired();
 		
-		for (Integer i : required)
+		for (String i : required)
 		{
 			setValue(i, 0);
 		}

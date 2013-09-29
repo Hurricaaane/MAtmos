@@ -39,9 +39,9 @@ public abstract class MAtProcessorEnchantments extends MAtProcessorModel
 	{
 		// Sets everything to 0 if no such armor
 		
-		Set<Integer> required = getRequired();
+		Set<String> required = getRequired();
 		
-		for (Integer i : required)
+		for (String i : required)
 		{
 			setValue(i, 0);
 		}
