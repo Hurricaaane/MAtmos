@@ -3,7 +3,7 @@ package eu.ha3.matmos.conv;
 import java.util.HashSet;
 import java.util.Set;
 
-import eu.ha3.matmos.engine.implem.IntegerData;
+import eu.ha3.matmos.engine.implem.StringData;
 import eu.ha3.matmos.engine.interfaces.Sheet;
 
 /*
@@ -24,20 +24,20 @@ import eu.ha3.matmos.engine.interfaces.Sheet;
 
 public abstract class ProcessorModel implements Processor
 {
-	private IntegerData data;
+	private StringData data;
 	
 	private String normalName;
 	private String deltaName;
 	
-	private Sheet<Integer> normalSheet;
-	private Sheet<Integer> deltaSheet;
+	private Sheet<String> normalSheet;
+	private Sheet<String> deltaSheet;
 	
 	private boolean normalRequired = false;
 	private boolean deltaRequired = false;
 	
 	private HashSet<String> requirementsSet;
 	
-	public ProcessorModel(IntegerData dataIn, String normalNameIn, String deltaNameIn)
+	public ProcessorModel(StringData dataIn, String normalNameIn, String deltaNameIn)
 	{
 		this.data = dataIn;
 		this.normalName = normalNameIn;
@@ -46,7 +46,7 @@ public abstract class ProcessorModel implements Processor
 		this.requirementsSet = new HashSet<String>();
 	}
 	
-	public IntegerData data()
+	public StringData data()
 	{
 		return this.data;
 	}
@@ -71,20 +71,41 @@ public abstract class ProcessorModel implements Processor
 		doProcess();
 	}
 	
+	@Deprecated
 	public void setValue(int index, int newValue)
+	{
+		setValue(index, Integer.toString(newValue));
+	}
+	
+	public void setValue(String index, int newValue)
+	{
+		setValue(index, Integer.toString(newValue));
+	}
+	
+	@Deprecated
+	public void setValue(int index, String newValue)
 	{
 		// 1.7 DERAIL
 		setValue(Integer.toString(index), newValue);
 	}
 	
-	public void setValue(String index, int newValue)
+	public void setValue(String index, String newValue)
 	{
-		int previousValue = this.normalSheet.get(index);
+		String previousValue = this.normalSheet.get(index);
 		this.normalSheet.set(index, newValue);
 		
 		if (this.deltaName != null)
 		{
-			this.deltaSheet.set(index, newValue - previousValue);
+			try
+			{
+				int previousValueIntegerForm = Integer.parseInt(previousValue);
+				int newValueIntegerForm = Integer.parseInt(newValue);
+				this.deltaSheet.set(index, Integer.toString(newValueIntegerForm - previousValueIntegerForm));
+			}
+			catch (Exception e)
+			{
+				this.deltaSheet.set(index, "");
+			}
 		}
 	}
 	

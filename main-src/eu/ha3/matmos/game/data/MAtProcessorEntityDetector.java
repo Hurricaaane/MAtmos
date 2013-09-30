@@ -11,7 +11,7 @@ import net.minecraft.src.EntityList;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.Minecraft;
 import eu.ha3.matmos.conv.Processor;
-import eu.ha3.matmos.engine.implem.IntegerData;
+import eu.ha3.matmos.engine.implem.StringData;
 import eu.ha3.matmos.game.system.MAtMod;
 
 /*
@@ -51,7 +51,7 @@ public class MAtProcessorEntityDetector implements Processor
 	
 	@SuppressWarnings("unchecked")
 	public MAtProcessorEntityDetector(
-		MAtMod modIn, IntegerData dataIn, String mindist, String prefix, String deltaSuffix, int max, int... radiis)
+		MAtMod modIn, StringData dataIn, String mindist, String prefix, String deltaSuffix, int max, int... radiis)
 	{
 		this.mod = modIn;
 		

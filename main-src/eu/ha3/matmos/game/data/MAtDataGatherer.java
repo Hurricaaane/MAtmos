@@ -14,7 +14,7 @@ import eu.ha3.matmos.conv.MAtmosConvLogger;
 import eu.ha3.matmos.conv.Processor;
 import eu.ha3.matmos.conv.ProcessorModel;
 import eu.ha3.matmos.engine.implem.GenericSheet;
-import eu.ha3.matmos.engine.implem.IntegerData;
+import eu.ha3.matmos.engine.implem.StringData;
 import eu.ha3.matmos.engine.interfaces.Data;
 import eu.ha3.matmos.game.system.MAtMod;
 import eu.ha3.matmos.requirem.Requirements;
@@ -85,7 +85,7 @@ public class MAtDataGatherer
 	private ProcessorModel optionsProcessor;
 	private ProcessorModel weatherpony_seasons_api_Processor;
 	
-	private IntegerData data;
+	private StringData data;
 	
 	private int ticksPassed;
 	
@@ -110,7 +110,7 @@ public class MAtDataGatherer
 	{
 		resetRegulators();
 		
-		this.data = new IntegerData(globalRequirements);
+		this.data = new StringData(globalRequirements);
 		prepareSheets();
 		
 		this.largeScanner = new MAtScanVolumetricModel(this.mod);
@@ -347,7 +347,7 @@ public class MAtDataGatherer
 	
 	private void createSheet(String name, int count)
 	{
-		this.data.setSheet(name, new GenericSheet<Integer>(count, 0));
+		this.data.setSheet(name, new GenericSheet<String>(count, ""));
 	}
 	
 	public void dataRoll()

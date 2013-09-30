@@ -12,7 +12,7 @@ import net.minecraft.src.MAtAccessors;
 import net.minecraft.src.Minecraft;
 import net.minecraft.src.World;
 import net.minecraft.src.WorldInfo;
-import eu.ha3.matmos.engine.implem.IntegerData;
+import eu.ha3.matmos.engine.implem.StringData;
 import eu.ha3.matmos.game.system.MAtMod;
 
 /*
@@ -33,7 +33,7 @@ import eu.ha3.matmos.game.system.MAtMod;
 
 public class MAtProcessorFrequent extends MAtProcessorModel
 {
-	public MAtProcessorFrequent(MAtMod modIn, IntegerData dataIn, String normalNameIn, String deltaNameIn)
+	public MAtProcessorFrequent(MAtMod modIn, StringData dataIn, String normalNameIn, String deltaNameIn)
 	{
 		super(modIn, dataIn, normalNameIn, deltaNameIn);
 	}

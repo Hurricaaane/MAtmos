@@ -19,7 +19,7 @@ import net.minecraft.src.MathHelper;
 import net.minecraft.src.Minecraft;
 import net.minecraft.src.ServerData;
 import net.minecraft.src.World;
-import eu.ha3.matmos.engine.implem.IntegerData;
+import eu.ha3.matmos.engine.implem.StringData;
 import eu.ha3.matmos.game.system.MAtMod;
 import eu.ha3.mc.haddon.PrivateAccessException;
 
@@ -47,7 +47,7 @@ public class MAtProcessorRelaxed extends MAtProcessorModel
 	private Map<String, Integer> serverAddresses;
 	private Map<String, Integer> serverPorts;
 	
-	public MAtProcessorRelaxed(MAtMod modIn, IntegerData dataIn, String normalNameIn, String deltaNameIn)
+	public MAtProcessorRelaxed(MAtMod modIn, StringData dataIn, String normalNameIn, String deltaNameIn)
 	{
 		super(modIn, dataIn, normalNameIn, deltaNameIn);
 		

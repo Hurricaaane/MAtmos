@@ -1,5 +1,7 @@
 package eu.ha3.matmos.requirem;
 
+import java.util.Map.Entry;
+
 import eu.ha3.matmos.engine.implem.Condition;
 import eu.ha3.matmos.engine.implem.Dynamic;
 import eu.ha3.matmos.engine.implem.Knowledge;
@@ -41,14 +43,13 @@ public class RequiremForAKnowledge extends FlatRequirements
 		for (String dynamicName : knowledge.getDynamicsKeySet())
 		{
 			Dynamic dynamic = knowledge.getDynamic(dynamicName);
-			int size = dynamic.getSheets().size();
 			
-			for (int i = 0; i < size; i++)
+			for (Entry<String, String> entry : dynamic.getEntries())
 			{
-				String sheet = dynamic.getSheet(i);
+				String sheet = entry.getKey();
 				ensureSheetExists(sheet);
 				
-				this.sheets.get(sheet).add(dynamic.getKey(i));
+				this.sheets.get(sheet).add(entry.getValue());
 			}
 		}
 		

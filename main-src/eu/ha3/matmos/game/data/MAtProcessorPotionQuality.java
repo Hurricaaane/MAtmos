@@ -6,7 +6,7 @@ import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.Minecraft;
 import net.minecraft.src.PotionEffect;
 import eu.ha3.matmos.conv.MAtmosConvLogger;
-import eu.ha3.matmos.engine.implem.IntegerData;
+import eu.ha3.matmos.engine.implem.StringData;
 import eu.ha3.matmos.game.system.MAtMod;
 
 /*
@@ -27,7 +27,7 @@ import eu.ha3.matmos.game.system.MAtMod;
 
 public abstract class MAtProcessorPotionQuality extends MAtProcessorModel
 {
-	public MAtProcessorPotionQuality(MAtMod modIn, IntegerData dataIn, String normalNameIn, String deltaNameIn)
+	public MAtProcessorPotionQuality(MAtMod modIn, StringData dataIn, String normalNameIn, String deltaNameIn)
 	{
 		super(modIn, dataIn, normalNameIn, deltaNameIn);
 	}

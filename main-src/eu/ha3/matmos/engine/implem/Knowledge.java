@@ -61,7 +61,7 @@ public class Knowledge
 	
 	public Knowledge()
 	{
-		this.data = new IntegerData(new FlatRequirements());
+		this.data = new StringData(new FlatRequirements());
 		this.soundManager = null;
 		
 		this.dataLastVersion = 0;
@@ -270,10 +270,11 @@ public class Knowledge
 		}
 		for (Condition o : this.conditions.values())
 		{
-			if (o.getList() != null && o.getList() != "")
-			{
-				toPurge.remove(o.getList());
-			}
+			if (o.isListBased())
+				if (o.getConstant() != null && o.getConstant() != "")
+				{
+					toPurge.remove(o.getConstant());
+				}
 		}
 		for (String removable : toPurge)
 		{
@@ -350,7 +351,7 @@ public class Knowledge
 			return false;
 		
 		this.events.put(name, new Event(this));
-		this.events.get(name).nickname = name;
+		this.events.get(name).name = name;
 		
 		return true;
 		
@@ -377,7 +378,7 @@ public class Knowledge
 		
 		this.events.put(newName, this.events.get(name));
 		this.events.remove(name);
-		this.events.get(newName).nickname = newName;
+		this.events.get(newName).name = newName;
 		
 		for (Machine machine : this.machines.values())
 		{
@@ -418,7 +419,7 @@ public class Knowledge
 			return false;
 		
 		this.dynamics.put(name, new Dynamic(this));
-		this.dynamics.get(name).nickname = name;
+		this.dynamics.get(name).name = name;
 		
 		applyDynamicFlagNeedsTesting();
 		
@@ -449,7 +450,7 @@ public class Knowledge
 		
 		this.dynamics.put(newName, this.dynamics.get(name));
 		this.dynamics.remove(name);
-		this.dynamics.get(newName).nickname = newName;
+		this.dynamics.get(newName).name = newName;
 		
 		for (Condition condition : this.conditions.values())
 		{
@@ -482,7 +483,7 @@ public class Knowledge
 			return false;
 		
 		this.lists.put(name, new SugarList());
-		this.lists.get(name).nickname = name;
+		this.lists.get(name).name = name;
 		
 		applyDynamicFlagNeedsTesting();
 		
@@ -513,7 +514,7 @@ public class Knowledge
 		
 		this.lists.put(newName, this.lists.get(name));
 		this.lists.remove(name);
-		this.lists.get(newName).nickname = newName;
+		this.lists.get(newName).name = newName;
 		
 		for (Condition condition : this.conditions.values())
 		{
@@ -545,7 +546,7 @@ public class Knowledge
 			return false;
 		
 		this.conditions.put(name, new Condition(this));
-		this.conditions.get(name).nickname = name;
+		this.conditions.get(name).name = name;
 		
 		applyConditionNeedsTesting();
 		
@@ -563,7 +564,7 @@ public class Knowledge
 		
 		this.conditions.put(newName, this.conditions.get(name));
 		this.conditions.remove(name);
-		this.conditions.get(newName).nickname = newName;
+		this.conditions.get(newName).name = newName;
 		
 		for (ConditionSet cset : this.sets.values())
 		{
@@ -609,7 +610,7 @@ public class Knowledge
 			return false;
 		
 		this.sets.put(name, new ConditionSet(this));
-		this.sets.get(name).nickname = name;
+		this.sets.get(name).name = name;
 		
 		applyConditionSetNeedsTesting();
 		
@@ -627,7 +628,7 @@ public class Knowledge
 		
 		this.sets.put(newName, this.sets.get(name));
 		this.sets.remove(name);
-		this.sets.get(newName).nickname = newName;
+		this.sets.get(newName).name = newName;
 		
 		for (Machine machine : this.machines.values())
 		{
@@ -672,7 +673,7 @@ public class Knowledge
 			return false;
 		
 		this.machines.put(name, new Machine(this));
-		this.machines.get(name).nickname = name;
+		this.machines.get(name).name = name;
 		
 		applyMachineNeedsTesting();
 		
@@ -703,7 +704,7 @@ public class Knowledge
 		
 		this.machines.put(newName, this.machines.get(name));
 		this.machines.remove(name);
-		this.machines.get(newName).nickname = newName;
+		this.machines.get(newName).name = newName;
 		
 		// Nothing to do!
 		

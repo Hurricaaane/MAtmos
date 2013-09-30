@@ -1,6 +1,4 @@
-package eu.ha3.matmos.engine.interfaces;
-
-import java.util.Set;
+package eu.ha3.matmos.engine.implem;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -18,15 +16,8 @@ import java.util.Set;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public interface Data
+public enum ConditionType
 {
-	public abstract void flagUpdate();
-	
-	public abstract int getVersion();
-	
-	public abstract Set<String> getSheetNames();
-	
-	public abstract Sheet<String> getSheet(String name);
-	
-	public abstract void setSheet(String name, Sheet<String> sheet);
+		ALWAYS_FALSE, ALWAYS_TRUE, EQUAL, NOT_EQUAL, GREATER, LESSER_, GREATER_OR_EQUAL, LESSER_OR_EQUAL, IN_LIST,
+		NOT_IN_LIST;
 }

@@ -1,7 +1,7 @@
 package eu.ha3.matmos.game.data;
 
 import net.minecraft.src.Minecraft;
-import eu.ha3.matmos.engine.implem.IntegerData;
+import eu.ha3.matmos.engine.implem.StringData;
 import eu.ha3.matmos.game.system.MAtMod;
 
 /*
@@ -24,7 +24,7 @@ public class MAtProcessorContact extends MAtProcessorModel
 {
 	private int contactSum[];
 	
-	public MAtProcessorContact(MAtMod modIn, IntegerData dataIn, String normalNameIn, String deltaNameIn)
+	public MAtProcessorContact(MAtMod modIn, StringData dataIn, String normalNameIn, String deltaNameIn)
 	{
 		super(modIn, dataIn, normalNameIn, deltaNameIn);
 		this.contactSum = new int[MAtDataGatherer.COUNT_WORLD_BLOCKS];

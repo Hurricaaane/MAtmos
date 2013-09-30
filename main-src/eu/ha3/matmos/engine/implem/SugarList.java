@@ -26,27 +26,26 @@ import javax.xml.stream.XMLStreamException;
 
 public class SugarList extends Descriptible
 {
-	private List<Integer> list;
+	private List<String> list;
 	
-	SugarList()
+	public SugarList()
 	{
-		this.list = new ArrayList<Integer>();
-		
+		this.list = new ArrayList<String>();
 	}
 	
-	public List<Integer> getList()
+	public List<String> getList()
 	{
 		return this.list;
 		
 	}
 	
-	public boolean contains(int in)
+	public boolean contains(String in)
 	{
 		return this.list.contains(in);
 		
 	}
 	
-	public void add(int in)
+	public void add(String in)
 	{
 		if (this.list.contains(in))
 			return;
@@ -70,9 +69,9 @@ public class SugarList extends Descriptible
 	{
 		buildDescriptibleSerialized(eventWriter);
 		
-		for (Iterator<Integer> iter = this.list.iterator(); iter.hasNext();)
+		for (Iterator<String> iter = this.list.iterator(); iter.hasNext();)
 		{
-			createNode(eventWriter, "constant", iter.next().toString());
+			createNode(eventWriter, "constant", iter.next());
 			
 		}
 		

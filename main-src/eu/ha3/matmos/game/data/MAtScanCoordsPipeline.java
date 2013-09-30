@@ -1,6 +1,6 @@
 package eu.ha3.matmos.game.data;
 
-import eu.ha3.matmos.engine.implem.IntegerData;
+import eu.ha3.matmos.engine.implem.StringData;
 import eu.ha3.matmos.game.system.MAtMod;
 
 /*
@@ -22,11 +22,11 @@ import eu.ha3.matmos.game.system.MAtMod;
 public abstract class MAtScanCoordsPipeline implements MAtScanCoordsOps
 {
 	private MAtMod mod;
-	private IntegerData data;
+	private StringData data;
 	
 	private MAtScanCoordsPipeline next;
 	
-	MAtScanCoordsPipeline(MAtMod mod2, IntegerData dataIn)
+	MAtScanCoordsPipeline(MAtMod mod2, StringData dataIn)
 	{
 		this.mod = mod2;
 		this.data = dataIn;
@@ -40,7 +40,7 @@ public abstract class MAtScanCoordsPipeline implements MAtScanCoordsOps
 		
 	}
 	
-	public IntegerData data()
+	public StringData data()
 	{
 		return this.data;
 		

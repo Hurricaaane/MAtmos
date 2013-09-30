@@ -25,15 +25,15 @@ import eu.ha3.matmos.requirem.Requirements;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class IntegerData implements Data, Requestable
+public class StringData implements Data, Requestable
 {
-	private Map<String, Sheet<Integer>> sheets;
+	private Map<String, Sheet<String>> sheets;
 	private int updateVersion;
 	private Requirements requirements;
 	
-	public IntegerData(Requirements requirements)
+	public StringData(Requirements requirements)
 	{
-		this.sheets = new LinkedHashMap<String, Sheet<Integer>>();
+		this.sheets = new LinkedHashMap<String, Sheet<String>>();
 		this.updateVersion = 0;
 		this.requirements = requirements;
 	}
@@ -51,13 +51,13 @@ public class IntegerData implements Data, Requestable
 	}
 	
 	@Override
-	public Sheet<Integer> getSheet(String name)
+	public Sheet<String> getSheet(String name)
 	{
 		return this.sheets.get(name);
 	}
 	
 	@Override
-	public void setSheet(String name, Sheet<Integer> sheet)
+	public void setSheet(String name, Sheet<String> sheet)
 	{
 		this.sheets.put(name, sheet);
 	}

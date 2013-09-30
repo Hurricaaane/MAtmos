@@ -135,7 +135,7 @@ public class ConditionSet extends Switchable
 		{
 			//MAtmosEngine.logger; //TODO Logger
 			MAtmosConvLogger.fine(new StringBuilder("S:")
-				.append(this.nickname).append(this.isTrueEvaluated ? " now On." : " now Off.").toString());
+				.append(this.name).append(this.isTrueEvaluated ? " now On." : " now Off.").toString());
 			
 		}
 		

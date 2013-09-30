@@ -1,4 +1,8 @@
-package eu.ha3.matmos.engine.implem;
+package eu.ha3.matmos.engine.parsers;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.xml.xpath.XPathExpressionException;
 
@@ -9,6 +13,19 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import eu.ha3.matmos.engine.implem.Condition;
+import eu.ha3.matmos.engine.implem.ConditionSet;
+import eu.ha3.matmos.engine.implem.ConditionType;
+import eu.ha3.matmos.engine.implem.Descriptible;
+import eu.ha3.matmos.engine.implem.Dynamic;
+import eu.ha3.matmos.engine.implem.Event;
+import eu.ha3.matmos.engine.implem.Knowledge;
+import eu.ha3.matmos.engine.implem.MAtmosException;
+import eu.ha3.matmos.engine.implem.Machine;
+import eu.ha3.matmos.engine.implem.Stream;
+import eu.ha3.matmos.engine.implem.SugarList;
+import eu.ha3.matmos.engine.implem.TimedEvent;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -26,7 +43,7 @@ import org.w3c.dom.NodeList;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class UtilityLoader
+public class XMLExpansions_Engine0
 {
 	Knowledge knowledgeWorkstation;
 	
@@ -86,23 +103,28 @@ public class UtilityLoader
 	static final String ISLOOPING = "islooping";
 	static final String ISUSINGPAUSE = "isusingpause";
 	
-	private UtilityLoader()
-	{
-	}
+	private Map<String, ConditionType> inverseSymbols;
 	
-	/**
-	 * SingletonHolder is loaded on the first execution of
-	 * Singleton.getInstance() or the first access to SingletonHolder.INSTANCE,
-	 * not before.
-	 */
-	private static class MAtmosUtilityLoaderSingletonHolder
+	public XMLExpansions_Engine0()
 	{
-		public static final UtilityLoader instance = new UtilityLoader();
-	}
-	
-	public static UtilityLoader getInstance()
-	{
-		return MAtmosUtilityLoaderSingletonHolder.instance;
+		this.inverseSymbols = new HashMap<String, ConditionType>();
+		
+		Map<ConditionType, String> symbols = new HashMap<ConditionType, String>();
+		symbols.put(ConditionType.NOT_EQUAL, "!=");
+		symbols.put(ConditionType.EQUAL, "==");
+		symbols.put(ConditionType.GREATER, ">");
+		symbols.put(ConditionType.GREATER_OR_EQUAL, ">=");
+		symbols.put(ConditionType.LESSER_, "<");
+		symbols.put(ConditionType.LESSER_OR_EQUAL, "<=");
+		symbols.put(ConditionType.IN_LIST, "in");
+		symbols.put(ConditionType.NOT_IN_LIST, "!in");
+		symbols.put(ConditionType.ALWAYS_FALSE, "><");
+		
+		for (Entry<ConditionType, String> is : symbols.entrySet())
+		{
+			this.inverseSymbols.put(is.getValue(), is.getKey());
+		}
+		
 	}
 	
 	///
@@ -170,7 +192,7 @@ public class UtilityLoader
 		
 		if (nickname != null)
 		{
-			descriptible.nickname = nickname;
+			descriptible.name = nickname;
 		}
 		if (description != null)
 		{
@@ -237,10 +259,8 @@ public class UtilityLoader
 		{
 			String constant = textOf(eelt);
 			
-			descriptible.add(toInt(constant));
-			
+			descriptible.add(constant);
 		}
-		
 	}
 	
 	private void parseXMLcondition(Knowledge original, Element capsule, String name, boolean allowOverrides)
@@ -282,19 +302,24 @@ public class UtilityLoader
 		
 		if (symbol != null)
 		{
-			descriptible.setSymbol(symbol);
+			setSymbolTo(descriptible, symbol);
 		}
 		
 		if (constant != null)
 		{
-			descriptible.setConstant(toInt(constant));
+			descriptible.setConstant(constant);
 		}
 		
 		if (list != null)
 		{
-			descriptible.setList(list);
+			descriptible.setConstant(list);
 		}
 		
+	}
+	
+	private void setSymbolTo(Condition descriptible, String symbol)
+	{
+		descriptible.setConditionType(this.inverseSymbols.get(symbol));
 	}
 	
 	private void parseXMLset(Knowledge original, Element capsule, String name, boolean allowOverrides)

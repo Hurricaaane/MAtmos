@@ -380,15 +380,15 @@ public class MAtMod extends HaddonImpl
 		Map sheets = new LinkedHashMap();
 		for (String name : this.dataGatherer.getData().getSheetNames())
 		{
-			List<Integer> integers = new ArrayList<Integer>();
+			List<String> values = new ArrayList<String>();
 			
-			Sheet<Integer> sheet = this.dataGatherer.getData().getSheet(name);
+			Sheet<String> sheet = this.dataGatherer.getData().getSheet(name);
 			for (int i = 0; i < sheet.getSize(); i++)
 			{
 				// 1.7 DERAIL
-				integers.add(sheet.get(Integer.toString(i)));
+				values.add(sheet.get(Integer.toString(i)));
 			}
-			sheets.put(name, integers);
+			sheets.put(name, values);
 		}
 		toJsonify.put("sheets", sheets);
 		

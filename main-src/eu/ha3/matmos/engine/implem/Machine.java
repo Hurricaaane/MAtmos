@@ -352,7 +352,7 @@ public class Machine extends Switchable
 			
 			//MAtmosEngine.logger; //TODO Logger
 			MAtmosConvLogger.fine(new StringBuilder("M:")
-				.append(this.nickname).append(this.switchedOn ? " now On." : " now Off.").toString());
+				.append(this.name).append(this.switchedOn ? " now On." : " now Off.").toString());
 			
 		}
 		

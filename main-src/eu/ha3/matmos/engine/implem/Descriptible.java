@@ -23,20 +23,21 @@ import javax.xml.stream.events.XMLEvent;
 
 public abstract class Descriptible
 {
-	public String nickname = "";
+	public String name = "";
 	public String description = "";
 	public String icon = "";
 	public String meta = "";
 	
-	public abstract String serialize(XMLEventWriter eventWriter) throws XMLStreamException;
-	
 	@Override
 	public String toString()
 	{
-		return "[(" + this.getClass().toString() + ") " + this.nickname + "]";
-		
+		return "[(" + this.getClass().toString() + ") " + this.name + "]";
 	}
 	
+	@Deprecated
+	public abstract String serialize(XMLEventWriter eventWriter) throws XMLStreamException;
+	
+	@Deprecated
 	protected void buildDescriptibleSerialized(XMLEventWriter eventWriter) throws XMLStreamException
 	{
 		XMLEventFactory eventFactory = XMLEventFactory.newInstance();
@@ -46,7 +47,7 @@ public abstract class Descriptible
 		eventWriter.add(tab);
 		eventWriter.add(eventFactory.createStartElement("", "", "descriptible"));
 		eventWriter.add(ret);
-		createNode(eventWriter, "nickname", this.nickname, 2);
+		createNode(eventWriter, "nickname", this.name, 2);
 		createNode(eventWriter, "description", this.description, 2);
 		createNode(eventWriter, "icon", this.icon, 2);
 		createNode(eventWriter, "meta", this.meta, 2);
@@ -56,6 +57,7 @@ public abstract class Descriptible
 		
 	}
 	
+	@Deprecated
 	protected void createNode(XMLEventWriter eventWriter, String name, String value, int tabCount)
 		throws XMLStreamException
 	{
@@ -78,7 +80,6 @@ public abstract class Descriptible
 	protected void createNode(XMLEventWriter eventWriter, String name, String value) throws XMLStreamException
 	{
 		createNode(eventWriter, name, value, 1);
-		
 	}
 	
 }

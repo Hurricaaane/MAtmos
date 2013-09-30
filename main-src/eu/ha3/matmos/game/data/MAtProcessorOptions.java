@@ -1,6 +1,6 @@
 package eu.ha3.matmos.game.data;
 
-import eu.ha3.matmos.engine.implem.IntegerData;
+import eu.ha3.matmos.engine.implem.StringData;
 import eu.ha3.matmos.game.system.MAtMod;
 
 /*
@@ -21,7 +21,7 @@ import eu.ha3.matmos.game.system.MAtMod;
 
 public class MAtProcessorOptions extends MAtProcessorModel
 {
-	public MAtProcessorOptions(MAtMod modIn, IntegerData dataIn, String normalNameIn, String deltaNameIn)
+	public MAtProcessorOptions(MAtMod modIn, StringData dataIn, String normalNameIn, String deltaNameIn)
 	{
 		super(modIn, dataIn, normalNameIn, deltaNameIn);
 	}

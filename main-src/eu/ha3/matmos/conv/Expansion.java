@@ -28,9 +28,9 @@ import eu.ha3.easy.TimeStatistic;
 import eu.ha3.matmos.engine.implem.Event;
 import eu.ha3.matmos.engine.implem.Knowledge;
 import eu.ha3.matmos.engine.implem.MAtmosException;
-import eu.ha3.matmos.engine.implem.UtilityLoader;
 import eu.ha3.matmos.engine.interfaces.Data;
 import eu.ha3.matmos.engine.interfaces.SoundRelay;
+import eu.ha3.matmos.engine.parsers.XMLExpansions_Engine0;
 import eu.ha3.matmos.requirem.Collation;
 import eu.ha3.matmos.requirem.RequiremForAKnowledge;
 import eu.ha3.matmos.requirem.Requirements;
@@ -244,7 +244,7 @@ public class Expansion implements CustomVolume
 		{
 			this.knowledge.patchKnowledge();
 			// loadKnowledge returns the validity of the knowledge
-			this.isReady = UtilityLoader.getInstance().loadKnowledge(this.knowledge, this.document, false);
+			this.isReady = new XMLExpansions_Engine0().loadKnowledge(this.knowledge, this.document, false);
 			
 			this.requirements = new RequiremForAKnowledge(this.knowledge);
 			

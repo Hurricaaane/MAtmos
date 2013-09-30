@@ -1,8 +1,9 @@
 package eu.ha3.matmos.engine.implem;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 
 import javax.xml.stream.XMLEventFactory;
 import javax.xml.stream.XMLEventWriter;
@@ -27,17 +28,15 @@ import javax.xml.stream.events.XMLEvent;
 
 public class Dynamic extends Switchable
 {
-	private List<String> sheets;
-	private List<String> keys;
+	private List<Entry<String, String>> entries;
 	
-	public int value;
+	private int value;
 	
 	public Dynamic(Knowledge knowledgeIn)
 	{
 		super(knowledgeIn);
 		
-		this.sheets = new ArrayList<String>();
-		this.keys = new ArrayList<String>();
+		this.entries = new ArrayList<Entry<String, String>>();
 		
 		this.value = 0;
 		
@@ -45,55 +44,33 @@ public class Dynamic extends Switchable
 	
 	public void addCouple(String sheet, String key)
 	{
-		this.sheets.add(sheet);
-		this.keys.add(key);
+		this.entries.add(new AbstractMap.SimpleEntry<String, String>(sheet, key));
 		flagNeedsTesting();
 		
 	}
 	
 	public void removeCouple(int id)
 	{
-		this.sheets.remove(id);
-		this.keys.remove(id);
+		this.entries.remove(id);
 		flagNeedsTesting();
 		
 	}
 	
-	public void setSheet(int id, String sheet)
+	public void set(int id, String sheet, String key)
 	{
-		this.sheets.set(id, sheet);
+		this.entries.set(id, new AbstractMap.SimpleEntry<String, String>(sheet, key));
 		flagNeedsTesting();
 		
 	}
 	
-	public void setKey(int id, String key)
+	public List<Entry<String, String>> getEntries()
 	{
-		this.keys.set(id, key);
-		flagNeedsTesting();
-		
+		return this.entries;
 	}
 	
-	public List<String> getSheets()
+	public Entry<String, String> getEntry(int id)
 	{
-		return this.sheets;
-		
-	}
-	
-	public List<String> getKeys()
-	{
-		return this.keys;
-		
-	}
-	
-	public String getSheet(int id)
-	{
-		return this.sheets.get(id);
-		
-	}
-	
-	public String getKey(int id)
-	{
-		return this.keys.get(id);
+		return this.entries.get(id);
 		
 	}
 	
@@ -101,7 +78,6 @@ public class Dynamic extends Switchable
 	public boolean isActive()
 	{
 		return false;
-		
 	}
 	
 	public void evaluate()
@@ -111,16 +87,20 @@ public class Dynamic extends Switchable
 		if (!isValid())
 			return;
 		
-		Iterator<String> iterSheets = this.sheets.iterator();
-		Iterator<String> iterKeys = this.keys.iterator();
-		
-		while (iterSheets.hasNext())
+		for (Entry<String, String> entry : this.entries)
 		{
-			String sheet = iterSheets.next();
-			String key = iterKeys.next();
+			String in = this.knowledge.getData().getSheet(entry.getKey()).get(entry.getValue());
+			int integerForm = 0;
 			
-			this.value = this.value + this.knowledge.getData().getSheet(sheet).get(key);
+			try
+			{
+				integerForm = Integer.parseInt(in);
+			}
+			catch (Exception e)
+			{
+			}
 			
+			this.value = this.value + integerForm;
 		}
 		
 	}
@@ -128,21 +108,19 @@ public class Dynamic extends Switchable
 	@Override
 	protected boolean testIfValid()
 	{
-		Iterator<String> iterSheets = this.sheets.iterator();
-		Iterator<String> iterKeys = this.keys.iterator();
-		
-		while (iterSheets.hasNext())
+		for (Entry<String, String> entry : this.entries)
 		{
-			String sheet = iterSheets.next();
-			String key = iterKeys.next();
-			
-			if (this.knowledge.getData().getSheet(sheet) == null
-				|| !this.knowledge.getData().getSheet(sheet).containsKey(key))
+			if (this.knowledge.getData().getSheet(entry.getKey()) == null
+				|| !this.knowledge.getData().getSheet(entry.getKey()).containsKey(entry.getValue()))
 				return false;
-			
 		}
 		
 		return true;
+	}
+	
+	public int getValue()
+	{
+		return this.value;
 	}
 	
 	@Override
@@ -155,12 +133,12 @@ public class Dynamic extends Switchable
 		XMLEvent tab = eventFactory.createDTD("\t");
 		XMLEvent ret = eventFactory.createDTD("\n");
 		
-		for (int i = 0; i < this.sheets.size(); i++)
+		for (int i = 0; i < this.entries.size(); i++)
 		{
 			eventWriter.add(tab);
 			eventWriter.add(eventFactory.createStartElement("", "", "entry"));
-			eventWriter.add(eventFactory.createAttribute("sheet", this.sheets.get(i)));
-			eventWriter.add(eventFactory.createCharacters(this.keys.get(i) + ""));
+			eventWriter.add(eventFactory.createAttribute("sheet", this.entries.get(i).getKey()));
+			eventWriter.add(eventFactory.createCharacters(this.entries.get(i).getValue() + ""));
 			eventWriter.add(eventFactory.createEndElement("", "", "entry"));
 			eventWriter.add(ret);
 			

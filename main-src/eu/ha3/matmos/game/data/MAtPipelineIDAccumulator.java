@@ -2,7 +2,7 @@ package eu.ha3.matmos.game.data;
 
 import net.minecraft.src.Minecraft;
 import eu.ha3.matmos.engine.implem.GenericSheet;
-import eu.ha3.matmos.engine.implem.IntegerData;
+import eu.ha3.matmos.engine.implem.StringData;
 import eu.ha3.matmos.engine.interfaces.Sheet;
 import eu.ha3.matmos.game.system.MAtMod;
 
@@ -33,7 +33,7 @@ public class MAtPipelineIDAccumulator extends MAtScanCoordsPipeline
 	private int proportionnalTotal;
 	
 	public MAtPipelineIDAccumulator(
-		MAtMod mod, IntegerData dataIn, String normalNameIn, String proportionnalNameIn, int proportionnalTotalIn)
+		MAtMod mod, StringData dataIn, String normalNameIn, String proportionnalNameIn, int proportionnalTotalIn)
 	{
 		super(mod, dataIn);
 		this.tempnormal = new GenericSheet<Integer>(MAtDataGatherer.COUNT_WORLD_BLOCKS, 0);
@@ -72,8 +72,8 @@ public class MAtPipelineIDAccumulator extends MAtScanCoordsPipeline
 	@Override
 	void doFinish()
 	{
-		Sheet<Integer> normal = null;
-		Sheet<Integer> proportionnal = null;
+		Sheet<String> normal = null;
+		Sheet<String> proportionnal = null;
 		
 		normal = data().getSheet(this.normalName);
 		
@@ -85,11 +85,13 @@ public class MAtPipelineIDAccumulator extends MAtScanCoordsPipeline
 		for (int i = 0; i < this.tempnormal.getSize(); i++)
 		{
 			String iS = Integer.toString(i);
-			normal.set(iS, this.tempnormal.get(iS));
+			normal.set(iS, Integer.toString(this.tempnormal.get(iS)));
 			
 			if (this.proportionnalName != null)
 			{
-				proportionnal.set(iS, (int) (this.proportionnalTotal * this.tempnormal.get(iS) / (float) this.count));
+				proportionnal.set(
+					iS,
+					Integer.toString((int) (this.proportionnalTotal * this.tempnormal.get(iS) / (float) this.count)));
 			}
 			
 		}

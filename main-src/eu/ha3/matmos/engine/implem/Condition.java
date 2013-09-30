@@ -29,11 +29,12 @@ public class Condition extends Switchable
 	private String sheet = "";
 	private String key = "0";
 	private String dynamicKey = "";
-	private int conditionType = 0;
-	private int constant = 0;
-	private String list = "";
+	private ConditionType conditionType = ConditionType.ALWAYS_FALSE;
+	private String constant = "";
 	
 	private int version = -1;
+	
+	private Integer constantIntegerForm = 0;
 	
 	private boolean isTrueEvaluated;
 	
@@ -46,7 +47,6 @@ public class Condition extends Switchable
 	{
 		this.sheet = sheetIn;
 		flagNeedsTesting();
-		
 	}
 	
 	public void setKey(String keyIn)
@@ -55,7 +55,6 @@ public class Condition extends Switchable
 		
 		this.key = keyIn;
 		flagNeedsTesting();
-		
 	}
 	
 	public void setDynamic(String dynamicKeyIn)
@@ -68,58 +67,27 @@ public class Condition extends Switchable
 		
 	}
 	
-	public void setSymbol(String symbol)
+	public void setConditionType(ConditionType type)
 	{
-		this.conditionType = -1;
-		
-		if (symbol.equals("!="))
-		{
-			this.conditionType = 0;
-		}
-		else if (symbol.equals("=="))
-		{
-			this.conditionType = 1;
-		}
-		else if (symbol.equals(">"))
-		{
-			this.conditionType = 2;
-		}
-		else if (symbol.equals(">="))
-		{
-			this.conditionType = 3;
-		}
-		else if (symbol.equals("<"))
-		{
-			this.conditionType = 4;
-		}
-		else if (symbol.equals("<="))
-		{
-			this.conditionType = 5;
-		}
-		else if (symbol.equals("in"))
-		{
-			this.conditionType = 6;
-		}
-		else if (symbol.equals("!in"))
-		{
-			this.conditionType = 7;
-		}
+		this.conditionType = type;
 		
 		flagNeedsTesting();
 		
 	}
 	
-	public void setConstant(int constantIn)
+	public void setConstant(String constantIn)
 	{
 		this.constant = constantIn;
-		flagNeedsTesting(); // Not required.
 		
-	}
-	
-	public void setList(String listIn)
-	{
-		this.list = listIn;
-		flagNeedsTesting(); // Required.
+		try
+		{
+			this.constantIntegerForm = Integer.parseInt(constantIn);
+		}
+		catch (Exception e)
+		{
+			this.constantIntegerForm = null;
+		}
+		flagNeedsTesting(); // Not required.
 		
 	}
 	
@@ -147,28 +115,21 @@ public class Condition extends Switchable
 		
 	}
 	
-	public String getList()
-	{
-		return this.list;
-		
-	}
-	
-	public int getConditionType()
+	public ConditionType getConditionType()
 	{
 		return this.conditionType;
 		
 	}
 	
-	public int getConstant()
+	public String getConstant()
 	{
 		return this.constant;
-		
 	}
 	
 	@Override
 	protected boolean testIfValid()
 	{
-		if (this.conditionType == -1)
+		if (this.conditionType == ConditionType.ALWAYS_FALSE)
 			return false;
 		
 		boolean valid = false;
@@ -194,9 +155,9 @@ public class Condition extends Switchable
 			}
 			
 		}
-		if (valid && (this.conditionType == 6 || this.conditionType == 7))
+		if (valid && (this.conditionType == ConditionType.IN_LIST || this.conditionType == ConditionType.NOT_IN_LIST))
 		{
-			valid = this.knowledge.getListsKeySet().contains(this.list);
+			valid = this.knowledge.getListsKeySet().contains(this.constant);
 			
 		}
 		
@@ -216,7 +177,7 @@ public class Condition extends Switchable
 		{
 			//MAtmosEngine.logger; //TODO Logger
 			MAtmosConvLogger.fine(new StringBuilder("C:")
-				.append(this.nickname).append(this.isTrueEvaluated ? " now On." : " now Off.").toString());
+				.append(this.name).append(this.isTrueEvaluated ? " now On." : " now Off.").toString());
 		}
 		
 		return this.isTrueEvaluated;
@@ -241,11 +202,11 @@ public class Condition extends Switchable
 		if (!isValid())
 			return false;
 		
-		int gotValue;
+		String gotValue;
 		
 		if (!isDynamic())
 		{
-			Sheet<Integer> sheet = this.knowledge.getData().getSheet(this.sheet);
+			Sheet<String> sheet = this.knowledge.getData().getSheet(this.sheet);
 			int newVersion = sheet.getVersionOf(this.key);
 			
 			if (sheet.getVersionOf(this.key) == this.version)
@@ -257,32 +218,48 @@ public class Condition extends Switchable
 		}
 		else
 		{
-			gotValue = this.knowledge.getDynamic(this.dynamicKey).value;
+			gotValue = Integer.toString(this.knowledge.getDynamic(this.dynamicKey).getValue());
 		}
 		
-		if (this.conditionType == 0)
-			return gotValue != this.constant;
+		Integer gotValueIntegerForm;
+		try
+		{
+			gotValueIntegerForm = Integer.parseInt(gotValue);
+		}
+		catch (Exception e)
+		{
+			gotValueIntegerForm = null;
+		}
 		
-		else if (this.conditionType == 1)
-			return gotValue == this.constant;
+		if (this.conditionType == ConditionType.NOT_EQUAL)
+			return !gotValue.equals(this.constant);
 		
-		else if (this.conditionType == 2)
-			return gotValue > this.constant;
+		else if (this.conditionType == ConditionType.EQUAL)
+			return gotValue.equals(this.constant);
 		
-		else if (this.conditionType == 3)
-			return gotValue >= this.constant;
+		else if (this.conditionType == ConditionType.IN_LIST)
+			return this.knowledge.getList(this.constant).contains(gotValue);
 		
-		else if (this.conditionType == 4)
-			return gotValue < this.constant;
+		else if (this.conditionType == ConditionType.NOT_IN_LIST)
+			return !this.knowledge.getList(this.constant).contains(gotValue);
 		
-		else if (this.conditionType == 5)
-			return gotValue <= this.constant;
-		
-		else if (this.conditionType == 6)
-			return this.knowledge.getList(this.list).contains(gotValue);
-		
-		else if (this.conditionType == 7)
-			return !this.knowledge.getList(this.list).contains(gotValue);
+		else if (gotValueIntegerForm != null && this.constantIntegerForm != null)
+		{
+			if (this.conditionType == ConditionType.GREATER)
+				return gotValueIntegerForm > this.constantIntegerForm;
+			
+			else if (this.conditionType == ConditionType.GREATER_OR_EQUAL)
+				return gotValueIntegerForm >= this.constantIntegerForm;
+			
+			else if (this.conditionType == ConditionType.LESSER_)
+				return gotValueIntegerForm < this.constantIntegerForm;
+			
+			else if (this.conditionType == ConditionType.LESSER_OR_EQUAL)
+				return gotValueIntegerForm <= this.constantIntegerForm;
+			
+			else
+				return false;
+		}
 		
 		else
 			return false;
@@ -292,6 +269,7 @@ public class Condition extends Switchable
 	@Override
 	public String serialize(XMLEventWriter eventWriter) throws XMLStreamException
 	{
+		/*
 		buildDescriptibleSerialized(eventWriter);
 		
 		if (!isDynamic())
@@ -346,7 +324,7 @@ public class Condition extends Switchable
 		
 		createNode(eventWriter, "constant", "" + this.constant);
 		createNode(eventWriter, "list", "" + this.list);
-		
+		*/
 		return "";
 	}
 	
@@ -361,14 +339,21 @@ public class Condition extends Switchable
 		}
 		
 		flagNeedsTesting();
-		
+	}
+	
+	public boolean isListBased()
+	{
+		return this.conditionType == ConditionType.IN_LIST || this.conditionType == ConditionType.NOT_IN_LIST;
 	}
 	
 	public void replaceListName(String name, String newName)
 	{
-		if (this.list.equals(name))
+		if (isListBased())
 		{
-			this.list = newName;
+			if (this.constant.equals(name))
+			{
+				this.constant = newName;
+			}
 		}
 		
 		flagNeedsTesting();
