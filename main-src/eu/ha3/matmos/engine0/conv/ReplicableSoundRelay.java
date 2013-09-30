@@ -1,6 +1,6 @@
-package net.minecraft.src;
+package eu.ha3.matmos.engine0.conv;
 
-import eu.ha3.matmos.engine0.game.system.MAtMod;
+import eu.ha3.matmos.engine0.core.interfaces.SoundRelay;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -18,19 +18,7 @@ import eu.ha3.matmos.engine0.game.system.MAtMod;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class mod_MAtmos extends HaddonBridgeModLoader
+public interface ReplicableSoundRelay extends SoundRelay
 {
-	public mod_MAtmos()
-	{
-		super(new MAtMod());
-		
-	}
-	
-	@Override
-	public String getVersion()
-	{
-		return "r" + MAtMod.VERSION + " for " + MAtMod.FOR; // Remember to change the thing on MAtMod
-		
-	}
-	
+	public SoundRelay createChild();
 }

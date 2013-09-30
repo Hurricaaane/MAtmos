@@ -1,6 +1,4 @@
-package net.minecraft.src;
-
-import eu.ha3.matmos.engine0.game.system.MAtMod;
+package eu.ha3.matmos.engine0.core.implem;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -18,19 +16,8 @@ import eu.ha3.matmos.engine0.game.system.MAtMod;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class mod_MAtmos extends HaddonBridgeModLoader
+public enum ConditionType
 {
-	public mod_MAtmos()
-	{
-		super(new MAtMod());
-		
-	}
-	
-	@Override
-	public String getVersion()
-	{
-		return "r" + MAtMod.VERSION + " for " + MAtMod.FOR; // Remember to change the thing on MAtMod
-		
-	}
-	
+		ALWAYS_FALSE, ALWAYS_TRUE, EQUAL, NOT_EQUAL, GREATER, LESSER_, GREATER_OR_EQUAL, LESSER_OR_EQUAL, IN_LIST,
+		NOT_IN_LIST;
 }

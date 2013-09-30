@@ -1,0 +1,51 @@
+package eu.ha3.matmos.engine0.game.system;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import net.minecraft.src.Minecraft;
+import eu.ha3.matmos.engine0.conv.CacheRegistry;
+
+/*
+            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
+                    Version 2, December 2004 
+
+ Copyright (C) 2004 Sam Hocevar <sam@hocevar.net> 
+
+ Everyone is permitted to copy and distribute verbatim or modified 
+ copies of this license document, and changing it is allowed as long 
+ as the name is changed. 
+
+            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
+   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION 
+
+  0. You just DO WHAT THE FUCK YOU WANT TO. 
+*/
+
+public class MAtCacheRegistry implements CacheRegistry
+{
+	private Set<String> set;
+	
+	public MAtCacheRegistry()
+	{
+		this.set = new HashSet<String>();
+	}
+	
+	@Override
+	public void clear()
+	{
+		this.set.clear();
+	}
+	
+	@Override
+	public void cacheSound(String path)
+	{
+		if (this.set.contains(path))
+			return;
+		
+		Minecraft.getMinecraft().sndManager.addSound(path);
+		this.set.add(path);
+		
+		//MAtmosConvLogger.info("Cached sound " + path);
+	}
+}

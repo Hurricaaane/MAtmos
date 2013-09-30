@@ -1,6 +1,4 @@
-package net.minecraft.src;
-
-import eu.ha3.matmos.engine0.game.system.MAtMod;
+package eu.ha3.matmos.engine0.conv;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -18,19 +16,11 @@ import eu.ha3.matmos.engine0.game.system.MAtMod;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class mod_MAtmos extends HaddonBridgeModLoader
+public interface CacheRegistry
 {
-	public mod_MAtmos()
-	{
-		super(new MAtMod());
-		
-	}
 	
-	@Override
-	public String getVersion()
-	{
-		return "r" + MAtMod.VERSION + " for " + MAtMod.FOR; // Remember to change the thing on MAtMod
-		
-	}
+	public abstract void clear();
+	
+	public abstract void cacheSound(String path);
 	
 }

@@ -1,5 +1,7 @@
-package net.minecraft.src;
+package eu.ha3.matmos.engine0.game.data;
 
+import eu.ha3.matmos.engine0.conv.ProcessorModel;
+import eu.ha3.matmos.engine0.core.implem.StringData;
 import eu.ha3.matmos.engine0.game.system.MAtMod;
 
 /*
@@ -18,19 +20,19 @@ import eu.ha3.matmos.engine0.game.system.MAtMod;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class mod_MAtmos extends HaddonBridgeModLoader
+public abstract class MAtProcessorModel extends ProcessorModel
 {
-	public mod_MAtmos()
+	private MAtMod mod;
+	
+	public MAtProcessorModel(MAtMod modIn, StringData dataIn, String normalNameIn, String deltaNameIn)
 	{
-		super(new MAtMod());
+		super(dataIn, normalNameIn, deltaNameIn);
+		this.mod = modIn;
 		
 	}
 	
-	@Override
-	public String getVersion()
+	public MAtMod mod()
 	{
-		return "r" + MAtMod.VERSION + " for " + MAtMod.FOR; // Remember to change the thing on MAtMod
-		
+		return this.mod;
 	}
-	
 }

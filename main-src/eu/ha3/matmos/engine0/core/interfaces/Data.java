@@ -1,6 +1,6 @@
-package net.minecraft.src;
+package eu.ha3.matmos.engine0.core.interfaces;
 
-import eu.ha3.matmos.engine0.game.system.MAtMod;
+import java.util.Set;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -18,19 +18,15 @@ import eu.ha3.matmos.engine0.game.system.MAtMod;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class mod_MAtmos extends HaddonBridgeModLoader
+public interface Data
 {
-	public mod_MAtmos()
-	{
-		super(new MAtMod());
-		
-	}
+	public abstract void flagUpdate();
 	
-	@Override
-	public String getVersion()
-	{
-		return "r" + MAtMod.VERSION + " for " + MAtMod.FOR; // Remember to change the thing on MAtMod
-		
-	}
+	public abstract int getVersion();
 	
+	public abstract Set<String> getSheetNames();
+	
+	public abstract Sheet<String> getSheet(String name);
+	
+	public abstract void setSheet(String name, Sheet<String> sheet);
 }

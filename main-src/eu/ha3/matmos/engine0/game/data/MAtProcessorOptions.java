@@ -1,5 +1,6 @@
-package net.minecraft.src;
+package eu.ha3.matmos.engine0.game.data;
 
+import eu.ha3.matmos.engine0.core.implem.StringData;
 import eu.ha3.matmos.engine0.game.system.MAtMod;
 
 /*
@@ -18,19 +19,18 @@ import eu.ha3.matmos.engine0.game.system.MAtMod;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class mod_MAtmos extends HaddonBridgeModLoader
+public class MAtProcessorOptions extends MAtProcessorModel
 {
-	public mod_MAtmos()
+	public MAtProcessorOptions(MAtMod modIn, StringData dataIn, String normalNameIn, String deltaNameIn)
 	{
-		super(new MAtMod());
-		
+		super(modIn, dataIn, normalNameIn, deltaNameIn);
 	}
 	
 	@Override
-	public String getVersion()
+	protected void doProcess()
 	{
-		return "r" + MAtMod.VERSION + " for " + MAtMod.FOR; // Remember to change the thing on MAtMod
-		
+		setValue(0, mod().getConfig().getBoolean("useroptions.altitudes.high") ? 1 : 0);
+		setValue(1, mod().getConfig().getBoolean("useroptions.altitudes.low") ? 1 : 0);
 	}
 	
 }
