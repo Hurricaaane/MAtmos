@@ -2,7 +2,10 @@ package eu.ha3.matmos.engine0.game.data;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Map;
@@ -12,35 +15,22 @@ import java.util.Set;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.InitialDirContext;
 
-import net.minecraft.src.BiomeGenBase;
-import net.minecraft.src.Chunk;
-import net.minecraft.src.EntityPlayerSP;
-import net.minecraft.src.MathHelper;
-import net.minecraft.src.Minecraft;
-import net.minecraft.src.ServerData;
-import net.minecraft.src.World;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.util.MathHelper;
+import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.chunk.Chunk;
 import eu.ha3.matmos.engine0.core.implem.StringData;
 import eu.ha3.matmos.engine0.game.system.MAtMod;
 import eu.ha3.mc.haddon.PrivateAccessException;
 
-/*
-            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
-                    Version 2, December 2004 
-
- Copyright (C) 2004 Sam Hocevar <sam@hocevar.net> 
-
- Everyone is permitted to copy and distribute verbatim or modified 
- copies of this license document, and changing it is allowed as long 
- as the name is changed. 
-
-            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
-   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION 
-
-  0. You just DO WHAT THE FUCK YOU WANT TO. 
-*/
+/* x-placeholder */
 
 public class MAtProcessorRelaxed extends MAtProcessorModel
 {
+	private final HashSet<String> serverData;
 	private Map<String, Integer> deprecatedBiomeHash;
 	private Random random;
 	
@@ -50,6 +40,8 @@ public class MAtProcessorRelaxed extends MAtProcessorModel
 	public MAtProcessorRelaxed(MAtMod modIn, StringData dataIn, String normalNameIn, String deltaNameIn)
 	{
 		super(modIn, dataIn, normalNameIn, deltaNameIn);
+		
+		this.serverData = new HashSet<String>(Arrays.asList(new String[] { "75", "76", "77", "78", "79", "80" }));
 		
 		this.deprecatedBiomeHash = new HashMap<String, Integer>();
 		//biomeHash.put("Rainforest", 1);
@@ -97,13 +89,10 @@ public class MAtProcessorRelaxed extends MAtProcessorModel
 		
 		Set<String> required = getRequired();
 		
-		// Dear Princess Celestia
-		// i am so alone
-		// 1.7 DERAIL
-		// XXX check me
-		if (required.contains("75")
-			|| required.contains("76") || required.contains("77") || required.contains("78") || required.contains("79")
-			|| required.contains("80"))
+		//if (required.contains("75")
+		//	|| required.contains("76") || required.contains("77") || required.contains("78") || required.contains("79")
+		//	|| required.contains("80"))
+		if (!Collections.disjoint(required, this.serverData))
 		{
 			ServerData serverData = null;
 			try
@@ -133,22 +122,22 @@ public class MAtProcessorRelaxed extends MAtProcessorModel
 					NAMEsec = "";
 				}
 				
-				setValue(75, 1);
-				setValue(76, serverData.serverIP.toLowerCase(Locale.ENGLISH).hashCode());
-				setValue(77, MOTDsec.hashCode());
-				setValue(78, NAMEsec.hashCode());
-				setValue(79, this.serverAddresses.get(playerIp));
-				setValue(80, this.serverPorts.get(playerIp));
+				setValueLegacyIntIndexes(75, 1);
+				setValueLegacyIntIndexes(76, serverData.serverIP.toLowerCase(Locale.ENGLISH).hashCode());
+				setValueLegacyIntIndexes(77, MOTDsec.hashCode());
+				setValueLegacyIntIndexes(78, NAMEsec.hashCode());
+				setValueLegacyIntIndexes(79, this.serverAddresses.get(playerIp));
+				setValueLegacyIntIndexes(80, this.serverPorts.get(playerIp));
 				
 			}
 			else
 			{
-				setValue(75, 0);
-				setValue(76, 0);
-				setValue(77, 0);
-				setValue(78, 0);
-				setValue(79, 0);
-				setValue(80, 0);
+				setValueLegacyIntIndexes(75, 0);
+				setValueLegacyIntIndexes(76, 0);
+				setValueLegacyIntIndexes(77, 0);
+				setValueLegacyIntIndexes(78, 0);
+				setValueLegacyIntIndexes(79, 0);
+				setValueLegacyIntIndexes(80, 0);
 			}
 		}
 		
@@ -160,35 +149,35 @@ public class MAtProcessorRelaxed extends MAtProcessorModel
 			switch (index)
 			{
 			case 5:
-				setValue(5, w.provider.dimensionId);
+				setValueLegacyIntIndexes(5, w.provider.dimensionId);
 				break;
 			
 			case 12:
-				setValue(12, w.isRemote ? 1 : 0);
+				setValueLegacyIntIndexes(12, w.isRemote ? 1 : 0);
 				break;
 			
 			case 13:
-				setValue(13, 1 + this.random.nextInt(100)); // DICE A
+				setValueLegacyIntIndexes(13, 1 + this.random.nextInt(100)); // DICE A
 				break;
 			
 			case 14:
-				setValue(14, 1 + this.random.nextInt(100)); // DICE B
+				setValueLegacyIntIndexes(14, 1 + this.random.nextInt(100)); // DICE B
 				break;
 			
 			case 15:
-				setValue(15, 1 + this.random.nextInt(100)); // DICE C
+				setValueLegacyIntIndexes(15, 1 + this.random.nextInt(100)); // DICE C
 				break;
 			
 			case 16:
-				setValue(16, 1 + this.random.nextInt(100)); // DICE D
+				setValueLegacyIntIndexes(16, 1 + this.random.nextInt(100)); // DICE D
 				break;
 			
 			case 17:
-				setValue(17, 1 + this.random.nextInt(100)); // DICE E
+				setValueLegacyIntIndexes(17, 1 + this.random.nextInt(100)); // DICE E
 				break;
 			
 			case 18:
-				setValue(18, 1 + this.random.nextInt(100)); // DICE F
+				setValueLegacyIntIndexes(18, 1 + this.random.nextInt(100)); // DICE F
 				break;
 			
 			case 29:
@@ -201,25 +190,25 @@ public class MAtProcessorRelaxed extends MAtProcessorModel
 					{
 						biomeInt = -1;
 					}
-					setValue(29, biomeInt);
+					setValueLegacyIntIndexes(29, biomeInt);
 				}
 				else
 				{
-					setValue(29, biomei);
+					setValueLegacyIntIndexes(29, biomei);
 				}
 				break;
 			}
 			
 			case 30:
-				setValue(30, (int) (w.getSeed() >> 32));
+				setValueLegacyIntIndexes(30, (int) (w.getSeed() >> 32));
 				break;
 			
 			case 31:
-				setValue(31, (int) (w.getSeed() & 0xFFFFFFFF));
+				setValueLegacyIntIndexes(31, (int) (w.getSeed() & 0xFFFFFFFF));
 				break;
 			
 			case 88:
-				setValue(88, w.getMoonPhase());
+				setValueLegacyIntIndexes(88, w.getMoonPhase());
 				break;
 			
 			case 93:
@@ -227,11 +216,11 @@ public class MAtProcessorRelaxed extends MAtProcessorModel
 				int biomej = mod().getConfig().getInteger("useroptions.biome.override");
 				if (biomej <= -1)
 				{
-					setValue(93, calculateBiome().biomeID);
+					setValueLegacyIntIndexes(93, calculateBiome().biomeID);
 				}
 				else
 				{
-					setValue(93, biomej);
+					setValueLegacyIntIndexes(93, biomej);
 				}
 			}
 				break;
@@ -289,7 +278,7 @@ public class MAtProcessorRelaxed extends MAtProcessorModel
 		String conIp = ipPotential;
 		int conPort = portPotential;
 		
-		String wellIp = "<could not determine>";
+		String wellIp = "";
 		int wellHashCode = 0;
 		try
 		{

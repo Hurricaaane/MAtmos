@@ -4,11 +4,11 @@ import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Set;
 
-import net.minecraft.src.EntityPlayer;
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.src.Ha3Utility;
-import net.minecraft.src.ItemStack;
-import net.minecraft.src.Minecraft;
-import net.minecraft.src.PotionEffect;
 import eu.ha3.easy.TimeStatistic;
 import eu.ha3.matmos.engine0.conv.MAtmosConvLogger;
 import eu.ha3.matmos.engine0.conv.Processor;
@@ -20,21 +20,7 @@ import eu.ha3.matmos.engine0.game.system.MAtMod;
 import eu.ha3.matmos.engine0.requirem.Requirements;
 import eu.ha3.mc.convenience.Ha3StaticUtilities;
 
-/*
-            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
-                    Version 2, December 2004 
-
- Copyright (C) 2004 Sam Hocevar <sam@hocevar.net> 
-
- Everyone is permitted to copy and distribute verbatim or modified 
- copies of this license document, and changing it is allowed as long 
- as the name is changed. 
-
-            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
-   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION 
-
-  0. You just DO WHAT THE FUCK YOU WANT TO. 
-*/
+/* x-placeholder */
 
 public class MAtDataGatherer
 {
@@ -89,9 +75,9 @@ public class MAtDataGatherer
 	
 	private int ticksPassed;
 	
-	private long lastLargeScanX;
-	private long lastLargeScanY;
-	private long lastLargeScanZ;
+	private int lastLargeScanX;
+	private int lastLargeScanY;
+	private int lastLargeScanZ;
 	private int lastLargeScanPassed;
 	
 	public MAtDataGatherer(MAtMod mAtmosHaddon)
@@ -113,11 +99,11 @@ public class MAtDataGatherer
 		this.data = new StringData(globalRequirements);
 		prepareSheets();
 		
-		this.largeScanner = new MAtScanVolumetricModel(this.mod);
-		this.smallScanner = new MAtScanVolumetricModel(this.mod);
+		this.largeScanner = new MAtScanVolumetricModel();
+		this.smallScanner = new MAtScanVolumetricModel();
 		
-		this.largePipeline = new MAtPipelineIDAccumulator(this.mod, this.data, LARGESCAN, LARGESCAN_THOUSAND, 1000);
-		this.smallPipeline = new MAtPipelineIDAccumulator(this.mod, this.data, SMALLSCAN, SMALLSCAN_THOUSAND, 1000);
+		this.largePipeline = new MAtPipelineIDAccumulator(this.data, LARGESCAN, LARGESCAN_THOUSAND, 1000);
+		this.smallPipeline = new MAtPipelineIDAccumulator(this.data, SMALLSCAN, SMALLSCAN_THOUSAND, 1000);
 		
 		this.largeScanner.setPipeline(this.largePipeline);
 		this.smallScanner.setPipeline(this.smallPipeline);
@@ -237,9 +223,9 @@ public class MAtDataGatherer
 		if (this.ticksPassed % 64 == 0)
 		{
 			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-			long x = (long) Math.floor(player.posX);
-			long y = (long) Math.floor(player.posY);
-			long z = (long) Math.floor(player.posZ);
+			int x = (int) Math.floor(player.posX);
+			int y = (int) Math.floor(player.posY);
+			int z = (int) Math.floor(player.posZ);
 			
 			if (this.ticksPassed % 256 == 0
 				&& (this.data.getRequirements().isRequired(LARGESCAN) || this.data.getRequirements().isRequired(
@@ -302,13 +288,13 @@ public class MAtDataGatherer
 	
 	private void prepareSheets()
 	{
-		createSheet(LARGESCAN, COUNT_WORLD_BLOCKS);
-		createSheet(LARGESCAN_THOUSAND, COUNT_WORLD_BLOCKS);
+		createSheet(LARGESCAN);
+		createSheet(LARGESCAN_THOUSAND);
 		
-		createSheet(SMALLSCAN, COUNT_WORLD_BLOCKS);
-		createSheet(SMALLSCAN_THOUSAND, COUNT_WORLD_BLOCKS);
+		createSheet(SMALLSCAN);
+		createSheet(SMALLSCAN_THOUSAND);
 		
-		createSheet(CONTACTSCAN, COUNT_WORLD_BLOCKS);
+		createSheet(CONTACTSCAN);
 		
 		createSheet(INSTANTS, COUNT_INSTANTS);
 		createSheet(DELTAS, COUNT_INSTANTS);
@@ -316,11 +302,11 @@ public class MAtDataGatherer
 		createSheet(POTIONPOWER, COUNT_POTIONEFFECTS);
 		createSheet(POTIONDURATION, COUNT_POTIONEFFECTS);
 		
-		createSheet(CURRENTITEM_E, COUNT_ENCHANTMENTS);
-		createSheet(ARMOR1_E, COUNT_ENCHANTMENTS);
-		createSheet(ARMOR2_E, COUNT_ENCHANTMENTS);
-		createSheet(ARMOR3_E, COUNT_ENCHANTMENTS);
-		createSheet(ARMOR4_E, COUNT_ENCHANTMENTS);
+		createSheet(CURRENTITEM_E);
+		createSheet(ARMOR1_E);
+		createSheet(ARMOR2_E);
+		createSheet(ARMOR3_E);
+		createSheet(ARMOR4_E);
 		
 		createSheet(SPECIAL_LARGE, 2);
 		createSheet(SPECIAL_SMALL, 1);
@@ -345,9 +331,15 @@ public class MAtDataGatherer
 		
 	}
 	
-	private void createSheet(String name, int count)
+	@Deprecated
+	private void createSheet(String name, int __count__IGNORED)
 	{
-		this.data.setSheet(name, new GenericSheet<String>(count, ""));
+		createSheet(name);
+	}
+	
+	private void createSheet(String name)
+	{
+		this.data.setSheet(name, new GenericSheet<String>(""));
 	}
 	
 	public void dataRoll()

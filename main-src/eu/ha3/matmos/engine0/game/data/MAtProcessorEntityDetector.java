@@ -5,30 +5,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.src.AxisAlignedBB;
-import net.minecraft.src.Entity;
-import net.minecraft.src.EntityList;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.Minecraft;
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.AxisAlignedBB;
 import eu.ha3.matmos.engine0.conv.Processor;
 import eu.ha3.matmos.engine0.core.implem.StringData;
 import eu.ha3.matmos.engine0.game.system.MAtMod;
 
-/*
-            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
-                    Version 2, December 2004 
-
- Copyright (C) 2004 Sam Hocevar <sam@hocevar.net> 
-
- Everyone is permitted to copy and distribute verbatim or modified 
- copies of this license document, and changing it is allowed as long 
- as the name is changed. 
-
-            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
-   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION 
-
-  0. You just DO WHAT THE FUCK YOU WANT TO. 
-*/
+/* x-placeholder */
 
 public class MAtProcessorEntityDetector implements Processor
 {
@@ -125,7 +111,7 @@ public class MAtProcessorEntityDetector implements Processor
 		this.bbox.setBounds(x - this.maxel, y - this.maxel, z - this.maxel, x + this.maxel, y + this.maxel, z
 			+ this.maxel);
 		
-		List<Entity> entityList = mc.theWorld.getEntitiesWithinAABB(net.minecraft.src.Entity.class, this.bbox);
+		List<Entity> entityList = mc.theWorld.getEntitiesWithinAABB(Entity.class, this.bbox);
 		
 		for (Entity e : entityList)
 		{
@@ -187,21 +173,21 @@ public class MAtProcessorEntityDetector implements Processor
 				if (this.radiModels[rr].isRequired())
 					if (this.mappies[rr].containsKey(i))
 					{
-						this.radiModels[rr].setValue(i, this.mappies[rr].get(i));
+						this.radiModels[rr].setValueLegacyIntIndexes(i, this.mappies[rr].get(i));
 					}
 					else
 					{
-						this.radiModels[rr].setValue(i, 0);
+						this.radiModels[rr].setValueLegacyIntIndexes(i, 0);
 					}
 			}
 			if (this.mindistModel.isRequired())
 				if (this.mindistMappy.containsKey(i))
 				{
-					this.mindistModel.setValue(i, (int) Math.floor(this.mindistMappy.get(i) * 1000));
+					this.mindistModel.setValueLegacyIntIndexes(i, (int) Math.floor(this.mindistMappy.get(i) * 1000));
 				}
 				else
 				{
-					this.mindistModel.setValue(i, Integer.MAX_VALUE);
+					this.mindistModel.setValueLegacyIntIndexes(i, Integer.MAX_VALUE);
 				}
 			
 		}

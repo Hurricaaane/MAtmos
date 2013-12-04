@@ -1,29 +1,21 @@
 package net.minecraft.src;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.util.FoodStats;
+import net.minecraft.world.World;
+import net.minecraft.world.storage.WorldInfo;
 import eu.ha3.mc.haddon.PrivateAccessException;
 import eu.ha3.mc.haddon.Utility;
 
-/*
-            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
-                    Version 2, December 2004 
-
- Copyright (C) 2004 Sam Hocevar <sam@hocevar.net> 
-
- Everyone is permitted to copy and distribute verbatim or modified 
- copies of this license document, and changing it is allowed as long 
- as the name is changed. 
-
-            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
-   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION 
-
-  0. You just DO WHAT THE FUCK YOU WANT TO. 
-*/
+/* x-placeholder */
 
 public class MAtAccessors
 {
+	@Deprecated
 	public static FoodStats getFoodStatsOf(EntityPlayerSP player)
 	{
-		return player.foodStats;
+		return player.getFoodStats();
 	}
 	
 	public static boolean getIsJumpingOf(EntityPlayerSP player)
@@ -36,9 +28,10 @@ public class MAtAccessors
 		return player.isInWeb;
 	}
 	
+	@Deprecated
 	public static WorldInfo getWorldInfoOf(World world)
 	{
-		return world.worldInfo;
+		return world.getWorldInfo();
 	}
 	
 	public static SoundPool getSoundPoolSounds(Utility util)

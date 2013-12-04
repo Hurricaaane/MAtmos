@@ -1,53 +1,35 @@
 package eu.ha3.matmos.engine0.game.data;
 
-import eu.ha3.matmos.engine0.game.system.MAtMod;
+import net.minecraft.client.Minecraft;
 import eu.ha3.mc.convenience.Ha3Signal;
 
-/*
-            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
-                    Version 2, December 2004 
-
- Copyright (C) 2004 Sam Hocevar <sam@hocevar.net> 
-
- Everyone is permitted to copy and distribute verbatim or modified 
- copies of this license document, and changing it is allowed as long 
- as the name is changed. 
-
-            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
-   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION 
-
-  0. You just DO WHAT THE FUCK YOU WANT TO. 
-*/
+/* x-placeholder */
 
 public class MAtScanVolumetricModel
 {
-	private MAtMod mod;
-	
 	private MAtScanCoordsOps pipeline;
 	
-	private long xstart;
-	private long ystart;
-	private long zstart;
+	private int xstart;
+	private int ystart;
+	private int zstart;
 	
-	private long xsize;
-	private long ysize;
-	private long zsize;
+	private int xsize;
+	private int ysize;
+	private int zsize;
 	
-	private long opspercall;
+	private int opspercall;
 	
 	private boolean isScanning;
 	
-	private long finality;
-	private long progress;
+	private int finality;
+	private int progress;
 	
 	private Ha3Signal onDone;
 	
-	public MAtScanVolumetricModel(MAtMod mod2)
+	public MAtScanVolumetricModel()
 	{
-		this.mod = mod2;
 		this.pipeline = null;
 		this.isScanning = false;
-		
 	}
 	
 	public void setPipeline(MAtScanCoordsOps pipelineIn)
@@ -57,7 +39,7 @@ public class MAtScanVolumetricModel
 	}
 	
 	public void startScan(
-		long x, long y, long z, long xsizeIn, long ysizeIn, long zsizeIn, long opspercallIn, Ha3Signal onDoneIn) //throws MAtScannerTooLargeException
+		int x, int y, int z, int xsizeIn, int ysizeIn, int zsizeIn, int opspercallIn, Ha3Signal onDoneIn) //throws MAtScannerTooLargeException
 	{
 		if (this.isScanning)
 			return;
@@ -68,12 +50,11 @@ public class MAtScanVolumetricModel
 		if (opspercallIn <= 0)
 			throw new IllegalArgumentException();
 		
-		int worldHeight = this.mod.util().getWorldHeight();
+		int worldHeight = Minecraft.getMinecraft().theWorld.getHeight();
 		
 		if (ysizeIn > worldHeight)
 		{
 			ysizeIn = worldHeight;
-			//throw new MAtScannerTooLargeException();
 		}
 		
 		this.xsize = xsizeIn;
@@ -110,7 +91,7 @@ public class MAtScanVolumetricModel
 			return false;
 		
 		long ops = 0;
-		long x, y, z;
+		int x, y, z;
 		while (ops < this.opspercall && this.progress < this.finality)
 		{
 			// TODO Optimize this

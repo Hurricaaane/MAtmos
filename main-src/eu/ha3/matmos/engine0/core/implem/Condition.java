@@ -6,21 +6,7 @@ import javax.xml.stream.XMLStreamException;
 import eu.ha3.matmos.engine0.conv.MAtmosConvLogger;
 import eu.ha3.matmos.engine0.core.interfaces.Sheet;
 
-/*
-            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
-                    Version 2, December 2004 
-
- Copyright (C) 2004 Sam Hocevar <sam@hocevar.net> 
-
- Everyone is permitted to copy and distribute verbatim or modified 
- copies of this license document, and changing it is allowed as long 
- as the name is changed. 
-
-            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
-   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION 
-
-  0. You just DO WHAT THE FUCK YOU WANT TO. 
-*/
+/* x-placeholder */
 
 public class Condition extends Switchable
 {
@@ -137,12 +123,16 @@ public class Condition extends Switchable
 		{
 			if (this.knowledge.getData().getSheet(this.sheet) != null)
 			{
-				if (!this.key.equals("") && this.knowledge.getData().getSheet(this.sheet).containsKey(this.key))
+				/*if (!this.key.equals("") && this.knowledge.getData().getSheet(this.sheet).containsKey(this.key))
 				{
 					valid = true;
-					
-				}
+				}*/
 				
+				// The entry doesn't need to exist initially for the condition to be valid.
+				if (!this.key.equals("") && this.knowledge.getData().getSheet(this.sheet) != null)
+				{
+					valid = true;
+				}
 			}
 			
 		}

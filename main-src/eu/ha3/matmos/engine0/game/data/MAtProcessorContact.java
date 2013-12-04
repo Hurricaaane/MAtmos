@@ -1,43 +1,30 @@
 package eu.ha3.matmos.engine0.game.data;
 
-import net.minecraft.src.Minecraft;
+import net.minecraft.client.Minecraft;
+import eu.ha3.matmos.engine0.core.implem.GenericSheet;
 import eu.ha3.matmos.engine0.core.implem.StringData;
+import eu.ha3.matmos.engine0.core.interfaces.Sheet;
 import eu.ha3.matmos.engine0.game.system.MAtMod;
+import eu.ha3.matmos.v170helper.Version170Helper;
 
-/*
-            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
-                    Version 2, December 2004 
-
- Copyright (C) 2004 Sam Hocevar <sam@hocevar.net> 
-
- Everyone is permitted to copy and distribute verbatim or modified 
- copies of this license document, and changing it is allowed as long 
- as the name is changed. 
-
-            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
-   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION 
-
-  0. You just DO WHAT THE FUCK YOU WANT TO. 
-*/
+/* x-placeholder */
 
 public class MAtProcessorContact extends MAtProcessorModel
 {
-	private int contactSum[];
+	private Sheet<Integer> tempnormal;
 	
 	public MAtProcessorContact(MAtMod modIn, StringData dataIn, String normalNameIn, String deltaNameIn)
 	{
 		super(modIn, dataIn, normalNameIn, deltaNameIn);
-		this.contactSum = new int[MAtDataGatherer.COUNT_WORLD_BLOCKS];
-		
+		this.tempnormal = new GenericSheet<Integer>(0);
 	}
 	
 	private void emptyContact()
 	{
-		for (int i = 0; i < this.contactSum.length; i++)
+		for (String key : this.tempnormal.keySet())
 		{
-			this.contactSum[i] = 0;
+			this.tempnormal.set(key, 0);
 		}
-		
 	}
 	
 	@Override
@@ -45,8 +32,9 @@ public class MAtProcessorContact extends MAtProcessorModel
 	{
 		Minecraft mc = Minecraft.getMinecraft();
 		int x = (int) Math.floor(mc.thePlayer.posX);
-		int y = (int) Math.floor(mc.thePlayer.posY) - 1; //FIXME: Player position is different from Half Life, this is fixed with a -1
+		int y = (int) Math.floor(mc.thePlayer.posY) - 1;
 		int z = (int) Math.floor(mc.thePlayer.posZ);
+		int worldHeight = mc.theWorld.getHeight();
 		
 		int nx;
 		int ny;
@@ -57,24 +45,19 @@ public class MAtProcessorContact extends MAtProcessorModel
 		for (int k = 0; k < 12; k++)
 		{
 			ny = y + (k > 7 ? k - 9 : k % 2);
-			if (ny >= 0 && ny < mod().util().getWorldHeight())
+			if (ny >= 0 && ny < worldHeight)
 			{
 				nx = x + (k < 4 ? k < 2 ? -1 : 1 : 0);
 				nz = z + (k > 3 && k < 8 ? k < 6 ? -1 : 1 : 0);
 				
-				int id = Minecraft.getMinecraft().theWorld.getBlockId(nx, ny, nz);
-				if (id < this.contactSum.length || id >= 0)
-				{
-					this.contactSum[id] = this.contactSum[id] + 1;
-				}
-				
+				String blockName = Version170Helper.getNameAt(nx, ny, nz, "");
+				this.tempnormal.set(blockName, this.tempnormal.get(blockName) + 1);
 			}
-			
 		}
 		
-		for (int i = 0; i < this.contactSum.length; i++)
+		for (String key : this.tempnormal.keySet())
 		{
-			setValue(i, this.contactSum[i]);
+			setValue(key, Integer.toString(this.tempnormal.get(key)));
 		}
 		
 	}

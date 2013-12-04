@@ -9,22 +9,16 @@ import eu.ha3.matmos.engine0.core.interfaces.Data;
 import eu.ha3.matmos.engine0.requirem.Collation;
 import eu.ha3.matmos.engine0.requirem.Requirements;
 
-/*
-            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
-                    Version 2, December 2004 
+/* x-placeholder */
 
- Copyright (C) 2004 Sam Hocevar <sam@hocevar.net> 
-
- Everyone is permitted to copy and distribute verbatim or modified 
- copies of this license document, and changing it is allowed as long 
- as the name is changed. 
-
-            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
-   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION 
-
-  0. You just DO WHAT THE FUCK YOU WANT TO. 
-*/
-
+/**
+ * Doesn't work since the introduction of arbitrary strings; the sheets can't be
+ * iterated over them as they aren't initialized.
+ * 
+ * @author Hurry
+ * 
+ */
+@Deprecated
 public class MAtCatchAllRequirements implements Collation
 {
 	private Data data;
@@ -53,10 +47,10 @@ public class MAtCatchAllRequirements implements Collation
 			return this.sheetCache.get(sheet);
 		
 		LinkedHashSet<String> all = new LinkedHashSet<String>();
-		for (int i = 0; i < this.data.getSheet(sheet).getSize(); i++)
-		{
-			all.add(Integer.toString(i));
-		}
+		//for (int i = 0; i < this.data.getSheet(sheet).getSize(); i++) /// crap!!!! how can it work with arbitrary strings???!
+		//{
+		//	all.add(Integer.toString(i));
+		//}
 		
 		this.sheetCache.put(sheet, all);
 		return this.sheetCache.get(sheet);

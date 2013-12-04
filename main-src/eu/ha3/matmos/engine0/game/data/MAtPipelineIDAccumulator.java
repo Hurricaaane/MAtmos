@@ -1,26 +1,11 @@
 package eu.ha3.matmos.engine0.game.data;
 
-import net.minecraft.src.Minecraft;
 import eu.ha3.matmos.engine0.core.implem.GenericSheet;
 import eu.ha3.matmos.engine0.core.implem.StringData;
 import eu.ha3.matmos.engine0.core.interfaces.Sheet;
-import eu.ha3.matmos.engine0.game.system.MAtMod;
+import eu.ha3.matmos.v170helper.Version170Helper;
 
-/*
-            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
-                    Version 2, December 2004 
-
- Copyright (C) 2004 Sam Hocevar <sam@hocevar.net> 
-
- Everyone is permitted to copy and distribute verbatim or modified 
- copies of this license document, and changing it is allowed as long 
- as the name is changed. 
-
-            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
-   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION 
-
-  0. You just DO WHAT THE FUCK YOU WANT TO. 
-*/
+/* x-placeholder */
 
 public class MAtPipelineIDAccumulator extends MAtScanCoordsPipeline
 {
@@ -33,10 +18,10 @@ public class MAtPipelineIDAccumulator extends MAtScanCoordsPipeline
 	private int proportionnalTotal;
 	
 	public MAtPipelineIDAccumulator(
-		MAtMod mod, StringData dataIn, String normalNameIn, String proportionnalNameIn, int proportionnalTotalIn)
+		StringData dataIn, String normalNameIn, String proportionnalNameIn, int proportionnalTotalIn)
 	{
-		super(mod, dataIn);
-		this.tempnormal = new GenericSheet<Integer>(MAtDataGatherer.COUNT_WORLD_BLOCKS, 0);
+		super(dataIn);
+		this.tempnormal = new GenericSheet<Integer>(0);
 		
 		this.normalName = normalNameIn;
 		this.proportionnalName = proportionnalNameIn;
@@ -48,52 +33,38 @@ public class MAtPipelineIDAccumulator extends MAtScanCoordsPipeline
 	void doBegin()
 	{
 		this.count = 0;
-		for (int i = 0; i < this.tempnormal.getSize(); i++)
+		for (String key : this.tempnormal.keySet())
 		{
-			// 1.7 DERAIL
-			this.tempnormal.set(Integer.toString(i), 0);
+			this.tempnormal.set(key, 0);
 		}
 	}
 	
 	@Override
-	void doInput(long x, long y, long z)
+	void doInput(int x, int y, int z)
 	{
-		int id = Minecraft.getMinecraft().theWorld.getBlockId((int) x, (int) y, (int) z);
-		if (id >= this.tempnormal.getSize() || id < 0)
-			return; /// Do not count
-			
-		// 1.7 DERAIL
-		this.tempnormal.set(Integer.toString(id), this.tempnormal.get(Integer.toString(id)) + 1);
+		String blockName = Version170Helper.getNameAt(x, y, z, "");
+		
+		this.tempnormal.set(blockName, this.tempnormal.get(blockName) + 1);
 		
 		this.count++;
-		
 	}
 	
 	@Override
 	void doFinish()
 	{
-		Sheet<String> normal = null;
-		Sheet<String> proportionnal = null;
+		Sheet<String> normal = data().getSheet(this.normalName);
+		Sheet<String> proportionnal = this.proportionnalName != null ? data().getSheet(this.proportionnalName) : null;
 		
-		normal = data().getSheet(this.normalName);
-		
-		if (this.proportionnalName != null)
+		for (String key : this.tempnormal.keySet())
 		{
-			proportionnal = data().getSheet(this.proportionnalName);
-		}
-		
-		for (int i = 0; i < this.tempnormal.getSize(); i++)
-		{
-			String iS = Integer.toString(i);
-			normal.set(iS, Integer.toString(this.tempnormal.get(iS)));
+			int result = this.tempnormal.get(key);
+			
+			normal.set(key, Integer.toString(result));
 			
 			if (this.proportionnalName != null)
 			{
-				proportionnal.set(
-					iS,
-					Integer.toString((int) (this.proportionnalTotal * this.tempnormal.get(iS) / (float) this.count)));
+				proportionnal.set(key, Integer.toString((int) (this.proportionnalTotal * result / (float) this.count)));
 			}
-			
 		}
 	}
 }

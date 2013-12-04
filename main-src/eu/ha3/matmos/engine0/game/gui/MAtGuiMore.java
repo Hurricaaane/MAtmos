@@ -1,25 +1,11 @@
 package eu.ha3.matmos.engine0.game.gui;
 
-import net.minecraft.src.GuiButton;
-import net.minecraft.src.GuiScreen;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
 import eu.ha3.matmos.engine0.game.system.MAtMod;
 import eu.ha3.mc.gui.HGuiSliderControl;
 
-/*
-            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
-                    Version 2, December 2004 
-
- Copyright (C) 2004 Sam Hocevar <sam@hocevar.net> 
-
- Everyone is permitted to copy and distribute verbatim or modified 
- copies of this license document, and changing it is allowed as long 
- as the name is changed. 
-
-            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
-   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION 
-
-  0. You just DO WHAT THE FUCK YOU WANT TO. 
-*/
+/* x-placeholder */
 
 public class MAtGuiMore extends GuiScreen
 {
@@ -92,7 +78,8 @@ public class MAtGuiMore extends GuiScreen
 		biomeControl.updateDisplayString();
 		this.buttonList.add(biomeControl);
 		
-		MAtGuiSetSlider setSlider = new MAtGuiSetSlider(this.mod, this.mod.getConfig().getString("totalconversion.name"));
+		MAtGuiSetSlider setSlider =
+			new MAtGuiSetSlider(this.mod, this.mod.getConfig().getString("totalconversion.name"));
 		if (setSlider.getMaxPossibilities() > 1)
 		{
 			HGuiSliderControl setControl =

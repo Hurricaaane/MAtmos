@@ -6,21 +6,7 @@ import java.util.Set;
 import eu.ha3.matmos.engine0.core.implem.StringData;
 import eu.ha3.matmos.engine0.core.interfaces.Sheet;
 
-/*
-            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
-                    Version 2, December 2004 
-
- Copyright (C) 2004 Sam Hocevar <sam@hocevar.net> 
-
- Everyone is permitted to copy and distribute verbatim or modified 
- copies of this license document, and changing it is allowed as long 
- as the name is changed. 
-
-            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
-   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION 
-
-  0. You just DO WHAT THE FUCK YOU WANT TO. 
-*/
+/* x-placeholder */
 
 public abstract class ProcessorModel implements Processor
 {
@@ -71,22 +57,19 @@ public abstract class ProcessorModel implements Processor
 		doProcess();
 	}
 	
-	@Deprecated
-	public void setValue(int index, int newValue)
+	public void setValueLegacyIntIndexes(int index, int newValue)
 	{
-		setValue(index, Integer.toString(newValue));
+		setValue(Integer.toString(index), Integer.toString(newValue));
+	}
+	
+	public void setValueLegacyIntIndexes(int index, String newValue)
+	{
+		setValue(Integer.toString(index), newValue);
 	}
 	
 	public void setValue(String index, int newValue)
 	{
 		setValue(index, Integer.toString(newValue));
-	}
-	
-	@Deprecated
-	public void setValue(int index, String newValue)
-	{
-		// 1.7 DERAIL
-		setValue(Integer.toString(index), newValue);
 	}
 	
 	public void setValue(String index, String newValue)

@@ -1,9 +1,9 @@
 package eu.ha3.matmos.engine0.game.user;
 
-import net.minecraft.src.GuiScreen;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.src.Ha3Utility;
-import net.minecraft.src.KeyBinding;
-import net.minecraft.src.Minecraft;
 
 import org.lwjgl.input.Keyboard;
 
@@ -15,21 +15,7 @@ import eu.ha3.mc.convenience.Ha3HoldActions;
 import eu.ha3.mc.convenience.Ha3KeyHolding;
 import eu.ha3.mc.convenience.Ha3KeyManager;
 
-/*
-            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
-                    Version 2, December 2004 
-
- Copyright (C) 2004 Sam Hocevar <sam@hocevar.net> 
-
- Everyone is permitted to copy and distribute verbatim or modified 
- copies of this license document, and changing it is allowed as long 
- as the name is changed. 
-
-            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
-   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION 
-
-  0. You just DO WHAT THE FUCK YOU WANT TO. 
-*/
+/* x-placeholder */
 
 public class MAtUserControl implements Ha3HoldActions
 {
@@ -48,7 +34,7 @@ public class MAtUserControl implements Ha3HoldActions
 	
 	public void load()
 	{
-		this.keyBindingMain = new KeyBinding("key.matmos", 65);
+		this.keyBindingMain = new KeyBinding("key.matmos", 65, "key.categories.misc");
 		this.keyManager = new Ha3KeyManager();
 		
 		this.scroller = new MAtScroller(this.mod);
@@ -62,7 +48,7 @@ public class MAtUserControl implements Ha3HoldActions
 		if (this.keyBindingMain == null)
 			return "undefined";
 		
-		return Keyboard.getKeyName(this.keyBindingMain.keyCode);
+		return Keyboard.getKeyName(this.keyBindingMain.func_151463_i()); // getKeyCode(), or .keyCode
 	}
 	
 	public void tickRoutine()
@@ -110,7 +96,6 @@ public class MAtUserControl implements Ha3HoldActions
 				this.mod.getChatter().printChat(
 					Ha3Utility.COLOR_RED, "Warning: ", Ha3Utility.COLOR_WHITE,
 					"Sounds are turned off in your game settings!");
-				
 			}
 		}
 		

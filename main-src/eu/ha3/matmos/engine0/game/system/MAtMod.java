@@ -10,16 +10,16 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import net.minecraft.src.FolderResourcePack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.FolderResourcePack;
+import net.minecraft.client.resources.ReloadableResourceManager;
+import net.minecraft.client.resources.ResourceManager;
+import net.minecraft.client.resources.ResourceManagerReloadListener;
+import net.minecraft.client.resources.ResourcePack;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.src.Ha3SoundCommunicator;
 import net.minecraft.src.Ha3Utility;
 import net.minecraft.src.HaddonImpl;
-import net.minecraft.src.KeyBinding;
-import net.minecraft.src.Minecraft;
-import net.minecraft.src.ReloadableResourceManager;
-import net.minecraft.src.ResourceManager;
-import net.minecraft.src.ResourceManagerReloadListener;
-import net.minecraft.src.ResourcePack;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -352,8 +352,13 @@ public class MAtMod extends HaddonImpl
 	}
 	
 	@SuppressWarnings("unchecked")
+	@Deprecated
 	public void createDataDump(boolean force)
 	{
+		// Disabled functionnality due to arbitrary strings
+		if (true)
+			return;
+		
 		if (!force && !isDumpReady())
 		{
 			if (this.config.getBoolean("dump.sheets.enabled"))
@@ -489,7 +494,7 @@ public class MAtMod extends HaddonImpl
 	
 	// ResourceManagerReloadListener
 	@Override
-	public void onReload(ResourceManager var1)
+	public void onResourceManagerReload(ResourceManager var1)
 	{
 		MAtmosConvLogger.warning("ResourceManager has changed. Unintended side-effects results may happen.");
 		
