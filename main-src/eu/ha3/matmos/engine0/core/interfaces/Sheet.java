@@ -4,7 +4,7 @@ import java.util.Set;
 
 /* x-placeholder */
 
-public interface Sheet<T>
+public interface Sheet
 {
 	/**
 	 * Get the value of a certain position. This should return a default value
@@ -13,7 +13,7 @@ public interface Sheet<T>
 	 * @param key
 	 * @return
 	 */
-	public T get(String key);
+	public String get(String key);
 	
 	/**
 	 * Sets the value of a certain position. This should return a default value
@@ -22,7 +22,7 @@ public interface Sheet<T>
 	 * @param key
 	 * @return
 	 */
-	public void set(String key, T value);
+	public void set(String key, String value);
 	
 	/**
 	 * Gets the maximum possible position + 1 of this sheet.

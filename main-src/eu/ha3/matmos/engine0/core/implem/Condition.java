@@ -196,7 +196,7 @@ public class Condition extends Switchable
 		
 		if (!isDynamic())
 		{
-			Sheet<String> sheet = this.knowledge.getData().getSheet(this.sheet);
+			Sheet sheet = this.knowledge.getData().getSheet(this.sheet);
 			int newVersion = sheet.getVersionOf(this.key);
 			
 			if (sheet.getVersionOf(this.key) == this.version)
@@ -210,6 +210,10 @@ public class Condition extends Switchable
 		{
 			gotValue = Integer.toString(this.knowledge.getDynamic(this.dynamicKey).getValue());
 		}
+		
+		// Always return false if the entry in this sheet does not exist
+		if (gotValue == null)
+			return false;
 		
 		Integer gotValueIntegerForm;
 		try
@@ -235,6 +239,8 @@ public class Condition extends Switchable
 		
 		else if (gotValueIntegerForm != null && this.constantIntegerForm != null)
 		{
+			// if (both values are integers), then
+			
 			if (this.conditionType == ConditionType.GREATER)
 				return gotValueIntegerForm > this.constantIntegerForm;
 			

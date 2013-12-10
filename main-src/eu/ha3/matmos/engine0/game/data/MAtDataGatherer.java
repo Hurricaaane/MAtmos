@@ -339,7 +339,7 @@ public class MAtDataGatherer
 	
 	private void createSheet(String name)
 	{
-		this.data.setSheet(name, new GenericSheet<String>(""));
+		this.data.setSheet(name, new GenericSheet(""));
 	}
 	
 	public void dataRoll()

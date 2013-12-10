@@ -15,8 +15,8 @@ public abstract class ProcessorModel implements Processor
 	private String normalName;
 	private String deltaName;
 	
-	private Sheet<String> normalSheet;
-	private Sheet<String> deltaSheet;
+	private Sheet normalSheet;
+	private Sheet deltaSheet;
 	
 	private boolean normalRequired = false;
 	private boolean deltaRequired = false;

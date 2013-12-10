@@ -1,9 +1,10 @@
 package eu.ha3.matmos.engine0.game.data;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import net.minecraft.client.Minecraft;
-import eu.ha3.matmos.engine0.core.implem.GenericSheet;
 import eu.ha3.matmos.engine0.core.implem.StringData;
-import eu.ha3.matmos.engine0.core.interfaces.Sheet;
 import eu.ha3.matmos.engine0.game.system.MAtMod;
 import eu.ha3.matmos.v170helper.Version170Helper;
 
@@ -11,19 +12,19 @@ import eu.ha3.matmos.v170helper.Version170Helper;
 
 public class MAtProcessorContact extends MAtProcessorModel
 {
-	private Sheet<Integer> tempnormal;
+	private Map<String, Integer> tempnormal;
 	
 	public MAtProcessorContact(MAtMod modIn, StringData dataIn, String normalNameIn, String deltaNameIn)
 	{
 		super(modIn, dataIn, normalNameIn, deltaNameIn);
-		this.tempnormal = new GenericSheet<Integer>(0);
+		this.tempnormal = new HashMap<String, Integer>(0);
 	}
 	
 	private void emptyContact()
 	{
 		for (String key : this.tempnormal.keySet())
 		{
-			this.tempnormal.set(key, 0);
+			this.tempnormal.put(key, 0);
 		}
 	}
 	
@@ -51,7 +52,7 @@ public class MAtProcessorContact extends MAtProcessorModel
 				nz = z + (k > 3 && k < 8 ? k < 6 ? -1 : 1 : 0);
 				
 				String blockName = Version170Helper.getNameAt(nx, ny, nz, "");
-				this.tempnormal.set(blockName, this.tempnormal.get(blockName) + 1);
+				this.tempnormal.put(blockName, this.tempnormal.get(blockName) + 1);
 			}
 		}
 		

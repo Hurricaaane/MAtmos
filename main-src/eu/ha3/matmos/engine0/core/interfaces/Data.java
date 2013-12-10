@@ -12,7 +12,7 @@ public interface Data
 	
 	public abstract Set<String> getSheetNames();
 	
-	public abstract Sheet<String> getSheet(String name);
+	public abstract Sheet getSheet(String name);
 	
-	public abstract void setSheet(String name, Sheet<String> sheet);
+	public abstract void setSheet(String name, Sheet sheet);
 }

@@ -13,13 +13,13 @@ import eu.ha3.matmos.engine0.requirem.Requirements;
 
 public class StringData implements Data, Requestable
 {
-	private Map<String, Sheet<String>> sheets;
+	private Map<String, Sheet> sheets;
 	private int updateVersion;
 	private Requirements requirements;
 	
 	public StringData(Requirements requirements)
 	{
-		this.sheets = new LinkedHashMap<String, Sheet<String>>();
+		this.sheets = new LinkedHashMap<String, Sheet>();
 		this.updateVersion = 0;
 		this.requirements = requirements;
 	}
@@ -37,13 +37,13 @@ public class StringData implements Data, Requestable
 	}
 	
 	@Override
-	public Sheet<String> getSheet(String name)
+	public Sheet getSheet(String name)
 	{
 		return this.sheets.get(name);
 	}
 	
 	@Override
-	public void setSheet(String name, Sheet<String> sheet)
+	public void setSheet(String name, Sheet sheet)
 	{
 		this.sheets.put(name, sheet);
 	}

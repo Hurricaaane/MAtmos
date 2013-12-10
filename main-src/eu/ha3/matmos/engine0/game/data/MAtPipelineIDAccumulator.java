@@ -1,6 +1,8 @@
 package eu.ha3.matmos.engine0.game.data;
 
-import eu.ha3.matmos.engine0.core.implem.GenericSheet;
+import java.util.HashMap;
+import java.util.Map;
+
 import eu.ha3.matmos.engine0.core.implem.StringData;
 import eu.ha3.matmos.engine0.core.interfaces.Sheet;
 import eu.ha3.matmos.v170helper.Version170Helper;
@@ -9,7 +11,7 @@ import eu.ha3.matmos.v170helper.Version170Helper;
 
 public class MAtPipelineIDAccumulator extends MAtScanCoordsPipeline
 {
-	private Sheet<Integer> tempnormal;
+	private Map<String, Integer> tempnormal;
 	private int count;
 	
 	private String normalName;
@@ -21,7 +23,7 @@ public class MAtPipelineIDAccumulator extends MAtScanCoordsPipeline
 		StringData dataIn, String normalNameIn, String proportionnalNameIn, int proportionnalTotalIn)
 	{
 		super(dataIn);
-		this.tempnormal = new GenericSheet<Integer>(0);
+		this.tempnormal = new HashMap<String, Integer>(0);
 		
 		this.normalName = normalNameIn;
 		this.proportionnalName = proportionnalNameIn;
@@ -35,7 +37,7 @@ public class MAtPipelineIDAccumulator extends MAtScanCoordsPipeline
 		this.count = 0;
 		for (String key : this.tempnormal.keySet())
 		{
-			this.tempnormal.set(key, 0);
+			this.tempnormal.put(key, 0);
 		}
 	}
 	
@@ -44,7 +46,7 @@ public class MAtPipelineIDAccumulator extends MAtScanCoordsPipeline
 	{
 		String blockName = Version170Helper.getNameAt(x, y, z, "");
 		
-		this.tempnormal.set(blockName, this.tempnormal.get(blockName) + 1);
+		this.tempnormal.put(blockName, this.tempnormal.get(blockName) + 1);
 		
 		this.count++;
 	}
@@ -52,8 +54,8 @@ public class MAtPipelineIDAccumulator extends MAtScanCoordsPipeline
 	@Override
 	void doFinish()
 	{
-		Sheet<String> normal = data().getSheet(this.normalName);
-		Sheet<String> proportionnal = this.proportionnalName != null ? data().getSheet(this.proportionnalName) : null;
+		Sheet normal = data().getSheet(this.normalName);
+		Sheet proportionnal = this.proportionnalName != null ? data().getSheet(this.proportionnalName) : null;
 		
 		for (String key : this.tempnormal.keySet())
 		{

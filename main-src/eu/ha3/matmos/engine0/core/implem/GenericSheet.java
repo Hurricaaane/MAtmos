@@ -8,25 +8,25 @@ import eu.ha3.matmos.engine0.core.interfaces.Sheet;
 
 /* x-placeholder */
 
-public class GenericSheet<T> implements Sheet<T>
+public class GenericSheet implements Sheet
 {
-	private final Map<String, T> values;
+	private final Map<String, String> values;
 	private final Map<String, Integer> versions;
 	
-	public GenericSheet(T defaultValue)
+	public GenericSheet(String defaultValue)
 	{
-		this.values = new LinkedHashMap<String, T>();
+		this.values = new LinkedHashMap<String, String>();
 		this.versions = new LinkedHashMap<String, Integer>();
 	}
 	
 	@Override
-	public T get(String pos)
+	public String get(String pos)
 	{
 		return this.values.get(pos);
 	}
 	
 	@Override
-	public void set(String pos, T value)
+	public void set(String pos, String value)
 	{
 		if (!value.equals(this.values.get(pos)))
 		{
