@@ -11,6 +11,7 @@ import eu.ha3.easy.TimeStatistic;
 import eu.ha3.matmos.engine0.game.gui.MAtGuiMenu;
 import eu.ha3.matmos.engine0.game.system.MAtMod;
 import eu.ha3.matmos.engine0.game.system.MAtModPhase;
+import eu.ha3.matmos.v170helper.Version170Helper;
 import eu.ha3.mc.convenience.Ha3HoldActions;
 import eu.ha3.mc.convenience.Ha3KeyHolding;
 import eu.ha3.mc.convenience.Ha3KeyManager;
@@ -91,7 +92,7 @@ public class MAtUserControl implements Ha3HoldActions
 		}
 		else
 		{
-			if (Minecraft.getMinecraft().gameSettings.soundVolume <= 0)
+			if (Version170Helper.getSoundVolume() <= 0f)
 			{
 				this.mod.getChatter().printChat(
 					Ha3Utility.COLOR_RED, "Warning: ", Ha3Utility.COLOR_WHITE,
@@ -217,8 +218,8 @@ public class MAtUserControl implements Ha3HoldActions
 	{
 		if (this.mod.isRunning() && this.mod.util().isCurrentScreen(null))
 		{
-			Minecraft.getMinecraft().displayGuiScreen(
-				new MAtGuiMenu((GuiScreen) this.mod.util().getCurrentScreen(), this.mod));
+			Minecraft.getMinecraft().func_147108_a //displayGuiScreen
+			(new MAtGuiMenu((GuiScreen) this.mod.util().getCurrentScreen(), this.mod));
 		}
 	}
 	

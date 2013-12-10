@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import eu.ha3.matmos.engine0.conv.CustomVolume;
@@ -239,18 +240,20 @@ public class MAtGuiMenu extends GuiScreen
 	@Override
 	protected void actionPerformed(GuiButton par1GuiButton)
 	{
+		Minecraft mc = Minecraft.getMinecraft();
+		
 		if (par1GuiButton.id == 200)
 		{
 			// This triggers onGuiClosed
-			this.mc.displayGuiScreen(this.parentScreen);
+			mc.displayGuiScreen(this.parentScreen);
 		}
 		else if (par1GuiButton.id == 201)
 		{
-			this.mc.displayGuiScreen(new MAtGuiMenu(this.parentScreen, this.mod, this.pageFromZero - 1));
+			mc.displayGuiScreen(new MAtGuiMenu(this.parentScreen, this.mod, this.pageFromZero - 1));
 		}
 		else if (par1GuiButton.id == 202)
 		{
-			this.mc.displayGuiScreen(new MAtGuiMenu(this.parentScreen, this.mod, this.pageFromZero + 1));
+			mc.displayGuiScreen(new MAtGuiMenu(this.parentScreen, this.mod, this.pageFromZero + 1));
 		}
 		else if (par1GuiButton.id == 210)
 		{
@@ -261,11 +264,11 @@ public class MAtGuiMenu extends GuiScreen
 		}
 		else if (par1GuiButton.id == 211)
 		{
-			this.mc.displayGuiScreen(new MAtGuiMore(this, this.mod));
+			mc.displayGuiScreen(new MAtGuiMore(this, this.mod));
 		}
 		else if (par1GuiButton.id == 212)
 		{
-			this.mc.displayGuiScreen(this.parentScreen);
+			mc.displayGuiScreen(this.parentScreen);
 			this.mod.stopRunning();
 		}
 		else if (par1GuiButton.id == 220)

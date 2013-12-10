@@ -1,11 +1,9 @@
 package eu.ha3.matmos.engine0.game.system;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -17,19 +15,13 @@ import net.minecraft.client.resources.ResourceManager;
 import net.minecraft.client.resources.ResourceManagerReloadListener;
 import net.minecraft.client.resources.ResourcePack;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.src.Ha3SoundCommunicator;
 import net.minecraft.src.Ha3Utility;
 import net.minecraft.src.HaddonImpl;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import eu.ha3.easy.TimeStatistic;
 import eu.ha3.matmos.engine0.conv.CustomVolume;
 import eu.ha3.matmos.engine0.conv.Expansion;
 import eu.ha3.matmos.engine0.conv.ExpansionManager;
 import eu.ha3.matmos.engine0.conv.MAtmosConvLogger;
-import eu.ha3.matmos.engine0.core.interfaces.Sheet;
 import eu.ha3.matmos.engine0.game.data.MAtCatchAllRequirements;
 import eu.ha3.matmos.engine0.game.data.MAtDataGatherer;
 import eu.ha3.matmos.engine0.game.user.MAtUpdateNotifier;
@@ -40,21 +32,7 @@ import eu.ha3.mc.haddon.SupportsKeyEvents;
 import eu.ha3.mc.haddon.SupportsTickEvents;
 import eu.ha3.util.property.simple.ConfigProperty;
 
-/*
-            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
-                    Version 2, December 2004
-
- Copyright (C) 2004 Sam Hocevar <sam@hocevar.net>
-
- Everyone is permitted to copy and distribute verbatim or modified
- copies of this license document, and changing it is allowed as long
- as the name is changed.
-
-            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
-   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
-
-  0. You just DO WHAT THE FUCK YOU WANT TO.
- */
+/* x-placeholder */
 
 public class MAtMod extends HaddonImpl
 	implements SupportsFrameEvents, SupportsTickEvents, SupportsKeyEvents, ResourceManagerReloadListener
@@ -76,7 +54,6 @@ public class MAtMod extends HaddonImpl
 	private ExpansionManager expansionManager;
 	
 	private boolean dataRoll;
-	private Ha3SoundCommunicator sndComm;
 	private MAtUserControl userControl;
 	private MAtDataGatherer dataGatherer;
 	private MAtSoundManagerMaster soundManagerMaster;
@@ -112,6 +89,7 @@ public class MAtMod extends HaddonImpl
 		this.matmosFolder = new File(util().getModsFolder(), "matmos/");
 		this.chatter = new Chatter(this, MOD_RAW_NAME);
 		
+		// Required for the fatal error message to appear.
 		manager().hookTickEvents(true);
 		
 		// Look for installation errors
@@ -122,7 +100,6 @@ public class MAtMod extends HaddonImpl
 		}
 		
 		this.timeStatistic = new TimeStatistic(Locale.ENGLISH);
-		this.sndComm = new Ha3SoundCommunicator(this, "MAtmos_");
 		this.userControl = new MAtUserControl(this);
 		this.dataGatherer = new MAtDataGatherer(this);
 		this.expansionManager =
@@ -359,6 +336,7 @@ public class MAtMod extends HaddonImpl
 		if (true)
 			return;
 		
+		/*
 		if (!force && !isDumpReady())
 		{
 			if (this.config.getBoolean("dump.sheets.enabled"))
@@ -413,7 +391,7 @@ public class MAtMod extends HaddonImpl
 		{
 			e.printStackTrace();
 		}
-		
+		*/
 	}
 	
 	public void saveConfig()
@@ -553,11 +531,6 @@ public class MAtMod extends HaddonImpl
 	public Map<String, Expansion> getExpansionList()
 	{
 		return this.expansionManager.getExpansions();
-	}
-	
-	public Ha3SoundCommunicator getSoundCommunicator()
-	{
-		return this.sndComm;
 	}
 	
 	public Chatter getChatter()

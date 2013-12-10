@@ -4,13 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.SoundPoolEntry;
 import net.minecraft.src.MAtAccessors;
-import net.minecraft.src.Minecraft;
-import net.minecraft.src.SoundPoolEntry;
 import paulscode.sound.SoundSystem;
 import paulscode.sound.SoundSystemConfig;
 import eu.ha3.matmos.engine0.conv.CustomVolume;
 import eu.ha3.matmos.engine0.conv.ReplicableSoundRelay;
+import eu.ha3.matmos.v170helper.Version170Helper;
 
 /* x-placeholder */
 
@@ -40,10 +41,10 @@ public class MAtSoundManagerMaster implements ReplicableSoundRelay, CustomVolume
 		this.random = new Random();
 	}
 	
+	@Deprecated
 	public SoundSystem sndSystem()
 	{
-		return this.mod.getSoundCommunicator().getSoundSystem();
-		
+		//return this.mod.getSoundCommunicator().getSoundSystem();
 	}
 	
 	@Override
@@ -99,18 +100,22 @@ public class MAtSoundManagerMaster implements ReplicableSoundRelay, CustomVolume
 		if (soundEffectiveVolume <= 0)
 			return;
 		
+		// TODO 2013-12-06 : It should be mandatory that all global sounds must be set as stereo sounds
 		if (meta > 0)
 		{
+			// Play a positoned sound
 			double angle = this.random.nextFloat() * 2 * Math.PI;
 			nx = nx + (float) (Math.cos(angle) * meta);
 			ny = ny + this.random.nextFloat() * meta * 0.2F - meta * 0.01F;
 			nz = nz + (float) (Math.sin(angle) * meta);
 			
-			this.mod.getSoundCommunicator().playSound(
+			Version170Helper.playSound(
 				equivalent, nx, ny, nz, soundEffectiveVolume, pitch, SoundSystemConfig.ATTENUATION_NONE, 0F);
 		}
 		else
 		{
+			// Play a pseudo-global sound
+			
 			// NOTE: playSoundFX from Minecraft SoundManager
 			//   does NOT work (actually, only works for stereo sounds).
 			// Must use playSoundFX Proxy
@@ -118,7 +123,7 @@ public class MAtSoundManagerMaster implements ReplicableSoundRelay, CustomVolume
 			//   ...and that somehow does the trick!
 			
 			ny = ny + 2048;
-			this.mod.getSoundCommunicator().playSound(
+			Version170Helper.playSound(
 				equivalent, nx, ny, nz, soundEffectiveVolume, pitch, SoundSystemConfig.ATTENUATION_NONE, 0F);
 		}
 	}
