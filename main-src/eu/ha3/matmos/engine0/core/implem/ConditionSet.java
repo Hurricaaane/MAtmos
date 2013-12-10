@@ -168,7 +168,7 @@ public class ConditionSet extends Switchable
 	@Override
 	public String serialize(XMLEventWriter eventWriter) throws XMLStreamException
 	{
-		buildDescriptibleSerialized(eventWriter);
+		/*buildDescriptibleSerialized(eventWriter);
 		
 		for (Iterator<Entry<String, Boolean>> iter = this.conditions.entrySet().iterator(); iter.hasNext();)
 		{
@@ -184,7 +184,7 @@ public class ConditionSet extends Switchable
 			}
 			
 		}
-		
+		*/
 		return "";
 	}
 	

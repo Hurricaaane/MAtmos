@@ -25,7 +25,6 @@ public abstract class Switchable extends Descriptible
 	 */
 	public void flagNeedsTesting()
 	{
-		//System.out.println("TESTING");
 		this.needsTesting = true;
 	}
 	
