@@ -15,6 +15,7 @@ import eu.ha3.matmos.engine0.game.data.MAtCatchAllRequirements;
 import eu.ha3.matmos.engine0.game.data.MAtDataGatherer;
 import eu.ha3.matmos.engine0.game.user.MAtUpdateNotifier;
 import eu.ha3.matmos.engine0.game.user.MAtUserControl;
+import eu.ha3.mc.haddon.OperatorCaster;
 import eu.ha3.mc.haddon.implem.HaddonImpl;
 import eu.ha3.mc.haddon.supporting.SupportsFrameEvents;
 import eu.ha3.mc.haddon.supporting.SupportsKeyEvents;
@@ -78,7 +79,7 @@ public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsT
 		this.chatter = new Chatter(this, MOD_RAW_NAME);
 		
 		// Required for the fatal error message to appear.
-		caster().setTickEnabled(true);
+		((OperatorCaster) op()).setTickEnabled(true);
 		
 		// Look for installation errors
 		/*if (!this.matmosFolder.exists())
@@ -94,7 +95,7 @@ public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsT
 			new ExpansionManager(new File(util().getModsFolder(), "matmos/expansions_r27_userconfig/"));
 		this.updateNotifier = new MAtUpdateNotifier(this);
 		
-		caster().setFrameEnabled(true);
+		((OperatorCaster) op()).setFrameEnabled(true);
 		
 		// Create default configuration
 		this.config = new ConfigProperty();
@@ -374,8 +375,8 @@ public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsT
 						" was NOT found. This folder should exist on a normal installation.");
 				
 			}*/
-			caster().setTickEnabled(false);
-			caster().setFrameEnabled(false);
+			((OperatorCaster) op()).setTickEnabled(false);
+			((OperatorCaster) op()).setFrameEnabled(false);
 			return;
 		}
 		
@@ -469,13 +470,13 @@ public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsT
 	}
 	
 	@Override
-	public String getName()
+	public String getHaddonName()
 	{
 		return MAtMod.MOD_RAW_NAME;
 	}
 	
 	@Override
-	public String getVersion()
+	public String getHaddonVersion()
 	{
 		return "r" + MAtMod.VERSION + " for " + MAtMod.FOR;
 	}
