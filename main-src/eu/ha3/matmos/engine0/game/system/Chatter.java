@@ -1,7 +1,7 @@
 package eu.ha3.matmos.engine0.game.system;
 
-import net.minecraft.src.Ha3Utility;
 import eu.ha3.mc.haddon.Haddon;
+import eu.ha3.mc.quick.ChatColorsSimple;
 
 /* x-placeholder */
 
@@ -18,12 +18,12 @@ public class Chatter
 	
 	public void printChat(Object... args)
 	{
-		printChat(new Object[] { Ha3Utility.COLOR_WHITE, this.prefix + ": " }, args);
+		printChat(new Object[] { ChatColorsSimple.COLOR_WHITE, this.prefix + ": " }, args);
 	}
 	
 	public void printChatShort(Object... args)
 	{
-		printChat(new Object[] { Ha3Utility.COLOR_WHITE, "" }, args);
+		printChat(new Object[] { ChatColorsSimple.COLOR_WHITE, "" }, args);
 	}
 	
 	protected void printChat(final Object[] in, Object... args)
@@ -32,6 +32,6 @@ public class Chatter
 		System.arraycopy(in, 0, dest, 0, in.length);
 		System.arraycopy(args, 0, dest, in.length, args.length);
 		
-		this.mod.getManager().getUtility().printChat(dest);
+		this.mod.getUtility().printChat(dest);
 	}
 }

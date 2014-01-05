@@ -12,8 +12,6 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import net.minecraft.src.Ha3Utility;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -21,6 +19,7 @@ import org.xml.sax.SAXException;
 
 import eu.ha3.matmos.engine0.conv.MAtmosConvLogger;
 import eu.ha3.matmos.engine0.game.system.MAtMod;
+import eu.ha3.mc.quick.ChatColorsSimple;
 import eu.ha3.util.property.simple.ConfigProperty;
 
 /* x-placeholder */
@@ -116,21 +115,21 @@ public class MAtUpdateNotifier extends Thread// implements Ha3Personalizable
 					
 					int vc = maxvn - MAtMod.VERSION;
 					this.mod.getChatter().printChat(
-						Ha3Utility.COLOR_GOLD, "A ", Ha3Utility.COLOR_WHITE, "r" + maxvn, Ha3Utility.COLOR_GOLD,
-						" update is available (You're ", Ha3Utility.COLOR_WHITE, vc, Ha3Utility.COLOR_GOLD,
-						" version" + (vc > 1 ? "s" : "") + " late). http://matmos.ha3.eu/");
+						ChatColorsSimple.COLOR_GOLD, "A ", ChatColorsSimple.COLOR_WHITE, "r" + maxvn,
+						ChatColorsSimple.COLOR_GOLD, " update is available (You're ", ChatColorsSimple.COLOR_WHITE, vc,
+						ChatColorsSimple.COLOR_GOLD, " version" + (vc > 1 ? "s" : "") + " late). " + MAtMod.ADDRESS);
 					
 					if (this.displayRemaining > 0)
 					{
 						this.mod.getChatter().printChat(
-							Ha3Utility.COLOR_GRAY, "This message will display ", Ha3Utility.COLOR_WHITE,
-							this.displayRemaining, Ha3Utility.COLOR_GRAY,
+							ChatColorsSimple.COLOR_GRAY, "This message will display ", ChatColorsSimple.COLOR_WHITE,
+							this.displayRemaining, ChatColorsSimple.COLOR_GRAY,
 							" more time" + (this.displayRemaining > 1 ? "s" : "") + ".");
 					}
 					else
 					{
 						this.mod.getChatter().printChat(
-							Ha3Utility.COLOR_GRAY, "You won't be notified anymore until a newer version.");
+							ChatColorsSimple.COLOR_GRAY, "You won't be notified anymore until a newer version.");
 					}
 					
 					needsSave = true;

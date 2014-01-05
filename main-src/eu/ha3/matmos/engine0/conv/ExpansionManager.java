@@ -19,24 +19,18 @@ import eu.ha3.matmos.engine0.requirem.CollationOfRequirements;
 public class ExpansionManager
 {
 	private Map<String, Expansion> expansions;
-	//private List<MAtSoundManagerChild> soundManagers;
 	
-	private String expansionsSubdir;
 	private File userconfigFolder;
 	private boolean isActivated;
 	private ReplicableSoundRelay master;
 	private Data data;
 	
 	private Collation collation;
-	private CacheRegistry cacheRegistry;
-	private File packsFolder;
 	
-	public ExpansionManager(String expansionsSubdir, File userconfigFolder, CacheRegistry registry)
+	public ExpansionManager(File userconfigFolder)
 	{
 		this.expansions = new HashMap<String, Expansion>();
-		this.cacheRegistry = registry;
 		
-		this.expansionsSubdir = expansionsSubdir;
 		this.userconfigFolder = userconfigFolder;
 		
 		if (!this.userconfigFolder.exists())
@@ -46,11 +40,6 @@ public class ExpansionManager
 		
 		this.collation = new CollationOfRequirements();
 		
-	}
-	
-	public void setPacksFolder(File modsFolder)
-	{
-		this.packsFolder = modsFolder;
 	}
 	
 	public void createExpansionEntry(String userDefinedIdentifier)
@@ -197,7 +186,7 @@ public class ExpansionManager
 		clearExpansions();
 		
 		List<File> offline = new ArrayList<File>();
-		gatherOffline(this.packsFolder, offline);
+		gatherOffline(offline);
 		
 		createExpansionEntries(offline);
 		
@@ -218,8 +207,11 @@ public class ExpansionManager
 		
 	}
 	
-	private void gatherOffline(File modsDir, List<File> files)
+	private void gatherOffline(List<File> files)
 	{
+		throw new RuntimeException("NOT IMPLEMENTED");
+		// XX 2014-01-04 Must be changed to accommodate the resource pack system
+		/*
 		if (!modsDir.exists())
 			return;
 		
@@ -238,46 +230,12 @@ public class ExpansionManager
 						else if (individual.getName().endsWith(".xml"))
 						{
 							files.add(individual);
-							
 						}
-						
 					}
 				}
-				
-				File soundFolder = new File(mod, "assets/minecraft/sound/");
-				if (soundFolder.exists())
-				{
-					loadResource(soundFolder, "");
-				}
 			}
 		}
-		
-	}
-	
-	private void loadResource(File par1File, String root)
-	{
-		File[] filesInThisDir = par1File.listFiles();
-		int fileCount = filesInThisDir.length;
-		
-		for (int i = 0; i < fileCount; ++i)
-		{
-			File file = filesInThisDir[i];
-			
-			if (file.isDirectory())
-			{
-				loadResource(file, root + file.getName() + "/");
-			}
-			else
-			{
-				try
-				{
-					this.cacheRegistry.cacheSound(root + file.getName());
-				}
-				catch (Exception e)
-				{
-				}
-			}
-		}
+		*/
 	}
 	
 	public void setMaster(ReplicableSoundRelay master)

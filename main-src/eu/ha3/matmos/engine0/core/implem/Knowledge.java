@@ -97,12 +97,10 @@ public class Knowledge
 		ensureChildrenBound();
 		this.isRunning = true;
 		
-		// FIXME Why do i have to do that -> look at the UML sheet
 		// Machines have to be powered on for their routines to run even if the machines are turned off
 		for (Machine machine : this.machines.values())
 		{
 			machine.powerOn();
-			
 		}
 		
 	}
@@ -114,14 +112,11 @@ public class Knowledge
 		
 		this.isRunning = false;
 		
-		// FIXME Why do i have to do that -> look at the UML sheet
 		// Machines have to be powered on for their routines to run even if the machines are turned off
 		for (Machine machine : this.machines.values())
 		{
 			machine.powerOff();
-			
 		}
-		
 	}
 	
 	public boolean isTurnedOn()

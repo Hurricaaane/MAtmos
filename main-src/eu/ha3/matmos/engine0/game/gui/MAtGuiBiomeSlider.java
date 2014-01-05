@@ -46,9 +46,10 @@ public class MAtGuiBiomeSlider implements HDisplayStringProvider, HSliderListene
 	public String provideDisplayString()
 	{
 		final String base = "Override biome detection: ";
-		if (this.definedBiomeID >= 0 && this.definedBiomeID < BiomeGenBase.biomeList.length)
+		// biomeList
+		if (this.definedBiomeID >= 0 && this.definedBiomeID < BiomeGenBase.func_150565_n().length)
 		{
-			BiomeGenBase biome = BiomeGenBase.biomeList[this.definedBiomeID];
+			BiomeGenBase biome = BiomeGenBase.func_150565_n()[this.definedBiomeID];
 			if (biome == null)
 				return base + "Undefined biome (" + this.definedBiomeID + ")";
 			else if (biome.biomeName.equals(""))
@@ -69,7 +70,8 @@ public class MAtGuiBiomeSlider implements HDisplayStringProvider, HSliderListene
 	
 	private int calculateMaxBiomes()
 	{
-		BiomeGenBase[] biomes = BiomeGenBase.biomeList;
+		// biomeList
+		BiomeGenBase[] biomes = BiomeGenBase.func_150565_n();
 		int max = 0;
 		
 		for (int i = 0; i < biomes.length; i++)

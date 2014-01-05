@@ -10,6 +10,7 @@ import eu.ha3.matmos.engine0.game.system.MAtMod;
 
 /* x-placeholder */
 
+@Deprecated
 public class MAtProcessorSeasonsModAPI extends MAtProcessorModel
 {
 	private Map<Season, Integer> seasonsHash;

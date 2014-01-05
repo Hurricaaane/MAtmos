@@ -3,8 +3,6 @@ package eu.ha3.matmos.engine0.game.system;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.minecraft.src.SoundPoolEntry;
-import paulscode.sound.SoundSystem;
 import eu.ha3.matmos.engine0.conv.CustomVolume;
 import eu.ha3.matmos.engine0.conv.MAtmosConvLogger;
 import eu.ha3.matmos.engine0.core.interfaces.SoundRelay;
@@ -152,16 +150,6 @@ public class MAtSoundManagerChild implements SoundRelay, CustomVolume
 		stream.unallocate();
 		this.tokens.remove(token);
 		
-	}
-	
-	public SoundPoolEntry getSoundPoolEntryOf(String path)
-	{
-		return this.master.getSoundPoolEntryOf(path);
-	}
-	
-	public SoundSystem getSoundSystem()
-	{
-		return this.master.getSoundSystem();
 	}
 	
 	@Override

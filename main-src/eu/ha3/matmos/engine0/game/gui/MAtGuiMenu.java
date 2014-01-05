@@ -342,7 +342,8 @@ public class MAtGuiMenu extends GuiScreen
 	@Override
 	public void drawScreen(int par1, int par2, float par3)
 	{
-		drawDefaultBackground();
+		// XXX 2014-01-04 unsure
+		//drawDefaultBackground();
 		drawCenteredString(this.fontRenderer, this.screenTitle, this.width / 2, 8, 0xffffff);
 		
 		super.drawScreen(par1, par2, par3);

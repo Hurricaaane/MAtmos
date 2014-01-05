@@ -5,6 +5,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
 import eu.ha3.matmos.engine0.game.system.MAtMod;
+import eu.ha3.matmos.v170helper.Version170Helper;
 import eu.ha3.mc.convenience.Ha3Scroller;
 
 /* x-placeholder */
@@ -116,7 +117,7 @@ public class MAtScroller extends Ha3Scroller
 			float posY = (float) ply.posY;
 			float posZ = (float) ply.posZ;
 			
-			this.mod.getSoundCommunicator().playSoundViaManager("random.click", posX, posY, posZ, hgn, res);
+			Version170Helper.playSound("random.click", posX, posY, posZ, hgn, res);
 			
 		}
 		

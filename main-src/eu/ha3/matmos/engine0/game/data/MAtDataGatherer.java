@@ -8,7 +8,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.src.Ha3Utility;
 import eu.ha3.easy.TimeStatistic;
 import eu.ha3.matmos.engine0.conv.MAtmosConvLogger;
 import eu.ha3.matmos.engine0.conv.Processor;
@@ -19,6 +18,7 @@ import eu.ha3.matmos.engine0.core.interfaces.Data;
 import eu.ha3.matmos.engine0.game.system.MAtMod;
 import eu.ha3.matmos.engine0.requirem.Requirements;
 import eu.ha3.mc.convenience.Ha3StaticUtilities;
+import eu.ha3.mc.quick.ChatColorsSimple;
 
 /* x-placeholder */
 
@@ -200,20 +200,20 @@ public class MAtDataGatherer
 			{
 				this.anticrash = false;
 				this.mod.getChatter().printChat(
-					Ha3Utility.COLOR_RED, "MAtmos is crashing: ", Ha3Utility.COLOR_WHITE, e.getClass().getName(), ": ",
-					e.getCause());
+					ChatColorsSimple.COLOR_RED, "MAtmos is crashing: ", ChatColorsSimple.COLOR_WHITE,
+					e.getClass().getName(), ": ", e.getCause());
 				
 				int i = 0;
 				for (StackTraceElement x : e.getStackTrace())
 				{
 					if (i <= 5 || x.toString().contains("MAt") || x.toString().contains("eu.ha3.matmos."))
 					{
-						this.mod.getChatter().printChat(Ha3Utility.COLOR_WHITE, x.toString());
+						this.mod.getChatter().printChat(ChatColorsSimple.COLOR_WHITE, x.toString());
 					}
 					i++;
 				}
 				
-				this.mod.getChatter().printChat(Ha3Utility.COLOR_RED, "Please report this issue :(");
+				this.mod.getChatter().printChat(ChatColorsSimple.COLOR_RED, "Please report this issue :(");
 			}
 		}
 	}

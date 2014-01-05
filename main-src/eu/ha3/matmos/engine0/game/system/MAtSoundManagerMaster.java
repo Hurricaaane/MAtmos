@@ -5,9 +5,6 @@ import java.util.Map;
 import java.util.Random;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.SoundPoolEntry;
-import net.minecraft.src.MAtAccessors;
-import paulscode.sound.SoundSystem;
 import paulscode.sound.SoundSystemConfig;
 import eu.ha3.matmos.engine0.conv.CustomVolume;
 import eu.ha3.matmos.engine0.conv.ReplicableSoundRelay;
@@ -39,12 +36,6 @@ public class MAtSoundManagerMaster implements ReplicableSoundRelay, CustomVolume
 		
 		this.settingsVolume = 0F;
 		this.random = new Random();
-	}
-	
-	@Deprecated
-	public SoundSystem sndSystem()
-	{
-		//return this.mod.getSoundCommunicator().getSoundSystem();
 	}
 	
 	@Override
@@ -189,16 +180,6 @@ public class MAtSoundManagerMaster implements ReplicableSoundRelay, CustomVolume
 	public float getSettingsVolume()
 	{
 		return this.settingsVolume;
-	}
-	
-	public SoundPoolEntry getSoundPoolEntryOf(String path)
-	{
-		return MAtAccessors.getSoundPoolSounds(this.mod.util()).getRandomSoundFromSoundPool(getSound(path));
-	}
-	
-	public SoundSystem getSoundSystem()
-	{
-		return this.mod.getSoundCommunicator().getSoundSystem();
 	}
 	
 	@Override

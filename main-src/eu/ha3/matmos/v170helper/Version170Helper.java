@@ -2,6 +2,7 @@ package eu.ha3.matmos.v170helper;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -146,6 +147,22 @@ public class Version170Helper
 	 */
 	public static void playSound(
 		String name, float nx, float ny, float nz, float volume, float pitch, int attenuation, float rollf)
+	{
+	}
+	
+	/**
+	 * Play a sound.
+	 * 
+	 * @param equivalent
+	 * @param nx
+	 * @param ny
+	 * @param nz
+	 * @param soundEffectiveVolume
+	 * @param pitch
+	 * @param attenuationNone
+	 * @param f
+	 */
+	public static void playSound(String name, float nx, float ny, float nz, float volume, float pitch)
 	{
 	}
 }

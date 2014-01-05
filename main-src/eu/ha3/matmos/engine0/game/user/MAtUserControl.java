@@ -3,7 +3,6 @@ package eu.ha3.matmos.engine0.game.user;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.src.Ha3Utility;
 
 import org.lwjgl.input.Keyboard;
 
@@ -15,6 +14,7 @@ import eu.ha3.matmos.v170helper.Version170Helper;
 import eu.ha3.mc.convenience.Ha3HoldActions;
 import eu.ha3.mc.convenience.Ha3KeyHolding;
 import eu.ha3.mc.convenience.Ha3KeyManager;
+import eu.ha3.mc.quick.ChatColorsSimple;
 
 /* x-placeholder */
 
@@ -35,12 +35,12 @@ public class MAtUserControl implements Ha3HoldActions
 	
 	public void load()
 	{
-		this.keyBindingMain = new KeyBinding("key.matmos", 65, "key.categories.misc");
+		// new KeyBinding registers it rightaway to the list of keys
+		this.keyBindingMain = new KeyBinding("MAtmos", 65, "key.categories.misc");
 		this.keyManager = new Ha3KeyManager();
 		
 		this.scroller = new MAtScroller(this.mod);
 		
-		this.mod.manager().addKeyBinding(this.keyBindingMain, "MAtmos");
 		this.keyManager.addKeyBinding(this.keyBindingMain, new Ha3KeyHolding(this, 7));
 	}
 	
@@ -49,7 +49,7 @@ public class MAtUserControl implements Ha3HoldActions
 		if (this.keyBindingMain == null)
 			return "undefined";
 		
-		return Keyboard.getKeyName(this.keyBindingMain.func_151463_i()); // getKeyCode(), or .keyCode
+		return Keyboard.getKeyName(this.keyBindingMain.getKeyCode()); // OBF getKeyCode(), or .keyCode
 	}
 	
 	public void tickRoutine()
@@ -81,13 +81,13 @@ public class MAtUserControl implements Ha3HoldActions
 			MAtModPhase phase = this.mod.getPhase();
 			if (!this.mod.isFatalError())
 			{
-				this.mod.getChatter().printChat(Ha3Utility.COLOR_GOLD, "MAtmos is not loaded.");
+				this.mod.getChatter().printChat(ChatColorsSimple.COLOR_GOLD, "MAtmos is not loaded.");
 			}
 			else if (phase == MAtModPhase.NOT_INITIALIZED)
 			{
 				this.mod.getChatter().printChat(
-					Ha3Utility.COLOR_GOLD, "MAtmos will not load due to a fatal error. ", Ha3Utility.COLOR_GRAY,
-					"(Some MAtmos modules are not initialized)");
+					ChatColorsSimple.COLOR_GOLD, "MAtmos will not load due to a fatal error. ",
+					ChatColorsSimple.COLOR_GRAY, "(Some MAtmos modules are not initialized)");
 			}
 		}
 		else
@@ -95,7 +95,7 @@ public class MAtUserControl implements Ha3HoldActions
 			if (Version170Helper.getSoundVolume() <= 0f)
 			{
 				this.mod.getChatter().printChat(
-					Ha3Utility.COLOR_RED, "Warning: ", Ha3Utility.COLOR_WHITE,
+					ChatColorsSimple.COLOR_RED, "Warning: ", ChatColorsSimple.COLOR_WHITE,
 					"Sounds are turned off in your game settings!");
 			}
 		}
@@ -159,22 +159,22 @@ public class MAtUserControl implements Ha3HoldActions
 		{
 			this.mod.stopRunning();
 			this.mod.getChatter().printChat(
-				Ha3Utility.COLOR_YELLOW, "Stopped. Press ", Ha3Utility.COLOR_WHITE, getKeyBindingMainFriendlyName(),
-				Ha3Utility.COLOR_YELLOW, " to re-enable.");
+				ChatColorsSimple.COLOR_YELLOW, "Stopped. Press ", ChatColorsSimple.COLOR_WHITE,
+				getKeyBindingMainFriendlyName(), ChatColorsSimple.COLOR_YELLOW, " to re-enable.");
 			
 		}
 		else if (this.mod.isReady())
 		{
 			if (this.loadingCount != 0)
 			{
-				this.mod.getChatter().printChat(Ha3Utility.COLOR_BRIGHTGREEN, "Loading...");
+				this.mod.getChatter().printChat(ChatColorsSimple.COLOR_BRIGHTGREEN, "Loading...");
 			}
 			else
 			{
 				this.mod.getChatter().printChat(
-					Ha3Utility.COLOR_BRIGHTGREEN, "Loading...", Ha3Utility.COLOR_YELLOW, " (Hold ",
-					Ha3Utility.COLOR_WHITE, getKeyBindingMainFriendlyName() + " down", Ha3Utility.COLOR_YELLOW,
-					" to tweak the volume)");
+					ChatColorsSimple.COLOR_BRIGHTGREEN, "Loading...", ChatColorsSimple.COLOR_YELLOW, " (Hold ",
+					ChatColorsSimple.COLOR_WHITE, getKeyBindingMainFriendlyName() + " down",
+					ChatColorsSimple.COLOR_YELLOW, " to tweak the volume)");
 			}
 			
 			this.loadingCount++;
@@ -196,7 +196,7 @@ public class MAtUserControl implements Ha3HoldActions
 		TimeStatistic stat = new TimeStatistic();
 		this.mod.initializeAndEnable();
 		this.mod.getChatter().printChat(
-			Ha3Utility.COLOR_BRIGHTGREEN, "Loading for the first time (" + stat.getSecondsAsString(2) + "s)");
+			ChatColorsSimple.COLOR_BRIGHTGREEN, "Loading for the first time (" + stat.getSecondsAsString(2) + "s)");
 	}
 	
 	private void whenWantsForcing()
@@ -206,7 +206,7 @@ public class MAtUserControl implements Ha3HoldActions
 			TimeStatistic stat = new TimeStatistic();
 			this.mod.reloadAndStart();
 			this.mod.getChatter().printChat(
-				Ha3Utility.COLOR_BRIGHTGREEN, "Reloading expansions (" + stat.getSecondsAsString(2) + "s)");
+				ChatColorsSimple.COLOR_BRIGHTGREEN, "Reloading expansions (" + stat.getSecondsAsString(2) + "s)");
 		}
 		else if (this.mod.getPhase() == MAtModPhase.NOT_YET_ENABLED)
 		{
@@ -218,8 +218,9 @@ public class MAtUserControl implements Ha3HoldActions
 	{
 		if (this.mod.isRunning() && this.mod.util().isCurrentScreen(null))
 		{
-			Minecraft.getMinecraft().func_147108_a //displayGuiScreen
-			(new MAtGuiMenu((GuiScreen) this.mod.util().getCurrentScreen(), this.mod));
+			// OBF displayGuiScreen
+			Minecraft.getMinecraft().displayGuiScreen(
+				new MAtGuiMenu((GuiScreen) this.mod.util().getCurrentScreen(), this.mod));
 		}
 	}
 	

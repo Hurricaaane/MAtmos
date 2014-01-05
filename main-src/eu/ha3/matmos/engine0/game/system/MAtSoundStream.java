@@ -13,7 +13,7 @@ public class MAtSoundStream
 	private final String SOURCE_PREFIX = "MATMOS_SRM_";
 	
 	private final int number;
-	private MAtSoundManagerChild refer;
+	private MAtSoundManagerChild soundManagerReference;
 	
 	private final String sourceName;
 	
@@ -33,7 +33,7 @@ public class MAtSoundStream
 	public MAtSoundStream(int number, MAtSoundManagerChild refer)
 	{
 		this.number = number;
-		this.refer = refer;
+		this.soundManagerReference = refer;
 		
 		this.sourceName = this.SOURCE_PREFIX + this.number;
 		this.poolURL = null;
@@ -47,7 +47,7 @@ public class MAtSoundStream
 		if (!this.isValid)
 			return;
 		
-		SoundSystem sndSystem = this.refer.getSoundSystem();
+		SoundSystem sndSystem = this.soundManagerReference.getSoundSystem();
 		if (sndSystem == null)
 		{
 			invalidSoundSystem();
@@ -107,8 +107,8 @@ public class MAtSoundStream
 		
 		MAtmosConvLogger.info("Initializing source: " + this.sourceName + " (" + this.path + ")");
 		
-		SoundSystem sndSystem = this.refer.getSoundSystem();
-		SoundPoolEntry poolEntry = this.refer.getSoundPoolEntryOf(this.path);
+		SoundSystem sndSystem = this.soundManagerReference.getSoundSystem();
+		SoundPoolEntry poolEntry = this.soundManagerReference.getSoundPoolEntryOf(this.path);
 		if (sndSystem != null && poolEntry != null)
 		{
 			this.poolURL = poolEntry.func_110457_b();
@@ -173,7 +173,7 @@ public class MAtSoundStream
 		
 		float volume = this.playbackVolume * this.volume;
 		
-		SoundSystem sndSystem = this.refer.getSoundSystem();
+		SoundSystem sndSystem = this.soundManagerReference.getSoundSystem();
 		if (sndSystem == null)
 		{
 			invalidSoundSystem();
@@ -189,7 +189,7 @@ public class MAtSoundStream
 		if (!this.isValid)
 			return;
 		
-		SoundSystem sndSystem = this.refer.getSoundSystem();
+		SoundSystem sndSystem = this.soundManagerReference.getSoundSystem();
 		if (sndSystem == null)
 		{
 			invalidSoundSystem();
@@ -212,7 +212,7 @@ public class MAtSoundStream
 		if (!this.isValid)
 			return;
 		
-		SoundSystem sndSystem = this.refer.getSoundSystem();
+		SoundSystem sndSystem = this.soundManagerReference.getSoundSystem();
 		if (sndSystem == null)
 		{
 			invalidSoundSystem();
@@ -233,7 +233,7 @@ public class MAtSoundStream
 		if (!this.isValid)
 			return;
 		
-		SoundSystem sndSystem = this.refer.getSoundSystem();
+		SoundSystem sndSystem = this.soundManagerReference.getSoundSystem();
 		if (sndSystem == null)
 		{
 			invalidSoundSystem();
