@@ -5,13 +5,16 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.IReloadableResourceManager;
+import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.client.settings.KeyBinding;
 import eu.ha3.easy.TimeStatistic;
 import eu.ha3.matmos.engine0.conv.CustomVolume;
 import eu.ha3.matmos.engine0.conv.Expansion;
 import eu.ha3.matmos.engine0.conv.ExpansionManager;
 import eu.ha3.matmos.engine0.conv.MAtmosConvLogger;
-import eu.ha3.matmos.engine0.game.data.MAtCatchAllRequirements;
 import eu.ha3.matmos.engine0.game.data.MAtDataGatherer;
 import eu.ha3.matmos.engine0.game.user.MAtUserControl;
 import eu.ha3.mc.haddon.Identity;
@@ -30,76 +33,62 @@ import eu.ha3.util.property.simple.ConfigProperty;
 /* x-placeholder */
 
 public class MAtMod extends HaddonImpl
-	implements SupportsFrameEvents, SupportsTickEvents, SupportsKeyEvents, NotifiableHaddon
+	implements SupportsFrameEvents, SupportsTickEvents, SupportsKeyEvents, NotifiableHaddon,
+	IResourceManagerReloadListener
 {
+	// Identity
 	protected final String NAME = "MAtmos";
 	protected final int VERSION = 26;
 	protected final String FOR = "1.6.2";
 	protected final String ADDRESS = "http://matmos.ha3.eu";
 	protected final Identity identity = new HaddonIdentity(this.NAME, this.VERSION, this.FOR, this.ADDRESS);
 	
-	public static final MAtmosConvLogger LOGGER = new MAtmosConvLogger();
+	// NotifiableHaddon and UpdateNotifier
+	private final ConfigProperty config = new ConfigProperty();
 	private final Chatter chatter = new Chatter(this, this.NAME);
+	private final UpdateNotifier updateNotifier = new UpdateNotifier(
+		this, "http://q.mc.ha3.eu/query/matmos-main-version-vn.xml?ver=%d");
 	
-	private MAtModPhase phase;
-	private ConfigProperty config;
+	// Logger
+	public static final MAtmosConvLogger LOGGER = new MAtmosConvLogger();
 	
+	// State
+	private MAtModPhase phase = MAtModPhase.NOT_INITIALIZED;
+	private boolean isFatalError;
+	private boolean isRunning;
+	private boolean isDumpReady;
+	
+	// Components
 	private ExpansionManager expansionManager;
-	
-	private boolean dataRoll;
 	private MAtUserControl userControl;
 	private MAtDataGatherer dataGatherer;
 	private MAtSoundManagerMaster soundManagerMaster;
-	private UpdateNotifier updateNotifier;
 	
-	private boolean isFatalError;
-	private boolean isRunning;
-	
-	private boolean firstTickPassed;
-	private TimeStatistic timeStatistic;
-	
-	private boolean dumpReady = false;
+	// Use once
+	private boolean hasFirstTickPassed;
+	private boolean hasDataRolled;
+	private TimeStatistic timeMeasure;
 	
 	public MAtMod()
 	{
-		// This is the constructor, so don't do anything
-		// related to Minecraft.
-		
-		// Haddon constructors don't have superclass constructor calls
-		// for convenience, so nothing is initialized.
-		
-		this.phase = MAtModPhase.NOT_INITIALIZED;
-		
 		MAtmosConvLogger.setRefinedness(MAtmosConvLogger.INFO);
-		
 	}
 	
 	@Override
 	public void onLoad()
 	{
-		//this.matmosFolder = new File(util().getModsFolder(), "matmos/");
-		
 		// Required for the fatal error message to appear.
 		((OperatorCaster) op()).setTickEnabled(true);
 		
-		// Look for installation errors
-		/*if (!this.matmosFolder.exists())
-		{
-			this.isFatalError = true;
-			return;
-		}*/
-		
-		this.timeStatistic = new TimeStatistic(Locale.ENGLISH);
+		this.timeMeasure = new TimeStatistic(Locale.ENGLISH);
 		this.userControl = new MAtUserControl(this);
 		this.dataGatherer = new MAtDataGatherer(this);
 		this.expansionManager =
 			new ExpansionManager(new File(util().getModsFolder(), "matmos/expansions_r27_userconfig/"));
-		this.updateNotifier = new UpdateNotifier(this, "http://q.mc.ha3.eu/query/matmos-main-version-vn.xml?ver=%d");
 		
 		((OperatorCaster) op()).setFrameEnabled(true);
 		
 		// Create default configuration
-		this.config = new ConfigProperty();
 		this.updateNotifier.fillDefaults(this.config);
 		this.config.setProperty("world.height", 256);
 		this.config.setProperty("dump.sheets.enabled", false);
@@ -132,7 +121,8 @@ public class MAtMod extends HaddonImpl
 		// This registers stuff to Minecraft (key bindings...)
 		this.userControl.load();
 		
-		MAtmosConvLogger.info("Took " + this.timeStatistic.getSecondsAsString(3) + " seconds to setup MAtmos base.");
+		MAtmosConvLogger.info("Took " + this.timeMeasure.getSecondsAsString(3) + " seconds to setup MAtmos base.");
+		this.timeMeasure = null;
 		
 		this.phase = MAtModPhase.NOT_YET_ENABLED;
 		if (this.config.getBoolean("start.enabled"))
@@ -148,10 +138,12 @@ public class MAtMod extends HaddonImpl
 		
 		this.phase = MAtModPhase.CONSTRUCTING;
 		
-		this.timeStatistic = new TimeStatistic(Locale.ENGLISH);
+		this.timeMeasure = new TimeStatistic(Locale.ENGLISH);
 		
 		MAtmosConvLogger.info("Constructing.");
 		
+		// FIXME 2014-01-06 This can't work because of the string sheets
+		/*
 		if (!this.config.getBoolean("dump.sheets.enabled"))
 		{
 			this.dataGatherer.load(this.expansionManager.getCollation());
@@ -162,35 +154,27 @@ public class MAtMod extends HaddonImpl
 			this.dataGatherer.load(catchall);
 			catchall.setData(this.dataGatherer.getData());
 			
-			this.dumpReady = true;
-		}
+			this.isDumpReady = true;
+		}*/
 		
 		this.expansionManager.setMaster(this.soundManagerMaster);
 		this.expansionManager.setData(this.dataGatherer.getData());
 		
 		this.expansionManager.loadExpansions();
 		
-		/*
-		ResourceManager resMan = Minecraft.getMinecraft().getResourceManager();
-		if (resMan instanceof ReloadableResourceManager)
+		IResourceManager resMan = Minecraft.getMinecraft().getResourceManager();
+		if (resMan instanceof IReloadableResourceManager)
 		{
-			MAtmosConvLogger.info("Adding resource reloading listener");
-			((ReloadableResourceManager) resMan).registerReloadListener(this);
+			((IReloadableResourceManager) resMan).registerReloadListener(this);
 		}
-		else
-		{
-			MAtmosConvLogger.severe("The base Resource Manager is not a reloadable instance. "
-				+ "Unpredictable results will be caused by switching resource packs.");
-		}
-		*/
 		
 		this.phase = MAtModPhase.READY;
 		MAtmosConvLogger.info("Ready.");
 		
 		startRunning();
 		
-		MAtmosConvLogger.info("Took " + this.timeStatistic.getSecondsAsString(3) + " seconds to enable MAtmos.");
-		
+		MAtmosConvLogger.info("Took " + this.timeMeasure.getSecondsAsString(3) + " seconds to enable MAtmos.");
+		this.timeMeasure = null;
 	}
 	
 	private void createSoundManagerMaster()
@@ -251,10 +235,9 @@ public class MAtMod extends HaddonImpl
 	
 	public boolean isDumpReady()
 	{
-		return this.dumpReady;
+		return this.isDumpReady;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Deprecated
 	public void createDataDump(boolean force)
 	{
@@ -382,9 +365,9 @@ public class MAtMod extends HaddonImpl
 		this.userControl.tickRoutine();
 		if (this.isRunning)
 		{
-			if (!this.dataRoll)
+			if (!this.hasDataRolled)
 			{
-				this.dataRoll = true;
+				this.hasDataRolled = true;
 				this.dataGatherer.dataRoll();
 			}
 			
@@ -392,9 +375,9 @@ public class MAtMod extends HaddonImpl
 			this.expansionManager.dataRoutine();
 		}
 		
-		if (!this.firstTickPassed)
+		if (!this.hasFirstTickPassed)
 		{
-			this.firstTickPassed = true;
+			this.hasFirstTickPassed = true;
 			this.updateNotifier.attempt();
 		}
 	}
@@ -469,10 +452,38 @@ public class MAtMod extends HaddonImpl
 	{
 		return this.chatter;
 	}
-	
+
 	@Override
 	public Identity getIdentity()
 	{
 		return this.identity;
+	}
+	
+	@Override
+	public void onResourceManagerReload(IResourceManager var1)
+	{
+		for (int i = 0; i < 20; i++)
+		{
+			System.err.println("NOT IMPLEMENTED: Reload expansions from new resource packs");
+		}
+		
+		MAtmosConvLogger.warning("ResourceManager has changed. Unintended side-effects results may happen.");
+		
+		// Initiate hot reload
+		if (isReady() && isRunning())
+		{
+			// Set a NullObject to all SoundManagers to dispose of all streams safely
+			this.expansionManager.neutralizeSoundManagers();
+			
+			// Stop the mod to clear all reserved streams
+			stopRunning();
+			
+			// Create a new master and set it
+			createSoundManagerMaster();
+			this.expansionManager.setMaster(this.soundManagerMaster);
+			
+			// Restart the mod from scratch
+			reloadAndStart();
+		}
 	}
 }
