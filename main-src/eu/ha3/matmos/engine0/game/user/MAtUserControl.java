@@ -14,7 +14,7 @@ import eu.ha3.matmos.v170helper.Version170Helper;
 import eu.ha3.mc.convenience.Ha3HoldActions;
 import eu.ha3.mc.convenience.Ha3KeyHolding;
 import eu.ha3.mc.convenience.Ha3KeyManager;
-import eu.ha3.mc.quick.ChatColorsSimple;
+import eu.ha3.mc.quick.chat.ChatColorsSimple;
 
 /* x-placeholder */
 

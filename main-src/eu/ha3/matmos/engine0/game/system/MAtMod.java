@@ -13,29 +13,33 @@ import eu.ha3.matmos.engine0.conv.ExpansionManager;
 import eu.ha3.matmos.engine0.conv.MAtmosConvLogger;
 import eu.ha3.matmos.engine0.game.data.MAtCatchAllRequirements;
 import eu.ha3.matmos.engine0.game.data.MAtDataGatherer;
-import eu.ha3.matmos.engine0.game.user.MAtUpdateNotifier;
 import eu.ha3.matmos.engine0.game.user.MAtUserControl;
+import eu.ha3.mc.haddon.Identity;
 import eu.ha3.mc.haddon.OperatorCaster;
+import eu.ha3.mc.haddon.implem.HaddonIdentity;
 import eu.ha3.mc.haddon.implem.HaddonImpl;
 import eu.ha3.mc.haddon.supporting.SupportsFrameEvents;
 import eu.ha3.mc.haddon.supporting.SupportsKeyEvents;
 import eu.ha3.mc.haddon.supporting.SupportsTickEvents;
-import eu.ha3.mc.quick.ChatColorsSimple;
+import eu.ha3.mc.quick.chat.ChatColorsSimple;
+import eu.ha3.mc.quick.chat.Chatter;
+import eu.ha3.mc.quick.update.NotifiableHaddon;
+import eu.ha3.mc.quick.update.UpdateNotifier;
 import eu.ha3.util.property.simple.ConfigProperty;
 
 /* x-placeholder */
 
-public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsTickEvents, SupportsKeyEvents
+public class MAtMod extends HaddonImpl
+	implements SupportsFrameEvents, SupportsTickEvents, SupportsKeyEvents, NotifiableHaddon
 {
-	final static public String MOD_RAW_NAME = "MAtmos";
-	final static public int VERSION = 26; // Remember to change the thing on mod_Matmos
-	final static public String FOR = "1.6.2";
-	final static public String MOD_VERSIONNED_NAME = MOD_RAW_NAME + " r" + VERSION + " for " + FOR;
-	final static public String ADDRESS = "http://matmos.ha3.eu";
+	protected final String NAME = "MAtmos";
+	protected final int VERSION = 26;
+	protected final String FOR = "1.6.2";
+	protected final String ADDRESS = "http://matmos.ha3.eu";
+	protected final Identity identity = new HaddonIdentity(this.NAME, this.VERSION, this.FOR, this.ADDRESS);
 	
-	final static public MAtmosConvLogger LOGGER = new MAtmosConvLogger();
-	
-	//private File matmosFolder;
+	public static final MAtmosConvLogger LOGGER = new MAtmosConvLogger();
+	private final Chatter chatter = new Chatter(this, this.NAME);
 	
 	private MAtModPhase phase;
 	private ConfigProperty config;
@@ -46,7 +50,7 @@ public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsT
 	private MAtUserControl userControl;
 	private MAtDataGatherer dataGatherer;
 	private MAtSoundManagerMaster soundManagerMaster;
-	private MAtUpdateNotifier updateNotifier;
+	private UpdateNotifier updateNotifier;
 	
 	private boolean isFatalError;
 	private boolean isRunning;
@@ -55,8 +59,6 @@ public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsT
 	private TimeStatistic timeStatistic;
 	
 	private boolean dumpReady = false;
-	
-	private Chatter chatter;
 	
 	public MAtMod()
 	{
@@ -76,7 +78,6 @@ public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsT
 	public void onLoad()
 	{
 		//this.matmosFolder = new File(util().getModsFolder(), "matmos/");
-		this.chatter = new Chatter(this, MOD_RAW_NAME);
 		
 		// Required for the fatal error message to appear.
 		((OperatorCaster) op()).setTickEnabled(true);
@@ -93,12 +94,13 @@ public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsT
 		this.dataGatherer = new MAtDataGatherer(this);
 		this.expansionManager =
 			new ExpansionManager(new File(util().getModsFolder(), "matmos/expansions_r27_userconfig/"));
-		this.updateNotifier = new MAtUpdateNotifier(this);
+		this.updateNotifier = new UpdateNotifier(this, "http://q.mc.ha3.eu/query/matmos-main-version-vn.xml?ver=%d");
 		
 		((OperatorCaster) op()).setFrameEnabled(true);
 		
 		// Create default configuration
 		this.config = new ConfigProperty();
+		this.updateNotifier.fillDefaults(this.config);
 		this.config.setProperty("world.height", 256);
 		this.config.setProperty("dump.sheets.enabled", false);
 		this.config.setProperty("start.enabled", true);
@@ -108,10 +110,6 @@ public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsT
 		this.config.setProperty("useroptions.altitudes.high", true);
 		this.config.setProperty("useroptions.altitudes.low", true);
 		this.config.setProperty("useroptions.biome.override", -1);
-		this.config.setProperty("update_found.enabled", true);
-		this.config.setProperty("update_found.version", MAtMod.VERSION);
-		this.config.setProperty("update_found.display.remaining.value", 0);
-		this.config.setProperty("update_found.display.count.value", 3);
 		this.config.setProperty("totalconversion.name", "default");
 		this.config.commit();
 		
@@ -322,6 +320,7 @@ public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsT
 		*/
 	}
 	
+	@Override
 	public void saveConfig()
 	{
 		// If there were changes...
@@ -449,6 +448,7 @@ public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsT
 	
 	// Getters
 	
+	@Override
 	public ConfigProperty getConfig()
 	{
 		return this.config;
@@ -464,21 +464,15 @@ public class MAtMod extends HaddonImpl implements SupportsFrameEvents, SupportsT
 		return this.expansionManager.getExpansions();
 	}
 	
+	@Override
 	public Chatter getChatter()
 	{
 		return this.chatter;
 	}
 	
 	@Override
-	public String getHaddonName()
+	public Identity getIdentity()
 	{
-		return MAtMod.MOD_RAW_NAME;
+		return this.identity;
 	}
-	
-	@Override
-	public String getHaddonVersion()
-	{
-		return "r" + MAtMod.VERSION + " for " + MAtMod.FOR;
-	}
-	
 }

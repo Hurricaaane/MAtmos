@@ -3,11 +3,11 @@ package eu.ha3.matmos.engine0.game.data;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.entity.MAtAccessor_NetMinecraftEntity;
 import net.minecraft.entity.item.EntityBoat;
 import net.minecraft.entity.item.EntityMinecartEmpty;
 import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.item.ItemStack;
-import net.minecraft.src.MAtAccessors;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
@@ -207,7 +207,7 @@ public class MAtProcessorFrequent extends MAtProcessorModel
 				break;
 			
 			case 42:
-				setValueLegacyIntIndexes(42, MAtAccessors.getIsJumpingOf(player) ? 1 : 0);
+				setValueLegacyIntIndexes(42, MAtAccessor_NetMinecraftEntity.getInstance().isJumping(player) ? 1 : 0);
 				break;
 			
 			case 43:
@@ -215,7 +215,7 @@ public class MAtProcessorFrequent extends MAtProcessorModel
 				break;
 			
 			case 44:
-				setValueLegacyIntIndexes(44, MAtAccessors.getIsInWebOf(player) ? 1 : 0);
+				setValueLegacyIntIndexes(44, MAtAccessor_NetMinecraftEntity.getInstance().isInWeb(player) ? 1 : 0);
 				break;
 			
 			case 45:

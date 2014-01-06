@@ -18,7 +18,7 @@ import eu.ha3.matmos.engine0.core.interfaces.Data;
 import eu.ha3.matmos.engine0.game.system.MAtMod;
 import eu.ha3.matmos.engine0.requirem.Requirements;
 import eu.ha3.mc.convenience.Ha3StaticUtilities;
-import eu.ha3.mc.quick.ChatColorsSimple;
+import eu.ha3.mc.quick.chat.ChatColorsSimple;
 
 /* x-placeholder */
 
