@@ -233,11 +233,6 @@ public class MAtMod extends HaddonImpl
 		createDataDump(false);
 	}
 	
-	public boolean isDumpReady()
-	{
-		return this.isDumpReady;
-	}
-	
 	@Deprecated
 	public void createDataDump(boolean force)
 	{
@@ -301,19 +296,6 @@ public class MAtMod extends HaddonImpl
 			e.printStackTrace();
 		}
 		*/
-	}
-	
-	@Override
-	public void saveConfig()
-	{
-		// If there were changes...
-		if (this.config.commit())
-		{
-			MAtmosConvLogger.info("Saving configuration...");
-			
-			// Write changes on disk.
-			this.config.save();
-		}
 	}
 	
 	// Events
@@ -407,58 +389,6 @@ public class MAtMod extends HaddonImpl
 	}
 	*/
 	
-	// Status getters
-	
-	public MAtModPhase getPhase()
-	{
-		return this.phase;
-	}
-	
-	public boolean isFatalError()
-	{
-		return this.isFatalError;
-	}
-	
-	public boolean isReady()
-	{
-		return this.phase == MAtModPhase.READY;
-	}
-	
-	public boolean isRunning()
-	{
-		return this.isRunning;
-	}
-	
-	// Getters
-	
-	@Override
-	public ConfigProperty getConfig()
-	{
-		return this.config;
-	}
-	
-	public CustomVolume getGlobalVolumeControl()
-	{
-		return this.soundManagerMaster;
-	}
-	
-	public Map<String, Expansion> getExpansionList()
-	{
-		return this.expansionManager.getExpansions();
-	}
-	
-	@Override
-	public Chatter getChatter()
-	{
-		return this.chatter;
-	}
-
-	@Override
-	public Identity getIdentity()
-	{
-		return this.identity;
-	}
-	
 	@Override
 	public void onResourceManagerReload(IResourceManager var1)
 	{
@@ -484,6 +414,97 @@ public class MAtMod extends HaddonImpl
 			
 			// Restart the mod from scratch
 			reloadAndStart();
+		}
+	}
+	
+	// ResourceManagerReloadListener
+	/*
+	public void onResourceManagerReload(Objectr var1) // ResourceManager
+	{
+		MAtmosConvLogger.warning("ResourceManager has changed. Unintended side-effects results may happen.");
+		
+		// Initiate hot reload
+		if (isReady() && isRunning())
+		{
+			// Set a NullObject to all SoundManagers to dispose of all streams safely
+			this.expansionManager.neutralizeSoundManagers();
+			
+			// Stop the mod to clear all reserved streams
+			stopRunning();
+			
+			// Create a new master and set it
+			createSoundManagerMaster();
+			this.expansionManager.setMaster(this.soundManagerMaster);
+			
+			// Restart the mod from scratch
+			reloadAndStart();
+		}
+	}
+	*/
+	
+	public MAtModPhase getPhase()
+	{
+		return this.phase;
+	}
+
+	public CustomVolume getGlobalVolumeControl()
+	{
+		return this.soundManagerMaster;
+	}
+
+	public Map<String, Expansion> getExpansionList()
+	{
+		return this.expansionManager.getExpansions();
+	}
+
+	public boolean isReady()
+	{
+		return this.phase == MAtModPhase.READY;
+	}
+	
+	public boolean isRunning()
+	{
+		return this.isRunning;
+	}
+	
+	public boolean isFatalError()
+	{
+		return this.isFatalError;
+	}
+	
+	public boolean isDumpReady()
+	{
+		return this.isDumpReady;
+	}
+	
+	@Override
+	public Identity getIdentity()
+	{
+		return this.identity;
+	}
+	
+	@Override
+	public Chatter getChatter()
+	{
+		return this.chatter;
+	}
+	
+	@Override
+	public ConfigProperty getConfig()
+	{
+		return this.config;
+	}
+	
+	@Override
+	public void saveConfig()
+	{
+		// If there were changes...
+		if (this.config.commit())
+		{
+			MAtmosConvLogger.info("Saving configuration...");
+			
+			// Write changes on disk.
+			this.config.save();
 		}
 	}
 }
