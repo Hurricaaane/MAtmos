@@ -1,16 +1,26 @@
 package eu.ha3.matmos.engine0.conv;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.client.resources.ResourcePackRepository;
+import net.minecraft.util.ResourceLocation;
+
+import org.apache.commons.io.IOUtils;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import eu.ha3.matmos.engine0.core.interfaces.Data;
 import eu.ha3.matmos.engine0.core.interfaces.SoundRelay;
+import eu.ha3.matmos.engine0.game.system.MAtResourcePackDealer;
 import eu.ha3.matmos.engine0.requirem.Collation;
 import eu.ha3.matmos.engine0.requirem.CollationOfRequirements;
 
@@ -18,6 +28,7 @@ import eu.ha3.matmos.engine0.requirem.CollationOfRequirements;
 
 public class ExpansionManager
 {
+	private final MAtResourcePackDealer dealer = new MAtResourcePackDealer();
 	private Map<String, Expansion> expansions;
 	
 	private File userconfigFolder;
@@ -39,54 +50,108 @@ public class ExpansionManager
 		}
 		
 		this.collation = new CollationOfRequirements();
+	}
+	
+	public void loadExpansions()
+	{
+		clearExpansions();
+		
+		List<ExpressedExpansion> expressions = new ArrayList<ExpressedExpansion>();
+		gatherOffline(expressions);
+		createExpansionEntries(expressions);
+		for (ExpressedExpansion exp : expressions)
+		{
+			addExpansionFromExpression(exp);
+		}
 		
 	}
 	
-	public void createExpansionEntry(String userDefinedIdentifier)
+	private void gatherOffline(List<ExpressedExpansion> expressions)
 	{
-		Expansion expansion =
-			new Expansion(userDefinedIdentifier, new File(this.userconfigFolder, userDefinedIdentifier + ".cfg"));
-		this.expansions.put(userDefinedIdentifier, expansion);
+		List<ResourcePackRepository.Entry> resourcePacks = this.dealer.findResourcePacks();
+		for (ResourcePackRepository.Entry pack : resourcePacks)
+		{
+			try
+			{
+				StringWriter writer = new StringWriter();
+				IOUtils.copy(this.dealer.openExpansionsPointerFile(pack.getResourcePack()), writer);
+				String jasonString = writer.toString();
+				
+				JsonObject jason = new JsonParser().parse(jasonString).getAsJsonObject();
+				JsonObject versions = jason.getAsJsonObject("expansions");
+				for (JsonElement element : versions.getAsJsonArray())
+				{
+					JsonObject o = element.getAsJsonObject();
+					String uniqueName = o.get("uniquename").getAsString();
+					String friendlyName = o.get("friendlyname").getAsString();
+					String pointer = o.get("pointer").getAsString();
+					ResourceLocation location = new ResourceLocation("matmos", pointer);
+					if (pack.getResourcePack().resourceExists(location))
+					{
+						ExpressedExpansion exp =
+							new ExpressedExpansion(uniqueName, friendlyName, pack.getResourcePack(), location);
+						expressions.add(exp);
+					}
+					else
+					{
+						MAtmosConvLogger.warning("An expansion pointer doesn't exist: " + pointer);
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				MAtmosConvLogger.warning(pack.getResourcePackName()
+					+ " " + "has failed with an error: " + e.getMessage());
+			}
+		}
+	}
+	
+	private void createExpansionEntries(List<ExpressedExpansion> offline)
+	{
+		for (ExpressedExpansion exp : offline)
+		{
+			MAtmosConvLogger.info("ExpansionLoader found offline " + exp.getUniqueName() + ".");
+			createExpansionEntry(exp.getUniqueName());
+		}
+		
+	}
+	
+	private void createExpansionEntry(String uniqueName)
+	{
+		Expansion expansion = new Expansion(uniqueName, new File(this.userconfigFolder, uniqueName + ".cfg"));
+		this.expansions.put(uniqueName, expansion);
 		
 		SoundRelay soundManager = this.master.createChild();
-		//this.soundManagers.add(soundManager);
 		
 		expansion.setSoundManager(soundManager);
 		expansion.setData(this.data);
 		expansion.setCollation(this.collation);
-		
 	}
 	
-	public void addExpansionFromFile(String userDefinedIdentifier, File file)
+	private void addExpansionFromExpression(ExpressedExpansion exp)
 	{
 		try
 		{
-			addExpansion(userDefinedIdentifier, new FileInputStream(file));
-			
+			addExpansion(exp.getUniqueName(), exp.getPack().getInputStream(exp.getLocation()));
 		}
-		catch (FileNotFoundException e)
+		catch (IOException e)
 		{
-			MAtmosConvLogger.warning("Error with FileNotFound on ExpansionLoader (on file "
-				+ file.getAbsolutePath() + ").");
-			
+			MAtmosConvLogger.warning("Error on ExpansionLoader (on expression " + exp.getUniqueName() + ").");
 		}
-		
 	}
 	
-	public void addExpansion(String userDefinedIdentifier, InputStream stream)
+	private void addExpansion(String uniqueName, InputStream stream)
 	{
-		if (!this.expansions.containsKey(userDefinedIdentifier))
+		if (!this.expansions.containsKey(uniqueName))
 		{
 			MAtmosConvLogger.severe("Tried to add an expansion that has no entry!");
 			return;
-			
 		}
 		
-		Expansion expansion = this.expansions.get(userDefinedIdentifier);
+		Expansion expansion = this.expansions.get(uniqueName);
 		expansion.inputStructure(stream);
 		
 		tryTurnOn(expansion);
-		
 	}
 	
 	private void tryTurnOn(Expansion expansion)
@@ -156,9 +221,7 @@ public class ExpansionManager
 		for (Expansion expansion : this.expansions.values())
 		{
 			expansion.soundRoutine();
-			
 		}
-		
 	}
 	
 	public void dataRoutine()
@@ -166,9 +229,7 @@ public class ExpansionManager
 		for (Expansion expansion : this.expansions.values())
 		{
 			expansion.dataRoutine();
-			
 		}
-		
 	}
 	
 	public void clearExpansions()
@@ -178,64 +239,6 @@ public class ExpansionManager
 			expansion.clear();
 		}
 		this.expansions.clear();
-		
-	}
-	
-	public void loadExpansions()
-	{
-		clearExpansions();
-		
-		List<File> offline = new ArrayList<File>();
-		gatherOffline(offline);
-		
-		createExpansionEntries(offline);
-		
-		for (File file : offline)
-		{
-			addExpansionFromFile(file.getName(), file);
-		}
-		
-	}
-	
-	private void createExpansionEntries(List<File> offline)
-	{
-		for (File file : offline)
-		{
-			MAtmosConvLogger.info("ExpansionLoader found offline " + file.getName() + ".");
-			createExpansionEntry(file.getName());
-		}
-		
-	}
-	
-	private void gatherOffline(List<File> files)
-	{
-		throw new RuntimeException("NOT IMPLEMENTED");
-		// XX 2014-01-04 Must be changed to accommodate the resource pack system
-		/*
-		if (!modsDir.exists())
-			return;
-		
-		for (File mod : modsDir.listFiles())
-		{
-			if (mod.isDirectory()) //&& mod.getName().startsWith("matmos_"))
-			{
-				File expansionFolder = new File(mod, this.expansionsSubdir);
-				if (expansionFolder.isDirectory() && expansionFolder.exists())
-				{
-					for (File individual : expansionFolder.listFiles())
-					{
-						if (individual.isDirectory())
-						{
-						}
-						else if (individual.getName().endsWith(".xml"))
-						{
-							files.add(individual);
-						}
-					}
-				}
-			}
-		}
-		*/
 	}
 	
 	public void setMaster(ReplicableSoundRelay master)

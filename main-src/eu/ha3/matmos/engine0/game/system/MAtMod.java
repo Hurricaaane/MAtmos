@@ -47,7 +47,7 @@ public class MAtMod extends HaddonImpl
 	private final ConfigProperty config = new ConfigProperty();
 	private final Chatter chatter = new Chatter(this, this.NAME);
 	private final UpdateNotifier updateNotifier = new UpdateNotifier(
-		this, "http://q.mc.ha3.eu/query/matmos-main-version-vn.xml?ver=%d");
+		this, "http://q.mc.ha3.eu/query/matmos-main-version-vn.json?ver=%d");
 	
 	// Logger
 	public static final MAtmosConvLogger LOGGER = new MAtmosConvLogger();
@@ -79,14 +79,13 @@ public class MAtMod extends HaddonImpl
 	{
 		// Required for the fatal error message to appear.
 		((OperatorCaster) op()).setTickEnabled(true);
+		((OperatorCaster) op()).setFrameEnabled(true);
 		
 		this.timeMeasure = new TimeStatistic(Locale.ENGLISH);
 		this.userControl = new MAtUserControl(this);
 		this.dataGatherer = new MAtDataGatherer(this);
 		this.expansionManager =
 			new ExpansionManager(new File(util().getModsFolder(), "matmos/expansions_r27_userconfig/"));
-		
-		((OperatorCaster) op()).setFrameEnabled(true);
 		
 		// Create default configuration
 		this.updateNotifier.fillDefaults(this.config);
@@ -143,6 +142,7 @@ public class MAtMod extends HaddonImpl
 		MAtmosConvLogger.info("Constructing.");
 		
 		// FIXME 2014-01-06 This can't work because of the string sheets
+		this.dataGatherer.load(this.expansionManager.getCollation());
 		/*
 		if (!this.config.getBoolean("dump.sheets.enabled"))
 		{
@@ -179,7 +179,7 @@ public class MAtMod extends HaddonImpl
 	
 	private void createSoundManagerMaster()
 	{
-		this.soundManagerMaster = new MAtSoundManagerMaster(this);
+		this.soundManagerMaster = new MAtSoundManagerMaster();
 		this.soundManagerMaster.setVolume(this.config.getFloat("globalvolume.scale"));
 	}
 	
@@ -446,17 +446,17 @@ public class MAtMod extends HaddonImpl
 	{
 		return this.phase;
 	}
-
+	
 	public CustomVolume getGlobalVolumeControl()
 	{
 		return this.soundManagerMaster;
 	}
-
+	
 	public Map<String, Expansion> getExpansionList()
 	{
 		return this.expansionManager.getExpansions();
 	}
-
+	
 	public boolean isReady()
 	{
 		return this.phase == MAtModPhase.READY;

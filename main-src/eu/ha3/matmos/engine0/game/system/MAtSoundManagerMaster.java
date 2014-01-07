@@ -14,8 +14,6 @@ import eu.ha3.matmos.v170helper.Version170Helper;
 
 public class MAtSoundManagerMaster implements ReplicableSoundRelay, CustomVolume
 {
-	private MAtMod mod;
-	
 	private float volume;
 	
 	private int nbTokens;
@@ -25,10 +23,8 @@ public class MAtSoundManagerMaster implements ReplicableSoundRelay, CustomVolume
 	
 	private Random random;
 	
-	public MAtSoundManagerMaster(MAtMod mAtmosHaddon)
+	public MAtSoundManagerMaster()
 	{
-		this.mod = mAtmosHaddon;
-		
 		this.volume = 1F;
 		
 		this.nbTokens = 0;
@@ -171,9 +167,10 @@ public class MAtSoundManagerMaster implements ReplicableSoundRelay, CustomVolume
 	{
 		Minecraft mc = Minecraft.getMinecraft();
 		
-		if (this.settingsVolume != mc.gameSettings.soundVolume)
+		// XXX 1.7.2
+		if (this.settingsVolume != Version170Helper.getSoundVolume())
 		{
-			this.settingsVolume = mc.gameSettings.soundVolume;
+			this.settingsVolume = Version170Helper.getSoundVolume();
 		}
 	}
 	

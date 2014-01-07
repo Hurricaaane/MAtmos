@@ -78,7 +78,8 @@ public class MAtGuiMore extends GuiScreen
 		biomeControl.updateDisplayString();
 		this.buttonList.add(biomeControl);
 		
-		MAtGuiSetSlider setSlider =
+		// XXX 1.7.2
+		/*MAtGuiSetSlider setSlider =
 			new MAtGuiSetSlider(this.mod, this.mod.getConfig().getString("totalconversion.name"));
 		if (setSlider.getMaxPossibilities() > 1)
 		{
@@ -90,7 +91,7 @@ public class MAtGuiMore extends GuiScreen
 			setControl.setDisplayStringProvider(setSlider);
 			setControl.updateDisplayString();
 			this.buttonList.add(setControl);
-		}
+		}*/
 		
 		this.buttonList.add(new GuiButton(220, _LEFT + _MIX, _MIX * (5 + 1), _WIDTH - _MIX * 2, _UNIT, this.mod
 			.getConfig().getBoolean("dump.sheets.enabled")
@@ -217,7 +218,8 @@ public class MAtGuiMore extends GuiScreen
 	@Override
 	public void drawScreen(int par1, int par2, float par3)
 	{
-		drawDefaultBackground();
+		// XXX 1.7.2
+		//drawDefaultBackground();
 		drawCenteredString(this.fontRenderer, this.screenTitle, this.width / 2, 8, 0xffffff);
 		
 		super.drawScreen(par1, par2, par3);

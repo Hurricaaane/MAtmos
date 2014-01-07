@@ -5,7 +5,6 @@ import java.util.Set;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import eu.ha3.matmos.engine0.core.implem.StringData;
 import eu.ha3.matmos.engine0.game.system.MAtMod;
@@ -40,11 +39,14 @@ public abstract class MAtProcessorEnchantments extends MAtProcessorModel
 			NBTTagList enchantments = item.getEnchantmentTagList();
 			for (int i = 0; i < total; i++)
 			{
-				int id = ((NBTTagCompound) enchantments.tagAt(i)).getShort("id");
+				// tagAt
+				//int id = ((NBTTagCompound) enchantments.func_150305_b(i)).getShort("id");
+				int id = enchantments.func_150305_b(i).getShort("id");
 				
 				if (required.contains(id))
 				{
-					short lvl = ((NBTTagCompound) enchantments.tagAt(i)).getShort("lvl");
+					//short lvl = ((NBTTagCompound) enchantments.func_150305_b(i)).getShort("lvl");
+					short lvl = enchantments.func_150305_b(i).getShort("lvl");
 					setValueLegacyIntIndexes(id, lvl);
 				}
 			}

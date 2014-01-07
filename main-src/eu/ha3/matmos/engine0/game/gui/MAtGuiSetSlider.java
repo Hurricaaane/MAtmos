@@ -9,6 +9,7 @@ import eu.ha3.mc.gui.HSliderListener;
 
 /* x-placeholder */
 
+@Deprecated
 public class MAtGuiSetSlider implements HDisplayStringProvider, HSliderListener
 {
 	final protected MAtMod mod;

@@ -2,7 +2,6 @@ package eu.ha3.matmos.v170helper;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -128,9 +127,11 @@ public class Version170Helper
 	 * @param item
 	 * @return
 	 */
+	@Deprecated
 	public static float getSoundVolume()
 	{
-		return Minecraft.getMinecraft().???;
+		// XXX NOT IMPLEMENTED
+		return 1f;
 	}
 	
 	/**
