@@ -46,7 +46,8 @@ public class MAtPipelineIDAccumulator extends MAtScanCoordsPipeline
 	{
 		String blockName = Version170Helper.getNameAt(x, y, z, "");
 		
-		this.tempnormal.put(blockName, this.tempnormal.get(blockName) + 1);
+		int n = this.tempnormal.containsKey(blockName) ? this.tempnormal.get(blockName) : 0;
+		this.tempnormal.put(blockName, n + 1);
 		
 		this.count++;
 	}

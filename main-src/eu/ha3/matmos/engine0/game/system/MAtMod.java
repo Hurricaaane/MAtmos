@@ -9,7 +9,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
-import net.minecraft.client.settings.KeyBinding;
 import eu.ha3.easy.TimeStatistic;
 import eu.ha3.matmos.engine0.conv.CustomVolume;
 import eu.ha3.matmos.engine0.conv.Expansion;
@@ -22,7 +21,6 @@ import eu.ha3.mc.haddon.OperatorCaster;
 import eu.ha3.mc.haddon.implem.HaddonIdentity;
 import eu.ha3.mc.haddon.implem.HaddonImpl;
 import eu.ha3.mc.haddon.supporting.SupportsFrameEvents;
-import eu.ha3.mc.haddon.supporting.SupportsKeyEvents;
 import eu.ha3.mc.haddon.supporting.SupportsTickEvents;
 import eu.ha3.mc.quick.chat.ChatColorsSimple;
 import eu.ha3.mc.quick.chat.Chatter;
@@ -33,8 +31,7 @@ import eu.ha3.util.property.simple.ConfigProperty;
 /* x-placeholder */
 
 public class MAtMod extends HaddonImpl
-	implements SupportsFrameEvents, SupportsTickEvents, SupportsKeyEvents, NotifiableHaddon,
-	IResourceManagerReloadListener
+	implements SupportsFrameEvents, SupportsTickEvents, NotifiableHaddon, IResourceManagerReloadListener
 {
 	// Identity
 	protected final String NAME = "MAtmos";
@@ -301,12 +298,6 @@ public class MAtMod extends HaddonImpl
 	// Events
 	
 	@Override
-	public void onKey(KeyBinding event)
-	{
-		this.userControl.communicateKeyBindingEvent(event);
-	}
-	
-	@Override
 	public void onFrame(float semi)
 	{
 		if (this.isFatalError)
@@ -318,7 +309,7 @@ public class MAtMod extends HaddonImpl
 		this.expansionManager.soundRoutine();
 		this.soundManagerMaster.routine();
 		
-		this.userControl.frameRoutine(semi);
+		this.userControl.onFrame(semi);
 	}
 	
 	@Override
@@ -328,23 +319,12 @@ public class MAtMod extends HaddonImpl
 		if (this.isFatalError)
 		{
 			this.chatter.printChat(ChatColorsSimple.COLOR_YELLOW, "A fatal error has occured. MAtmos will not load.");
-			/*if (!new File(util().getModsFolder(), "matmos/").exists())
-			{
-				this.chatter.printChat(ChatColorsSimple.COLOR_WHITE, "Are you sure you installed MAtmos correctly?");
-				this.chatter
-					.printChat(
-						ChatColorsSimple.COLOR_WHITE, "The folder at (.minecraft/)", ChatColorsSimple.COLOR_YELLOW,
-						Minecraft.getMinecraft().mcDataDir.toURI().relativize(this.matmosFolder.toURI()).getPath(),
-						ChatColorsSimple.COLOR_YELLOW,
-						" was NOT found. This folder should exist on a normal installation.");
-				
-			}*/
 			((OperatorCaster) op()).setTickEnabled(false);
 			((OperatorCaster) op()).setFrameEnabled(false);
 			return;
 		}
 		
-		this.userControl.tickRoutine();
+		this.userControl.onTick();
 		if (this.isRunning)
 		{
 			if (!this.hasDataRolled)

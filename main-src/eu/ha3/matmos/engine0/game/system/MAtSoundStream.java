@@ -2,7 +2,6 @@ package eu.ha3.matmos.engine0.game.system;
 
 import java.net.URL;
 
-import net.minecraft.src.SoundPoolEntry;
 import paulscode.sound.SoundSystem;
 import eu.ha3.matmos.engine0.conv.MAtmosConvLogger;
 
@@ -108,15 +107,8 @@ public class MAtSoundStream
 		MAtmosConvLogger.info("Initializing source: " + this.sourceName + " (" + this.path + ")");
 		
 		SoundSystem sndSystem = this.soundManagerReference.getSoundSystem();
-		SoundPoolEntry poolEntry = this.soundManagerReference.getSoundPoolEntryOf(this.path);
-		if (sndSystem != null && poolEntry != null)
+		if (sndSystem != null)
 		{
-			this.poolURL = poolEntry.func_110457_b();
-			this.path = poolEntry.func_110458_a();
-			
-			MAtmosConvLogger.info("Source: "
-				+ this.sourceName + " is being initialized with URL: " + poolEntry.func_110458_a().toString());
-			
 			sndSystem.newStreamingSource(true, this.sourceName, this.poolURL, this.path, true, 0, 0, 0, 0, 0);
 			sndSystem.setTemporary(this.sourceName, false);
 			sndSystem.setPitch(this.sourceName, this.pitch);

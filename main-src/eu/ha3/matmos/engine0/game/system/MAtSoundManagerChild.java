@@ -3,6 +3,7 @@ package eu.ha3.matmos.engine0.game.system;
 import java.util.HashMap;
 import java.util.Map;
 
+import paulscode.sound.SoundSystem;
 import eu.ha3.matmos.engine0.conv.CustomVolume;
 import eu.ha3.matmos.engine0.conv.MAtmosConvLogger;
 import eu.ha3.matmos.engine0.core.interfaces.SoundRelay;
@@ -175,5 +176,11 @@ public class MAtSoundManagerChild implements SoundRelay, CustomVolume
 		{
 			e.printStackTrace();
 		}
+	}
+	
+	public SoundSystem getSoundSystem()
+	{
+		throw new RuntimeException();
+		//return Minecraft.getMinecraft().getSoundHandler();
 	}
 }

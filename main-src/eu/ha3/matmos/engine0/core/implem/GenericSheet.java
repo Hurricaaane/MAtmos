@@ -30,15 +30,18 @@ public class GenericSheet implements Sheet
 	{
 		if (!value.equals(this.values.get(pos)))
 		{
+			int ver = this.versions.containsKey(pos) ? this.versions.get(pos) : 0;
 			this.values.put(pos, value);
-			this.versions.put(pos, this.versions.get(pos) + 1);
+			this.versions.put(pos, ver + 1);
 		}
 	}
 	
 	@Override
 	public int getVersionOf(String pos)
 	{
-		return this.versions.get(pos);
+		if (this.versions.containsKey(pos))
+			return this.versions.get(pos);
+		return -1;
 	}
 	
 	@Override

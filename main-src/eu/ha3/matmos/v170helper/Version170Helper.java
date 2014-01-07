@@ -106,7 +106,7 @@ public class Version170Helper
 	public static String nameOf(ItemStack itemStack)
 	{
 		// RegistryNamespaced
-		return Block.field_149771_c.func_148750_c(itemStack.getItem());
+		return Item.field_150901_e.func_148750_c(itemStack.getItem());
 	}
 	
 	/**
@@ -118,7 +118,7 @@ public class Version170Helper
 	public static String nameOf(Item item)
 	{
 		// RegistryNamespaced
-		return Block.field_149771_c.func_148750_c(item);
+		return Item.field_150901_e.func_148750_c(item);
 	}
 	
 	/**
@@ -149,6 +149,7 @@ public class Version170Helper
 	public static void playSound(
 		String name, float nx, float ny, float nz, float volume, float pitch, int attenuation, float rollf)
 	{
+		Minecraft.getMinecraft().theWorld.playSound(nx, ny, nz, name, volume, pitch, false);
 	}
 	
 	/**
@@ -165,5 +166,6 @@ public class Version170Helper
 	 */
 	public static void playSound(String name, float nx, float ny, float nz, float volume, float pitch)
 	{
+		Minecraft.getMinecraft().theWorld.playSound(nx, ny, nz, name, volume, pitch, false);
 	}
 }

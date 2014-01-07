@@ -3,7 +3,6 @@ package eu.ha3.matmos.engine0.conv;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +13,7 @@ import net.minecraft.util.ResourceLocation;
 
 import org.apache.commons.io.IOUtils;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -73,13 +73,12 @@ public class ExpansionManager
 		{
 			try
 			{
-				StringWriter writer = new StringWriter();
-				IOUtils.copy(this.dealer.openExpansionsPointerFile(pack.getResourcePack()), writer);
-				String jasonString = writer.toString();
+				InputStream is = this.dealer.openExpansionsPointerFile(pack.getResourcePack());
+				String jasonString = IOUtils.toString(is, "UTF-8");
 				
 				JsonObject jason = new JsonParser().parse(jasonString).getAsJsonObject();
-				JsonObject versions = jason.getAsJsonObject("expansions");
-				for (JsonElement element : versions.getAsJsonArray())
+				JsonArray versions = jason.get("expansions").getAsJsonArray();
+				for (JsonElement element : versions)
 				{
 					JsonObject o = element.getAsJsonObject();
 					String uniqueName = o.get("uniquename").getAsString();

@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.settings.KeyBinding;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.input.Keyboard;
 
 import eu.ha3.easy.TimeStatistic;
@@ -14,33 +15,39 @@ import eu.ha3.matmos.v170helper.Version170Helper;
 import eu.ha3.mc.convenience.Ha3HoldActions;
 import eu.ha3.mc.convenience.Ha3KeyHolding;
 import eu.ha3.mc.convenience.Ha3KeyManager;
+import eu.ha3.mc.haddon.supporting.SupportsFrameEvents;
+import eu.ha3.mc.haddon.supporting.SupportsKeyEvents;
+import eu.ha3.mc.haddon.supporting.SupportsTickEvents;
 import eu.ha3.mc.quick.chat.ChatColorsSimple;
+import eu.ha3.mc.quick.keys.KeyWatcher;
 
 /* x-placeholder */
 
-public class MAtUserControl implements Ha3HoldActions
+public class MAtUserControl implements Ha3HoldActions, SupportsTickEvents, SupportsFrameEvents, SupportsKeyEvents
 {
-	private MAtMod mod;
+	private final MAtMod mod;
+	private final KeyWatcher watcher = new KeyWatcher(this);
+	private final Ha3KeyManager keyManager = new Ha3KeyManager();
 	
 	private KeyBinding keyBindingMain;
-	private Ha3KeyManager keyManager;
 	private MAtScroller scroller;
 	
 	private int loadingCount;
 	
-	public MAtUserControl(MAtMod mAtmosHaddon)
+	public MAtUserControl(MAtMod mod)
 	{
-		this.mod = mAtmosHaddon;
+		this.mod = mod;
 	}
 	
 	public void load()
 	{
 		// new KeyBinding registers it rightaway to the list of keys
 		this.keyBindingMain = new KeyBinding("MAtmos", 65, "key.categories.misc");
-		this.keyManager = new Ha3KeyManager();
+		Minecraft.getMinecraft().gameSettings.keyBindings =
+			ArrayUtils.addAll(Minecraft.getMinecraft().gameSettings.keyBindings, this.keyBindingMain);
+		this.watcher.add(this.keyBindingMain);
 		
 		this.scroller = new MAtScroller(this.mod);
-		
 		this.keyManager.addKeyBinding(this.keyBindingMain, new Ha3KeyHolding(this, 7));
 	}
 	
@@ -52,8 +59,16 @@ public class MAtUserControl implements Ha3HoldActions
 		return Keyboard.getKeyName(this.keyBindingMain.getKeyCode()); // OBF getKeyCode(), or .keyCode
 	}
 	
-	public void tickRoutine()
+	@Override
+	public void onKey(KeyBinding event)
 	{
+		communicateKeyBindingEvent(event);
+	}
+	
+	@Override
+	public void onTick()
+	{
+		this.watcher.onTick();
 		this.keyManager.handleRuntime();
 		
 		this.scroller.routine();
@@ -63,7 +78,8 @@ public class MAtUserControl implements Ha3HoldActions
 		}
 	}
 	
-	public void frameRoutine(float fspan)
+	@Override
+	public void onFrame(float fspan)
 	{
 		this.scroller.draw(fspan);
 	}
@@ -71,7 +87,6 @@ public class MAtUserControl implements Ha3HoldActions
 	public void communicateKeyBindingEvent(KeyBinding event)
 	{
 		this.keyManager.handleKeyDown(event);
-		
 	}
 	
 	public void printUnusualMessages()
