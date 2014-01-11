@@ -25,12 +25,15 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import eu.ha3.easy.TimeStatistic;
+import eu.ha3.matmos.engine0.conv.volume.VolumeContainer;
+import eu.ha3.matmos.engine0.conv.volume.VolumeUpdatable;
 import eu.ha3.matmos.engine0.core.implem.Event;
 import eu.ha3.matmos.engine0.core.implem.Knowledge;
 import eu.ha3.matmos.engine0.core.implem.MAtmosException;
 import eu.ha3.matmos.engine0.core.interfaces.Data;
-import eu.ha3.matmos.engine0.core.interfaces.SoundRelay;
 import eu.ha3.matmos.engine0.core.parsers.XMLExpansions_Engine0;
+import eu.ha3.matmos.engine0.game.system.SoundAccessor;
+import eu.ha3.matmos.engine0.game.system.SoundHelperRelay;
 import eu.ha3.matmos.engine0.requirem.Collation;
 import eu.ha3.matmos.engine0.requirem.RequiremForAKnowledge;
 import eu.ha3.matmos.engine0.requirem.Requirements;
@@ -38,8 +41,11 @@ import eu.ha3.util.property.simple.ConfigProperty;
 
 /* x-placeholder */
 
-public class Expansion implements CustomVolume
+public class Expansion implements VolumeUpdatable
 {
+	private final VolumeContainer masterVolume;
+	private final SoundHelperRelay capabilities;
+	
 	private DocumentBuilder documentBuilder;
 	private Document document;
 	private Knowledge knowledge;
@@ -57,17 +63,20 @@ public class Expansion implements CustomVolume
 	private int dataFrequency;
 	private int dataCyclic;
 	
-	private SoundRelay soundManager;
-	
 	private ConfigProperty myConfiguration;
 	private String friendlyName;
 	private boolean isBuilding;
 	
 	private Requirements requirements;
 	private Collation collation;
+	private float volume;
 	
-	public Expansion(String userDefinedIdentifier, File configurationSource)
+	public Expansion(
+		VolumeContainer masterVolume, SoundAccessor accessor, String userDefinedIdentifier, File configurationSource)
 	{
+		this.masterVolume = masterVolume;
+		this.capabilities = new SoundHelperRelay(accessor);
+		
 		this.userDefinedIdentifier = userDefinedIdentifier;
 		this.isReady = false;
 		this.hasStructure = false;
@@ -123,19 +132,9 @@ public class Expansion implements CustomVolume
 		
 	}
 	
-	public void setSoundManager(SoundRelay soundManager)
-	{
-		this.knowledge.setSoundManager(soundManager);
-		this.soundManager = soundManager;
-		
-		setVolume(this.myConfiguration.getFloat("volume"));
-		
-	}
-	
 	public void setData(Data data)
 	{
 		this.knowledge.setData(data);
-		
 	}
 	
 	private String eltString(String tagName, Element ele)
@@ -207,13 +206,11 @@ public class Expansion implements CustomVolume
 		{
 			this.error = ExpansionError.COULD_NOT_PARSE_XML;
 			e.printStackTrace();
-			
 		}
 		catch (IOException e)
 		{
 			this.error = ExpansionError.COULD_NOT_PARSE_XML;
 			e.printStackTrace();
-			
 		}
 		
 	}
@@ -249,9 +246,7 @@ public class Expansion implements CustomVolume
 		if (this.isReady)
 		{
 			this.knowledge.soundRoutine();
-			this.soundManager.routine();
 		}
-		
 	}
 	
 	public void dataRoutine()
@@ -327,7 +322,6 @@ public class Expansion implements CustomVolume
 		{
 			this.myConfiguration.save();
 		}
-		
 	}
 	
 	public boolean isReady()
@@ -381,28 +375,6 @@ public class Expansion implements CustomVolume
 		
 		this.knowledge.turnOff();
 		this.collation.removeRequirements(this.userDefinedIdentifier);
-		
-	}
-	
-	@Override
-	public float getVolume()
-	{
-		if (this.soundManager instanceof CustomVolume)
-			return ((CustomVolume) this.soundManager).getVolume();
-		
-		return 1;
-		
-	}
-	
-	@Override
-	public void setVolume(float volume)
-	{
-		if (this.soundManager instanceof CustomVolume)
-		{
-			((CustomVolume) this.soundManager).setVolume(volume);
-			this.myConfiguration.setProperty("volume", getVolume());
-		}
-		
 	}
 	
 	public String getDocumentStringForm()
@@ -441,7 +413,6 @@ public class Expansion implements CustomVolume
 		}
 		
 		return output.toString();
-		
 	}
 	
 	public void clear()
@@ -457,4 +428,39 @@ public class Expansion implements CustomVolume
 		this.collation = collation;
 	}
 	
+	@Override
+	public float getVolume()
+	{
+		return this.volume;
+	}
+	
+	@Override
+	public void setVolumeAndUpdate(float volume)
+	{
+		this.volume = volume;
+		updateVolume();
+	}
+	
+	@Override
+	public void updateVolume()
+	{
+		this.capabilities.applyVolume(this.masterVolume.getVolume() * getVolume());
+	}
+	
+	/**
+	 * Interrupt this expansion brutally, without calling cleanup calls.
+	 */
+	public void interrupt()
+	{
+		this.capabilities.interrupt();
+	}
+	
+	/**
+	 * Cleanup this expansion. When cleaned up, this expansion can't be used
+	 * again.
+	 */
+	public void cleanUp()
+	{
+		this.capabilities.cleanUp();
+	}
 }

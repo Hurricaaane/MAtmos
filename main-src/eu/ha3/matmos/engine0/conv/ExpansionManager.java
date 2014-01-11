@@ -18,31 +18,35 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import eu.ha3.matmos.engine0.conv.volume.VolumeUpdatable;
 import eu.ha3.matmos.engine0.core.interfaces.Data;
-import eu.ha3.matmos.engine0.core.interfaces.SoundRelay;
 import eu.ha3.matmos.engine0.game.system.MAtResourcePackDealer;
+import eu.ha3.matmos.engine0.game.system.SoundAccessor;
 import eu.ha3.matmos.engine0.requirem.Collation;
 import eu.ha3.matmos.engine0.requirem.CollationOfRequirements;
 
 /* x-placeholder */
 
-public class ExpansionManager
+public class ExpansionManager implements VolumeUpdatable
 {
+	private final SoundAccessor accessor;
+	private final File userconfigFolder;
+	
 	private final MAtResourcePackDealer dealer = new MAtResourcePackDealer();
 	private Map<String, Expansion> expansions;
 	
-	private File userconfigFolder;
 	private boolean isActivated;
-	private ReplicableSoundRelay master;
 	private Data data;
 	
 	private Collation collation;
+	private float volume = 1f;
 	
-	public ExpansionManager(File userconfigFolder)
+	public ExpansionManager(File userconfigFolder, SoundAccessor accessor)
 	{
-		this.expansions = new HashMap<String, Expansion>();
-		
 		this.userconfigFolder = userconfigFolder;
+		this.accessor = accessor;
+		
+		this.expansions = new HashMap<String, Expansion>();
 		
 		if (!this.userconfigFolder.exists())
 		{
@@ -117,12 +121,10 @@ public class ExpansionManager
 	
 	private void createExpansionEntry(String uniqueName)
 	{
-		Expansion expansion = new Expansion(uniqueName, new File(this.userconfigFolder, uniqueName + ".cfg"));
+		Expansion expansion =
+			new Expansion(this, this.accessor, uniqueName, new File(this.userconfigFolder, uniqueName + ".cfg"));
 		this.expansions.put(uniqueName, expansion);
 		
-		SoundRelay soundManager = this.master.createChild();
-		
-		expansion.setSoundManager(soundManager);
 		expansion.setData(this.data);
 		expansion.setCollation(this.collation);
 	}
@@ -240,28 +242,52 @@ public class ExpansionManager
 		this.expansions.clear();
 	}
 	
-	public void setMaster(ReplicableSoundRelay master)
-	{
-		this.master = master;
-	}
-	
 	public void setData(Data data)
 	{
 		this.data = data;
 		
 	}
 	
-	public void neutralizeSoundManagers()
+	public void interrupt()
 	{
-		this.master = new SRCVNullObject();
 		for (Expansion exp : this.expansions.values())
 		{
-			exp.setSoundManager(new SRCVNullObject());
+			exp.interrupt();
 		}
 	}
 	
 	public Collation getCollation()
 	{
 		return this.collation;
+	}
+	
+	@Override
+	public float getVolume()
+	{
+		return this.volume;
+	}
+	
+	@Override
+	public void setVolumeAndUpdate(float volume)
+	{
+		this.volume = volume;
+		updateVolume();
+	}
+	
+	@Override
+	public void updateVolume()
+	{
+		for (Expansion e : this.expansions.values())
+		{
+			e.updateVolume();
+		}
+	}
+	
+	public void dispose()
+	{
+		for (Expansion e : this.expansions.values())
+		{
+			e.cleanUp();
+		}
 	}
 }

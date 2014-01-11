@@ -1,12 +1,20 @@
 package eu.ha3.matmos.engine0.game.system;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLStreamHandler;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.ResourceLocation;
 import paulscode.sound.SoundSystem;
 import eu.ha3.matmos.engine0.conv.MAtmosConvLogger;
 
 /* x-placeholder */
 
+@Deprecated
 public class MAtSoundStream
 {
 	private final String SOURCE_PREFIX = "MATMOS_SRM_";
@@ -17,6 +25,8 @@ public class MAtSoundStream
 	private final String sourceName;
 	
 	private String path;
+	private ResourceLocation loc;
+	
 	private float volume;
 	private float pitch;
 	
@@ -94,9 +104,7 @@ public class MAtSoundStream
 			
 			sndSystem.play(this.sourceName);
 			sndSystem.fadeOutIn(this.sourceName, this.poolURL, this.path, 1, (long) fadeDuration * 1000L);
-			
 		}
-		
 	}
 	
 	private void ensureInitialized()
@@ -129,7 +137,38 @@ public class MAtSoundStream
 	public void setWeakPath(String path)
 	{
 		this.path = path;
+		this.loc = new ResourceLocation("assets/sounds/" + path);
 		
+		String opth =
+			String.format(
+				"%s:%s:%s", new Object[] { "mcsounddomain", this.loc.getResourceDomain(), this.loc.getResourcePath() });
+		URLStreamHandler url = new URLStreamHandler() {
+			@Override
+			protected URLConnection openConnection(final URL par1URL)
+			{
+				return new URLConnection(par1URL) {
+					@Override
+					public void connect()
+					{
+					}
+					
+					@Override
+					public InputStream getInputStream() throws IOException
+					{
+						return Minecraft
+							.getMinecraft().getResourceManager().getResource(MAtSoundStream.this.loc).getInputStream();
+					}
+				};
+			}
+		};
+		
+		try
+		{
+			this.poolURL = new URL((URL) null, opth, url);
+		}
+		catch (MalformedURLException var4)
+		{
+		}
 	}
 	
 	public void setVolume(float volume)

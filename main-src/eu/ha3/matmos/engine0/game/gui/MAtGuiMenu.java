@@ -8,8 +8,8 @@ import java.util.Map;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import eu.ha3.matmos.engine0.conv.CustomVolume;
 import eu.ha3.matmos.engine0.conv.Expansion;
+import eu.ha3.matmos.engine0.conv.volume.VolumeUpdatable;
 import eu.ha3.matmos.engine0.game.system.MAtMod;
 import eu.ha3.mc.gui.HDisplayStringProvider;
 import eu.ha3.mc.gui.HGuiSliderControl;
@@ -79,7 +79,7 @@ public class MAtGuiMenu extends GuiScreen
 		int id = 0;
 		
 		{
-			final CustomVolume globalVolumeControl = this.mod.getGlobalVolumeControl();
+			final VolumeUpdatable globalVolumeControl = this.mod.getGlobalVolumeControl();
 			
 			HGuiSliderControl sliderControl =
 				new HGuiSliderControl(id, _LEFT, _MIX, _WIDTH, _UNIT, "", globalVolumeControl.getVolume() * 0.5f);
@@ -87,7 +87,7 @@ public class MAtGuiMenu extends GuiScreen
 				@Override
 				public void sliderValueChanged(HGuiSliderControl slider, float value)
 				{
-					globalVolumeControl.setVolume(value * 2);
+					globalVolumeControl.setVolumeAndUpdate(value * 2);
 					slider.updateDisplayString();
 					MAtGuiMenu.this.mod.getConfig().setProperty("globalvolume.scale", globalVolumeControl.getVolume());
 				}
@@ -134,7 +134,7 @@ public class MAtGuiMenu extends GuiScreen
 				@Override
 				public void sliderValueChanged(HGuiSliderControl slider, float value)
 				{
-					expansion.setVolume(value * 2);
+					expansion.setVolumeAndUpdate(value * 2);
 					if (value != 0f && !expansion.isRunning())
 					{
 						expansion.turnOn();

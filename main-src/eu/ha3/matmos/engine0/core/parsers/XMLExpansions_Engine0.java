@@ -535,7 +535,7 @@ public class XMLExpansions_Engine0
 		
 		if (_ISUSINGPAUSE != null)
 		{
-			inscriptible.isUsingPause = toInt(_ISUSINGPAUSE) == 1;
+			inscriptible.usesPause = toInt(_ISUSINGPAUSE) == 1;
 		}
 		
 	}

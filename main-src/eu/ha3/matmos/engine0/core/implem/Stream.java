@@ -21,7 +21,7 @@ public class Stream extends Descriptible
 	public float fadeInTime = 0f;
 	public float fadeOutTime = 0f;
 	public boolean isLooping = true;
-	public boolean isUsingPause = false;
+	public boolean usesPause = false;
 	
 	private boolean isTurnedOn;
 	private boolean isPlaying;
@@ -85,7 +85,7 @@ public class Stream extends Descriptible
 	
 	public void routine()
 	{
-		if (!this.isLooping && this.isUsingPause)
+		if (!this.isLooping && this.usesPause)
 			return; // FIXME: A non-looping sound cannot use the pause scheme.
 			
 		if (this.isTurnedOn && !this.isPlaying)
@@ -100,19 +100,17 @@ public class Stream extends Descriptible
 					
 					// FIXME: Blatent crash prevention: Find new implementation
 					if (this.machine.knowledge.getSoundManager().setupStreamingToken(
-						this.token, this.path, this.volume, this.pitch))
+						this.token, this.path, this.volume, this.pitch, this.isLooping, this.usesPause))
 					{
 						this.firstCall = false;
-						this.machine.knowledge.getSoundManager().startStreaming(
-							this.token, this.fadeInTime, this.isLooping ? 0 : 1);
+						this.machine.knowledge.getSoundManager().startStreaming(this.token, this.fadeInTime);
 						
 					}
 					
 				}
 				else
 				{
-					this.machine.knowledge.getSoundManager().startStreaming(
-						this.token, this.fadeInTime, this.isLooping ? 0 : 1);
+					this.machine.knowledge.getSoundManager().startStreaming(this.token, this.fadeInTime);
 					
 				}
 				
@@ -125,14 +123,14 @@ public class Stream extends Descriptible
 			{
 				this.isPlaying = false;
 				
-				if (!this.isUsingPause)
-				{
-					this.machine.knowledge.getSoundManager().stopStreaming(this.token, this.fadeOutTime);
-				}
-				else
-				{
-					this.machine.knowledge.getSoundManager().pauseStreaming(this.token, this.fadeOutTime);
-				}
+				//if (!this.usesPause)
+				//{
+				this.machine.knowledge.getSoundManager().stopStreaming(this.token, this.fadeOutTime);
+				//}
+				//else
+				//{
+				//	this.machine.knowledge.getSoundManager().stopStreaming(this.token, this.fadeOutTime);
+				//}
 				
 			}
 			
@@ -158,7 +156,7 @@ public class Stream extends Descriptible
 		createNode(eventWriter, "delaybeforefadein", "" + this.delayBeforeFadeIn, 2);
 		createNode(eventWriter, "delaybeforefadeout", "" + this.delayBeforeFadeOut, 2);
 		createNode(eventWriter, "islooping", this.isLooping ? "1" : "0", 2);
-		createNode(eventWriter, "isusingpause", this.isUsingPause ? "1" : "0", 2);
+		createNode(eventWriter, "isusingpause", this.usesPause ? "1" : "0", 2);
 		eventWriter.add(tab);
 		eventWriter.add(eventFactory.createEndElement("", "", "stream"));
 		eventWriter.add(ret);

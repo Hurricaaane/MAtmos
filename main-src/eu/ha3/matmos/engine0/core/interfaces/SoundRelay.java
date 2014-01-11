@@ -12,13 +12,14 @@ public interface SoundRelay
 	
 	public int getNewStreamingToken();
 	
-	public boolean setupStreamingToken(int token, String path, float volume, float pitch);
+	public boolean setupStreamingToken(
+		int token, String path, float volume, float pitch, boolean isLooping, boolean usesPause);
 	
-	public void startStreaming(int token, float fadeDuration, int timesToPlay);
+	public void startStreaming(int token, float fadeDuration);
 	
 	public void stopStreaming(int token, float fadeDuration);
 	
-	public void pauseStreaming(int token, float fadeDuration);
+	//public void pauseStreaming(int token, float fadeDuration);
 	
 	public void eraseStreamingToken(int token);
 	

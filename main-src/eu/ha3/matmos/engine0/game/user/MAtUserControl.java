@@ -74,7 +74,8 @@ public class MAtUserControl implements Ha3HoldActions, SupportsTickEvents, Suppo
 		this.scroller.routine();
 		if (this.scroller.isRunning())
 		{
-			this.mod.getGlobalVolumeControl().setVolume(this.scroller.getValue());
+			// XXX 2014-01-11 not a controller
+			//this.mod.getGlobalVolumeControl().setVolume(this.scroller.getValue());
 		}
 	}
 	
@@ -93,7 +94,7 @@ public class MAtUserControl implements Ha3HoldActions, SupportsTickEvents, Suppo
 	{
 		if (!this.mod.isReady())
 		{
-			MAtModPhase phase = this.mod.getPhase();
+			/*MAtModPhase phase = this.mod.getPhase();
 			if (!this.mod.isFatalError())
 			{
 				this.mod.getChatter().printChat(ChatColorsSimple.COLOR_GOLD, "MAtmos is not loaded.");
@@ -103,7 +104,7 @@ public class MAtUserControl implements Ha3HoldActions, SupportsTickEvents, Suppo
 				this.mod.getChatter().printChat(
 					ChatColorsSimple.COLOR_GOLD, "MAtmos will not load due to a fatal error. ",
 					ChatColorsSimple.COLOR_GRAY, "(Some MAtmos modules are not initialized)");
-			}
+			}*/
 		}
 		else
 		{

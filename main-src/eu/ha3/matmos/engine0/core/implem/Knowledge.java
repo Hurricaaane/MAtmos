@@ -37,7 +37,7 @@ public class Knowledge
 	private Map<String, Event> events;
 	
 	private Data data;
-	private SoundRelay soundManager;
+	private SoundRelay soundRelay;
 	private RunningClock clock;
 	
 	private boolean isRunning;
@@ -48,7 +48,7 @@ public class Knowledge
 	public Knowledge()
 	{
 		this.data = new StringData(new FlatRequirements());
-		this.soundManager = null;
+		this.soundRelay = null;
 		
 		this.dataLastVersion = 0;
 		this.isRunning = false;
@@ -88,7 +88,7 @@ public class Knowledge
 	
 	public void turnOn()
 	{
-		if (this.soundManager == null)
+		if (this.soundRelay == null)
 			return;
 		
 		if (this.isRunning)
@@ -268,12 +268,12 @@ public class Knowledge
 	
 	public void setSoundManager(SoundRelay soundManagerIn)
 	{
-		this.soundManager = soundManagerIn;
+		this.soundRelay = soundManagerIn;
 	}
 	
 	public SoundRelay getSoundManager()
 	{
-		return this.soundManager;
+		return this.soundRelay;
 	}
 	
 	public void cacheSounds()
@@ -700,7 +700,7 @@ public class Knowledge
 		if (!this.isRunning)
 			return;
 		
-		this.soundManager.routine();
+		this.soundRelay.routine();
 		for (Iterator<Machine> iter = this.machines.values().iterator(); iter.hasNext();)
 		{
 			iter.next().routine();
