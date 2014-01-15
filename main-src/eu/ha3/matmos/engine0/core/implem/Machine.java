@@ -1,17 +1,19 @@
 package eu.ha3.matmos.engine0.core.implem;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.TreeSet;
 
 import eu.ha3.matmos.engine0.conv.MAtmosConvLogger;
-import eu.ha3.matmos.engine0.core.implem.abstractions.MultistateComponent;
+import eu.ha3.matmos.engine0.core.implem.abstractions.DependableComponent;
 import eu.ha3.matmos.engine0.core.interfaces.Overrided;
 import eu.ha3.matmos.engine0.core.interfaces.Provider;
 import eu.ha3.matmos.engine0.core.interfaces.Simulated;
 
 /* x-placeholder */
 
-public class Machine extends MultistateComponent implements Simulated, Overrided
+public class Machine extends DependableComponent implements Simulated, Overrided
 {
 	private final List<String> allow;
 	private final List<String> restrict;
@@ -22,6 +24,8 @@ public class Machine extends MultistateComponent implements Simulated, Overrided
 	
 	private boolean overrideUnderway;
 	private boolean overrideState;
+	
+	private final Collection<String> dependencies;
 	
 	public Machine(
 		String name, Provider<Junction> provider, List<String> allow, List<String> restrict,
@@ -34,6 +38,10 @@ public class Machine extends MultistateComponent implements Simulated, Overrided
 		this.restrict = restrict;
 		this.timed = timed;
 		this.stream = stream;
+		
+		this.dependencies = new TreeSet<String>();
+		this.dependencies.addAll(allow);
+		this.dependencies.addAll(restrict);
 	}
 	
 	@Override
@@ -131,5 +139,11 @@ public class Machine extends MultistateComponent implements Simulated, Overrided
 	{
 		this.overrideUnderway = false;
 		evaluate();
+	}
+	
+	@Override
+	public Collection<String> getDependencies()
+	{
+		return this.dependencies;
 	}
 }

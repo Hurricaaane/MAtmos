@@ -1,20 +1,24 @@
 package eu.ha3.matmos.engine0.core.implem;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.TreeSet;
 
 import eu.ha3.matmos.engine0.conv.MAtmosConvLogger;
-import eu.ha3.matmos.engine0.core.implem.abstractions.MultistateComponent;
+import eu.ha3.matmos.engine0.core.implem.abstractions.DependableComponent;
 import eu.ha3.matmos.engine0.core.interfaces.Provider;
 
 /* x-placeholder */
 
-public class Junction extends MultistateComponent
+public class Junction extends DependableComponent
 {
 	private final List<String> yes;
 	private final List<String> no;
 	
 	private final Provider<Condition> provider;
+	
+	private final Collection<String> dependencies;
 	
 	public Junction(String name, Provider<Condition> provider, List<String> yes, List<String> no)
 	{
@@ -23,6 +27,10 @@ public class Junction extends MultistateComponent
 		
 		this.yes = yes;
 		this.no = no;
+		
+		this.dependencies = new TreeSet<String>();
+		this.dependencies.addAll(yes);
+		this.dependencies.addAll(no);
 	}
 	
 	@Override
@@ -66,5 +74,11 @@ public class Junction extends MultistateComponent
 			}
 		}
 		return isTrue;
+	}
+	
+	@Override
+	public Collection<String> getDependencies()
+	{
+		return this.dependencies;
 	}
 }

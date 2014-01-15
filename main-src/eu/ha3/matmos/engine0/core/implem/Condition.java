@@ -1,13 +1,16 @@
 package eu.ha3.matmos.engine0.core.implem;
 
+import java.util.Collection;
+import java.util.HashSet;
+
 import eu.ha3.matmos.engine0.conv.MAtmosConvLogger;
-import eu.ha3.matmos.engine0.core.implem.abstractions.MultistateComponent;
+import eu.ha3.matmos.engine0.core.implem.abstractions.DependableComponent;
 import eu.ha3.matmos.engine0.core.interfaces.SheetCommander;
 import eu.ha3.matmos.engine0.core.interfaces.SheetIndex;
 
 /* x-placeholder */
 
-public class Condition extends MultistateComponent
+public class Condition extends DependableComponent
 {
 	private final SheetIndex indexX;
 	private final Operator operatorX;
@@ -18,6 +21,8 @@ public class Condition extends MultistateComponent
 	private final SheetCommander sheetCommander;
 	
 	private int siVersion = -1;
+	
+	private final Collection<String> dependencies;
 	
 	public Condition(String name, SheetCommander sheetCommander, SheetIndex index, Operator operator, String constant)
 	{
@@ -30,6 +35,9 @@ public class Condition extends MultistateComponent
 		
 		this.constantLongX = LongFloatSimplificator.longOf(constant);
 		//this.constantFloatX = LongFloatSimplificator.floatOf(constant);
+		
+		this.dependencies = new HashSet<String>();
+		this.dependencies.add(index.getSheet());
 	}
 	
 	@Override
@@ -100,5 +108,14 @@ public class Condition extends MultistateComponent
 			e.printStackTrace();
 			return false;
 		}
+	}
+	
+	/**
+	 * Returns the required sheet modules of this condition.
+	 */
+	@Override
+	public Collection<String> getDependencies()
+	{
+		return this.dependencies;
 	}
 }
