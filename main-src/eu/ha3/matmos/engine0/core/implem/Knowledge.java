@@ -8,6 +8,7 @@ import java.util.Random;
 import java.util.Set;
 
 import eu.ha3.matmos.engine0.core.interfaces.Data;
+import eu.ha3.matmos.engine0.core.interfaces.EventInterface;
 import eu.ha3.matmos.engine0.core.interfaces.SoundRelay;
 import eu.ha3.matmos.engine0.core.interfaces.Stated;
 import eu.ha3.matmos.engine0.requirem.FlatRequirements;
@@ -20,17 +21,17 @@ import eu.ha3.matmos.engine0.requirem.FlatRequirements;
 public class Knowledge implements Stated
 {
 	private Map<String, Dynamic> dynamics;
-	private Map<String, SugarList> lists;
+	private Map<String, StringListContainer> lists;
 	
 	private Map<String, Condition> conditions;
-	private Map<String, ConditionSet> sets;
+	private Map<String, Junction> sets;
 	private Map<String, Machine> machines;
 	
 	private Map<String, Event> events;
 	
 	private Data data;
 	private SoundRelay soundRelay;
-	private RunningClock clock;
+	private SystemClock clock;
 	
 	private boolean isRunning;
 	private int dataLastVersion;
@@ -47,7 +48,7 @@ public class Knowledge implements Stated
 		
 		this.random = new Random(System.currentTimeMillis());
 		
-		this.clock = new RunningClock();
+		this.clock = new SystemClock();
 		
 		patchKnowledge();
 		
@@ -68,10 +69,10 @@ public class Knowledge implements Stated
 		turnOff();
 		
 		this.dynamics = new LinkedHashMap<String, Dynamic>();
-		this.lists = new LinkedHashMap<String, SugarList>();
+		this.lists = new LinkedHashMap<String, StringListContainer>();
 		
 		this.conditions = new LinkedHashMap<String, Condition>();
-		this.sets = new LinkedHashMap<String, ConditionSet>();
+		this.sets = new LinkedHashMap<String, Junction>();
 		this.machines = new LinkedHashMap<String, Machine>();
 		
 		this.events = new LinkedHashMap<String, Event>();
@@ -169,7 +170,7 @@ public class Knowledge implements Stated
 			condition.setKnowledge(this);
 		}
 		
-		for (ConditionSet cset : this.sets.values())
+		for (Junction cset : this.sets.values())
 		{
 			cset.setKnowledge(this);
 		}
@@ -179,7 +180,7 @@ public class Knowledge implements Stated
 			machine.setKnowledge(this);
 		}
 		
-		for (Event event : this.events.values())
+		for (EventInterface event : this.events.values())
 		{
 			event.setKnowledge(this);
 		}
@@ -221,7 +222,7 @@ public class Knowledge implements Stated
 		{
 			toPurge.add(o);
 		}
-		for (ConditionSet o : this.sets.values())
+		for (Junction o : this.sets.values())
 		{
 			for (String keepable : o.getSet().keySet())
 			{
@@ -270,14 +271,14 @@ public class Knowledge implements Stated
 	
 	public void cacheSounds()
 	{
-		for (Event event : this.events.values())
+		for (EventInterface event : this.events.values())
 		{
 			event.cacheSounds();
 		}
 		
 	}
 	
-	public void setClock(RunningClock clockIn)
+	public void setClock(SystemClock clockIn)
 	{
 		this.clock = clockIn;
 	}
@@ -405,7 +406,7 @@ public class Knowledge implements Stated
 		
 	}
 	
-	public SugarList getList(String name)
+	public StringListContainer getList(String name)
 	{
 		return this.lists.get(name);
 		
@@ -416,7 +417,7 @@ public class Knowledge implements Stated
 		if (this.lists.containsKey(name))
 			return false;
 		
-		this.lists.put(name, new SugarList());
+		this.lists.put(name, new StringListContainer());
 		this.lists.get(name).name = name;
 		
 		return true;
@@ -485,7 +486,7 @@ public class Knowledge implements Stated
 		this.conditions.remove(name);
 		this.conditions.get(newName).name = newName;
 		
-		for (ConditionSet cset : this.sets.values())
+		for (Junction cset : this.sets.values())
 		{
 			cset.replaceConditionName(name, newName);
 		}
@@ -505,7 +506,7 @@ public class Knowledge implements Stated
 		
 	}
 	
-	public ConditionSet getConditionSet(String name)
+	public Junction getConditionSet(String name)
 	{
 		return this.sets.get(name);
 	}
@@ -515,7 +516,7 @@ public class Knowledge implements Stated
 		if (this.sets.containsKey(name))
 			return false;
 		
-		this.sets.put(name, new ConditionSet(this));
+		this.sets.put(name, new Junction(this));
 		this.sets.get(name).name = name;
 		
 		return true;
@@ -651,7 +652,7 @@ public class Knowledge implements Stated
 			condition.evaluate();
 			
 		}
-		for (ConditionSet cset : this.sets.values())
+		for (Junction cset : this.sets.values())
 		{
 			cset.evaluate();
 			

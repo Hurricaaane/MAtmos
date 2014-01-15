@@ -27,10 +27,10 @@ import org.xml.sax.SAXException;
 import eu.ha3.easy.TimeStatistic;
 import eu.ha3.matmos.engine0.conv.volume.VolumeContainer;
 import eu.ha3.matmos.engine0.conv.volume.VolumeUpdatable;
-import eu.ha3.matmos.engine0.core.implem.Event;
 import eu.ha3.matmos.engine0.core.implem.Knowledge;
 import eu.ha3.matmos.engine0.core.implem.MAtmosException;
 import eu.ha3.matmos.engine0.core.interfaces.Data;
+import eu.ha3.matmos.engine0.core.interfaces.EventInterface;
 import eu.ha3.matmos.engine0.core.parsers.XMLExpansions_Engine0;
 import eu.ha3.matmos.engine0.game.system.SoundAccessor;
 import eu.ha3.matmos.engine0.game.system.SoundHelperRelay;
@@ -265,7 +265,7 @@ public class Expansion implements VolumeUpdatable, Stable
 		if (!isActivated())
 			return;
 		
-		Event event = this.knowledge.getEvent("__SAMPLE");
+		EventInterface event = this.knowledge.getEvent("__SAMPLE");
 		if (event != null)
 		{
 			event.playSound(1f, 1f);

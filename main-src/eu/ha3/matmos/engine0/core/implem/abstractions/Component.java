@@ -1,11 +1,11 @@
-package eu.ha3.matmos.engine0.core.implem;
+package eu.ha3.matmos.engine0.core.implem.abstractions;
 
 import eu.ha3.matmos.engine0.core.interfaces.Named;
 import eu.ha3.matmos.engine0.core.interfaces.Versionned;
 
 /* x-placeholder */
 
-public class Component implements Named, Versionned
+public abstract class Component implements Named, Versionned
 {
 	private final String name;
 	private int version;

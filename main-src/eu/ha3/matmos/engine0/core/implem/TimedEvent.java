@@ -1,87 +1,77 @@
 package eu.ha3.matmos.engine0.core.implem;
 
+import java.util.Random;
+
+import eu.ha3.matmos.engine0.core.interfaces.Provider;
+import eu.ha3.matmos.engine0.core.interfaces.ReferenceTime;
+import eu.ha3.matmos.engine0.core.interfaces.TimedEventInterface;
+
 /* x-placeholder */
 
-public class TimedEvent extends Component
+public class TimedEvent implements TimedEventInterface
 {
-	Machine machine;
+	private static Random random = new Random();
 	
-	public String event;
+	private String event;
+	private final float volMod;
+	private final float pitchMod;
+	private final float delayMin;
+	private final float delayMax;
+	private final float delayStart;
 	
-	public float volMod;
-	public float pitchMod;
+	private long nextPlayTime;
 	
-	public float delayMin;
-	public float delayMax;
-	
-	public float delayStart;
-	
-	public long nextPlayTime;
-	
-	TimedEvent(Machine machineIn)
+	public TimedEvent(String event, float volMod, float pitchMod, float delayMin, float delayMax, float delayStart)
 	{
-		//event = eventIn;
+		this.event = event;
+		this.volMod = volMod;
+		this.pitchMod = pitchMod;
+		this.delayMin = delayMin;
+		this.delayMax = delayMax;
+		this.delayStart = delayStart;
 		
-		this.event = "";
-		
-		this.machine = machineIn;
-		this.volMod = 1F;
-		this.pitchMod = 1F;
-		
-		this.delayMin = 10F;
-		this.delayMax = 10F;
-		
-		this.delayStart = 0F;
-		
+		if (delayMax < delayMin)
+		{
+			delayMax = delayMin;
+		}
 	}
 	
-	void setMachine(Machine machineIn)
+	@Override
+	public void restart(ReferenceTime time)
 	{
-		this.machine = machineIn;
-		
+		if (this.delayStart == 0)
+		{
+			this.nextPlayTime = time.getMilliseconds() + (long) (random.nextFloat() * this.delayMax * 1000);
+		}
+		else
+		{
+			this.nextPlayTime = time.getMilliseconds() + (long) (this.delayStart * 1000);
+		}
 	}
 	
-	public void routine()
+	@Override
+	public void play(Provider<Event> eventProvider, ReferenceTime time, float fadeFactor)
 	{
-		if (this.machine.knowledge.getTimeMillis() < this.nextPlayTime)
+		if (time.getMilliseconds() < this.nextPlayTime)
 			return;
 		
-		if (this.machine.knowledge.getEventsKeySet().contains(this.event))
+		if (eventProvider.exists(this.event))
 		{
-			this.machine.knowledge.getEvent(this.event).playSound(this.volMod, this.pitchMod);
+			eventProvider.get(this.event).playSound(this.volMod * fadeFactor, this.pitchMod);
 		}
 		
 		if (this.delayMin == this.delayMax && this.delayMin > 0)
 		{
-			while (this.nextPlayTime < this.machine.knowledge.getTimeMillis())
+			while (this.nextPlayTime < time.getMilliseconds())
 			{
 				this.nextPlayTime = this.nextPlayTime + (long) (this.delayMin * 1000);
-				
 			}
-			
 		}
 		else
 		{
 			this.nextPlayTime =
-				this.machine.knowledge.getTimeMillis()
-					+ (long) ((this.delayMin + this.machine.knowledge.getRNG().nextFloat()
-						* (this.delayMax - this.delayMin)) * 1000);
+				time.getMilliseconds()
+					+ (long) ((this.delayMin + random.nextFloat() * (this.delayMax - this.delayMin)) * 1000);
 		}
-		
-	}
-	
-	public void restart()
-	{
-		if (this.delayStart == 0)
-		{
-			this.nextPlayTime =
-				this.machine.knowledge.getTimeMillis()
-					+ (long) (this.machine.knowledge.getRNG().nextFloat() * this.delayMax * 1000);
-		}
-		else
-		{
-			this.nextPlayTime = this.machine.knowledge.getTimeMillis() + (long) (this.delayStart * 1000);
-		}
-		
 	}
 }

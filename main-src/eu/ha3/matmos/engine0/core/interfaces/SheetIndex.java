@@ -1,4 +1,4 @@
-package eu.ha3.matmos.engine0.core.implem;
+package eu.ha3.matmos.engine0.core.interfaces;
 
 /*
 --filenotes-placeholder

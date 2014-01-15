@@ -1,23 +1,17 @@
-package eu.ha3.matmos.engine0.core.implem;
+package eu.ha3.matmos.engine0.core.implem.abstractions;
 
 import eu.ha3.matmos.engine0.core.interfaces.Evaluated;
-import eu.ha3.matmos.engine0.core.interfaces.Provider;
 import eu.ha3.matmos.engine0.core.interfaces.Stated;
 
 /* x-placeholder */
 
 public abstract class MultistateComponent extends Component implements Stated, Evaluated
 {
-	@SuppressWarnings("rawtypes")
-	protected Provider provider;
 	protected boolean isActive;
 	
-	@SuppressWarnings("rawtypes")
-	public MultistateComponent(String name, Provider provider)
+	public MultistateComponent(String name)
 	{
 		super(name);
-		
-		this.provider = provider;
 	}
 	
 	@Override

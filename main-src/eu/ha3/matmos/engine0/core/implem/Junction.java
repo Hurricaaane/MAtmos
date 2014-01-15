@@ -4,21 +4,22 @@ import java.util.Iterator;
 import java.util.List;
 
 import eu.ha3.matmos.engine0.conv.MAtmosConvLogger;
+import eu.ha3.matmos.engine0.core.implem.abstractions.MultistateComponent;
 import eu.ha3.matmos.engine0.core.interfaces.Provider;
 
 /* x-placeholder */
 
-public class ConditionSet extends MultistateComponent
+public class Junction extends MultistateComponent
 {
 	private final List<String> yes;
 	private final List<String> no;
 	
-	private final Provider<Condition> x;
+	private final Provider<Condition> provider;
 	
-	public ConditionSet(String name, Provider<Condition> provider, List<String> yes, List<String> no)
+	public Junction(String name, Provider<Condition> provider, List<String> yes, List<String> no)
 	{
-		super(name, provider);
-		this.x = provider;
+		super(name);
+		this.provider = provider;
 		
 		this.yes = yes;
 		this.no = no;
@@ -46,17 +47,20 @@ public class ConditionSet extends MultistateComponent
 		while (isTrue && iterYes.hasNext())
 		{
 			String yes = iterYes.next();
-			if (!this.x.exists(yes) || !this.x.get(yes).isActive())
+			if (!this.provider.exists(yes) || !this.provider.get(yes).isActive())
 			{
 				isTrue = false;
 			}
 		}
 		
+		if (!isTrue)
+			return false;
+		
 		Iterator<String> iterNo = this.no.iterator();
 		while (isTrue && iterNo.hasNext())
 		{
 			String no = iterNo.next();
-			if (!this.x.exists(no) || this.x.get(no).isActive())
+			if (!this.provider.exists(no) || this.provider.get(no).isActive())
 			{
 				isTrue = false;
 			}

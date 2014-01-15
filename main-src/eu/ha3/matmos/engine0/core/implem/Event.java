@@ -1,49 +1,54 @@
 package eu.ha3.matmos.engine0.core.implem;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
+
+import eu.ha3.matmos.engine0.core.implem.abstractions.Component;
+import eu.ha3.matmos.engine0.core.interfaces.EventInterface;
+import eu.ha3.matmos.engine0.core.interfaces.SoundRelay;
 
 /* x-placeholder */
 
-public class Event extends Component
+public class Event extends Component implements EventInterface
 {
-	private Knowledge knowledge;
+	private static Random random = new Random();
 	
-	public ArrayList<String> paths;
+	public final List<String> paths;
+	public final float volMin;
+	public final float volMax;
+	public final float pitchMin;
+	public final float pitchMax;
+	public final int distance;
 	
-	public float volMin;
-	public float volMax;
-	public float pitchMin;
-	public float pitchMax;
+	//
 	
-	public int metaSound;
+	private final SoundRelay relay;
 	
-	public Event(Knowledge knowledgeIn)
+	public Event(
+		String name, SoundRelay relay, List<String> paths, float volMin, float volMax, float pitchMin, float pitchMax,
+		int distance)
 	{
-		this.paths = new ArrayList<String>();
-		this.knowledge = knowledgeIn;
+		super(name);
+		this.relay = relay;
 		
-		this.volMin = 1F;
-		this.volMax = 1F;
-		this.pitchMin = 1F;
-		this.pitchMax = 1F;
-		
-		this.metaSound = 0;
+		this.paths = paths;
+		this.volMin = volMin;
+		this.volMax = volMax;
+		this.pitchMin = pitchMin;
+		this.pitchMax = pitchMax;
+		this.distance = distance;
 	}
 	
-	void setKnowledge(Knowledge knowledgeIn)
-	{
-		this.knowledge = knowledgeIn;
-	}
-	
+	@Override
 	public void cacheSounds()
 	{
-		for (Iterator<String> iter = this.paths.iterator(); iter.hasNext();)
+		for (String path : this.paths)
 		{
-			this.knowledge.getSoundManager().cacheSound(iter.next());
+			this.relay.cacheSound(path);
 		}
 	}
 	
+	@Override
 	public void playSound(float volMod, float pitchMod)
 	{
 		if (this.paths.isEmpty())
@@ -51,14 +56,14 @@ public class Event extends Component
 		
 		float volume = this.volMax - this.volMin;
 		float pitch = this.pitchMax - this.pitchMin;
-		volume = this.volMin + (volume > 0 ? this.knowledge.getRNG().nextFloat() * volume : 0);
-		pitch = this.pitchMin + (pitch > 0 ? this.knowledge.getRNG().nextFloat() * pitch : 0);
+		volume = this.volMin + (volume > 0 ? random.nextFloat() * volume : 0);
+		pitch = this.pitchMin + (pitch > 0 ? random.nextFloat() * pitch : 0);
 		
-		String path = this.paths.get(this.knowledge.getRNG().nextInt(this.paths.size()));
+		String path = this.paths.get(random.nextInt(this.paths.size()));
 		
 		volume = volume * volMod;
 		pitch = pitch * pitchMod;
 		
-		this.knowledge.getSoundManager().playSound(path, volume, pitch, this.metaSound);
+		this.relay.playSound(path, volume, pitch, this.distance);
 	}
 }
