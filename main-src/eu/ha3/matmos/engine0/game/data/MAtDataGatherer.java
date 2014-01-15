@@ -15,6 +15,7 @@ import eu.ha3.matmos.engine0.conv.ProcessorModel;
 import eu.ha3.matmos.engine0.core.implem.GenericSheet;
 import eu.ha3.matmos.engine0.core.implem.StringData;
 import eu.ha3.matmos.engine0.core.interfaces.Data;
+import eu.ha3.matmos.engine0.datacustom.MAtProcessorSeasonsModAPI;
 import eu.ha3.matmos.engine0.game.system.MAtMod;
 import eu.ha3.matmos.engine0.requirem.Requirements;
 import eu.ha3.mc.convenience.Ha3StaticUtilities;
