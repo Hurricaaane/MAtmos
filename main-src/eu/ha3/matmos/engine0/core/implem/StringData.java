@@ -1,8 +1,8 @@
 package eu.ha3.matmos.engine0.core.implem;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import eu.ha3.matmos.engine0.core.interfaces.Data;
 import eu.ha3.matmos.engine0.core.interfaces.Sheet;
@@ -19,7 +19,7 @@ public class StringData implements Data, Requestable
 	
 	public StringData(Requirements requirements)
 	{
-		this.sheets = new LinkedHashMap<String, Sheet>();
+		this.sheets = new TreeMap<String, Sheet>();
 		this.updateVersion = 0;
 		this.requirements = requirements;
 	}

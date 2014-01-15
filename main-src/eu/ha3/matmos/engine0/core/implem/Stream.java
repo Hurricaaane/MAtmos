@@ -1,13 +1,9 @@
 package eu.ha3.matmos.engine0.core.implem;
 
-import javax.xml.stream.XMLEventFactory;
-import javax.xml.stream.XMLEventWriter;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.events.XMLEvent;
 
 /* x-placeholder */
 
-public class Stream extends Descriptible
+public class Stream extends Component
 {
 	Machine machine;
 	
@@ -137,31 +133,4 @@ public class Stream extends Descriptible
 		}
 		
 	}
-	
-	@Override
-	public String serialize(XMLEventWriter eventWriter) throws XMLStreamException
-	{
-		XMLEventFactory eventFactory = XMLEventFactory.newInstance();
-		XMLEvent ret = eventFactory.createDTD("\n");
-		XMLEvent tab = eventFactory.createDTD("\t");
-		
-		eventWriter.add(tab);
-		eventWriter.add(eventFactory.createStartElement("", "", "stream"));
-		eventWriter.add(ret);
-		createNode(eventWriter, "path", this.path, 2);
-		createNode(eventWriter, "volume", "" + this.volume, 2);
-		createNode(eventWriter, "pitch", "" + this.pitch, 2);
-		createNode(eventWriter, "fadeintime", "" + this.fadeInTime, 2);
-		createNode(eventWriter, "fadeouttime", "" + this.fadeOutTime, 2);
-		createNode(eventWriter, "delaybeforefadein", "" + this.delayBeforeFadeIn, 2);
-		createNode(eventWriter, "delaybeforefadeout", "" + this.delayBeforeFadeOut, 2);
-		createNode(eventWriter, "islooping", this.isLooping ? "1" : "0", 2);
-		createNode(eventWriter, "isusingpause", this.usesPause ? "1" : "0", 2);
-		eventWriter.add(tab);
-		eventWriter.add(eventFactory.createEndElement("", "", "stream"));
-		eventWriter.add(ret);
-		
-		return "";
-	}
-	
 }

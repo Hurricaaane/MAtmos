@@ -1,141 +1,57 @@
 package eu.ha3.matmos.engine0.core.implem;
 
-import java.util.AbstractMap;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map.Entry;
 
-import javax.xml.stream.XMLEventFactory;
-import javax.xml.stream.XMLEventWriter;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.events.XMLEvent;
+import eu.ha3.matmos.engine0.core.interfaces.Evaluated;
+import eu.ha3.matmos.engine0.core.interfaces.InformationContainer;
+import eu.ha3.matmos.engine0.core.interfaces.Provider;
+import eu.ha3.matmos.engine0.core.interfaces.SheetCommander;
 
 /* x-placeholder */
 
-public class Dynamic extends Switchable
+public class Dynamic extends Component implements Evaluated, InformationContainer<Long>
 {
-	private List<Entry<String, String>> entries;
+	private long value;
 	
-	private int value;
+	private final List<SheetIndex> indexes;
+	private final Provider<SheetCommander> x;
 	
-	public Dynamic(Knowledge knowledgeIn)
+	public Dynamic(String name, Provider<SheetCommander> x, List<SheetIndex> indexes)
 	{
-		super(knowledgeIn);
+		super(name);
+		this.x = x;
 		
-		this.entries = new ArrayList<Entry<String, String>>();
-		
-		this.value = 0;
-		
-	}
-	
-	public void addCouple(String sheet, String key)
-	{
-		this.entries.add(new AbstractMap.SimpleEntry<String, String>(sheet, key));
-		flagNeedsTesting();
-		
-	}
-	
-	public void removeCouple(int id)
-	{
-		this.entries.remove(id);
-		flagNeedsTesting();
-		
-	}
-	
-	public void set(int id, String sheet, String key)
-	{
-		this.entries.set(id, new AbstractMap.SimpleEntry<String, String>(sheet, key));
-		flagNeedsTesting();
-		
-	}
-	
-	public List<Entry<String, String>> getEntries()
-	{
-		return this.entries;
-	}
-	
-	public Entry<String, String> getEntry(int id)
-	{
-		return this.entries.get(id);
-		
+		this.indexes = indexes;
 	}
 	
 	@Override
-	public boolean isActive()
-	{
-		return false;
-	}
-	
 	public void evaluate()
 	{
+		long previous = this.value;
+		
 		this.value = 0;
 		
-		if (!isValid())
-			return;
-		
-		for (Entry<String, String> entry : this.entries)
+		for (SheetIndex sheetIndex : this.indexes)
 		{
-			String in = this.knowledge.getData().getSheet(entry.getKey()).get(entry.getValue());
-			int integerForm = 0;
-			
-			try
+			if (this.x.instance().exists(sheetIndex))
 			{
-				integerForm = Integer.parseInt(in);
+				Long value = LongFloatSimplificator.longOf(this.x.instance().get(sheetIndex));
+				if (value != null)
+				{
+					this.value = this.value + value;
+				}
 			}
-			catch (Exception e)
-			{
-			}
-			
-			this.value = this.value + integerForm;
 		}
 		
+		if (previous != this.value)
+		{
+			incrementVersion();
+		}
 	}
 	
 	@Override
-	protected boolean testIfValid()
-	{
-		for (Entry<String, String> entry : this.entries)
-		{
-			/*if (this.knowledge.getData().getSheet(entry.getKey()) == null
-				|| !this.knowledge.getData().getSheet(entry.getKey()).containsKey(entry.getValue()))
-				return false;*/
-			
-			// The entry doesn't need to exist initially for the condition to be valid.
-			if (this.knowledge.getData().getSheet(entry.getKey()) == null)
-				//		|| !this.knowledge.getData().getSheet(entry.getKey()).containsKey(entry.getValue()))
-				return false;
-		}
-		
-		return true;
-	}
-	
-	public int getValue()
+	public Long getInformation()
 	{
 		return this.value;
 	}
-	
-	@Override
-	public String serialize(XMLEventWriter eventWriter) throws XMLStreamException
-	{
-		buildDescriptibleSerialized(eventWriter);
-		
-		XMLEventFactory eventFactory = XMLEventFactory.newInstance();
-		
-		XMLEvent tab = eventFactory.createDTD("\t");
-		XMLEvent ret = eventFactory.createDTD("\n");
-		
-		for (int i = 0; i < this.entries.size(); i++)
-		{
-			eventWriter.add(tab);
-			eventWriter.add(eventFactory.createStartElement("", "", "entry"));
-			eventWriter.add(eventFactory.createAttribute("sheet", this.entries.get(i).getKey()));
-			eventWriter.add(eventFactory.createCharacters(this.entries.get(i).getValue() + ""));
-			eventWriter.add(eventFactory.createEndElement("", "", "entry"));
-			eventWriter.add(ret);
-			
-		}
-		
-		return null;
-	}
-	
 }

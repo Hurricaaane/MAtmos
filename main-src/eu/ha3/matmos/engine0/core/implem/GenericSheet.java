@@ -1,8 +1,8 @@
 package eu.ha3.matmos.engine0.core.implem;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import eu.ha3.matmos.engine0.core.interfaces.Sheet;
 
@@ -15,8 +15,8 @@ public class GenericSheet implements Sheet
 	
 	public GenericSheet(String defaultValue)
 	{
-		this.values = new LinkedHashMap<String, String>();
-		this.versions = new LinkedHashMap<String, Integer>();
+		this.values = new TreeMap<String, String>();
+		this.versions = new TreeMap<String, Integer>();
 	}
 	
 	@Override
@@ -41,6 +41,7 @@ public class GenericSheet implements Sheet
 	{
 		if (this.versions.containsKey(pos))
 			return this.versions.get(pos);
+		
 		return -1;
 	}
 	

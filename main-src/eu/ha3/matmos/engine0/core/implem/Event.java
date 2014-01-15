@@ -3,12 +3,9 @@ package eu.ha3.matmos.engine0.core.implem;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import javax.xml.stream.XMLEventWriter;
-import javax.xml.stream.XMLStreamException;
-
 /* x-placeholder */
 
-public class Event extends Descriptible
+public class Event extends Component
 {
 	private Knowledge knowledge;
 	
@@ -37,7 +34,6 @@ public class Event extends Descriptible
 	void setKnowledge(Knowledge knowledgeIn)
 	{
 		this.knowledge = knowledgeIn;
-		
 	}
 	
 	public void cacheSounds()
@@ -45,9 +41,7 @@ public class Event extends Descriptible
 		for (Iterator<String> iter = this.paths.iterator(); iter.hasNext();)
 		{
 			this.knowledge.getSoundManager().cacheSound(iter.next());
-			
 		}
-		
 	}
 	
 	public void playSound(float volMod, float pitchMod)
@@ -67,25 +61,4 @@ public class Event extends Descriptible
 		
 		this.knowledge.getSoundManager().playSound(path, volume, pitch, this.metaSound);
 	}
-	
-	@Override
-	public String serialize(XMLEventWriter eventWriter) throws XMLStreamException
-	{
-		buildDescriptibleSerialized(eventWriter);
-		
-		for (Iterator<String> iter = this.paths.iterator(); iter.hasNext();)
-		{
-			createNode(eventWriter, "path", iter.next());
-			
-		}
-		
-		createNode(eventWriter, "volmin", this.volMin + "");
-		createNode(eventWriter, "volmax", this.volMax + "");
-		createNode(eventWriter, "pitchmin", this.pitchMin + "");
-		createNode(eventWriter, "pitchmax", this.pitchMax + "");
-		createNode(eventWriter, "metasound", this.metaSound + "");
-		
-		return "";
-	}
-	
 }

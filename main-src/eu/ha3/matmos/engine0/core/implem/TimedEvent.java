@@ -1,13 +1,8 @@
 package eu.ha3.matmos.engine0.core.implem;
 
-import javax.xml.stream.XMLEventFactory;
-import javax.xml.stream.XMLEventWriter;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.events.XMLEvent;
-
 /* x-placeholder */
 
-public class TimedEvent extends Descriptible
+public class TimedEvent extends Component
 {
 	Machine machine;
 	
@@ -89,28 +84,4 @@ public class TimedEvent extends Descriptible
 		}
 		
 	}
-	
-	@Override
-	public String serialize(XMLEventWriter eventWriter) throws XMLStreamException
-	{
-		XMLEventFactory eventFactory = XMLEventFactory.newInstance();
-		XMLEvent ret = eventFactory.createDTD("\n");
-		XMLEvent tab = eventFactory.createDTD("\t");
-		
-		eventWriter.add(tab);
-		eventWriter.add(eventFactory.createStartElement("", "", "eventtimed"));
-		eventWriter.add(ret);
-		createNode(eventWriter, "eventname", this.event, 2);
-		createNode(eventWriter, "delaymin", "" + this.delayMin, 2);
-		createNode(eventWriter, "delaymax", "" + this.delayMax, 2);
-		createNode(eventWriter, "delaystart", "" + this.delayStart, 2);
-		createNode(eventWriter, "volmod", "" + this.volMod, 2);
-		createNode(eventWriter, "pitchmod", "" + this.pitchMod, 2);
-		eventWriter.add(tab);
-		eventWriter.add(eventFactory.createEndElement("", "", "eventtimed"));
-		eventWriter.add(ret);
-		
-		return "";
-	}
-	
 }

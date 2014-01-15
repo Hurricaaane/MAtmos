@@ -1,7 +1,5 @@
 package eu.ha3.matmos.engine0.core.implem;
 
-import java.io.StringWriter;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -9,15 +7,9 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-import javax.xml.stream.XMLEventFactory;
-import javax.xml.stream.XMLEventWriter;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.events.XMLEvent;
-import javax.xml.transform.stream.StreamResult;
-
 import eu.ha3.matmos.engine0.core.interfaces.Data;
 import eu.ha3.matmos.engine0.core.interfaces.SoundRelay;
+import eu.ha3.matmos.engine0.core.interfaces.Stated;
 import eu.ha3.matmos.engine0.requirem.FlatRequirements;
 
 /* x-placeholder */
@@ -25,7 +17,7 @@ import eu.ha3.matmos.engine0.requirem.FlatRequirements;
 /**
  * Stores a Knowledge.
  */
-public class Knowledge
+public class Knowledge implements Stated
 {
 	private Map<String, Dynamic> dynamics;
 	private Map<String, SugarList> lists;
@@ -293,7 +285,6 @@ public class Knowledge
 	public void setData(Data dataIn)
 	{
 		this.data = dataIn;
-		applySheetFlagNeedsTesting();
 	}
 	
 	public Data getData()
@@ -304,20 +295,6 @@ public class Knowledge
 	public long getTimeMillis()
 	{
 		return this.clock.getMilliseconds();
-	}
-	
-	void applySheetFlagNeedsTesting()
-	{
-		for (Condition condition : this.conditions.values())
-		{
-			condition.flagNeedsTesting();
-		}
-		
-		for (Dynamic dynamic : this.dynamics.values())
-		{
-			dynamic.flagNeedsTesting();
-		}
-		
 	}
 	
 	public Event getEvent(String name)
@@ -378,16 +355,6 @@ public class Knowledge
 		
 	}
 	
-	void applyDynamicFlagNeedsTesting()
-	{
-		for (Condition condition : this.conditions.values())
-		{
-			condition.flagNeedsTesting();
-			
-		}
-		
-	}
-	
 	public Dynamic getDynamic(String name)
 	{
 		return this.dynamics.get(name);
@@ -402,8 +369,6 @@ public class Knowledge
 		this.dynamics.put(name, new Dynamic(this));
 		this.dynamics.get(name).name = name;
 		
-		applyDynamicFlagNeedsTesting();
-		
 		return true;
 		
 	}
@@ -414,8 +379,6 @@ public class Knowledge
 			return false;
 		
 		this.dynamics.remove(name);
-		
-		applyDynamicFlagNeedsTesting();
 		
 		return true;
 		
@@ -442,16 +405,6 @@ public class Knowledge
 		
 	}
 	
-	void applyListFlagNeedsTesting()
-	{
-		for (Condition condition : this.conditions.values())
-		{
-			condition.flagNeedsTesting();
-			
-		}
-		
-	}
-	
 	public SugarList getList(String name)
 	{
 		return this.lists.get(name);
@@ -466,8 +419,6 @@ public class Knowledge
 		this.lists.put(name, new SugarList());
 		this.lists.get(name).name = name;
 		
-		applyDynamicFlagNeedsTesting();
-		
 		return true;
 		
 	}
@@ -478,8 +429,6 @@ public class Knowledge
 			return false;
 		
 		this.lists.remove(name);
-		
-		applyDynamicFlagNeedsTesting();
 		
 		return true;
 		
@@ -506,15 +455,6 @@ public class Knowledge
 		
 	}
 	
-	void applyConditionNeedsTesting()
-	{
-		for (ConditionSet cset : this.sets.values())
-		{
-			cset.flagNeedsTesting();
-		}
-		
-	}
-	
 	public Condition getCondition(String name)
 	{
 		return this.conditions.get(name);
@@ -528,8 +468,6 @@ public class Knowledge
 		
 		this.conditions.put(name, new Condition(this));
 		this.conditions.get(name).name = name;
-		
-		applyConditionNeedsTesting();
 		
 		return true;
 		
@@ -552,8 +490,6 @@ public class Knowledge
 			cset.replaceConditionName(name, newName);
 		}
 		
-		applyConditionNeedsTesting();
-		
 		return true;
 		
 	}
@@ -565,18 +501,7 @@ public class Knowledge
 		
 		this.conditions.remove(name);
 		
-		applyConditionNeedsTesting();
-		
 		return true;
-		
-	}
-	
-	void applyConditionSetNeedsTesting()
-	{
-		for (Machine machine : this.machines.values())
-		{
-			machine.flagNeedsTesting();
-		}
 		
 	}
 	
@@ -592,8 +517,6 @@ public class Knowledge
 		
 		this.sets.put(name, new ConditionSet(this));
 		this.sets.get(name).name = name;
-		
-		applyConditionSetNeedsTesting();
 		
 		return true;
 		
@@ -614,10 +537,7 @@ public class Knowledge
 		for (Machine machine : this.machines.values())
 		{
 			machine.replaceSetName(name, newName);
-			
 		}
-		
-		applyConditionSetNeedsTesting();
 		
 		return true;
 		
@@ -626,13 +546,9 @@ public class Knowledge
 	public boolean removeConditionSet(String name)
 	{
 		if (!this.sets.containsKey(name))
-			// MAtmosEngine.logger;
-			// Not an exception!
 			return false;
 		
 		this.sets.remove(name);
-		
-		applyConditionSetNeedsTesting();
 		
 		return true;
 		
@@ -686,10 +602,6 @@ public class Knowledge
 		this.machines.put(newName, this.machines.get(name));
 		this.machines.remove(name);
 		this.machines.get(newName).name = newName;
-		
-		// Nothing to do!
-		
-		applyConditionSetNeedsTesting();
 		
 		return true;
 		
@@ -749,159 +661,5 @@ public class Knowledge
 			machine.evaluate();
 			
 		}
-		
 	}
-	
-	public String createXML() throws XMLStreamException
-	{
-		StreamResult serialized = new StreamResult(new StringWriter());
-		
-		XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
-		XMLEventFactory eventFactory = XMLEventFactory.newInstance();
-		
-		XMLEventWriter eventWriter = outputFactory.createXMLEventWriter(serialized);
-		
-		XMLEvent ret = eventFactory.createDTD("\n");
-		XMLEvent end = eventFactory.createDTD("\n");
-		
-		Object[] keysArray;
-		
-		eventWriter.add(eventFactory.createStartDocument());
-		eventWriter.add(ret);
-		eventWriter.add(eventFactory.createStartElement("", "", "contents"));
-		
-		keysArray = this.dynamics.keySet().toArray();
-		Arrays.sort(keysArray);
-		for (int i = 0; i < keysArray.length; i++)
-		{
-			String name = keysArray[i].toString();
-			
-			eventWriter.add(ret);
-			eventWriter.add(eventFactory.createStartElement("", "", "dynamic"));
-			eventWriter.add(eventFactory.createAttribute("name", name));
-			eventWriter.add(ret);
-			this.dynamics.get(name).serialize(eventWriter);
-			eventWriter.add(eventFactory.createEndElement("", "", "dynamic"));
-			
-		}
-		keysArray = this.lists.keySet().toArray();
-		Arrays.sort(keysArray);
-		for (int i = 0; i < keysArray.length; i++)
-		{
-			String name = keysArray[i].toString();
-			
-			eventWriter.add(ret);
-			eventWriter.add(eventFactory.createStartElement("", "", "list"));
-			eventWriter.add(eventFactory.createAttribute("name", name));
-			eventWriter.add(ret);
-			this.lists.get(name).serialize(eventWriter);
-			eventWriter.add(eventFactory.createEndElement("", "", "list"));
-			
-		}
-		keysArray = this.conditions.keySet().toArray();
-		Arrays.sort(keysArray);
-		for (int i = 0; i < keysArray.length; i++)
-		{
-			String name = keysArray[i].toString();
-			
-			eventWriter.add(ret);
-			eventWriter.add(eventFactory.createStartElement("", "", "condition"));
-			eventWriter.add(eventFactory.createAttribute("name", name));
-			eventWriter.add(ret);
-			this.conditions.get(name).serialize(eventWriter);
-			eventWriter.add(eventFactory.createEndElement("", "", "condition"));
-			
-		}
-		keysArray = this.sets.keySet().toArray();
-		Arrays.sort(keysArray);
-		for (int i = 0; i < keysArray.length; i++)
-		{
-			String name = keysArray[i].toString();
-			
-			eventWriter.add(ret);
-			eventWriter.add(eventFactory.createStartElement("", "", "set"));
-			eventWriter.add(eventFactory.createAttribute("name", name));
-			eventWriter.add(ret);
-			this.sets.get(name).serialize(eventWriter);
-			eventWriter.add(eventFactory.createEndElement("", "", "set"));
-			
-		}
-		keysArray = this.events.keySet().toArray();
-		Arrays.sort(keysArray);
-		for (int i = 0; i < keysArray.length; i++)
-		{
-			String name = keysArray[i].toString();
-			
-			eventWriter.add(ret);
-			eventWriter.add(eventFactory.createStartElement("", "", "event"));
-			eventWriter.add(eventFactory.createAttribute("name", name));
-			eventWriter.add(ret);
-			this.events.get(name).serialize(eventWriter);
-			eventWriter.add(eventFactory.createEndElement("", "", "event"));
-			
-		}
-		keysArray = this.machines.keySet().toArray();
-		Arrays.sort(keysArray);
-		for (int i = 0; i < keysArray.length; i++)
-		{
-			String name = keysArray[i].toString();
-			
-			eventWriter.add(ret);
-			eventWriter.add(eventFactory.createStartElement("", "", "machine"));
-			eventWriter.add(eventFactory.createAttribute("name", name));
-			eventWriter.add(ret);
-			this.machines.get(name).serialize(eventWriter);
-			eventWriter.add(eventFactory.createEndElement("", "", "machine"));
-			
-		}
-		
-		eventWriter.add(ret);
-		eventWriter.add(eventFactory.createEndElement("", "", "contents"));
-		
-		eventWriter.add(end);
-		eventWriter.add(eventFactory.createEndDocument());
-		eventWriter.close();
-		
-		return serialized.getWriter().toString();
-		
-	}
-	/*
-	public String diffXML(MAtmosKnowledge base) throws XMLStreamException
-	{
-		StreamResult serialized = new StreamResult(new StringWriter());
-		
-		XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
-		XMLEventFactory eventFactory = XMLEventFactory.newInstance();
-		
-		XMLEventWriter eventWriter = outputFactory.createXMLEventWriter(serialized);
-
-		XMLEvent ret = eventFactory.createDTD("\n");
-		XMLEvent end = eventFactory.createDTD("\n");
-		
-		eventWriter.add(eventFactory.createStartDocument());
-		eventWriter.add(ret);
-		eventWriter.add(eventFactory.createStartElement("", "", "contents"));
-		
-		
-		
-		for (Iterator<Entry<String,MAtmosDynamic>> iter = dynamics.entrySet().iterator(); iter.hasNext();)
-		{
-			Entry<String,MAtmosDynamic> entry = iter.next();
-			boolean addMe = false;
-			
-			if (base.getDynamic( entry.getKey() ) == null)
-			{
-				addMe = true;
-				
-			}
-			else
-			
-		}
-		
-		
-		return "";
-		
-	}
-	 */
-	
 }

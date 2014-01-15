@@ -2,15 +2,11 @@ package eu.ha3.matmos.engine0.core.implem;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
-
-import javax.xml.stream.XMLEventWriter;
-import javax.xml.stream.XMLStreamException;
 
 /* x-placeholder */
 
-public class SugarList extends Descriptible
+public class SugarList extends Component
 {
 	private List<String> list;
 	
@@ -49,20 +45,4 @@ public class SugarList extends Descriptible
 	{
 		this.list.clear();
 	}
-	
-	@Override
-	public String serialize(XMLEventWriter eventWriter) throws XMLStreamException
-	{
-		buildDescriptibleSerialized(eventWriter);
-		
-		for (Iterator<String> iter = this.list.iterator(); iter.hasNext();)
-		{
-			createNode(eventWriter, "constant", iter.next());
-			
-		}
-		
-		return null;
-		
-	}
-	
 }

@@ -1,62 +1,40 @@
 package eu.ha3.matmos.engine0.core.implem;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.xml.stream.XMLEventWriter;
-import javax.xml.stream.XMLStreamException;
-
 import eu.ha3.matmos.engine0.conv.MAtmosConvLogger;
+import eu.ha3.matmos.engine0.core.interfaces.Overrided;
+import eu.ha3.matmos.engine0.core.interfaces.Provider;
+import eu.ha3.matmos.engine0.core.interfaces.Simulated;
 
 /* x-placeholder */
 
-/**
- * 
- * @author Hurry A Machine is an indexed entity in a Knowledge.
- * 
- * 
- *         The purpose of a Machine is to generate noises by the storage of
- *         EventTimed.
- * 
- *         A Machine can be powered on/off and turned on/off.
- * 
- *         Powering a machine on allows its routine to execute events that
- *         happen while the Machine is turned off.
- * 
- *         A Machine is turned on whenever it is powered and its routine
- *         executes, and all of the Restricts are false while any of the Allows
- *         is true.
- * 
- * 
- *         For a Machine to be valid, it needs to have at least one Allow.
- * 
- */
-
-public class Machine extends Switchable
+public class Machine extends MultistateComponent implements Simulated, Overrided
 {
-	private List<String> anyallows;
-	private List<String> anyrestricts;
-	
-	private List<TimedEvent> etimes;
-	private List<Stream> streams;
+	private final List<String> allow;
+	private final List<String> restrict;
+	private final TimedEventInformation timed;
+	private final StreamInformation stream;
 	
 	private boolean powered;
 	private boolean switchedOn;
 	
-	Machine(Knowledge knowledgeIn)
+	//
+	
+	private final Provider<ConditionSet> x;
+	
+	public Machine(
+		String name, Provider<ConditionSet> provider, List<String> allow, List<String> restrict,
+		TimedEventInformation timed, StreamInformation stream)
 	{
-		super(knowledgeIn);
+		super(name, provider);
+		this.x = this.provider;
 		
-		this.etimes = new ArrayList<TimedEvent>();
-		this.streams = new ArrayList<Stream>();
-		
-		this.anyallows = new ArrayList<String>();
-		this.anyrestricts = new ArrayList<String>();
-		
-		this.powered = false;
-		this.switchedOn = false;
-		
+		this.allow = allow;
+		this.restrict = restrict;
+		this.timed = timed;
+		this.stream = stream;
 	}
 	
 	public void routine()
@@ -174,30 +152,14 @@ public class Machine extends Switchable
 	
 	public void addAllow(String name)
 	{
-		/*if (anyrestricts.contains(name))
-			return;
-
-		if (anyallows.contains(name))
-			return;
-		 */
-		
 		this.anyallows.add(name);
-		flagNeedsTesting();
 		
 		return;
 	}
 	
 	public void addRestrict(String name)
 	{
-		/*if (anyallows.contains(name))
-			return;
-		
-		if (anyrestricts.contains(name))
-			return;
-		 */
-		
 		this.anyrestricts.add(name);
-		flagNeedsTesting();
 		
 		return;
 	}
@@ -206,7 +168,6 @@ public class Machine extends Switchable
 	{
 		this.anyallows.remove(name);
 		this.anyrestricts.remove(name);
-		flagNeedsTesting();
 		
 		return;
 		
@@ -224,7 +185,6 @@ public class Machine extends Switchable
 			this.anyrestricts.add(newName);
 			this.anyrestricts.remove(name);
 		}
-		flagNeedsTesting();
 		
 	}
 	
@@ -285,40 +245,8 @@ public class Machine extends Switchable
 	}
 	
 	@Override
-	protected boolean testIfValid()
-	{
-		if (this.anyallows.size() == 0)
-			return false;
-		
-		Iterator<String> iterAnyallows = this.anyallows.iterator();
-		while (iterAnyallows.hasNext())
-		{
-			String cset = iterAnyallows.next();
-			
-			if (!this.knowledge.getConditionSetsKeySet().contains(cset))
-				return false;
-			
-		}
-		
-		Iterator<String> iterAnyrestricts = this.anyrestricts.iterator();
-		while (iterAnyrestricts.hasNext())
-		{
-			String cset = iterAnyrestricts.next();
-			
-			if (!this.knowledge.getConditionSetsKeySet().contains(cset))
-				return false;
-			
-		}
-		
-		return true;
-		
-	}
-	
 	public boolean evaluate()
 	{
-		if (!isValid())
-			return false;
-		
 		if (!this.powered)
 			return false;
 		
@@ -336,7 +264,6 @@ public class Machine extends Switchable
 				turnOff();
 			}
 			
-			//MAtmosEngine.logger; //TODO Logger
 			MAtmosConvLogger.fine(new StringBuilder("M:")
 				.append(this.name).append(this.switchedOn ? " now On." : " now Off.").toString());
 			
@@ -346,24 +273,8 @@ public class Machine extends Switchable
 		
 	}
 	
-	@Override
-	public boolean isActive()
-	{
-		return isTrue();
-		
-	}
-	
-	public boolean isTrue()
-	{
-		return this.switchedOn;
-		
-	}
-	
 	public boolean testIfTrue()
 	{
-		if (!isValid())
-			return false;
-		
 		boolean isTrue = false;
 		
 		Iterator<String> iterAnyallows = this.anyallows.iterator();
@@ -398,38 +309,16 @@ public class Machine extends Switchable
 		
 	}
 	
-	@Override
-	public String serialize(XMLEventWriter eventWriter) throws XMLStreamException
-	{
-		buildDescriptibleSerialized(eventWriter);
-		
-		for (Iterator<String> iter = this.anyallows.iterator(); iter.hasNext();)
-		{
-			createNode(eventWriter, "allow", iter.next());
-		}
-		
-		for (Iterator<String> iter = this.anyrestricts.iterator(); iter.hasNext();)
-		{
-			createNode(eventWriter, "restrict", iter.next());
-		}
-		
-		for (Iterator<TimedEvent> iter = this.etimes.iterator(); iter.hasNext();)
-		{
-			iter.next().serialize(eventWriter);
-		}
-		
-		for (Iterator<Stream> iter = this.streams.iterator(); iter.hasNext();)
-		{
-			iter.next().serialize(eventWriter);
-		}
-		
-		return "";
-		
-	}
-	
 	public List<TimedEvent> getTimedEvents()
 	{
 		return this.etimes;
+	}
+	
+	@Override
+	public void simulate()
+	{
+		// TODO Auto-generated method stub
+		
 	}
 	
 }
