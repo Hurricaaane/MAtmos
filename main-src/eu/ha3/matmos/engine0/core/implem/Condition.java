@@ -8,20 +8,6 @@ import eu.ha3.matmos.engine0.core.interfaces.SheetCommander;
 
 public class Condition extends MultistateComponent
 {
-	private boolean isDynamic;
-	
-	private String sheet = "";
-	private String key = "0";
-	private String dynamicKey = "";
-	private ConditionType conditionType = ConditionType.ALWAYS_FALSE;
-	private String constant = "";
-	
-	private int version = -1;
-	
-	private Integer constantIntegerForm = 0;
-	
-	// NEW
-	
 	private final SheetIndex indexX;
 	private final ConditionType operatorX;
 	private final String constantX;
@@ -71,35 +57,35 @@ public class Condition extends MultistateComponent
 		try
 		{
 			String value = (String) this.x.instance().get(this.indexX);
-			Long longValue = LongFloatSimplificator.longOf(this.constant);
+			Long longValue = LongFloatSimplificator.longOf(value);
 			//Float floatValue = LongFloatSimplificator.floatOf(this.constant);
 			
-			if (this.conditionType == ConditionType.NOT_EQUAL)
+			if (this.operatorX == ConditionType.NOT_EQUAL)
 				return !value.equals(this.constantX);
 			
-			else if (this.conditionType == ConditionType.EQUAL)
+			else if (this.operatorX == ConditionType.EQUAL)
 				return value.equals(this.constantX);
 			
-			else if (this.conditionType == ConditionType.IN_LIST)
+			else if (this.operatorX == ConditionType.IN_LIST)
 				return this.x.instance().listHas(this.constantX, value);
 			
-			else if (this.conditionType == ConditionType.NOT_IN_LIST)
+			else if (this.operatorX == ConditionType.NOT_IN_LIST)
 				return !this.x.instance().listHas(this.constantX, value);
 			
 			else if (longValue != null && this.constantLongX != null)
 			{
 				// if (both values are integers), then
 				
-				if (this.conditionType == ConditionType.GREATER)
+				if (this.operatorX == ConditionType.GREATER)
 					return longValue > this.constantLongX;
 				
-				else if (this.conditionType == ConditionType.GREATER_OR_EQUAL)
+				else if (this.operatorX == ConditionType.GREATER_OR_EQUAL)
 					return longValue >= this.constantLongX;
 				
-				else if (this.conditionType == ConditionType.LESSER_)
+				else if (this.operatorX == ConditionType.LESSER_)
 					return longValue < this.constantLongX;
 				
-				else if (this.conditionType == ConditionType.LESSER_OR_EQUAL)
+				else if (this.operatorX == ConditionType.LESSER_OR_EQUAL)
 					return longValue <= this.constantLongX;
 				
 				else
