@@ -16,6 +16,7 @@ import eu.ha3.easy.TimeStatistic;
 import eu.ha3.matmos.engine0.conv.Expansion;
 import eu.ha3.matmos.engine0.conv.ExpansionManager;
 import eu.ha3.matmos.engine0.conv.MAtmosConvLogger;
+import eu.ha3.matmos.engine0.conv.Stable;
 import eu.ha3.matmos.engine0.conv.volume.VolumeUpdatable;
 import eu.ha3.matmos.engine0.game.data.MAtDataGatherer;
 import eu.ha3.matmos.engine0.game.user.MAtUserControl;
@@ -34,7 +35,8 @@ import eu.ha3.util.property.simple.ConfigProperty;
 /* x-placeholder */
 
 public class MAtMod extends HaddonImpl
-	implements SupportsFrameEvents, SupportsTickEvents, NotifiableHaddon, IResourceManagerReloadListener, SoundAccessor
+	implements SupportsFrameEvents, SupportsTickEvents, NotifiableHaddon, IResourceManagerReloadListener,
+	SoundAccessor, Stable
 {
 	// Identity
 	protected final String NAME = "MAtmos";
@@ -50,9 +52,8 @@ public class MAtMod extends HaddonImpl
 		this, "http://q.mc.ha3.eu/query/matmos-main-version-vn.json?ver=%d");
 	
 	// State
-	private boolean isReady;
-	private boolean isRunning;
-	private boolean isDumpReady;
+	private boolean isInitialized;
+	private boolean isActivated;
 	
 	// Components
 	private ExpansionManager expansionManager;
@@ -61,11 +62,11 @@ public class MAtMod extends HaddonImpl
 	
 	// Use once
 	private boolean hasFirstTickPassed;
-	private boolean hasDataRolled;
+	private boolean dataRolled;
 	
 	public MAtMod()
 	{
-		MAtmosConvLogger.setRefinedness(MAtmosConvLogger.INFO);
+		MAtmosConvLogger.setRefinedness(MAtmosConvLogger.FINE);
 	}
 	
 	@Override
@@ -74,9 +75,7 @@ public class MAtMod extends HaddonImpl
 		util().registerPrivateGetter("getSoundManager", SoundHandler.class, 5, "field_147694_f");
 		util().registerPrivateGetter("getSoundSystem", SoundManager.class, 4, "field_148620_e");
 		
-		// Required for the fatal error message to appear.
 		((OperatorCaster) op()).setTickEnabled(true);
-		((OperatorCaster) op()).setFrameEnabled(true);
 		
 		TimeStatistic timeMeasure = new TimeStatistic(Locale.ENGLISH);
 		this.userControl = new MAtUserControl(this);
@@ -91,6 +90,7 @@ public class MAtMod extends HaddonImpl
 		this.config.setProperty("reversed.controls", false);
 		this.config.setProperty("sound.autopreview", true);
 		this.config.setProperty("globalvolume.scale", 1f);
+		this.config.setProperty("key.code", 65);
 		this.config.setProperty("useroptions.altitudes.high", true);
 		this.config.setProperty("useroptions.altitudes.low", true);
 		this.config.setProperty("useroptions.biome.override", -1);
@@ -124,14 +124,12 @@ public class MAtMod extends HaddonImpl
 	
 	public void initializeAndEnable()
 	{
-		if (this.isReady)
+		if (this.isInitialized)
 			return;
 		
-		TimeStatistic timeMeasure = new TimeStatistic(Locale.ENGLISH);
+		this.isInitialized = true;
 		
-		MAtmosConvLogger.info("Constructing.");
-		
-		createNewWorkers();
+		((OperatorCaster) op()).setFrameEnabled(true);
 		
 		IResourceManager resMan = Minecraft.getMinecraft().getResourceManager();
 		if (resMan instanceof IReloadableResourceManager)
@@ -139,165 +137,59 @@ public class MAtMod extends HaddonImpl
 			((IReloadableResourceManager) resMan).registerReloadListener(this);
 		}
 		
-		this.isReady = true;
-		MAtmosConvLogger.info("Ready.");
-		
-		startRunning();
-		
-		MAtmosConvLogger.info("Took " + timeMeasure.getSecondsAsString(3) + " seconds to enable MAtmos.");
+		reloadEverything();
+		activate();
 	}
 	
-	private void createNewWorkers()
+	public void reloadEverything()
 	{
-		TimeStatistic stat = new TimeStatistic(Locale.ENGLISH);
+		if (!this.isInitialized)
+			return;
 		
-		// FIXME 2014-01-06 This can't work because of the string sheets
-		/*
-		if (!this.config.getBoolean("dump.sheets.enabled"))
-		{
-			this.dataGatherer.load(this.expansionManager.getCollation());
-		}
-		else
-		{
-			MAtCatchAllRequirements catchall = new MAtCatchAllRequirements();
-			this.dataGatherer.load(catchall);
-			catchall.setData(this.dataGatherer.getData());
-			
-			this.isDumpReady = true;
-		}*/
+		this.expansionManager.deactivate();
+		this.expansionManager.dispose();
+		
+		TimeStatistic stat = new TimeStatistic(Locale.ENGLISH);
 		
 		this.dataGatherer = new MAtDataGatherer(this);
 		this.dataGatherer.load(this.expansionManager.getCollation());
 		this.expansionManager.setData(this.dataGatherer.getData());
 		this.expansionManager.loadExpansions();
+		this.dataRolled = false;
 		
 		MAtmosConvLogger.info("Expansions loaded (" + stat.getSecondsAsString(1) + "s).");
 	}
 	
-	public void reloadAndStart()
+	@Override
+	public void activate()
 	{
-		if (!this.isReady)
+		if (!this.isInitialized)
 			return;
 		
-		if (this.isRunning)
+		if (this.isActivated)
 			return;
 		
-		reload();
-		startRunning();
-	}
-	
-	public void reload()
-	{
-		if (!this.isReady)
-			return;
-		
-		if (this.isRunning)
-			return;
-		
-		this.expansionManager.deactivate();
-		this.expansionManager.dispose();
-		createNewWorkers();
-		
-		TimeStatistic stat = new TimeStatistic(Locale.ENGLISH);
-		MAtMod.this.expansionManager.loadExpansions();
-		MAtmosConvLogger.info("Expansions loaded (" + stat.getSecondsAsString(1) + "s).");
-	}
-	
-	public void startRunning()
-	{
-		if (!this.isReady)
-			return;
-		
-		if (this.isRunning)
-			return;
-		
-		this.isRunning = true;
+		this.isActivated = true;
 		
 		MAtmosConvLogger.fine("Loading...");
 		this.expansionManager.activate();
 		MAtmosConvLogger.fine("Loaded.");
 	}
 	
-	public void stopRunning()
+	@Override
+	public void deactivate()
 	{
-		if (!this.isReady)
+		if (!this.isInitialized)
 			return;
 		
-		if (!this.isRunning)
+		if (!this.isActivated)
 			return;
 		
-		this.isRunning = false;
+		this.isActivated = false;
 		
 		MAtmosConvLogger.fine("Stopping...");
 		this.expansionManager.deactivate();
 		MAtmosConvLogger.fine("Stopped.");
-		
-		createDataDump(false);
-	}
-	
-	@Deprecated
-	public void createDataDump(boolean force)
-	{
-		// Disabled functionnality due to arbitrary strings
-		if (true)
-			return;
-		
-		/*
-		if (!force && !isDumpReady())
-		{
-			if (this.config.getBoolean("dump.sheets.enabled"))
-			{
-				this.chatter.printChat("Warning: Data dumps requires Minecraft to be restarted, "
-					+ "because data dumps must be already enabled when Minecraft starts to work.");
-			}
-			return;
-		}
-		
-		if (force)
-		{
-			this.chatter.printChat(
-				Ha3Utility.COLOR_RED, "Warning: Generating PARTIAL data dumps will normally yield the value 0 "
-					+ "for every unused data by the currently loaded expansions."
-					+ " Only use PARTIAL data dumps to debug errors!");
-		}
-		
-		MAtmosConvLogger.fine("Dumping data.");
-		
-		@SuppressWarnings("rawtypes")
-		Map toJsonify = new LinkedHashMap();
-		@SuppressWarnings("rawtypes")
-		Map sheets = new LinkedHashMap();
-		for (String name : this.dataGatherer.getData().getSheetNames())
-		{
-			List<String> values = new ArrayList<String>();
-			
-			Sheet<String> sheet = this.dataGatherer.getData().getSheet(name);
-			for (int i = 0; i < sheet.getSize(); i++)
-			{
-				// 1.7 DERAIL
-				values.add(sheet.get(Integer.toString(i)));
-			}
-			sheets.put(name, values);
-		}
-		toJsonify.put("sheets", sheets);
-		
-		Gson gson = new GsonBuilder().create();
-		String jason = gson.toJson(toJsonify);
-		
-		try
-		{
-			File file = new File(this.matmosFolder, "matmos_dump.json");
-			file.createNewFile();
-			
-			FileWriter fw = new FileWriter(file);
-			fw.write(jason);
-			fw.close();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		*/
 	}
 	
 	// Events
@@ -305,10 +197,10 @@ public class MAtMod extends HaddonImpl
 	@Override
 	public void onFrame(float semi)
 	{
-		if (!this.isRunning)
+		if (!this.isActivated)
 			return;
 		
-		this.expansionManager.soundRoutine();
+		this.expansionManager.onFrame(semi);
 		this.userControl.onFrame(semi);
 	}
 	
@@ -316,16 +208,16 @@ public class MAtMod extends HaddonImpl
 	public void onTick()
 	{
 		this.userControl.onTick();
-		if (this.isRunning)
+		if (this.isActivated)
 		{
-			if (!this.hasDataRolled)
+			if (!this.dataRolled)
 			{
-				this.hasDataRolled = true;
+				this.dataRolled = true;
 				this.dataGatherer.dataRoll();
 			}
 			
 			this.dataGatherer.tickRoutine();
-			this.expansionManager.dataRoutine();
+			this.expansionManager.onTick();
 		}
 		
 		if (!this.hasFirstTickPassed)
@@ -336,21 +228,33 @@ public class MAtMod extends HaddonImpl
 	}
 	
 	@Override
+	public void dispose()
+	{
+	}
+	
+	@Override
+	public void interrupt()
+	{
+		this.expansionManager.interrupt();
+	}
+	
+	@Override
 	public void onResourceManagerReload(IResourceManager var1)
 	{
 		MAtmosConvLogger.warning("ResourceManager has changed. Unintended side-effects may happen.");
 		
-		this.expansionManager.interrupt();
+		interrupt();
 		
 		// Initiate hot reload
-		if (this.isRunning)
+		if (this.isActivated)
 		{
-			stopRunning();
-			reloadAndStart();
+			deactivate();
+			reloadEverything();
+			activate();
 		}
 		else
 		{
-			reload();
+			reloadEverything();
 		}
 	}
 	
@@ -359,19 +263,15 @@ public class MAtMod extends HaddonImpl
 		return this.expansionManager.getExpansions();
 	}
 	
-	public boolean isReady()
+	public boolean isInitialized()
 	{
-		return this.isReady;
+		return this.isInitialized;
 	}
 	
-	public boolean isRunning()
+	@Override
+	public boolean isActivated()
 	{
-		return this.isRunning;
-	}
-	
-	public boolean isDumpReady()
-	{
-		return this.isDumpReady;
+		return this.isActivated;
 	}
 	
 	@Override
@@ -434,5 +334,15 @@ public class MAtMod extends HaddonImpl
 	public VolumeUpdatable getGlobalVolumeControl()
 	{
 		return this.expansionManager;
+	}
+	
+	public void synchronize()
+	{
+		this.expansionManager.synchronize();
+	}
+	
+	public void saveExpansions()
+	{
+		this.expansionManager.saveConfig();
 	}
 }

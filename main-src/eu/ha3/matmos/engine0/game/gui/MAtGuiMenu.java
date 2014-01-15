@@ -135,12 +135,11 @@ public class MAtGuiMenu extends GuiScreen
 				public void sliderValueChanged(HGuiSliderControl slider, float value)
 				{
 					expansion.setVolumeAndUpdate(value * 2);
-					if (value != 0f && !expansion.isRunning())
+					if (value > 0f && !expansion.isActivated())
 					{
-						expansion.turnOn();
+						expansion.activate();
 					}
 					slider.updateDisplayString();
-					
 				}
 				
 				@Override
@@ -162,10 +161,10 @@ public class MAtGuiMenu extends GuiScreen
 				@Override
 				public String provideDisplayString()
 				{
-					String display = expansion.getFriendlyName() + ": ";
+					String display = expansion.getName() + ": ";
 					if (expansion.getVolume() == 0f)
 					{
-						if (expansion.isRunning())
+						if (expansion.isActivated())
 						{
 							display = display + "Will be disabled";
 						}
@@ -269,7 +268,7 @@ public class MAtGuiMenu extends GuiScreen
 		else if (par1GuiButton.id == 212)
 		{
 			mc.displayGuiScreen(this.parentScreen);
-			this.mod.stopRunning();
+			this.mod.deactivate();
 		}
 		else if (par1GuiButton.id == 220)
 		{
@@ -283,7 +282,7 @@ public class MAtGuiMenu extends GuiScreen
 			int id = par1GuiButton.id - 400;
 			Expansion expansion = this.expansionList.get(id);
 			
-			if (expansion.isRunning())
+			if (expansion.isActivated())
 			{
 				expansion.playSample();
 				
@@ -295,30 +294,15 @@ public class MAtGuiMenu extends GuiScreen
 	
 	private void aboutToClose()
 	{
-		Map<String, Expansion> expansions = this.mod.getExpansionList();
-		for (Expansion expansion : expansions.values())
-		{
-			if (expansion.getVolume() == 0f && expansion.isRunning())
-			{
-				expansion.turnOff();
-				
-			}
-			
-		}
-		
+		this.mod.synchronize();
+		this.mod.saveExpansions();
 		this.mod.saveConfig();
-		for (Expansion expansion : expansions.values())
-		{
-			expansion.saveConfig();
-			
-		}
 	}
 	
 	@Override
 	public void onGuiClosed()
 	{
 		aboutToClose();
-		
 	}
 	
 	/**

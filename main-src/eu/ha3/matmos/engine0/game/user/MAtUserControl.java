@@ -10,7 +10,6 @@ import org.lwjgl.input.Keyboard;
 import eu.ha3.easy.TimeStatistic;
 import eu.ha3.matmos.engine0.game.gui.MAtGuiMenu;
 import eu.ha3.matmos.engine0.game.system.MAtMod;
-import eu.ha3.matmos.engine0.game.system.MAtModPhase;
 import eu.ha3.matmos.v170helper.Version170Helper;
 import eu.ha3.mc.convenience.Ha3HoldActions;
 import eu.ha3.mc.convenience.Ha3KeyHolding;
@@ -46,6 +45,8 @@ public class MAtUserControl implements Ha3HoldActions, SupportsTickEvents, Suppo
 		Minecraft.getMinecraft().gameSettings.keyBindings =
 			ArrayUtils.addAll(Minecraft.getMinecraft().gameSettings.keyBindings, this.keyBindingMain);
 		this.watcher.add(this.keyBindingMain);
+		this.keyBindingMain.setKeyCode(this.mod.getConfig().getInteger("key.code"));
+		KeyBinding.resetKeyBindingArrayAndHash();
 		
 		this.scroller = new MAtScroller(this.mod);
 		this.keyManager.addKeyBinding(this.keyBindingMain, new Ha3KeyHolding(this, 7));
@@ -74,8 +75,7 @@ public class MAtUserControl implements Ha3HoldActions, SupportsTickEvents, Suppo
 		this.scroller.routine();
 		if (this.scroller.isRunning())
 		{
-			// XXX 2014-01-11 not a controller
-			//this.mod.getGlobalVolumeControl().setVolume(this.scroller.getValue());
+			this.mod.getGlobalVolumeControl().setVolumeAndUpdate(this.scroller.getValue());
 		}
 	}
 	
@@ -92,19 +92,9 @@ public class MAtUserControl implements Ha3HoldActions, SupportsTickEvents, Suppo
 	
 	public void printUnusualMessages()
 	{
-		if (!this.mod.isReady())
+		if (!this.mod.isInitialized())
 		{
-			/*MAtModPhase phase = this.mod.getPhase();
-			if (!this.mod.isFatalError())
-			{
-				this.mod.getChatter().printChat(ChatColorsSimple.COLOR_GOLD, "MAtmos is not loaded.");
-			}
-			else if (phase == MAtModPhase.NOT_INITIALIZED)
-			{
-				this.mod.getChatter().printChat(
-					ChatColorsSimple.COLOR_GOLD, "MAtmos will not load due to a fatal error. ",
-					ChatColorsSimple.COLOR_GRAY, "(Some MAtmos modules are not initialized)");
-			}*/
+			this.mod.getChatter().printChat(ChatColorsSimple.COLOR_RED, "Unknown error: MAtmos isn't initialized");
 		}
 		else
 		{
@@ -125,11 +115,10 @@ public class MAtUserControl implements Ha3HoldActions, SupportsTickEvents, Suppo
 		{
 			displayMenu();
 		}
-		else if (this.mod.isRunning())
+		else if (this.mod.isActivated())
 		{
 			this.scroller.start();
 		}
-		
 	}
 	
 	@Override
@@ -141,7 +130,7 @@ public class MAtUserControl implements Ha3HoldActions, SupportsTickEvents, Suppo
 		}
 		else
 		{
-			if (!this.mod.isRunning())
+			if (!this.mod.isActivated())
 			{
 				whenWantsToggle();
 			}
@@ -171,15 +160,15 @@ public class MAtUserControl implements Ha3HoldActions, SupportsTickEvents, Suppo
 	
 	private void whenWantsToggle()
 	{
-		if (this.mod.isRunning())
+		if (this.mod.isActivated())
 		{
-			this.mod.stopRunning();
+			this.mod.deactivate();
 			this.mod.getChatter().printChat(
 				ChatColorsSimple.COLOR_YELLOW, "Stopped. Press ", ChatColorsSimple.COLOR_WHITE,
 				getKeyBindingMainFriendlyName(), ChatColorsSimple.COLOR_YELLOW, " to re-enable.");
 			
 		}
-		else if (this.mod.isReady())
+		else if (this.mod.isInitialized())
 		{
 			if (this.loadingCount != 0)
 			{
@@ -194,10 +183,10 @@ public class MAtUserControl implements Ha3HoldActions, SupportsTickEvents, Suppo
 			}
 			
 			this.loadingCount++;
-			this.mod.startRunning();
+			this.mod.activate();
 			
 		}
-		else if (this.mod.getPhase() == MAtModPhase.NOT_YET_ENABLED)
+		else if (!this.mod.isInitialized())
 		{
 			whenUninitializedAction();
 		}
@@ -206,7 +195,7 @@ public class MAtUserControl implements Ha3HoldActions, SupportsTickEvents, Suppo
 	
 	private void whenUninitializedAction()
 	{
-		if (this.mod.getPhase() != MAtModPhase.NOT_YET_ENABLED)
+		if (this.mod.isInitialized())
 			return;
 		
 		TimeStatistic stat = new TimeStatistic();
@@ -217,14 +206,15 @@ public class MAtUserControl implements Ha3HoldActions, SupportsTickEvents, Suppo
 	
 	private void whenWantsForcing()
 	{
-		if (!this.mod.isRunning() && this.mod.isReady())
+		if (!this.mod.isActivated() && this.mod.isInitialized())
 		{
 			TimeStatistic stat = new TimeStatistic();
-			this.mod.reloadAndStart();
+			this.mod.reloadEverything();
+			this.mod.activate();
 			this.mod.getChatter().printChat(
 				ChatColorsSimple.COLOR_BRIGHTGREEN, "Reloading expansions (" + stat.getSecondsAsString(2) + "s)");
 		}
-		else if (this.mod.getPhase() == MAtModPhase.NOT_YET_ENABLED)
+		else if (!this.mod.isInitialized())
 		{
 			whenUninitializedAction();
 		}
@@ -232,7 +222,7 @@ public class MAtUserControl implements Ha3HoldActions, SupportsTickEvents, Suppo
 	
 	private void displayMenu()
 	{
-		if (this.mod.isRunning() && this.mod.util().isCurrentScreen(null))
+		if (this.mod.isActivated() && this.mod.util().isCurrentScreen(null))
 		{
 			// OBF displayGuiScreen
 			Minecraft.getMinecraft().displayGuiScreen(

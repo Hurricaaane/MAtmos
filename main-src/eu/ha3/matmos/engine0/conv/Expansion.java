@@ -41,7 +41,7 @@ import eu.ha3.util.property.simple.ConfigProperty;
 
 /* x-placeholder */
 
-public class Expansion implements VolumeUpdatable
+public class Expansion implements VolumeUpdatable, Stable
 {
 	private final VolumeContainer masterVolume;
 	private final SoundHelperRelay capabilities;
@@ -64,7 +64,6 @@ public class Expansion implements VolumeUpdatable
 	private int dataCyclic;
 	
 	private ConfigProperty myConfiguration;
-	private String friendlyName;
 	private boolean isBuilding;
 	
 	private Requirements requirements;
@@ -94,7 +93,6 @@ public class Expansion implements VolumeUpdatable
 		
 		this.myConfiguration = new ConfigProperty();
 		this.myConfiguration.setProperty("volume", 1f);
-		this.myConfiguration.setProperty("friendlyname", "");
 		this.myConfiguration.commit();
 		try
 		{
@@ -105,11 +103,8 @@ public class Expansion implements VolumeUpdatable
 		{
 			e1.printStackTrace();
 		}
-		this.friendlyName = this.myConfiguration.getString("friendlyname");
-		if (this.friendlyName.equals(""))
-		{
-			this.friendlyName = userDefinedIdentifier;
-		}
+		
+		setVolumeAndUpdate(this.myConfiguration.getFloat("volume"));
 		
 		try
 		{
@@ -123,12 +118,6 @@ public class Expansion implements VolumeUpdatable
 			throw new RuntimeException();
 			
 		}
-		
-	}
-	
-	public String getFriendlyName()
-	{
-		return this.friendlyName;
 		
 	}
 	
@@ -229,6 +218,8 @@ public class Expansion implements VolumeUpdatable
 			// loadKnowledge returns the validity of the knowledge
 			this.isReady = new XMLExpansions_Engine0().loadKnowledge(this.knowledge, this.document, false);
 			
+			this.knowledge.setSoundManager(this.capabilities);
+			
 			this.requirements = new RequiremForAKnowledge(this.knowledge);
 			
 		}
@@ -261,21 +252,17 @@ public class Expansion implements VolumeUpdatable
 				}
 				
 				this.dataCyclic = (this.dataCyclic + 1) % this.dataFrequency;
-				
 			}
 			else
 			{
 				this.knowledge.dataRoutine();
-				
 			}
-			
 		}
-		
 	}
 	
 	public void playSample()
 	{
-		if (!isRunning())
+		if (!isActivated())
 			return;
 		
 		Event event = this.knowledge.getEvent("__SAMPLE");
@@ -289,7 +276,6 @@ public class Expansion implements VolumeUpdatable
 	public ExpansionError getError()
 	{
 		return this.error;
-		
 	}
 	
 	public String getUserDefinedName()
@@ -301,7 +287,6 @@ public class Expansion implements VolumeUpdatable
 	public String getName()
 	{
 		return this.docName;
-		
 	}
 	
 	public String getDescription()
@@ -310,14 +295,15 @@ public class Expansion implements VolumeUpdatable
 		
 	}
 	
-	public boolean isRunning()
+	@Override
+	public boolean isActivated()
 	{
 		return this.knowledge.isTurnedOn();
-		
 	}
 	
 	public void saveConfig()
 	{
+		this.myConfiguration.setProperty("volume", this.volume);
 		if (this.myConfiguration.commit())
 		{
 			this.myConfiguration.save();
@@ -336,9 +322,10 @@ public class Expansion implements VolumeUpdatable
 		
 	}
 	
-	public void turnOn()
+	@Override
+	public void activate()
 	{
-		if (isRunning())
+		if (isActivated())
 			return;
 		
 		if (getVolume() <= 0f)
@@ -368,9 +355,10 @@ public class Expansion implements VolumeUpdatable
 		
 	}
 	
-	public void turnOff()
+	@Override
+	public void deactivate()
 	{
-		if (!this.isReady || !isRunning())
+		if (!this.isReady || !isActivated())
 			return;
 		
 		this.knowledge.turnOff();
@@ -415,11 +403,14 @@ public class Expansion implements VolumeUpdatable
 		return output.toString();
 	}
 	
-	public void clear()
+	@Override
+	public void dispose()
 	{
-		turnOff();
+		deactivate();
 		this.knowledge.patchKnowledge();
 		this.collation.removeRequirements(this.userDefinedIdentifier);
+		this.capabilities.cleanUp();
+		
 		this.isReady = false;
 	}
 	
@@ -450,17 +441,9 @@ public class Expansion implements VolumeUpdatable
 	/**
 	 * Interrupt this expansion brutally, without calling cleanup calls.
 	 */
+	@Override
 	public void interrupt()
 	{
 		this.capabilities.interrupt();
-	}
-	
-	/**
-	 * Cleanup this expansion. When cleaned up, this expansion can't be used
-	 * again.
-	 */
-	public void cleanUp()
-	{
-		this.capabilities.cleanUp();
 	}
 }

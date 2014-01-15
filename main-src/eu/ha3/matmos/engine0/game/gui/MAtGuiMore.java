@@ -78,39 +78,6 @@ public class MAtGuiMore extends GuiScreen
 		biomeControl.updateDisplayString();
 		this.buttonList.add(biomeControl);
 		
-		// XXX 1.7.2
-		/*MAtGuiSetSlider setSlider =
-			new MAtGuiSetSlider(this.mod, this.mod.getConfig().getString("totalconversion.name"));
-		if (setSlider.getMaxPossibilities() > 1)
-		{
-			HGuiSliderControl setControl =
-				new HGuiSliderControl(
-					214, _LEFT, _MIX * (4 + 1), _WIDTH, _UNIT, "", setSlider.calculateSliderLocation(this.mod
-						.getConfig().getString("totalconversion.name")));
-			setControl.setListener(setSlider);
-			setControl.setDisplayStringProvider(setSlider);
-			setControl.updateDisplayString();
-			this.buttonList.add(setControl);
-		}*/
-		
-		this.buttonList.add(new GuiButton(220, _LEFT + _MIX, _MIX * (5 + 1), _WIDTH - _MIX * 2, _UNIT, this.mod
-			.getConfig().getBoolean("dump.sheets.enabled")
-			? "Data dump: "
-				+ (this.mod.isDumpReady()
-					? "Enabled (this will slow down Minecraft)" : "Enabled when Minecraft restarts")
-			: "Data dump: Disabled"));
-		
-		if (this.mod.isDumpReady())
-		{
-			this.buttonList.add(new GuiButton(
-				215, _LEFT + _MIX, _MIX * (6 + 1), _WIDTH - _MIX * 2, _UNIT, "Generate data dump now"));
-		}
-		else
-		{
-			this.buttonList.add(new GuiButton(
-				215, _LEFT + _MIX, _MIX * (6 + 1), _WIDTH - _MIX * 2, _UNIT, "Generate PARTIAL data dump now"));
-		}
-		
 		this.buttonList.add(new GuiButton(200, _LEFT + _MIX, _SEPARATOR + _MIX * (this.IDS_PER_PAGE + 4), _WIDTH
 			- _MIX * 2 - _GAP - _TURNOFFWIDTH, _UNIT, "Done"));
 	}
@@ -160,29 +127,6 @@ public class MAtGuiMore extends GuiScreen
 			par1GuiButton.displayString = "Use custom world height: " + this.mod.getConfig().getInteger("world.height");
 			this.mod.saveConfig();
 		}*/
-		else if (par1GuiButton.id == 215)
-		{
-			if (this.mod.isDumpReady())
-			{
-				this.mod.createDataDump(false);
-			}
-			else
-			{
-				this.mod.createDataDump(true);
-			}
-		}
-		else if (par1GuiButton.id == 220)
-		{
-			this.mod.getConfig().setProperty(
-				"dump.sheets.enabled", !this.mod.getConfig().getBoolean("dump.sheets.enabled"));
-			par1GuiButton.displayString =
-				this.mod.getConfig().getBoolean("dump.sheets.enabled")
-					? "Data dump: "
-						+ (this.mod.isDumpReady()
-							? "Enabled (this will slow down Minecraft)" : "Enabled when Minecraft restarts")
-					: "Data dump: Disabled";
-			this.mod.saveConfig();
-		}
 	}
 	
 	private void aboutToClose()

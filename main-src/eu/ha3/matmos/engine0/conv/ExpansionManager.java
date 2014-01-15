@@ -24,16 +24,19 @@ import eu.ha3.matmos.engine0.game.system.MAtResourcePackDealer;
 import eu.ha3.matmos.engine0.game.system.SoundAccessor;
 import eu.ha3.matmos.engine0.requirem.Collation;
 import eu.ha3.matmos.engine0.requirem.CollationOfRequirements;
+import eu.ha3.mc.haddon.supporting.SupportsFrameEvents;
+import eu.ha3.mc.haddon.supporting.SupportsTickEvents;
 
 /* x-placeholder */
 
-public class ExpansionManager implements VolumeUpdatable
+public class ExpansionManager implements VolumeUpdatable, Stable, SupportsTickEvents, SupportsFrameEvents
 {
 	private final SoundAccessor accessor;
 	private final File userconfigFolder;
 	
 	private final MAtResourcePackDealer dealer = new MAtResourcePackDealer();
 	private Map<String, Expansion> expansions;
+	private Map<String, ExpressedExpansion> expressions;
 	
 	private boolean isActivated;
 	private Data data;
@@ -47,6 +50,7 @@ public class ExpansionManager implements VolumeUpdatable
 		this.accessor = accessor;
 		
 		this.expansions = new HashMap<String, Expansion>();
+		this.expressions = new HashMap<String, ExpressedExpansion>();
 		
 		if (!this.userconfigFolder.exists())
 		{
@@ -58,19 +62,17 @@ public class ExpansionManager implements VolumeUpdatable
 	
 	public void loadExpansions()
 	{
-		clearExpansions();
+		dispose();
 		
 		List<ExpressedExpansion> expressions = new ArrayList<ExpressedExpansion>();
-		gatherOffline(expressions);
-		createExpansionEntries(expressions);
+		findExpansions(expressions);
 		for (ExpressedExpansion exp : expressions)
 		{
 			addExpansionFromExpression(exp);
 		}
-		
 	}
 	
-	private void gatherOffline(List<ExpressedExpansion> expressions)
+	private void findExpansions(List<ExpressedExpansion> expressions)
 	{
 		List<ResourcePackRepository.Entry> resourcePacks = this.dealer.findResourcePacks();
 		for (ResourcePackRepository.Entry pack : resourcePacks)
@@ -109,31 +111,22 @@ public class ExpansionManager implements VolumeUpdatable
 		}
 	}
 	
-	private void createExpansionEntries(List<ExpressedExpansion> offline)
-	{
-		for (ExpressedExpansion exp : offline)
-		{
-			MAtmosConvLogger.info("ExpansionLoader found offline " + exp.getUniqueName() + ".");
-			createExpansionEntry(exp.getUniqueName());
-		}
-		
-	}
-	
-	private void createExpansionEntry(String uniqueName)
-	{
-		Expansion expansion =
-			new Expansion(this, this.accessor, uniqueName, new File(this.userconfigFolder, uniqueName + ".cfg"));
-		this.expansions.put(uniqueName, expansion);
-		
-		expansion.setData(this.data);
-		expansion.setCollation(this.collation);
-	}
-	
 	private void addExpansionFromExpression(ExpressedExpansion exp)
 	{
 		try
 		{
-			addExpansion(exp.getUniqueName(), exp.getPack().getInputStream(exp.getLocation()));
+			String uniqueName = exp.getUniqueName();
+			
+			Expansion expansion =
+				new Expansion(this, this.accessor, uniqueName, new File(this.userconfigFolder, uniqueName + ".cfg"));
+			this.expansions.put(uniqueName, expansion);
+			this.expressions.put(uniqueName, exp);
+			
+			expansion.setData(this.data);
+			expansion.setCollation(this.collation);
+			
+			expansion.inputStructure(exp.getPack().getInputStream(exp.getLocation()));
+			expansion.updateVolume();
 		}
 		catch (IOException e)
 		{
@@ -141,83 +134,49 @@ public class ExpansionManager implements VolumeUpdatable
 		}
 	}
 	
-	private void addExpansion(String uniqueName, InputStream stream)
-	{
-		if (!this.expansions.containsKey(uniqueName))
-		{
-			MAtmosConvLogger.severe("Tried to add an expansion that has no entry!");
-			return;
-		}
-		
-		Expansion expansion = this.expansions.get(uniqueName);
-		expansion.inputStructure(stream);
-		
-		tryTurnOn(expansion);
-	}
-	
-	private void tryTurnOn(Expansion expansion)
-	{
-		if (expansion == null)
-			return;
-		
-		turnOnOrOff(expansion);
-		
-	}
-	
-	private void turnOnOrOff(Expansion expansion)
+	private void synchronizeStable(Expansion expansion)
 	{
 		if (expansion == null)
 			return;
 		
 		if (this.isActivated)
 		{
-			if (expansion.getVolume() > 0)
+			if (expansion.isActivated())
 			{
-				expansion.turnOn();
+				if (expansion.getVolume() <= 0f)
+				{
+					expansion.deactivate();
+				}
+			}
+			else
+			{
+				if (expansion.getVolume() > 0f)
+				{
+					expansion.activate();
+				}
 			}
 		}
 		else
 		{
-			expansion.turnOff();
+			expansion.deactivate();
 		}
-		
 	}
 	
-	public void activate()
-	{
-		if (this.isActivated)
-			return;
-		
-		this.isActivated = true;
-		
-		resync();
-	}
-	
-	public void deactivate()
-	{
-		if (!this.isActivated)
-			return;
-		
-		this.isActivated = false;
-		
-		resync();
-	}
-	
-	private void resync()
+	public void synchronize()
 	{
 		for (Expansion expansion : this.expansions.values())
 		{
-			turnOnOrOff(expansion);
+			synchronizeStable(expansion);
 		}
 	}
 	
 	public Map<String, Expansion> getExpansions()
 	{
 		return this.expansions;
-		
 	}
 	
-	public void soundRoutine()
+	@Override
+	public void onFrame(float f)
 	{
 		for (Expansion expansion : this.expansions.values())
 		{
@@ -225,7 +184,8 @@ public class ExpansionManager implements VolumeUpdatable
 		}
 	}
 	
-	public void dataRoutine()
+	@Override
+	public void onTick()
 	{
 		for (Expansion expansion : this.expansions.values())
 		{
@@ -233,27 +193,10 @@ public class ExpansionManager implements VolumeUpdatable
 		}
 	}
 	
-	public void clearExpansions()
-	{
-		for (Expansion expansion : this.expansions.values())
-		{
-			expansion.clear();
-		}
-		this.expansions.clear();
-	}
-	
 	public void setData(Data data)
 	{
 		this.data = data;
 		
-	}
-	
-	public void interrupt()
-	{
-		for (Expansion exp : this.expansions.values())
-		{
-			exp.interrupt();
-		}
 	}
 	
 	public Collation getCollation()
@@ -283,11 +226,59 @@ public class ExpansionManager implements VolumeUpdatable
 		}
 	}
 	
+	@Override
+	public void activate()
+	{
+		if (this.isActivated)
+			return;
+		
+		this.isActivated = true;
+		
+		synchronize();
+	}
+	
+	@Override
+	public void deactivate()
+	{
+		if (!this.isActivated)
+			return;
+		
+		this.isActivated = false;
+		
+		synchronize();
+	}
+	
+	@Override
+	public void interrupt()
+	{
+		for (Expansion exp : this.expansions.values())
+		{
+			exp.interrupt();
+		}
+	}
+	
+	@Override
 	public void dispose()
 	{
-		for (Expansion e : this.expansions.values())
+		for (Expansion expansion : this.expansions.values())
 		{
-			e.cleanUp();
+			expansion.dispose();
+		}
+		this.expansions.clear();
+		this.expressions.clear();
+	}
+	
+	@Override
+	public boolean isActivated()
+	{
+		return this.isActivated;
+	}
+	
+	public void saveConfig()
+	{
+		for (Expansion expansion : this.expansions.values())
+		{
+			expansion.saveConfig();
 		}
 	}
 }
