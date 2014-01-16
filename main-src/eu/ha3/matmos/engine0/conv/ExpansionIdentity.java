@@ -7,14 +7,14 @@ import net.minecraft.util.ResourceLocation;
 --filenotes-placeholder
 */
 
-public final class ExpressedExpansion
+public final class ExpansionIdentity
 {
 	private final String uniqueName;
 	private final String friendlyName;
 	private final IResourcePack pack;
 	private final ResourceLocation location;
 	
-	public ExpressedExpansion(String uniqueName, String friendlyName, IResourcePack pack, ResourceLocation location)
+	public ExpansionIdentity(String uniqueName, String friendlyName, IResourcePack pack, ResourceLocation location)
 	{
 		this.uniqueName = uniqueName;
 		this.friendlyName = friendlyName;

@@ -6,14 +6,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagList;
-import eu.ha3.matmos.engine0.core.implem.StringData;
+import eu.ha3.matmos.engine0.core.implem.SelfGeneratingData;
 import eu.ha3.matmos.engine0.game.system.MAtMod;
 
 /* x-placeholder */
 
 public abstract class MAtProcessorEnchantments extends MAtProcessorModel
 {
-	public MAtProcessorEnchantments(MAtMod modIn, StringData dataIn, String normalNameIn, String deltaNameIn)
+	public MAtProcessorEnchantments(MAtMod modIn, SelfGeneratingData dataIn, String normalNameIn, String deltaNameIn)
 	{
 		super(modIn, dataIn, normalNameIn, deltaNameIn);
 	}

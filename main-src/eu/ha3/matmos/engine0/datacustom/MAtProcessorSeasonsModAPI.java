@@ -5,7 +5,7 @@ import java.util.Map;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
-import eu.ha3.matmos.engine0.core.implem.StringData;
+import eu.ha3.matmos.engine0.core.implem.SelfGeneratingData;
 import eu.ha3.matmos.engine0.game.data.MAtProcessorModel;
 import eu.ha3.matmos.engine0.game.system.MAtMod;
 
@@ -16,7 +16,7 @@ public class MAtProcessorSeasonsModAPI extends MAtProcessorModel
 {
 	private Map<Season, Integer> seasonsHash;
 	
-	public MAtProcessorSeasonsModAPI(MAtMod modIn, StringData dataIn, String normalNameIn, String deltaNameIn)
+	public MAtProcessorSeasonsModAPI(MAtMod modIn, SelfGeneratingData dataIn, String normalNameIn, String deltaNameIn)
 	{
 		super(modIn, dataIn, normalNameIn, deltaNameIn);
 		

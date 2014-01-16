@@ -2,7 +2,9 @@ package eu.ha3.matmos.engine0.game.data;
 
 import java.util.LinkedHashSet;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,11 +15,12 @@ import eu.ha3.matmos.engine0.conv.MAtmosConvLogger;
 import eu.ha3.matmos.engine0.conv.Processor;
 import eu.ha3.matmos.engine0.conv.ProcessorModel;
 import eu.ha3.matmos.engine0.core.implem.GenericSheet;
-import eu.ha3.matmos.engine0.core.implem.StringData;
+import eu.ha3.matmos.engine0.core.implem.SelfGeneratingData;
 import eu.ha3.matmos.engine0.core.interfaces.Data;
 import eu.ha3.matmos.engine0.datacustom.MAtProcessorSeasonsModAPI;
+import eu.ha3.matmos.engine0.game.data.modules.Module;
+import eu.ha3.matmos.engine0.game.data.modules.ModulePlayerPosition;
 import eu.ha3.matmos.engine0.game.system.MAtMod;
-import eu.ha3.matmos.engine0.requirem.Requirements;
 import eu.ha3.mc.convenience.Ha3StaticUtilities;
 import eu.ha3.mc.quick.chat.ChatColorsSimple;
 
@@ -25,6 +28,8 @@ import eu.ha3.mc.quick.chat.ChatColorsSimple;
 
 public class MAtDataGatherer
 {
+	public static final String DELTA_SUFFIX = "_delta";
+	
 	final static String INSTANTS = "Instants";
 	final static String DELTAS = "Deltas";
 	final static String LARGESCAN = "LargeScan";
@@ -72,7 +77,7 @@ public class MAtDataGatherer
 	private ProcessorModel optionsProcessor;
 	private ProcessorModel weatherpony_seasons_api_Processor;
 	
-	private StringData data;
+	private Data data;
 	
 	private int ticksPassed;
 	
@@ -81,10 +86,14 @@ public class MAtDataGatherer
 	private int lastLargeScanZ;
 	private int lastLargeScanPassed;
 	
+	private Map<String, Module> modules;
+	
 	public MAtDataGatherer(MAtMod mAtmosHaddon)
 	{
 		this.mod = mAtmosHaddon;
 		this.frequent = new LinkedHashSet<Processor>();
+		
+		this.modules = new TreeMap<String, Module>();
 	}
 	
 	private void resetRegulators()
@@ -93,12 +102,19 @@ public class MAtDataGatherer
 		this.ticksPassed = 0;
 	}
 	
-	public void load(Requirements globalRequirements)
+	private void addModule(Module module, boolean hasDelta)
+	{
+		this.modules.put(module.getModuleName(), module);
+	}
+	
+	public void load()
 	{
 		resetRegulators();
 		
-		this.data = new StringData(globalRequirements);
+		this.data = new SelfGeneratingData(GenericSheet.class);
 		prepareSheets();
+		
+		addModule(new ModulePlayerPosition(this.data), true);
 		
 		this.largeScanner = new MAtScanVolumetricModel();
 		this.smallScanner = new MAtScanVolumetricModel();
@@ -262,8 +278,6 @@ public class MAtDataGatherer
 			}
 			
 			this.optionsProcessor.process();
-			
-			this.data.flagUpdate();
 		}
 		
 		if (true)
@@ -272,8 +286,6 @@ public class MAtDataGatherer
 			{
 				model.process();
 			}
-			
-			this.data.flagUpdate();
 		}
 		
 		if (this.ticksPassed % 2048 == 0)
@@ -287,6 +299,7 @@ public class MAtDataGatherer
 		this.ticksPassed = this.ticksPassed + 1;
 	}
 	
+	/*
 	private void prepareSheets()
 	{
 		createSheet(LARGESCAN);
@@ -329,19 +342,7 @@ public class MAtDataGatherer
 		createSheet("weatherpony_seasons_api", 4);
 		
 		createSheet("Options", 16);
-		
-	}
-	
-	@Deprecated
-	private void createSheet(String name, int __count__IGNORED)
-	{
-		createSheet(name);
-	}
-	
-	private void createSheet(String name)
-	{
-		this.data.setSheet(name, new GenericSheet(""));
-	}
+	}*/
 	
 	public void dataRoll()
 	{

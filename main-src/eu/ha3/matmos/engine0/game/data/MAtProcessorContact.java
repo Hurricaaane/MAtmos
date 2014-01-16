@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.minecraft.client.Minecraft;
-import eu.ha3.matmos.engine0.core.implem.StringData;
+import eu.ha3.matmos.engine0.core.implem.SelfGeneratingData;
 import eu.ha3.matmos.engine0.game.system.MAtMod;
 import eu.ha3.matmos.v170helper.Version170Helper;
 
@@ -14,7 +14,7 @@ public class MAtProcessorContact extends MAtProcessorModel
 {
 	private Map<String, Integer> tempnormal;
 	
-	public MAtProcessorContact(MAtMod modIn, StringData dataIn, String normalNameIn, String deltaNameIn)
+	public MAtProcessorContact(MAtMod modIn, SelfGeneratingData dataIn, String normalNameIn, String deltaNameIn)
 	{
 		super(modIn, dataIn, normalNameIn, deltaNameIn);
 		this.tempnormal = new HashMap<String, Integer>(0);

@@ -22,7 +22,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
-import eu.ha3.matmos.engine0.core.implem.StringData;
+import eu.ha3.matmos.engine0.core.interfaces.Data;
 import eu.ha3.matmos.engine0.game.system.MAtMod;
 import eu.ha3.mc.haddon.PrivateAccessException;
 
@@ -37,7 +37,7 @@ public class MAtProcessorRelaxed extends MAtProcessorModel
 	private Map<String, Integer> serverAddresses;
 	private Map<String, Integer> serverPorts;
 	
-	public MAtProcessorRelaxed(MAtMod modIn, StringData dataIn, String normalNameIn, String deltaNameIn)
+	public MAtProcessorRelaxed(MAtMod modIn, Data dataIn, String normalNameIn, String deltaNameIn)
 	{
 		super(modIn, dataIn, normalNameIn, deltaNameIn);
 		

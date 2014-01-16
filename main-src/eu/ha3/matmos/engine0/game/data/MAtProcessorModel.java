@@ -1,7 +1,7 @@
 package eu.ha3.matmos.engine0.game.data;
 
 import eu.ha3.matmos.engine0.conv.ProcessorModel;
-import eu.ha3.matmos.engine0.core.implem.StringData;
+import eu.ha3.matmos.engine0.core.interfaces.Data;
 import eu.ha3.matmos.engine0.game.system.MAtMod;
 
 /* x-placeholder */
@@ -10,11 +10,10 @@ public abstract class MAtProcessorModel extends ProcessorModel
 {
 	private MAtMod mod;
 	
-	public MAtProcessorModel(MAtMod modIn, StringData dataIn, String normalNameIn, String deltaNameIn)
+	public MAtProcessorModel(MAtMod mod, Data data, String normalName, String deltaName)
 	{
-		super(dataIn, normalNameIn, deltaNameIn);
-		this.mod = modIn;
-		
+		super(data, normalName, deltaName);
+		this.mod = mod;
 	}
 	
 	public MAtMod mod()

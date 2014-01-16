@@ -6,13 +6,17 @@ import java.util.Set;
 
 public interface Data
 {
-	public abstract void flagUpdate();
+	public Sheet getSheet(String name);
 	
-	public abstract int getVersion();
+	public Set<String> getSheetNames();
 	
-	public abstract Set<String> getSheetNames();
+	/**
+	 * Empties the data overall
+	 */
+	public void clear();
 	
-	public abstract Sheet getSheet(String name);
-	
-	public abstract void setSheet(String name, Sheet sheet);
+	/**
+	 * Empties the individual sheets
+	 */
+	public void clearContents();
 }

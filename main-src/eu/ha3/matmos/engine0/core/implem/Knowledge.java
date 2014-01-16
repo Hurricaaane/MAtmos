@@ -61,7 +61,7 @@ public class Knowledge implements Stated, Evaluated, Simulated
 		this.relay = relay;
 		this.time = time;
 		
-		this.data = new StringData(new FlatRequirements());
+		this.data = new SelfGeneratingData(new FlatRequirements());
 	}
 	
 	public ProviderCollection obtainProviders()
@@ -101,14 +101,17 @@ public class Knowledge implements Stated, Evaluated, Simulated
 	{
 		purge(this.machineMapped, this.junctionMapped, "junctions");
 		purge(this.junctionMapped, this.conditionMapped, "conditions");
-		
+	}
+	
+	public Set<String> calculateRequiredModules()
+	{
 		Set<String> requiredModules = new TreeSet<String>();
 		for (Condition c : this.conditionMapped.values())
 		{
 			requiredModules.addAll(c.getDependencies());
 		}
 		
-		this.sheetMaster.require(requiredModules);
+		return requiredModules;
 	}
 	
 	private void purge(
@@ -150,16 +153,6 @@ public class Knowledge implements Stated, Evaluated, Simulated
 		{
 			event.cacheSounds();
 		}
-	}
-	
-	public void setData(Data dataIn)
-	{
-		this.data = dataIn;
-	}
-	
-	public Data getData()
-	{
-		return this.data;
 	}
 	
 	@Override

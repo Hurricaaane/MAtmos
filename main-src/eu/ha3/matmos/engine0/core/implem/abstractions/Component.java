@@ -1,6 +1,10 @@
 package eu.ha3.matmos.engine0.core.implem.abstractions;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import eu.ha3.matmos.engine0.core.interfaces.Named;
+import eu.ha3.matmos.engine0.core.interfaces.VersionListener;
 import eu.ha3.matmos.engine0.core.interfaces.Versionned;
 
 /* x-placeholder */
@@ -8,11 +12,13 @@ import eu.ha3.matmos.engine0.core.interfaces.Versionned;
 public abstract class Component implements Named, Versionned
 {
 	private final String name;
+	private final Set<VersionListener> listeners;
 	private int version;
 	
 	public Component(String name)
 	{
 		this.name = name;
+		this.listeners = new HashSet<VersionListener>();
 		this.version = -1;
 	}
 	
@@ -38,5 +44,16 @@ public abstract class Component implements Named, Versionned
 	public void incrementVersion()
 	{
 		this.version = this.version + 1;
+		
+		for (VersionListener listener : this.listeners)
+		{
+			listener.onIncrement(this);
+		}
+	}
+	
+	@Override
+	public void registerVersionListener(VersionListener listener)
+	{
+		this.listeners.add(listener);
 	}
 }

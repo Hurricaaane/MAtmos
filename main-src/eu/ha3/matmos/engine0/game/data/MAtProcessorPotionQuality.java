@@ -6,14 +6,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.PotionEffect;
 import eu.ha3.matmos.engine0.conv.MAtmosConvLogger;
-import eu.ha3.matmos.engine0.core.implem.StringData;
+import eu.ha3.matmos.engine0.core.implem.SelfGeneratingData;
 import eu.ha3.matmos.engine0.game.system.MAtMod;
 
 /* x-placeholder */
 
 public abstract class MAtProcessorPotionQuality extends MAtProcessorModel
 {
-	public MAtProcessorPotionQuality(MAtMod modIn, StringData dataIn, String normalNameIn, String deltaNameIn)
+	public MAtProcessorPotionQuality(MAtMod modIn, SelfGeneratingData dataIn, String normalNameIn, String deltaNameIn)
 	{
 		super(modIn, dataIn, normalNameIn, deltaNameIn);
 	}

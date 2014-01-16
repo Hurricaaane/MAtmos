@@ -1,21 +1,21 @@
 package eu.ha3.matmos.engine0.game.data;
 
-import eu.ha3.matmos.engine0.core.implem.StringData;
+import eu.ha3.matmos.engine0.core.implem.SelfGeneratingData;
 
 /* x-placeholder */
 
 public abstract class MAtScanCoordsPipeline implements MAtScanCoordsOps
 {
-	private StringData data;
+	private SelfGeneratingData data;
 	private MAtScanCoordsPipeline next;
 	
-	public MAtScanCoordsPipeline(StringData dataIn)
+	public MAtScanCoordsPipeline(SelfGeneratingData dataIn)
 	{
 		this.data = dataIn;
 		this.next = null;
 	}
 	
-	public StringData data()
+	public SelfGeneratingData data()
 	{
 		return this.data;
 	}

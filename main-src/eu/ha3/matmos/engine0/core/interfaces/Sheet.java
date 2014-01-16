@@ -16,8 +16,7 @@ public interface Sheet
 	public String get(String key);
 	
 	/**
-	 * Sets the value of a certain position. This should return a default value
-	 * if the position does not exist.
+	 * Sets the value of a certain position.
 	 * 
 	 * @param key
 	 * @return
@@ -25,22 +24,14 @@ public interface Sheet
 	public void set(String key, String value);
 	
 	/**
-	 * Gets the maximum possible position + 1 of this sheet.
-	 * 
-	 * @param pos
-	 * @return
-	 */
-	//public int getSize();
-	
-	/**
-	 * Returns a number that changes every time this value is changed to a
+	 * Returns a number that increments every time this value is changed to a
 	 * different value (as opposed to set).<br>
-	 * Non-initialized positions start at 0.
+	 * Non-initialized positions start at -1.
 	 * 
 	 * @param key
 	 * @return
 	 */
-	public int getVersionOf(String key);
+	public int version(String key);
 	
 	/**
 	 * Tells if this sheet contains a certain key.
@@ -48,7 +39,7 @@ public interface Sheet
 	 * @param key
 	 * @return
 	 */
-	public boolean containsKey(String key);
+	public boolean exists(String key);
 	
 	/**
 	 * Returns the set of keys.
@@ -56,4 +47,9 @@ public interface Sheet
 	 * @return
 	 */
 	public Set<String> keySet();
+	
+	/**
+	 * Empty this sheet. Versions are preserved if cleared this way.
+	 */
+	public void clear();
 }

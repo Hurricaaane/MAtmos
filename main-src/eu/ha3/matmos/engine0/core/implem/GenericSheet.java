@@ -10,34 +10,34 @@ import eu.ha3.matmos.engine0.core.interfaces.Sheet;
 
 public class GenericSheet implements Sheet
 {
-	private final Map<String, String> values;
-	private final Map<String, Integer> versions;
+	protected final Map<String, String> values;
+	protected final Map<String, Integer> versions;
 	
-	public GenericSheet(String defaultValue)
+	public GenericSheet()
 	{
 		this.values = new TreeMap<String, String>();
 		this.versions = new TreeMap<String, Integer>();
 	}
 	
 	@Override
-	public String get(String pos)
+	public String get(String key)
 	{
-		return this.values.get(pos);
+		return this.values.containsKey(key) ? this.values.get(key) : "_ENTRY_NOT_DEFINED";
 	}
 	
 	@Override
-	public void set(String pos, String value)
+	public void set(String key, String value)
 	{
-		if (!value.equals(this.values.get(pos)))
+		if (!value.equals(this.values.get(key)))
 		{
-			int ver = this.versions.containsKey(pos) ? this.versions.get(pos) : 0;
-			this.values.put(pos, value);
-			this.versions.put(pos, ver + 1);
+			int ver = this.versions.containsKey(key) ? this.versions.get(key) : -1;
+			this.values.put(key, value);
+			this.versions.put(key, ver + 1);
 		}
 	}
 	
 	@Override
-	public int getVersionOf(String pos)
+	public int version(String pos)
 	{
 		if (this.versions.containsKey(pos))
 			return this.versions.get(pos);
@@ -46,7 +46,7 @@ public class GenericSheet implements Sheet
 	}
 	
 	@Override
-	public boolean containsKey(String key)
+	public boolean exists(String key)
 	{
 		return this.values.containsKey(key);
 	}
@@ -55,5 +55,11 @@ public class GenericSheet implements Sheet
 	public Set<String> keySet()
 	{
 		return this.values.keySet();
+	}
+	
+	@Override
+	public void clear()
+	{
+		this.values.clear();
 	}
 }

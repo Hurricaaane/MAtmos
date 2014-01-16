@@ -1,13 +1,13 @@
 package eu.ha3.matmos.engine0.game.data;
 
-import eu.ha3.matmos.engine0.core.implem.StringData;
+import eu.ha3.matmos.engine0.core.implem.SelfGeneratingData;
 import eu.ha3.matmos.engine0.game.system.MAtMod;
 
 /* x-placeholder */
 
 public class MAtProcessorOptions extends MAtProcessorModel
 {
-	public MAtProcessorOptions(MAtMod modIn, StringData dataIn, String normalNameIn, String deltaNameIn)
+	public MAtProcessorOptions(MAtMod modIn, SelfGeneratingData dataIn, String normalNameIn, String deltaNameIn)
 	{
 		super(modIn, dataIn, normalNameIn, deltaNameIn);
 	}

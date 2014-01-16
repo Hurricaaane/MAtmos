@@ -17,4 +17,9 @@ public interface Versionned
 	 * Increments the version.
 	 */
 	public void incrementVersion();
+	
+	/**
+	 * Registers a version listener that is called after incrementation.
+	 */
+	public void registerVersionListener(VersionListener listener);
 }

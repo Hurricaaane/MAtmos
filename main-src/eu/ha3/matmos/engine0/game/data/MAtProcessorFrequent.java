@@ -12,7 +12,7 @@ import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.WorldInfo;
-import eu.ha3.matmos.engine0.core.implem.StringData;
+import eu.ha3.matmos.engine0.core.implem.SelfGeneratingData;
 import eu.ha3.matmos.engine0.game.system.MAtMod;
 import eu.ha3.matmos.v170helper.Version170Helper;
 
@@ -20,7 +20,7 @@ import eu.ha3.matmos.v170helper.Version170Helper;
 
 public class MAtProcessorFrequent extends MAtProcessorModel
 {
-	public MAtProcessorFrequent(MAtMod modIn, StringData dataIn, String normalNameIn, String deltaNameIn)
+	public MAtProcessorFrequent(MAtMod modIn, SelfGeneratingData dataIn, String normalNameIn, String deltaNameIn)
 	{
 		super(modIn, dataIn, normalNameIn, deltaNameIn);
 	}

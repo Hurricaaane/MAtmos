@@ -15,16 +15,14 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import eu.ha3.matmos.engine0.core.implem.Condition;
-import eu.ha3.matmos.engine0.core.implem.ConditionSet;
-import eu.ha3.matmos.engine0.core.implem.ConditionType;
-import eu.ha3.matmos.engine0.core.implem.Descriptible;
 import eu.ha3.matmos.engine0.core.implem.Dynamic;
 import eu.ha3.matmos.engine0.core.implem.Event;
+import eu.ha3.matmos.engine0.core.implem.Junction;
 import eu.ha3.matmos.engine0.core.implem.Knowledge;
-import eu.ha3.matmos.engine0.core.implem.MAtmosException;
 import eu.ha3.matmos.engine0.core.implem.Machine;
-import eu.ha3.matmos.engine0.core.implem.Stream;
-import eu.ha3.matmos.engine0.core.implem.SugarList;
+import eu.ha3.matmos.engine0.core.implem.Operator;
+import eu.ha3.matmos.engine0.core.implem.StreamInformation;
+import eu.ha3.matmos.engine0.core.implem.StringListContainer;
 import eu.ha3.matmos.engine0.core.implem.TimedEvent;
 
 /* x-placeholder */
@@ -89,28 +87,27 @@ public class XMLExpansions_Engine0
 	static final String ISLOOPING = "islooping";
 	static final String ISUSINGPAUSE = "isusingpause";
 	
-	private Map<String, ConditionType> inverseSymbols;
+	private Map<String, Operator> inverseSymbols;
 	
 	public XMLExpansions_Engine0()
 	{
-		this.inverseSymbols = new HashMap<String, ConditionType>();
+		this.inverseSymbols = new HashMap<String, Operator>();
 		
-		Map<ConditionType, String> symbols = new HashMap<ConditionType, String>();
-		symbols.put(ConditionType.NOT_EQUAL, "!=");
-		symbols.put(ConditionType.EQUAL, "==");
-		symbols.put(ConditionType.GREATER, ">");
-		symbols.put(ConditionType.GREATER_OR_EQUAL, ">=");
-		symbols.put(ConditionType.LESSER_, "<");
-		symbols.put(ConditionType.LESSER_OR_EQUAL, "<=");
-		symbols.put(ConditionType.IN_LIST, "in");
-		symbols.put(ConditionType.NOT_IN_LIST, "!in");
-		symbols.put(ConditionType.ALWAYS_FALSE, "><");
+		Map<Operator, String> symbols = new HashMap<Operator, String>();
+		symbols.put(Operator.NOT_EQUAL, "!=");
+		symbols.put(Operator.EQUAL, "==");
+		symbols.put(Operator.GREATER, ">");
+		symbols.put(Operator.GREATER_OR_EQUAL, ">=");
+		symbols.put(Operator.LESSER_, "<");
+		symbols.put(Operator.LESSER_OR_EQUAL, "<=");
+		symbols.put(Operator.IN_LIST, "in");
+		symbols.put(Operator.NOT_IN_LIST, "!in");
+		symbols.put(Operator.ALWAYS_FALSE, "><");
 		
-		for (Entry<ConditionType, String> is : symbols.entrySet())
+		for (Entry<Operator, String> is : symbols.entrySet())
 		{
 			this.inverseSymbols.put(is.getValue(), is.getKey());
 		}
-		
 	}
 	
 	///
@@ -152,49 +149,6 @@ public class XMLExpansions_Engine0
 		
 	}
 	
-	private void extractXMLdescriptible(Knowledge original, Element capsule, Descriptible descriptible)
-		throws XPathExpressionException
-	{
-		Element descElt = DomUtil.getChild(capsule, DESCRIPTIBLE);
-		
-		if (descElt != null)
-		{
-			parseXMLdescriptible(original, descElt, descriptible);
-			
-		}
-		
-	}
-	
-	private void parseXMLdescriptible(Knowledge original, Element descNode, Descriptible descriptible)
-		throws XPathExpressionException
-	{
-		if (descNode == null)
-			return;
-		
-		String nickname = eltString(NICKNAME, descNode);
-		String description = eltString(DESCRIPTION, descNode);
-		String icon = eltString(ICON, descNode);
-		String meta = eltString(META, descNode);
-		
-		if (nickname != null)
-		{
-			descriptible.name = nickname;
-		}
-		if (description != null)
-		{
-			descriptible.description = description;
-		}
-		if (icon != null)
-		{
-			descriptible.icon = icon;
-		}
-		if (meta != null)
-		{
-			descriptible.meta = meta;
-		}
-		
-	}
-	
 	private void parseXMLdynamic(Knowledge original, Element capsule, String name, boolean allowOverrides)
 		throws XPathExpressionException
 	{
@@ -208,7 +162,6 @@ public class XMLExpansions_Engine0
 		}
 		
 		Dynamic descriptible = original.getDynamic(name);
-		extractXMLdescriptible(original, capsule, descriptible);
 		
 		for (Element eelt : DomUtil.getChildren(capsule, ENTRY))
 		{
@@ -238,8 +191,7 @@ public class XMLExpansions_Engine0
 			original.addList(name);
 		}
 		
-		SugarList descriptible = original.getList(name);
-		extractXMLdescriptible(original, capsule, descriptible);
+		StringListContainer descriptible = original.getList(name);
 		
 		for (Element eelt : DomUtil.getChildren(capsule, CONSTANT))
 		{
@@ -262,7 +214,6 @@ public class XMLExpansions_Engine0
 		}
 		
 		Condition descriptible = original.getCondition(name);
-		extractXMLdescriptible(original, capsule, descriptible);
 		
 		String sheet = eltString(SHEET, capsule);
 		String key = eltString(KEY, capsule);
@@ -320,8 +271,7 @@ public class XMLExpansions_Engine0
 			original.addConditionSet(name);
 		}
 		
-		ConditionSet descriptible = original.getConditionSet(name);
-		extractXMLdescriptible(original, capsule, descriptible);
+		Junction descriptible = original.getConditionSet(name);
 		
 		for (Element eelt : DomUtil.getChildren(capsule, TRUEPART))
 		{
@@ -354,7 +304,6 @@ public class XMLExpansions_Engine0
 		}
 		
 		Event descriptible = original.getEvent(name);
-		extractXMLdescriptible(original, capsule, descriptible);
 		
 		String volmin = eltString(VOLMIN, capsule);
 		String volmax = eltString(VOLMAX, capsule);
@@ -384,7 +333,7 @@ public class XMLExpansions_Engine0
 		
 		if (metasound != null)
 		{
-			descriptible.metaSound = toInt(metasound);
+			descriptible.distance = toInt(metasound);
 		}
 		
 		for (Element eelt : DomUtil.getChildren(capsule, PATH))
@@ -410,7 +359,6 @@ public class XMLExpansions_Engine0
 		}
 		
 		Machine descriptible = original.getMachine(name);
-		extractXMLdescriptible(original, capsule, descriptible);
 		
 		for (Element eelt : DomUtil.getChildren(capsule, EVENTTIMED))
 		{
@@ -481,7 +429,7 @@ public class XMLExpansions_Engine0
 		
 	}
 	
-	private void inscriptXMLstream(Stream inscriptible, Element specs) throws XPathExpressionException
+	private void inscriptXMLstream(StreamInformation inscriptible, Element specs) throws XPathExpressionException
 	{
 		String _PATH = eltString(PATH, specs);
 		String _VOLUME = eltString(VOLUME, specs);

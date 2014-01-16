@@ -23,7 +23,6 @@ import eu.ha3.matmos.engine0.core.interfaces.Data;
 import eu.ha3.matmos.engine0.game.system.MAtResourcePackDealer;
 import eu.ha3.matmos.engine0.game.system.SoundAccessor;
 import eu.ha3.matmos.engine0.requirem.Collation;
-import eu.ha3.matmos.engine0.requirem.CollationOfRequirements;
 import eu.ha3.mc.haddon.supporting.SupportsFrameEvents;
 import eu.ha3.mc.haddon.supporting.SupportsTickEvents;
 
@@ -36,12 +35,10 @@ public class ExpansionManager implements VolumeUpdatable, Stable, SupportsTickEv
 	
 	private final MAtResourcePackDealer dealer = new MAtResourcePackDealer();
 	private Map<String, Expansion> expansions;
-	private Map<String, ExpressedExpansion> expressions;
 	
 	private boolean isActivated;
 	private Data data;
 	
-	private Collation collation;
 	private float volume = 1f;
 	
 	public ExpansionManager(File userconfigFolder, SoundAccessor accessor)
@@ -50,29 +47,26 @@ public class ExpansionManager implements VolumeUpdatable, Stable, SupportsTickEv
 		this.accessor = accessor;
 		
 		this.expansions = new HashMap<String, Expansion>();
-		this.expressions = new HashMap<String, ExpressedExpansion>();
 		
 		if (!this.userconfigFolder.exists())
 		{
 			this.userconfigFolder.mkdirs();
 		}
-		
-		this.collation = new CollationOfRequirements();
 	}
 	
 	public void loadExpansions()
 	{
 		dispose();
 		
-		List<ExpressedExpansion> expressions = new ArrayList<ExpressedExpansion>();
+		List<ExpansionIdentity> expressions = new ArrayList<ExpansionIdentity>();
 		findExpansions(expressions);
-		for (ExpressedExpansion exp : expressions)
+		for (ExpansionIdentity exp : expressions)
 		{
 			addExpansionFromExpression(exp);
 		}
 	}
 	
-	private void findExpansions(List<ExpressedExpansion> expressions)
+	private void findExpansions(List<ExpansionIdentity> expressions)
 	{
 		List<ResourcePackRepository.Entry> resourcePacks = this.dealer.findResourcePacks();
 		for (ResourcePackRepository.Entry pack : resourcePacks)
@@ -93,8 +87,8 @@ public class ExpansionManager implements VolumeUpdatable, Stable, SupportsTickEv
 					ResourceLocation location = new ResourceLocation("matmos", pointer);
 					if (pack.getResourcePack().resourceExists(location))
 					{
-						ExpressedExpansion exp =
-							new ExpressedExpansion(uniqueName, friendlyName, pack.getResourcePack(), location);
+						ExpansionIdentity exp =
+							new ExpansionIdentity(uniqueName, friendlyName, pack.getResourcePack(), location);
 						expressions.add(exp);
 					}
 					else
@@ -111,19 +105,17 @@ public class ExpansionManager implements VolumeUpdatable, Stable, SupportsTickEv
 		}
 	}
 	
-	private void addExpansionFromExpression(ExpressedExpansion exp)
+	private void addExpansionFromExpression(ExpansionIdentity exp)
 	{
 		try
 		{
 			String uniqueName = exp.getUniqueName();
 			
 			Expansion expansion =
-				new Expansion(this, this.accessor, uniqueName, new File(this.userconfigFolder, uniqueName + ".cfg"));
+				new Expansion(this, this.accessor, exp, new File(this.userconfigFolder, uniqueName + ".cfg"));
 			this.expansions.put(uniqueName, expansion);
-			this.expressions.put(uniqueName, exp);
 			
 			expansion.setData(this.data);
-			expansion.setCollation(this.collation);
 			
 			expansion.inputStructure(exp.getPack().getInputStream(exp.getLocation()));
 			expansion.updateVolume();
@@ -265,7 +257,6 @@ public class ExpansionManager implements VolumeUpdatable, Stable, SupportsTickEv
 			expansion.dispose();
 		}
 		this.expansions.clear();
-		this.expressions.clear();
 	}
 	
 	@Override
