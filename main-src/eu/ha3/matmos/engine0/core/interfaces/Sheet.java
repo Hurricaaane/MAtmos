@@ -52,4 +52,22 @@ public interface Sheet
 	 * Empty this sheet. Versions are preserved if cleared this way.
 	 */
 	public void clear();
+	
+	/**
+	 * Sets a default value to be given out if some module tries to get an
+	 * uninitialized entry. This is useful in case some sheet want to consider
+	 * uninitialized values to be false or zero.
+	 * 
+	 * @param o
+	 */
+	public void setDefaultValue(String def);
+	
+	/**
+	 * Returns the default value given out if some module tries to get an
+	 * uninitialized entry. This is useful in case some sheet want to consider
+	 * uninitialized values to be false or zero.
+	 * 
+	 * @param o
+	 */
+	public String getDefaultValue();
 }

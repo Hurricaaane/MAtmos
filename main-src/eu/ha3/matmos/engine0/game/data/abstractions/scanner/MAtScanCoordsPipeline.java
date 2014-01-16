@@ -1,4 +1,4 @@
-package eu.ha3.matmos.engine0.game.data;
+package eu.ha3.matmos.engine0.game.data.abstractions.scanner;
 
 import eu.ha3.matmos.engine0.core.implem.SelfGeneratingData;
 
@@ -20,11 +20,11 @@ public abstract class MAtScanCoordsPipeline implements MAtScanCoordsOps
 		return this.data;
 	}
 	
-	abstract void doBegin();
+	public abstract void doBegin();
 	
-	abstract void doInput(int x, int y, int z);
+	public abstract void doInput(int x, int y, int z);
 	
-	abstract void doFinish();
+	public abstract void doFinish();
 	
 	public void append(MAtScanCoordsPipeline operator)
 	{

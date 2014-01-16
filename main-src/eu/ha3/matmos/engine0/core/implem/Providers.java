@@ -2,6 +2,8 @@ package eu.ha3.matmos.engine0.core.implem;
 
 import eu.ha3.matmos.engine0.core.implem.abstractions.ProviderCollection;
 import eu.ha3.matmos.engine0.core.interfaces.Provider;
+import eu.ha3.matmos.engine0.core.interfaces.ReferenceTime;
+import eu.ha3.matmos.engine0.core.interfaces.SheetCommander;
 
 /*
 --filenotes-placeholder
@@ -9,19 +11,36 @@ import eu.ha3.matmos.engine0.core.interfaces.Provider;
 
 public class Providers implements ProviderCollection
 {
+	private final ReferenceTime time;
+	private final SheetCommander commander;
 	private final Provider<Condition> conditionProvider;
 	private final Provider<Junction> junctionProvider;
 	private final Provider<Machine> machineProvider;
 	private final Provider<Event> eventProvider;
 	
 	public Providers(
-		Provider<Condition> conditionProvider, Provider<Junction> junctionProvider, Provider<Machine> machineProvider,
-		Provider<Event> eventProvider)
+		ReferenceTime time, SheetCommander commander, Provider<Condition> conditionProvider,
+		Provider<Junction> junctionProvider, Provider<Machine> machineProvider, Provider<Event> eventProvider)
 	{
+		this.time = time;
+		this.commander = commander;
+		
 		this.conditionProvider = conditionProvider;
 		this.junctionProvider = junctionProvider;
 		this.machineProvider = machineProvider;
 		this.eventProvider = eventProvider;
+	}
+	
+	@Override
+	public SheetCommander getSheetCommander()
+	{
+		return this.commander;
+	}
+	
+	@Override
+	public ReferenceTime getReferenceTime()
+	{
+		return this.time;
 	}
 	
 	@Override

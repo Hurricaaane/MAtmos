@@ -2,9 +2,9 @@ package eu.ha3.matmos.engine0.game.data.modules;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
-import eu.ha3.matmos.engine0.conv.ProcessorModel;
 import eu.ha3.matmos.engine0.core.interfaces.Data;
 import eu.ha3.matmos.engine0.game.data.MAtDataGatherer;
+import eu.ha3.matmos.engine0.game.data.abstractions.processor.ProcessorModel;
 import eu.ha3.matmos.v170helper.Version170Helper;
 
 /*

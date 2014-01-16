@@ -12,6 +12,7 @@ public class GenericSheet implements Sheet
 {
 	protected final Map<String, String> values;
 	protected final Map<String, Integer> versions;
+	private String def = "_ENTRY_NOT_DEFINED";
 	
 	public GenericSheet()
 	{
@@ -22,7 +23,7 @@ public class GenericSheet implements Sheet
 	@Override
 	public String get(String key)
 	{
-		return this.values.containsKey(key) ? this.values.get(key) : "_ENTRY_NOT_DEFINED";
+		return this.values.containsKey(key) ? this.values.get(key) : this.def;
 	}
 	
 	@Override
@@ -61,5 +62,17 @@ public class GenericSheet implements Sheet
 	public void clear()
 	{
 		this.values.clear();
+	}
+	
+	@Override
+	public void setDefaultValue(String def)
+	{
+		this.def = def;
+	}
+	
+	@Override
+	public String getDefaultValue()
+	{
+		return this.def;
 	}
 }

@@ -22,7 +22,6 @@ import eu.ha3.matmos.engine0.conv.volume.VolumeUpdatable;
 import eu.ha3.matmos.engine0.core.interfaces.Data;
 import eu.ha3.matmos.engine0.game.system.MAtResourcePackDealer;
 import eu.ha3.matmos.engine0.game.system.SoundAccessor;
-import eu.ha3.matmos.engine0.requirem.Collation;
 import eu.ha3.mc.haddon.supporting.SupportsFrameEvents;
 import eu.ha3.mc.haddon.supporting.SupportsTickEvents;
 
@@ -58,15 +57,15 @@ public class ExpansionManager implements VolumeUpdatable, Stable, SupportsTickEv
 	{
 		dispose();
 		
-		List<ExpansionIdentity> expressions = new ArrayList<ExpansionIdentity>();
-		findExpansions(expressions);
-		for (ExpansionIdentity exp : expressions)
+		List<ExpansionIdentity> identities = new ArrayList<ExpansionIdentity>();
+		findExpansions(identities);
+		for (ExpansionIdentity identity : identities)
 		{
-			addExpansionFromExpression(exp);
+			addExpansion(identity);
 		}
 	}
 	
-	private void findExpansions(List<ExpansionIdentity> expressions)
+	private void findExpansions(List<ExpansionIdentity> identities)
 	{
 		List<ResourcePackRepository.Entry> resourcePacks = this.dealer.findResourcePacks();
 		for (ResourcePackRepository.Entry pack : resourcePacks)
@@ -87,9 +86,9 @@ public class ExpansionManager implements VolumeUpdatable, Stable, SupportsTickEv
 					ResourceLocation location = new ResourceLocation("matmos", pointer);
 					if (pack.getResourcePack().resourceExists(location))
 					{
-						ExpansionIdentity exp =
+						ExpansionIdentity identity =
 							new ExpansionIdentity(uniqueName, friendlyName, pack.getResourcePack(), location);
-						expressions.add(exp);
+						identities.add(identity);
 					}
 					else
 					{
@@ -105,24 +104,23 @@ public class ExpansionManager implements VolumeUpdatable, Stable, SupportsTickEv
 		}
 	}
 	
-	private void addExpansionFromExpression(ExpansionIdentity exp)
+	private void addExpansion(ExpansionIdentity identity)
 	{
 		try
 		{
-			String uniqueName = exp.getUniqueName();
+			String uniqueName = identity.getUniqueName();
 			
 			Expansion expansion =
-				new Expansion(this, this.accessor, exp, new File(this.userconfigFolder, uniqueName + ".cfg"));
+				new Expansion(this, this.accessor, this.data, identity, new File(this.userconfigFolder, uniqueName
+					+ ".cfg"));
 			this.expansions.put(uniqueName, expansion);
 			
-			expansion.setData(this.data);
-			
-			expansion.inputStructure(exp.getPack().getInputStream(exp.getLocation()));
+			expansion.inputStructure(identity.getPack().getInputStream(identity.getLocation()));
 			expansion.updateVolume();
 		}
 		catch (IOException e)
 		{
-			MAtmosConvLogger.warning("Error on ExpansionLoader (on expression " + exp.getUniqueName() + ").");
+			MAtmosConvLogger.warning("Error on ExpansionLoader (on expression " + identity.getUniqueName() + ").");
 		}
 	}
 	
@@ -172,7 +170,7 @@ public class ExpansionManager implements VolumeUpdatable, Stable, SupportsTickEv
 	{
 		for (Expansion expansion : this.expansions.values())
 		{
-			expansion.soundRoutine();
+			expansion.simulate();
 		}
 	}
 	
@@ -181,19 +179,13 @@ public class ExpansionManager implements VolumeUpdatable, Stable, SupportsTickEv
 	{
 		for (Expansion expansion : this.expansions.values())
 		{
-			expansion.dataRoutine();
+			expansion.evaluate();
 		}
 	}
 	
 	public void setData(Data data)
 	{
 		this.data = data;
-		
-	}
-	
-	public Collation getCollation()
-	{
-		return this.collation;
 	}
 	
 	@Override

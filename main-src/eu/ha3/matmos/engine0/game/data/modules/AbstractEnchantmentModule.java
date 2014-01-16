@@ -1,32 +1,32 @@
-package eu.ha3.matmos.engine0.game.data;
-
-import java.util.Set;
+package eu.ha3.matmos.engine0.game.data.modules;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagList;
-import eu.ha3.matmos.engine0.core.implem.SelfGeneratingData;
-import eu.ha3.matmos.engine0.game.system.MAtMod;
+import eu.ha3.matmos.engine0.core.interfaces.Data;
+import eu.ha3.matmos.engine0.game.data.MAtDataGatherer;
+import eu.ha3.matmos.engine0.game.data.abstractions.processor.ProcessorModel;
 
 /* x-placeholder */
 
-public abstract class MAtProcessorEnchantments extends MAtProcessorModel
+public abstract class AbstractEnchantmentModule extends ProcessorModel implements Module
 {
-	public MAtProcessorEnchantments(MAtMod modIn, SelfGeneratingData dataIn, String normalNameIn, String deltaNameIn)
+	private final String NAME;
+	
+	public AbstractEnchantmentModule(Data dataIn, String name)
 	{
-		super(modIn, dataIn, normalNameIn, deltaNameIn);
+		super(dataIn, name, name + MAtDataGatherer.DELTA_SUFFIX);
+		this.NAME = name;
 	}
 	
 	@Override
 	protected void doProcess()
 	{
-		Set<String> required = getRequired();
-		
 		// Required to handle disappearing enchantments and unequipped armor
-		for (String i : required)
+		for (String entry : this.sheet.keySet())
 		{
-			setValue(i, 0);
+			setValue(entry, "0");
 		}
 		
 		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
@@ -43,14 +43,17 @@ public abstract class MAtProcessorEnchantments extends MAtProcessorModel
 				//int id = ((NBTTagCompound) enchantments.func_150305_b(i)).getShort("id");
 				int id = enchantments.func_150305_b(i).getShort("id");
 				
-				if (required.contains(id))
-				{
-					//short lvl = ((NBTTagCompound) enchantments.func_150305_b(i)).getShort("lvl");
-					short lvl = enchantments.func_150305_b(i).getShort("lvl");
-					setValueLegacyIntIndexes(id, lvl);
-				}
+				//short lvl = ((NBTTagCompound) enchantments.func_150305_b(i)).getShort("lvl");
+				short lvl = enchantments.func_150305_b(i).getShort("lvl");
+				setValue("id_" + id, Short.toString(lvl));
 			}
 		}
+	}
+	
+	@Override
+	public String getModuleName()
+	{
+		return this.NAME;
 	}
 	
 	protected abstract ItemStack getItem(EntityPlayer player);

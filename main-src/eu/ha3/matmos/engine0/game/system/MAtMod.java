@@ -62,7 +62,6 @@ public class MAtMod extends HaddonImpl
 	
 	// Use once
 	private boolean hasFirstTickPassed;
-	private boolean dataRolled;
 	
 	public MAtMod()
 	{
@@ -152,10 +151,9 @@ public class MAtMod extends HaddonImpl
 		TimeStatistic stat = new TimeStatistic(Locale.ENGLISH);
 		
 		this.dataGatherer = new MAtDataGatherer(this);
-		this.dataGatherer.load(this.expansionManager.getCollation());
+		this.dataGatherer.load();
 		this.expansionManager.setData(this.dataGatherer.getData());
 		this.expansionManager.loadExpansions();
-		this.dataRolled = false;
 		
 		MAtmosConvLogger.info("Expansions loaded (" + stat.getSecondsAsString(1) + "s).");
 	}
@@ -210,13 +208,7 @@ public class MAtMod extends HaddonImpl
 		this.userControl.onTick();
 		if (this.isActivated)
 		{
-			if (!this.dataRolled)
-			{
-				this.dataRolled = true;
-				this.dataGatherer.dataRoll();
-			}
-			
-			this.dataGatherer.tickRoutine();
+			this.dataGatherer.process();
 			this.expansionManager.onTick();
 		}
 		

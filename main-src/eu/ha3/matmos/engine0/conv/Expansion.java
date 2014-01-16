@@ -19,11 +19,13 @@ import eu.ha3.matmos.engine0.conv.volume.VolumeContainer;
 import eu.ha3.matmos.engine0.conv.volume.VolumeUpdatable;
 import eu.ha3.matmos.engine0.core.implem.Knowledge;
 import eu.ha3.matmos.engine0.core.implem.SystemClock;
+import eu.ha3.matmos.engine0.core.interfaces.Data;
 import eu.ha3.matmos.engine0.core.interfaces.Evaluated;
 import eu.ha3.matmos.engine0.core.interfaces.EventInterface;
 import eu.ha3.matmos.engine0.core.interfaces.ReferenceTime;
 import eu.ha3.matmos.engine0.core.interfaces.Simulated;
 import eu.ha3.matmos.engine0.core.parsers.XMLExpansions_Engine0;
+import eu.ha3.matmos.engine0.game.data.abstractions.Collector;
 import eu.ha3.matmos.engine0.game.system.SoundAccessor;
 import eu.ha3.matmos.engine0.game.system.SoundHelperRelay;
 import eu.ha3.util.property.simple.ConfigProperty;
@@ -54,12 +56,16 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 	private boolean isReady;
 	private boolean isActive;
 	
+	private final Data data;
+	
 	public Expansion(
-		VolumeContainer masterVolume, SoundAccessor accessor, ExpansionIdentity identity, File configurationSource)
+		VolumeContainer masterVolume, SoundAccessor accessor, Data data, ExpansionIdentity identity,
+		File configurationSource)
 	{
 		this.identity = identity;
 		this.masterVolume = masterVolume;
 		this.capabilities = new SoundHelperRelay(accessor);
+		this.data = data;
 		
 		this.knowledge = new Knowledge(this.capabilities, TIME);
 		
@@ -140,6 +146,9 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 		if (!this.isReady)
 			return;
 		
+		if (!this.isActive)
+			return;
+		
 		this.knowledge.simulate();
 	}
 	
@@ -147,6 +156,9 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 	public void evaluate()
 	{
 		if (!this.isReady)
+			return;
+		
+		if (!this.isActive)
 			return;
 		
 		this.knowledge.evaluate();
@@ -222,10 +234,11 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 		
 		if (this.isReady)
 		{
-			this.knowledge.turnOn();
-			this
-				.getCollector()
-				.addModuleStack(this.identity.getUniqueName(), this.knowledge.calculateRequiredModules());
+			if (this.data instanceof Collector)
+			{
+				((Collector) this.data).addModuleStack(
+					this.identity.getUniqueName(), this.knowledge.calculateRequiredModules());
+			}
 		}
 		
 		this.isActive = true;
@@ -241,8 +254,10 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 		if (!this.isActive)
 			return;
 		
-		this.knowledge.turnOff();
-		this.getCollector().removeModuleStack(this.identity.getUniqueName());
+		if (this.data instanceof Collector)
+		{
+			((Collector) this.data).removeModuleStack(this.identity.getUniqueName());
+		}
 		
 		this.isActive = false;
 	}

@@ -23,6 +23,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
 import eu.ha3.matmos.engine0.core.interfaces.Data;
+import eu.ha3.matmos.engine0.game.data.abstractions.processor.MAtProcessorModel;
 import eu.ha3.matmos.engine0.game.system.MAtMod;
 import eu.ha3.mc.haddon.PrivateAccessException;
 

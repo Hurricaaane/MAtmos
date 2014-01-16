@@ -1,4 +1,4 @@
-package eu.ha3.matmos.engine0.conv;
+package eu.ha3.matmos.engine0.game.data.abstractions;
 
 /* x-placeholder */
 

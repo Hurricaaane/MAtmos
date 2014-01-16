@@ -1,15 +1,16 @@
-package eu.ha3.matmos.engine0.conv;
+package eu.ha3.matmos.engine0.game.data.abstractions.processor;
 
 import eu.ha3.matmos.engine0.core.implem.DeltaSheet;
 import eu.ha3.matmos.engine0.core.interfaces.Data;
 import eu.ha3.matmos.engine0.core.interfaces.Sheet;
 import eu.ha3.matmos.engine0.core.interfaces.VirtualSheet;
+import eu.ha3.matmos.engine0.game.data.abstractions.Processor;
 
 /* x-placeholder */
 
 public abstract class ProcessorModel implements Processor
 {
-	private Sheet sheet;
+	protected Sheet sheet;
 	
 	public ProcessorModel(Data data, String normalName, String deltaName)
 	{

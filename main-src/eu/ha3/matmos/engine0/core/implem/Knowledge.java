@@ -17,20 +17,20 @@ import eu.ha3.matmos.engine0.core.interfaces.Named;
 import eu.ha3.matmos.engine0.core.interfaces.Provider;
 import eu.ha3.matmos.engine0.core.interfaces.ReferenceTime;
 import eu.ha3.matmos.engine0.core.interfaces.SheetCommander;
+import eu.ha3.matmos.engine0.core.interfaces.SheetIndex;
 import eu.ha3.matmos.engine0.core.interfaces.Simulated;
 import eu.ha3.matmos.engine0.core.interfaces.SoundRelay;
-import eu.ha3.matmos.engine0.core.interfaces.Stated;
 
 /* x-placeholder */
 
 /**
  * Stores a Knowledge.
  */
-public class Knowledge implements Stated, Evaluated, Simulated
+public class Knowledge implements Evaluated, Simulated
 {
 	private Data data;
 	
-	//
+	// 
 	
 	//private final Map<String, Dynamic> dynamicMapped = new TreeMap<String, Dynamic>();
 	private final Map<String, Condition> conditionMapped = new TreeMap<String, Condition>();
@@ -38,29 +38,56 @@ public class Knowledge implements Stated, Evaluated, Simulated
 	private final Map<String, Machine> machineMapped = new TreeMap<String, Machine>();
 	private final Map<String, Event> eventMapped = new TreeMap<String, Event>();
 	
-	private final SheetCommander sheetCommander = null;
+	private final SheetCommander sheetCommander = new SheetCommander() {
+		@Override
+		public int version(SheetIndex sheetIndex)
+		{
+			return Knowledge.this.data.getSheet(sheetIndex.getSheet()).version(sheetIndex.getIndex());
+		}
+		
+		@Override
+		public boolean listHas(String constantX, String value)
+		{
+			// XXX 2014-01-16
+			return false;
+		}
+		
+		@Override
+		public Object get(SheetIndex sheetIndex)
+		{
+			return Knowledge.this.data.getSheet(sheetIndex.getSheet()).get(sheetIndex.getIndex());
+		}
+		
+		@Override
+		public boolean exists(SheetIndex sheetIndex)
+		{
+			return Knowledge.this.data.getSheet(sheetIndex.getSheet()).exists(sheetIndex.getIndex());
+		}
+	};
 	//private final Provider<Dynamic> dynamicProvider = new MappedProvider<Dynamic>(this.dynamicMapped);
 	private final Provider<Condition> conditionProvider = new MappedProvider<Condition>(this.conditionMapped);
 	private final Provider<Junction> junctionProvider = new MappedProvider<Junction>(this.junctionMapped);
 	private final Provider<Machine> machineProvider = new MappedProvider<Machine>(this.machineMapped);
 	private final Provider<Event> eventProvider = new MappedProvider<Event>(this.eventMapped);
 	
-	private final ProviderCollection providerCollection = new Providers(
-		this.conditionProvider, this.junctionProvider, this.machineProvider, this.eventProvider);
+	private final ProviderCollection providerCollection;
 	
 	//
 	
 	private final SoundRelay relay;
 	private final ReferenceTime time;
 	
-	private boolean isActive;
-	
 	public Knowledge(SoundRelay relay, ReferenceTime time)
 	{
 		this.relay = relay;
 		this.time = time;
 		
-		this.data = new SelfGeneratingData(new FlatRequirements());
+		this.providerCollection =
+			new Providers(
+				this.time, this.sheetCommander, this.conditionProvider, this.junctionProvider, this.machineProvider,
+				this.eventProvider);
+		
+		this.data = new SelfGeneratingData(GenericSheet.class);
 	}
 	
 	public ProviderCollection obtainProviders()
@@ -163,9 +190,6 @@ public class Knowledge implements Stated, Evaluated, Simulated
 	@Override
 	public void simulate()
 	{
-		if (!this.isActive)
-			return;
-		
 		this.relay.routine();
 		for (Machine m : this.machineMapped.values())
 		{
@@ -176,9 +200,6 @@ public class Knowledge implements Stated, Evaluated, Simulated
 	@Override
 	public void evaluate()
 	{
-		if (!this.isActive)
-			return;
-		
 		for (Evaluated o : this.conditionMapped.values())
 		{
 			o.evaluate();
@@ -191,11 +212,5 @@ public class Knowledge implements Stated, Evaluated, Simulated
 		{
 			o.evaluate();
 		}
-	}
-	
-	@Override
-	public boolean isActive()
-	{
-		return this.isActive;
 	}
 }

@@ -1,6 +1,6 @@
 package eu.ha3.matmos.engine0.game.data.modules;
 
-import eu.ha3.matmos.engine0.conv.Processor;
+import eu.ha3.matmos.engine0.game.data.abstractions.Processor;
 
 /*
 --filenotes-placeholder

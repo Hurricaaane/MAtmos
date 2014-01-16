@@ -7,6 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.PotionEffect;
 import eu.ha3.matmos.engine0.conv.MAtmosConvLogger;
 import eu.ha3.matmos.engine0.core.implem.SelfGeneratingData;
+import eu.ha3.matmos.engine0.game.data.abstractions.processor.MAtProcessorModel;
 import eu.ha3.matmos.engine0.game.system.MAtMod;
 
 /* x-placeholder */

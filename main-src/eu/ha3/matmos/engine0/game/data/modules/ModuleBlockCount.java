@@ -1,7 +1,5 @@
 package eu.ha3.matmos.engine0.game.data.modules;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
 import eu.ha3.matmos.engine0.core.interfaces.Data;
 import eu.ha3.matmos.engine0.game.data.MAtDataGatherer;
 import eu.ha3.matmos.engine0.game.data.abstractions.processor.ProcessorModel;
@@ -10,22 +8,20 @@ import eu.ha3.matmos.engine0.game.data.abstractions.processor.ProcessorModel;
 --filenotes-placeholder
 */
 
-public class ModulePlayerPosition extends ProcessorModel implements Module
+public class ModuleBlockCount extends ProcessorModel implements Module
 {
-	public static String NAME = "player_position";
+	public static String NAME = "block_curadius8";
 	
-	public ModulePlayerPosition(Data data)
+	public ModuleBlockCount(Data data)
 	{
 		super(data, NAME, NAME + MAtDataGatherer.DELTA_SUFFIX);
+		data.getSheet(NAME).setDefaultValue("0");
 	}
 	
 	@Override
 	protected void doProcess()
 	{
-		Entity e = Minecraft.getMinecraft().thePlayer;
-		setValue("block_x", (long) Math.floor(e.posX));
-		setValue("block_y", (long) Math.floor(e.posY));
-		setValue("block_z", (long) Math.floor(e.posZ));
+		//Entity e = Minecraft.getMinecraft().thePlayer;
 	}
 	
 	@Override

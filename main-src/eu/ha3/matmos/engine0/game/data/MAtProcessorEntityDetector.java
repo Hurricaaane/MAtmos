@@ -10,24 +10,23 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
-import eu.ha3.matmos.engine0.conv.Processor;
 import eu.ha3.matmos.engine0.core.implem.SelfGeneratingData;
-import eu.ha3.matmos.engine0.game.system.MAtMod;
+import eu.ha3.matmos.engine0.game.data.abstractions.Processor;
+import eu.ha3.matmos.engine0.game.data.abstractions.processor.MAtProcessorModel;
+import eu.ha3.matmos.engine0.game.data.abstractions.processor.ProcessorModel;
 
 /* x-placeholder */
 
 public class MAtProcessorEntityDetector implements Processor
 {
-	private MAtMod mod;
-	
 	private AxisAlignedBB bbox;
 	
 	private int max;
 	
-	private MAtProcessorModel mindistModel;
+	private ProcessorModel mindistModel;
 	private Map<Integer, Double> mindistMappy;
 	
-	private MAtProcessorModel[] radiModels;
+	private ProcessorModel[] radiModels;
 	private int[] radi;
 	private Map<Integer, Integer>[] mappies;
 	
@@ -37,10 +36,8 @@ public class MAtProcessorEntityDetector implements Processor
 	
 	@SuppressWarnings("unchecked")
 	public MAtProcessorEntityDetector(
-		MAtMod modIn, SelfGeneratingData dataIn, String mindist, String prefix, String deltaSuffix, int max, int... radiis)
+		SelfGeneratingData dataIn, String mindist, String prefix, String deltaSuffix, int max, int... radiis)
 	{
-		this.mod = modIn;
-		
 		this.mindistModel = new MAtProcessorModel(modIn, dataIn, mindist, mindist + deltaSuffix) {
 			@Override
 			protected void doProcess()
@@ -49,7 +46,7 @@ public class MAtProcessorEntityDetector implements Processor
 		};
 		this.mindistMappy = new HashMap<Integer, Double>();
 		
-		this.radiModels = new MAtProcessorModel[radiis.length];
+		this.radiModels = new ProcessorModel[radiis.length];
 		this.mappies = new Map[radiis.length];
 		
 		this.radi = Arrays.copyOf(radiis, radiis.length);
@@ -59,13 +56,12 @@ public class MAtProcessorEntityDetector implements Processor
 		for (int i = 0; i < this.radi.length; i++)
 		{
 			int radiNum = this.radi[i];
-			this.radiModels[i] =
-				new MAtProcessorModel(modIn, dataIn, prefix + radiNum, prefix + radiNum + deltaSuffix) {
-					@Override
-					protected void doProcess()
-					{
-					}
-				};
+			this.radiModels[i] = new ProcessorModel(dataIn, prefix + radiNum, prefix + radiNum + deltaSuffix) {
+				@Override
+				protected void doProcess()
+				{
+				}
+			};
 			this.mappies[i] = new HashMap<Integer, Integer>();
 		}
 		
@@ -81,7 +77,7 @@ public class MAtProcessorEntityDetector implements Processor
 		this.mindistModel.process();
 		this.isRequired = this.mindistModel.isRequired();
 		
-		for (MAtProcessorModel processor : this.radiModels)
+		for (ProcessorModel processor : this.radiModels)
 		{
 			processor.process();
 			this.isRequired = this.isRequired || processor.isRequired();

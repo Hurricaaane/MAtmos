@@ -43,8 +43,9 @@ public class Condition extends DependableComponent
 	@Override
 	public void evaluate()
 	{
-		if (!this.sheetCommander.exists(this.indexX))
-			return;
+		// Bypass exists: We want sheets to return their default value
+		//if (!this.sheetCommander.exists(this.indexX))
+		//	return;
 		
 		if (this.sheetCommander.version(this.indexX) == this.siVersion)
 			return;

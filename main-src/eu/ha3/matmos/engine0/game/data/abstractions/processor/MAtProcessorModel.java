@@ -1,6 +1,5 @@
-package eu.ha3.matmos.engine0.game.data;
+package eu.ha3.matmos.engine0.game.data.abstractions.processor;
 
-import eu.ha3.matmos.engine0.conv.ProcessorModel;
 import eu.ha3.matmos.engine0.core.interfaces.Data;
 import eu.ha3.matmos.engine0.game.system.MAtMod;
 

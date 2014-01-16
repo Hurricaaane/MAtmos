@@ -6,13 +6,18 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import eu.ha3.matmos.engine0.conv.Collector;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import eu.ha3.matmos.engine0.conv.MAtmosConvLogger;
-import eu.ha3.matmos.engine0.conv.Processor;
-import eu.ha3.matmos.engine0.conv.ProcessorModel;
 import eu.ha3.matmos.engine0.core.implem.GenericSheet;
 import eu.ha3.matmos.engine0.core.implem.SelfGeneratingData;
 import eu.ha3.matmos.engine0.core.interfaces.Data;
+import eu.ha3.matmos.engine0.game.data.abstractions.Collector;
+import eu.ha3.matmos.engine0.game.data.abstractions.Processor;
+import eu.ha3.matmos.engine0.game.data.abstractions.processor.ProcessorModel;
+import eu.ha3.matmos.engine0.game.data.abstractions.scanner.MAtScanCoordsPipeline;
+import eu.ha3.matmos.engine0.game.data.abstractions.scanner.MAtScanVolumetricModel;
+import eu.ha3.matmos.engine0.game.data.modules.AbstractEnchantmentModule;
 import eu.ha3.matmos.engine0.game.data.modules.Module;
 import eu.ha3.matmos.engine0.game.data.modules.ModulePlayerHotbarItems;
 import eu.ha3.matmos.engine0.game.data.modules.ModulePlayerPosition;
@@ -99,25 +104,24 @@ public class MAtDataGatherer implements Collector, Processor
 		this.moduleStack = new TreeMap<String, Set<String>>();
 	}
 	
-	private void resetRegulators()
-	{
-		this.lastLargeScanPassed = MAX_LARGESCAN_PASS;
-		this.ticksPassed = 0;
-	}
-	
-	private void addModule(Module module, boolean hasDelta)
+	private void addModule(Module module)
 	{
 		this.modules.put(module.getModuleName(), module);
 	}
 	
 	public void load()
 	{
-		resetRegulators();
-		
 		this.data = new SelfGeneratingData(GenericSheet.class);
 		
-		addModule(new ModulePlayerPosition(this.data), true);
-		addModule(new ModulePlayerHotbarItems(this.data), true);
+		addModule(new ModulePlayerPosition(this.data));
+		addModule(new ModulePlayerHotbarItems(this.data));
+		addModule(new AbstractEnchantmentModule(this.data, "ench_current") {
+			@Override
+			protected ItemStack getItem(EntityPlayer player)
+			{
+				return player.getCurrentEquippedItem();
+			}
+		});
 		
 		/*
 		this.largeScanner = new MAtScanVolumetricModel();
@@ -392,5 +396,4 @@ public class MAtDataGatherer implements Collector, Processor
 			this.requiredModules.addAll(stack);
 		}
 	}
-	
 }

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import eu.ha3.matmos.engine0.core.implem.SelfGeneratingData;
 import eu.ha3.matmos.engine0.core.interfaces.Sheet;
+import eu.ha3.matmos.engine0.game.data.abstractions.scanner.MAtScanCoordsPipeline;
 import eu.ha3.matmos.v170helper.Version170Helper;
 
 /* x-placeholder */
@@ -32,7 +33,7 @@ public class MAtPipelineIDAccumulator extends MAtScanCoordsPipeline
 	}
 	
 	@Override
-	void doBegin()
+	public void doBegin()
 	{
 		this.count = 0;
 		for (String key : this.tempnormal.keySet())
@@ -42,7 +43,7 @@ public class MAtPipelineIDAccumulator extends MAtScanCoordsPipeline
 	}
 	
 	@Override
-	void doInput(int x, int y, int z)
+	public void doInput(int x, int y, int z)
 	{
 		String blockName = Version170Helper.getNameAt(x, y, z, "");
 		
@@ -53,7 +54,7 @@ public class MAtPipelineIDAccumulator extends MAtScanCoordsPipeline
 	}
 	
 	@Override
-	void doFinish()
+	public void doFinish()
 	{
 		Sheet normal = data().getSheet(this.normalName);
 		Sheet proportionnal = this.proportionnalName != null ? data().getSheet(this.proportionnalName) : null;
