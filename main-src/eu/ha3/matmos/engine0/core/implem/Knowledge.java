@@ -20,7 +20,6 @@ import eu.ha3.matmos.engine0.core.interfaces.SheetCommander;
 import eu.ha3.matmos.engine0.core.interfaces.Simulated;
 import eu.ha3.matmos.engine0.core.interfaces.SoundRelay;
 import eu.ha3.matmos.engine0.core.interfaces.Stated;
-import eu.ha3.matmos.engine0.requirem.FlatRequirements;
 
 /* x-placeholder */
 
@@ -103,6 +102,12 @@ public class Knowledge implements Stated, Evaluated, Simulated
 		purge(this.junctionMapped, this.conditionMapped, "conditions");
 	}
 	
+	/**
+	 * This method must return an object that can be modified afterwards by
+	 * something else.
+	 * 
+	 * @return
+	 */
 	public Set<String> calculateRequiredModules()
 	{
 		Set<String> requiredModules = new TreeSet<String>();

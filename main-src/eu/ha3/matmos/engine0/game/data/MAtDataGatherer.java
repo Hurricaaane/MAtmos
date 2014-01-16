@@ -1,32 +1,27 @@
 package eu.ha3.matmos.engine0.game.data;
 
-import java.util.LinkedHashSet;
-import java.util.Locale;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.PotionEffect;
-import eu.ha3.easy.TimeStatistic;
+import eu.ha3.matmos.engine0.conv.Collector;
 import eu.ha3.matmos.engine0.conv.MAtmosConvLogger;
 import eu.ha3.matmos.engine0.conv.Processor;
 import eu.ha3.matmos.engine0.conv.ProcessorModel;
 import eu.ha3.matmos.engine0.core.implem.GenericSheet;
 import eu.ha3.matmos.engine0.core.implem.SelfGeneratingData;
 import eu.ha3.matmos.engine0.core.interfaces.Data;
-import eu.ha3.matmos.engine0.datacustom.MAtProcessorSeasonsModAPI;
 import eu.ha3.matmos.engine0.game.data.modules.Module;
+import eu.ha3.matmos.engine0.game.data.modules.ModulePlayerHotbarItems;
 import eu.ha3.matmos.engine0.game.data.modules.ModulePlayerPosition;
 import eu.ha3.matmos.engine0.game.system.MAtMod;
-import eu.ha3.mc.convenience.Ha3StaticUtilities;
 import eu.ha3.mc.quick.chat.ChatColorsSimple;
 
 /* x-placeholder */
 
-public class MAtDataGatherer
+public class MAtDataGatherer implements Collector, Processor
 {
 	public static final String DELTA_SUFFIX = "_delta";
 	
@@ -62,7 +57,7 @@ public class MAtDataGatherer
 	final static int MAX_LARGESCAN_PASS = 10;
 	private static final int ENTITYIDS_MAX = 256;
 	
-	private MAtMod mod;
+	public static final String NULL = "";
 	
 	private MAtScanVolumetricModel largeScanner;
 	private MAtScanVolumetricModel smallScanner;
@@ -86,14 +81,22 @@ public class MAtDataGatherer
 	private int lastLargeScanZ;
 	private int lastLargeScanPassed;
 	
-	private Map<String, Module> modules;
+	//
+	
+	private final MAtMod mod;
+	private final Map<String, Module> modules;
+	private final Map<String, Set<String>> moduleStack;
+	private final Set<String> requiredModules;
+	
+	private boolean anticrash = true;
 	
 	public MAtDataGatherer(MAtMod mAtmosHaddon)
 	{
 		this.mod = mAtmosHaddon;
-		this.frequent = new LinkedHashSet<Processor>();
 		
 		this.modules = new TreeMap<String, Module>();
+		this.requiredModules = new TreeSet<String>();
+		this.moduleStack = new TreeMap<String, Set<String>>();
 	}
 	
 	private void resetRegulators()
@@ -112,10 +115,11 @@ public class MAtDataGatherer
 		resetRegulators();
 		
 		this.data = new SelfGeneratingData(GenericSheet.class);
-		prepareSheets();
 		
 		addModule(new ModulePlayerPosition(this.data), true);
+		addModule(new ModulePlayerHotbarItems(this.data), true);
 		
+		/*
 		this.largeScanner = new MAtScanVolumetricModel();
 		this.smallScanner = new MAtScanVolumetricModel();
 		
@@ -192,22 +196,20 @@ public class MAtDataGatherer
 		
 		this.frequent.add(new MAtProcessorEntityDetector(
 			this.mod, this.data, "DetectMinDist", "Detect", "_Deltas", ENTITYIDS_MAX, 2, 5, 10, 20, 50));
-		
+		*/
 	}
 	
 	public Data getData()
 	{
 		return this.data;
-		
 	}
 	
-	private boolean anticrash = true;
-	
-	public void tickRoutine()
+	@Override
+	public void process()
 	{
 		try
 		{
-			tickRoutineThrowsStupidProgrammingErrors();
+			doProcess();
 		}
 		catch (Exception e)
 		{
@@ -235,8 +237,14 @@ public class MAtDataGatherer
 		}
 	}
 	
-	public void tickRoutineThrowsStupidProgrammingErrors()
+	private void doProcess()
 	{
+		for (String requiredModule : this.requiredModules)
+		{
+			this.modules.get(requiredModule).process();
+		}
+		
+		/*
 		if (this.ticksPassed % 64 == 0)
 		{
 			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
@@ -297,6 +305,7 @@ public class MAtDataGatherer
 		this.smallScanner.routine();
 		
 		this.ticksPassed = this.ticksPassed + 1;
+		*/
 	}
 	
 	/*
@@ -344,20 +353,44 @@ public class MAtDataGatherer
 		createSheet("Options", 16);
 	}*/
 	
-	public void dataRoll()
+	@Override
+	public void addModuleStack(String name, Set<String> requiredModules)
 	{
-		TimeStatistic timeStatistic = new TimeStatistic(Locale.ENGLISH);
-		tickRoutine();
-		MAtmosConvLogger
-			.info("Took " + timeStatistic.getSecondsAsString(3) + " seconds to perform delta tick routine.");
-		
-		timeStatistic = new TimeStatistic(Locale.ENGLISH);
-		while (this.largeScanner.routine())
+		// Find missing modules first. We don't want to iterate and check through invalid modules.
+		Set<String> missingModules = new HashSet<String>();
+		for (String module : requiredModules)
 		{
+			if (!this.modules.containsKey(module))
+			{
+				MAtmosConvLogger.warning("Stack " + name + " requires missing module " + module);
+				missingModules.add(module);
+			}
 		}
-		this.smallScanner.routine();
-		MAtmosConvLogger.info("Took " + timeStatistic.getSecondsAsString(3) + " seconds to perform data roll.");
 		
+		for (String missingModule : missingModules)
+		{
+			requiredModules.remove(missingModule);
+		}
+		
+		this.moduleStack.put(name, requiredModules);
+		
+		recomputeModuleStack();
+	}
+	
+	@Override
+	public void removeModuleStack(String name)
+	{
+		this.moduleStack.remove(name);
+		recomputeModuleStack();
+	}
+	
+	private void recomputeModuleStack()
+	{
+		this.requiredModules.clear();
+		for (Set<String> stack : this.moduleStack.values())
+		{
+			this.requiredModules.addAll(stack);
+		}
 	}
 	
 }

@@ -223,7 +223,9 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 		if (this.isReady)
 		{
 			this.knowledge.turnOn();
-			this.collector.addModuleStack(this.identity.getUniqueName(), this.knowledge.calculateRequiredModules());
+			this
+				.getCollector()
+				.addModuleStack(this.identity.getUniqueName(), this.knowledge.calculateRequiredModules());
 		}
 		
 		this.isActive = true;
@@ -240,7 +242,7 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 			return;
 		
 		this.knowledge.turnOff();
-		this.collector.removeModuleStack(this.identity.getUniqueName());
+		this.getCollector().removeModuleStack(this.identity.getUniqueName());
 		
 		this.isActive = false;
 	}
