@@ -3,7 +3,7 @@ package eu.ha3.matmos.engine0.game.data;
 import java.io.File;
 import java.io.IOException;
 
-import eu.ha3.matmos.engine0.core.implem.SelfGeneratingData;
+import eu.ha3.matmos.engine0.core.interfaces.Data;
 import eu.ha3.matmos.engine0.game.data.abstractions.processor.MAtProcessorModel;
 import eu.ha3.matmos.engine0.game.system.MAtMod;
 import eu.ha3.util.property.simple.ConfigProperty;
@@ -19,7 +19,7 @@ public class MAtProcessorCVARS extends MAtProcessorModel
 	
 	private ConfigProperty config;
 	
-	public MAtProcessorCVARS(MAtMod modIn, SelfGeneratingData dataIn, String normalNameIn, String deltaNameIn)
+	public MAtProcessorCVARS(MAtMod modIn, Data dataIn, String normalNameIn, String deltaNameIn)
 	{
 		super(modIn, dataIn, normalNameIn, deltaNameIn);
 		this.defaultsConfig = new File(mod().util().getModsFolder(), "matmos/dataconfigvars_defaults.cfg");

@@ -1,13 +1,16 @@
 package eu.ha3.matmos.engine0.game.data;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.PotionEffect;
 import eu.ha3.matmos.engine0.conv.MAtmosConvLogger;
 import eu.ha3.matmos.engine0.core.implem.GenericSheet;
 import eu.ha3.matmos.engine0.core.implem.SelfGeneratingData;
@@ -18,9 +21,9 @@ import eu.ha3.matmos.engine0.game.data.abstractions.processor.ProcessorModel;
 import eu.ha3.matmos.engine0.game.data.abstractions.scanner.MAtScanCoordsPipeline;
 import eu.ha3.matmos.engine0.game.data.abstractions.scanner.MAtScanVolumetricModel;
 import eu.ha3.matmos.engine0.game.data.modules.AbstractEnchantmentModule;
+import eu.ha3.matmos.engine0.game.data.modules.AbstractPotionQualityModule;
 import eu.ha3.matmos.engine0.game.data.modules.Module;
-import eu.ha3.matmos.engine0.game.data.modules.ModulePlayerHotbarItems;
-import eu.ha3.matmos.engine0.game.data.modules.ModulePlayerPosition;
+import eu.ha3.matmos.engine0.game.data.modules.PassOnceModule;
 import eu.ha3.matmos.engine0.game.system.MAtMod;
 import eu.ha3.mc.quick.chat.ChatColorsSimple;
 
@@ -90,6 +93,7 @@ public class MAtDataGatherer implements Collector, Processor
 	
 	private final MAtMod mod;
 	private final Map<String, Module> modules;
+	private final Map<String, Set<String>> passOnceModules;
 	private final Map<String, Set<String>> moduleStack;
 	private final Set<String> requiredModules;
 	
@@ -100,20 +104,27 @@ public class MAtDataGatherer implements Collector, Processor
 		this.mod = mAtmosHaddon;
 		
 		this.modules = new TreeMap<String, Module>();
+		this.passOnceModules = new TreeMap<String, Set<String>>();
 		this.requiredModules = new TreeSet<String>();
 		this.moduleStack = new TreeMap<String, Set<String>>();
+		
+		this.frequent = new HashSet<Processor>();
 	}
 	
 	private void addModule(Module module)
 	{
 		this.modules.put(module.getModuleName(), module);
+		if (module instanceof PassOnceModule)
+		{
+			this.passOnceModules.put(module.getModuleName(), ((PassOnceModule) module).getSubModules());
+		}
 	}
 	
 	public void load()
 	{
 		this.data = new SelfGeneratingData(GenericSheet.class);
 		
-		addModule(new ModulePlayerPosition(this.data));
+		/*addModule(new ModulePlayerPosition(this.data));
 		addModule(new ModulePlayerHotbarItems(this.data));
 		addModule(new AbstractEnchantmentModule(this.data, "ench_current") {
 			@Override
@@ -121,9 +132,8 @@ public class MAtDataGatherer implements Collector, Processor
 			{
 				return player.getCurrentEquippedItem();
 			}
-		});
+		});*/
 		
-		/*
 		this.largeScanner = new MAtScanVolumetricModel();
 		this.smallScanner = new MAtScanVolumetricModel();
 		
@@ -137,45 +147,46 @@ public class MAtDataGatherer implements Collector, Processor
 		this.configVarsProcessor = new MAtProcessorCVARS(this.mod, this.data, CONFIGVARS, null);
 		this.optionsProcessor = new MAtProcessorOptions(this.mod, this.data, OPTIONS, null);
 		
-		if (Ha3StaticUtilities.classExists("WeatherPony.Seasons.api.Season", this)
+		// XXX 2014-01-17 Seasons Mod
+		/*if (Ha3StaticUtilities.classExists("WeatherPony.Seasons.api.Season", this)
 			&& Ha3StaticUtilities.classExists("WeatherPony.Seasons.api.BiomeHelper", this))
 		{
 			MAtmosConvLogger.info("WeatherPony.Seasons.api seems to be installed. Installing processor for Seasons.");
 			this.weatherpony_seasons_api_Processor =
 				new MAtProcessorSeasonsModAPI(this.mod, this.data, "weatherpony_seasons_api", null);
-		}
+		} */
 		
 		this.frequent.add(new MAtProcessorFrequent(this.mod, this.data, INSTANTS, DELTAS));
-		this.frequent.add(new MAtProcessorContact(this.mod, this.data, CONTACTSCAN, null));
-		this.frequent.add(new MAtProcessorEnchantments(this.mod, this.data, CURRENTITEM_E, null) {
+		this.frequent.add(new ProcessorContact(this.data, CONTACTSCAN));
+		this.frequent.add(new AbstractEnchantmentModule(this.data, CURRENTITEM_E) {
 			@Override
 			protected ItemStack getItem(EntityPlayer player)
 			{
 				return player.inventory.getCurrentItem();
 			}
 		});
-		this.frequent.add(new MAtProcessorEnchantments(this.mod, this.data, ARMOR1_E, null) {
+		this.frequent.add(new AbstractEnchantmentModule(this.data, ARMOR1_E) {
 			@Override
 			protected ItemStack getItem(EntityPlayer player)
 			{
 				return player.inventory.armorInventory[0];
 			}
 		});
-		this.frequent.add(new MAtProcessorEnchantments(this.mod, this.data, ARMOR2_E, null) {
+		this.frequent.add(new AbstractEnchantmentModule(this.data, ARMOR2_E) {
 			@Override
 			protected ItemStack getItem(EntityPlayer player)
 			{
 				return player.inventory.armorInventory[1];
 			}
 		});
-		this.frequent.add(new MAtProcessorEnchantments(this.mod, this.data, ARMOR3_E, null) {
+		this.frequent.add(new AbstractEnchantmentModule(this.data, ARMOR3_E) {
 			@Override
 			protected ItemStack getItem(EntityPlayer player)
 			{
 				return player.inventory.armorInventory[2];
 			}
 		});
-		this.frequent.add(new MAtProcessorEnchantments(this.mod, this.data, ARMOR4_E, null) {
+		this.frequent.add(new AbstractEnchantmentModule(this.data, ARMOR4_E) {
 			@Override
 			protected ItemStack getItem(EntityPlayer player)
 			{
@@ -183,14 +194,14 @@ public class MAtDataGatherer implements Collector, Processor
 			}
 		});
 		
-		this.frequent.add(new MAtProcessorPotionQuality(this.mod, this.data, POTIONPOWER, null) {
+		this.frequent.add(new AbstractPotionQualityModule(this.data, POTIONPOWER) {
 			@Override
 			protected int getQuality(PotionEffect effect)
 			{
 				return effect.getAmplifier() + 1;
 			}
 		});
-		this.frequent.add(new MAtProcessorPotionQuality(this.mod, this.data, POTIONDURATION, null) {
+		this.frequent.add(new AbstractPotionQualityModule(this.data, POTIONDURATION) {
 			@Override
 			protected int getQuality(PotionEffect effect)
 			{
@@ -198,9 +209,8 @@ public class MAtDataGatherer implements Collector, Processor
 			}
 		});
 		
-		this.frequent.add(new MAtProcessorEntityDetector(
-			this.mod, this.data, "DetectMinDist", "Detect", "_Deltas", ENTITYIDS_MAX, 2, 5, 10, 20, 50));
-		*/
+		//this.frequent.add(new MAtProcessorEntityDetector(
+		//	this.mod, this.data, "DetectMinDist", "Detect", "_Deltas", ENTITYIDS_MAX, 2, 5, 10, 20, 50));
 	}
 	
 	public Data getData()
@@ -248,7 +258,6 @@ public class MAtDataGatherer implements Collector, Processor
 			this.modules.get(requiredModule).process();
 		}
 		
-		/*
 		if (this.ticksPassed % 64 == 0)
 		{
 			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
@@ -256,9 +265,7 @@ public class MAtDataGatherer implements Collector, Processor
 			int y = (int) Math.floor(player.posY);
 			int z = (int) Math.floor(player.posZ);
 			
-			if (this.ticksPassed % 256 == 0
-				&& (this.data.getRequirements().isRequired(LARGESCAN) || this.data.getRequirements().isRequired(
-					LARGESCAN_THOUSAND)))
+			if (this.ticksPassed % 256 == 0 && (requires(LARGESCAN) || requires(LARGESCAN_THOUSAND)))
 			{
 				if (this.lastLargeScanPassed >= MAX_LARGESCAN_PASS
 					|| Math.abs(x - this.lastLargeScanX) > 16 || Math.abs(y - this.lastLargeScanY) > 8
@@ -277,8 +284,7 @@ public class MAtDataGatherer implements Collector, Processor
 				}
 			}
 			
-			if (this.data.getRequirements().isRequired(SMALLSCAN)
-				|| this.data.getRequirements().isRequired(SMALLSCAN_THOUSAND))
+			if (requires(SMALLSCAN) || requires(SMALLSCAN_THOUSAND))
 			{
 				this.smallScanner.startScan(x, y, z, 16, 8, 16, 2048, null);
 			}
@@ -289,7 +295,7 @@ public class MAtDataGatherer implements Collector, Processor
 				this.weatherpony_seasons_api_Processor.process();
 			}
 			
-			this.optionsProcessor.process();
+			//this.optionsProcessor.process();
 		}
 		
 		if (true)
@@ -309,53 +315,14 @@ public class MAtDataGatherer implements Collector, Processor
 		this.smallScanner.routine();
 		
 		this.ticksPassed = this.ticksPassed + 1;
-		*/
+		
 	}
 	
-	/*
-	private void prepareSheets()
+	@Override
+	public boolean requires(String moduleName)
 	{
-		createSheet(LARGESCAN);
-		createSheet(LARGESCAN_THOUSAND);
-		
-		createSheet(SMALLSCAN);
-		createSheet(SMALLSCAN_THOUSAND);
-		
-		createSheet(CONTACTSCAN);
-		
-		createSheet(INSTANTS, COUNT_INSTANTS);
-		createSheet(DELTAS, COUNT_INSTANTS);
-		
-		createSheet(POTIONPOWER, COUNT_POTIONEFFECTS);
-		createSheet(POTIONDURATION, COUNT_POTIONEFFECTS);
-		
-		createSheet(CURRENTITEM_E);
-		createSheet(ARMOR1_E);
-		createSheet(ARMOR2_E);
-		createSheet(ARMOR3_E);
-		createSheet(ARMOR4_E);
-		
-		createSheet(SPECIAL_LARGE, 2);
-		createSheet(SPECIAL_SMALL, 1);
-		
-		createSheet(CONFIGVARS, COUNT_CONFIGVARS);
-		
-		createSheet("DetectMinDist", ENTITYIDS_MAX);
-		createSheet("Detect2", ENTITYIDS_MAX);
-		createSheet("Detect5", ENTITYIDS_MAX);
-		createSheet("Detect10", ENTITYIDS_MAX);
-		createSheet("Detect20", ENTITYIDS_MAX);
-		createSheet("Detect50", ENTITYIDS_MAX);
-		createSheet("DetectMinDist_Deltas", ENTITYIDS_MAX);
-		createSheet("Detect2_Deltas", ENTITYIDS_MAX);
-		createSheet("Detect5_Deltas", ENTITYIDS_MAX);
-		createSheet("Detect10_Deltas", ENTITYIDS_MAX);
-		createSheet("Detect20_Deltas", ENTITYIDS_MAX);
-		createSheet("Detect50_Deltas", ENTITYIDS_MAX);
-		createSheet("weatherpony_seasons_api", 4);
-		
-		createSheet("Options", 16);
-	}*/
+		return this.requiredModules.contains(moduleName);
+	}
 	
 	@Override
 	public void addModuleStack(String name, Set<String> requiredModules)
@@ -394,6 +361,16 @@ public class MAtDataGatherer implements Collector, Processor
 		for (Set<String> stack : this.moduleStack.values())
 		{
 			this.requiredModules.addAll(stack);
+		}
+		
+		for (Map.Entry<String, Set<String>> submodules : this.passOnceModules.entrySet())
+		{
+			// if the submodules have something in common with the required modules
+			if (!Collections.disjoint(submodules.getValue(), this.requiredModules))
+			{
+				this.requiredModules.removeAll(submodules.getValue());
+				this.requiredModules.add(submodules.getKey());
+			}
 		}
 	}
 }

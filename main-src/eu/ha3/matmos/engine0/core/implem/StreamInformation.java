@@ -10,16 +10,15 @@ import eu.ha3.matmos.engine0.core.interfaces.SoundRelay;
 
 public class StreamInformation extends MultistateComponent implements Simulated
 {
-	
-	private String path = "";
-	private float volume = 1f;
-	private float pitch = 1f;
-	private float delayBeforeFadeIn = 0f;
-	private float delayBeforeFadeOut = 0f;
-	private float fadeInTime = 0f;
-	private float fadeOutTime = 0f;
-	private boolean isLooping = true;
-	private boolean usesPause = false;
+	private String path;
+	private float volume;
+	private float pitch;
+	private float delayBeforeFadeIn;
+	private float delayBeforeFadeOut;
+	private float fadeInTime;
+	private float fadeOutTime;
+	private boolean isLooping;
+	private boolean usesPause;
 	
 	//
 	
@@ -35,7 +34,10 @@ public class StreamInformation extends MultistateComponent implements Simulated
 	private long startTime;
 	private long stopTime;
 	
-	public StreamInformation(String machineName, Provider<Machine> provider, ReferenceTime time, SoundRelay relay)
+	public StreamInformation(
+		String machineName, Provider<Machine> provider, ReferenceTime time, SoundRelay relay, String path,
+		float volume, float pitch, float delayBeforeFadeIn, float delayBeforeFadeOut, float fadeInTime,
+		float fadeOutTime, boolean isLooping, boolean usesPause)
 	{
 		super("_STREAM:" + machineName);
 		
@@ -43,6 +45,16 @@ public class StreamInformation extends MultistateComponent implements Simulated
 		this.provider = provider;
 		this.time = time;
 		this.relay = relay;
+		
+		this.path = path;
+		this.volume = volume;
+		this.pitch = pitch;
+		this.delayBeforeFadeIn = delayBeforeFadeIn;
+		this.delayBeforeFadeOut = delayBeforeFadeOut;
+		this.fadeInTime = fadeInTime;
+		this.fadeOutTime = fadeOutTime;
+		this.isLooping = isLooping;
+		this.usesPause = usesPause;
 		
 		this.token = -1;
 	}

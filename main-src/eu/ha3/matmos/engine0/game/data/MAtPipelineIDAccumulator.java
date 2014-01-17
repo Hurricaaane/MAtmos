@@ -3,7 +3,7 @@ package eu.ha3.matmos.engine0.game.data;
 import java.util.HashMap;
 import java.util.Map;
 
-import eu.ha3.matmos.engine0.core.implem.SelfGeneratingData;
+import eu.ha3.matmos.engine0.core.interfaces.Data;
 import eu.ha3.matmos.engine0.core.interfaces.Sheet;
 import eu.ha3.matmos.engine0.game.data.abstractions.scanner.MAtScanCoordsPipeline;
 import eu.ha3.matmos.v170helper.Version170Helper;
@@ -21,7 +21,7 @@ public class MAtPipelineIDAccumulator extends MAtScanCoordsPipeline
 	private int proportionnalTotal;
 	
 	public MAtPipelineIDAccumulator(
-		SelfGeneratingData dataIn, String normalNameIn, String proportionnalNameIn, int proportionnalTotalIn)
+		Data dataIn, String normalNameIn, String proportionnalNameIn, int proportionnalTotalIn)
 	{
 		super(dataIn);
 		this.tempnormal = new HashMap<String, Integer>(0);

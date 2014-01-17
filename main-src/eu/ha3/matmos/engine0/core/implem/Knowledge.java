@@ -84,8 +84,8 @@ public class Knowledge implements Evaluated, Simulated
 		
 		this.providerCollection =
 			new Providers(
-				this.time, this.sheetCommander, this.conditionProvider, this.junctionProvider, this.machineProvider,
-				this.eventProvider);
+				this.time, this.relay, this.sheetCommander, this.conditionProvider, this.junctionProvider,
+				this.machineProvider, this.eventProvider);
 		
 		this.data = new SelfGeneratingData(GenericSheet.class);
 	}

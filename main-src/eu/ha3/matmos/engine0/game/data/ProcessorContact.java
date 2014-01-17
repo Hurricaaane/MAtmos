@@ -4,21 +4,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.minecraft.client.Minecraft;
-import eu.ha3.matmos.engine0.core.implem.SelfGeneratingData;
-import eu.ha3.matmos.engine0.game.data.abstractions.processor.MAtProcessorModel;
-import eu.ha3.matmos.engine0.game.system.MAtMod;
+import eu.ha3.matmos.engine0.core.interfaces.Data;
+import eu.ha3.matmos.engine0.game.data.abstractions.processor.ProcessorModel;
 import eu.ha3.matmos.v170helper.Version170Helper;
 
 /* x-placeholder */
 
-public class MAtProcessorContact extends MAtProcessorModel
+public class ProcessorContact extends ProcessorModel
 {
 	private Map<String, Integer> tempnormal;
 	
-	public MAtProcessorContact(MAtMod modIn, SelfGeneratingData dataIn, String normalNameIn, String deltaNameIn)
+	public ProcessorContact(Data dataIn, String name)
 	{
-		super(modIn, dataIn, normalNameIn, deltaNameIn);
-		this.tempnormal = new HashMap<String, Integer>(0);
+		super(dataIn, name, name + MAtDataGatherer.DELTA_SUFFIX);
+		this.tempnormal = new HashMap<String, Integer>();
 	}
 	
 	private void emptyContact()
@@ -53,7 +52,8 @@ public class MAtProcessorContact extends MAtProcessorModel
 				nz = z + (k > 3 && k < 8 ? k < 6 ? -1 : 1 : 0);
 				
 				String blockName = Version170Helper.getNameAt(nx, ny, nz, "");
-				this.tempnormal.put(blockName, this.tempnormal.get(blockName) + 1);
+				this.tempnormal.put(blockName, this.tempnormal.containsKey(blockName)
+					? this.tempnormal.get(blockName) + 1 : 1);
 			}
 		}
 		

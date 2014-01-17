@@ -14,7 +14,7 @@ public abstract class ProcessorModel implements Processor
 	
 	public ProcessorModel(Data data, String normalName, String deltaName)
 	{
-		if (deltaName.equals(null))
+		if (deltaName == null)
 		{
 			this.sheet = data.getSheet(normalName);
 		}

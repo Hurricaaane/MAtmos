@@ -3,14 +3,12 @@ package eu.ha3.matmos.engine0.game.data;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 
 import javax.naming.directory.Attributes;
 import javax.naming.directory.InitialDirContext;
@@ -88,147 +86,88 @@ public class MAtProcessorRelaxed extends MAtProcessorModel
 		Minecraft mc = Minecraft.getMinecraft();
 		World w = mc.theWorld;
 		
-		Set<String> required = getRequired();
-		
-		//if (required.contains("75")
-		//	|| required.contains("76") || required.contains("77") || required.contains("78") || required.contains("79")
-		//	|| required.contains("80"))
-		if (!Collections.disjoint(required, this.serverData))
+		ServerData serverData = null;
+		try
 		{
-			ServerData serverData = null;
-			try
+			serverData =
+				(ServerData) mod().util().getPrivateValueLiteral(Minecraft.class, Minecraft.getMinecraft(), "M", 6);
+		}
+		catch (PrivateAccessException e)
+		{
+			e.printStackTrace();
+		}
+		if (serverData != null && serverData.serverIP != null)
+		{
+			String playerIp = serverData.serverIP;
+			
+			computeServerIP(playerIp);
+			
+			String MOTDsec = serverData.serverMOTD;
+			String NAMEsec = serverData.serverName;
+			
+			if (MOTDsec == null)
 			{
-				serverData =
-					(ServerData) mod().util().getPrivateValueLiteral(Minecraft.class, Minecraft.getMinecraft(), "M", 6);
+				MOTDsec = "";
 			}
-			catch (PrivateAccessException e)
+			if (NAMEsec == null)
 			{
-				e.printStackTrace();
+				NAMEsec = "";
 			}
-			if (serverData != null && serverData.serverIP != null)
-			{
-				String playerIp = serverData.serverIP;
-				
-				computeServerIP(playerIp);
-				
-				String MOTDsec = serverData.serverMOTD;
-				String NAMEsec = serverData.serverName;
-				
-				if (MOTDsec == null)
-				{
-					MOTDsec = "";
-				}
-				if (NAMEsec == null)
-				{
-					NAMEsec = "";
-				}
-				
-				setValueLegacyIntIndexes(75, 1);
-				setValueLegacyIntIndexes(76, serverData.serverIP.toLowerCase(Locale.ENGLISH).hashCode());
-				setValueLegacyIntIndexes(77, MOTDsec.hashCode());
-				setValueLegacyIntIndexes(78, NAMEsec.hashCode());
-				setValueLegacyIntIndexes(79, this.serverAddresses.get(playerIp));
-				setValueLegacyIntIndexes(80, this.serverPorts.get(playerIp));
-				
-			}
-			else
-			{
-				setValueLegacyIntIndexes(75, 0);
-				setValueLegacyIntIndexes(76, 0);
-				setValueLegacyIntIndexes(77, 0);
-				setValueLegacyIntIndexes(78, 0);
-				setValueLegacyIntIndexes(79, 0);
-				setValueLegacyIntIndexes(80, 0);
-			}
+			
+			setValueLegacyIntIndexes(75, 1);
+			setValueLegacyIntIndexes(76, serverData.serverIP.toLowerCase(Locale.ENGLISH).hashCode());
+			setValueLegacyIntIndexes(77, MOTDsec.hashCode());
+			setValueLegacyIntIndexes(78, NAMEsec.hashCode());
+			setValueLegacyIntIndexes(79, this.serverAddresses.get(playerIp));
+			setValueLegacyIntIndexes(80, this.serverPorts.get(playerIp));
+			
+		}
+		else
+		{
+			setValueLegacyIntIndexes(75, 0);
+			setValueLegacyIntIndexes(76, 0);
+			setValueLegacyIntIndexes(77, 0);
+			setValueLegacyIntIndexes(78, 0);
+			setValueLegacyIntIndexes(79, 0);
+			setValueLegacyIntIndexes(80, 0);
 		}
 		
-		for (String sindex : required)
+		setValueLegacyIntIndexes(5, w.provider.dimensionId);
+		setValueLegacyIntIndexes(12, w.isRemote ? 1 : 0);
+		setValueLegacyIntIndexes(13, 1 + this.random.nextInt(100)); // DICE A
+		setValueLegacyIntIndexes(14, 1 + this.random.nextInt(100)); // DICE B
+		setValueLegacyIntIndexes(15, 1 + this.random.nextInt(100)); // DICE C
+		setValueLegacyIntIndexes(16, 1 + this.random.nextInt(100)); // DICE D
+		setValueLegacyIntIndexes(17, 1 + this.random.nextInt(100)); // DICE E
+		setValueLegacyIntIndexes(18, 1 + this.random.nextInt(100)); // DICE F
+		
+		int biomei = mod().getConfig().getInteger("useroptions.biome.override");
+		if (biomei <= -1)
 		{
-			// 1.7 DERAIL
-			int index = Integer.parseInt(sindex);
-			
-			switch (index)
+			Integer biomeInt = this.deprecatedBiomeHash.get(calculateBiome().biomeName);
+			if (biomeInt == null)
 			{
-			case 5:
-				setValueLegacyIntIndexes(5, w.provider.dimensionId);
-				break;
-			
-			case 12:
-				setValueLegacyIntIndexes(12, w.isRemote ? 1 : 0);
-				break;
-			
-			case 13:
-				setValueLegacyIntIndexes(13, 1 + this.random.nextInt(100)); // DICE A
-				break;
-			
-			case 14:
-				setValueLegacyIntIndexes(14, 1 + this.random.nextInt(100)); // DICE B
-				break;
-			
-			case 15:
-				setValueLegacyIntIndexes(15, 1 + this.random.nextInt(100)); // DICE C
-				break;
-			
-			case 16:
-				setValueLegacyIntIndexes(16, 1 + this.random.nextInt(100)); // DICE D
-				break;
-			
-			case 17:
-				setValueLegacyIntIndexes(17, 1 + this.random.nextInt(100)); // DICE E
-				break;
-			
-			case 18:
-				setValueLegacyIntIndexes(18, 1 + this.random.nextInt(100)); // DICE F
-				break;
-			
-			case 29:
-			{
-				int biomei = mod().getConfig().getInteger("useroptions.biome.override");
-				if (biomei <= -1)
-				{
-					Integer biomeInt = this.deprecatedBiomeHash.get(calculateBiome().biomeName);
-					if (biomeInt == null)
-					{
-						biomeInt = -1;
-					}
-					setValueLegacyIntIndexes(29, biomeInt);
-				}
-				else
-				{
-					setValueLegacyIntIndexes(29, biomei);
-				}
-				break;
+				biomeInt = -1;
 			}
-			
-			case 30:
-				setValueLegacyIntIndexes(30, (int) (w.getSeed() >> 32));
-				break;
-			
-			case 31:
-				setValueLegacyIntIndexes(31, (int) (w.getSeed() & 0xFFFFFFFF));
-				break;
-			
-			case 88:
-				setValueLegacyIntIndexes(88, w.getMoonPhase());
-				break;
-			
-			case 93:
-			{
-				int biomej = mod().getConfig().getInteger("useroptions.biome.override");
-				if (biomej <= -1)
-				{
-					setValueLegacyIntIndexes(93, calculateBiome().biomeID);
-				}
-				else
-				{
-					setValueLegacyIntIndexes(93, biomej);
-				}
-			}
-				break;
-			
-			default:
-				break;
-			}
+			setValueLegacyIntIndexes(29, biomeInt);
+		}
+		else
+		{
+			setValueLegacyIntIndexes(29, biomei);
+		}
+		
+		setValueLegacyIntIndexes(30, (int) (w.getSeed() >> 32));
+		setValueLegacyIntIndexes(31, (int) (w.getSeed() & 0xFFFFFFFF));
+		setValueLegacyIntIndexes(88, w.getMoonPhase());
+		
+		int biomej = mod().getConfig().getInteger("useroptions.biome.override");
+		if (biomej <= -1)
+		{
+			setValueLegacyIntIndexes(93, calculateBiome().biomeID);
+		}
+		else
+		{
+			setValueLegacyIntIndexes(93, biomej);
 		}
 		
 	}

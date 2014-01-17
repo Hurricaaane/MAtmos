@@ -3,6 +3,7 @@ package eu.ha3.matmos.engine0.core.implem.abstractions;
 import eu.ha3.matmos.engine0.core.interfaces.Provider;
 import eu.ha3.matmos.engine0.core.interfaces.ReferenceTime;
 import eu.ha3.matmos.engine0.core.interfaces.SheetCommander;
+import eu.ha3.matmos.engine0.core.interfaces.SoundRelay;
 
 /*
 --filenotes-placeholder
@@ -11,6 +12,8 @@ import eu.ha3.matmos.engine0.core.interfaces.SheetCommander;
 public interface ProviderCollection
 {
 	public ReferenceTime getReferenceTime();
+	
+	public SoundRelay getSoundRelay();
 	
 	public SheetCommander getSheetCommander();
 	

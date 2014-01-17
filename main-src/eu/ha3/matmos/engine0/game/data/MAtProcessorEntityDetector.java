@@ -10,9 +10,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
-import eu.ha3.matmos.engine0.core.implem.SelfGeneratingData;
+import eu.ha3.matmos.engine0.core.interfaces.Data;
 import eu.ha3.matmos.engine0.game.data.abstractions.Processor;
-import eu.ha3.matmos.engine0.game.data.abstractions.processor.MAtProcessorModel;
 import eu.ha3.matmos.engine0.game.data.abstractions.processor.ProcessorModel;
 
 /* x-placeholder */
@@ -35,10 +34,9 @@ public class MAtProcessorEntityDetector implements Processor
 	private boolean isRequired;
 	
 	@SuppressWarnings("unchecked")
-	public MAtProcessorEntityDetector(
-		SelfGeneratingData dataIn, String mindist, String prefix, String deltaSuffix, int max, int... radiis)
+	public MAtProcessorEntityDetector(Data dataIn, String mindist, String prefix, int max, int... radiis)
 	{
-		this.mindistModel = new MAtProcessorModel(modIn, dataIn, mindist, mindist + deltaSuffix) {
+		this.mindistModel = new ProcessorModel(dataIn, mindist, mindist + MAtDataGatherer.DELTA_SUFFIX) {
 			@Override
 			protected void doProcess()
 			{
@@ -56,12 +54,13 @@ public class MAtProcessorEntityDetector implements Processor
 		for (int i = 0; i < this.radi.length; i++)
 		{
 			int radiNum = this.radi[i];
-			this.radiModels[i] = new ProcessorModel(dataIn, prefix + radiNum, prefix + radiNum + deltaSuffix) {
-				@Override
-				protected void doProcess()
-				{
-				}
-			};
+			this.radiModels[i] =
+				new ProcessorModel(dataIn, prefix + radiNum, prefix + radiNum + MAtDataGatherer.DELTA_SUFFIX) {
+					@Override
+					protected void doProcess()
+					{
+					}
+				};
 			this.mappies[i] = new HashMap<Integer, Integer>();
 		}
 		
