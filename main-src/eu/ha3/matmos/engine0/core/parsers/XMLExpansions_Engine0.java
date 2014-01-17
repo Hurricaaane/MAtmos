@@ -1,6 +1,9 @@
 package eu.ha3.matmos.engine0.core.parsers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -15,22 +18,22 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import eu.ha3.matmos.engine0.core.implem.Condition;
-import eu.ha3.matmos.engine0.core.implem.Dynamic;
 import eu.ha3.matmos.engine0.core.implem.Event;
 import eu.ha3.matmos.engine0.core.implem.Junction;
 import eu.ha3.matmos.engine0.core.implem.Knowledge;
 import eu.ha3.matmos.engine0.core.implem.Machine;
 import eu.ha3.matmos.engine0.core.implem.Operator;
+import eu.ha3.matmos.engine0.core.implem.SheetEntry;
 import eu.ha3.matmos.engine0.core.implem.StreamInformation;
-import eu.ha3.matmos.engine0.core.implem.StringListContainer;
 import eu.ha3.matmos.engine0.core.implem.TimedEvent;
+import eu.ha3.matmos.engine0.core.implem.TimedEventInformation;
+import eu.ha3.matmos.engine0.core.implem.abstractions.ProviderCollection;
+import eu.ha3.matmos.engine0.core.interfaces.Named;
 
 /* x-placeholder */
 
 public class XMLExpansions_Engine0
 {
-	Knowledge knowledgeWorkstation;
-	
 	static final String NAME = "name";
 	
 	static final String DESCRIPTIBLE = "descriptible";
@@ -89,6 +92,10 @@ public class XMLExpansions_Engine0
 	
 	private Map<String, Operator> inverseSymbols;
 	
+	private Knowledge knowledgeWorkstation;
+	private LinkedHashSet<Named> elements;
+	private ProviderCollection providers;
+	
 	public XMLExpansions_Engine0()
 	{
 		this.inverseSymbols = new HashMap<String, Operator>();
@@ -112,11 +119,11 @@ public class XMLExpansions_Engine0
 	
 	///
 	
-	public boolean loadKnowledge(Knowledge original, Document doc, boolean allowOverrides) throws MAtmosException
+	public boolean loadKnowledge(Knowledge original, Document doc)
 	{
 		try
 		{
-			parseXML(original, doc, allowOverrides);
+			parseXML(original, doc);
 			return true;
 		}
 		catch (XPathExpressionException e)
@@ -129,9 +136,7 @@ public class XMLExpansions_Engine0
 		{
 			e.printStackTrace();
 			return false;
-			
 		}
-		
 	}
 	
 	private int toInt(String source)
@@ -149,8 +154,7 @@ public class XMLExpansions_Engine0
 		
 	}
 	
-	private void parseXMLdynamic(Knowledge original, Element capsule, String name, boolean allowOverrides)
-		throws XPathExpressionException
+	/*private void parseXMLdynamic(Knowledge original, Element capsule, String name) throws XPathExpressionException
 	{
 		boolean exists = original.getDynamic(name) != null;
 		if (exists && !allowOverrides)
@@ -177,9 +181,9 @@ public class XMLExpansions_Engine0
 			
 		}
 		
-	}
+	}*/
 	
-	private void parseXMLlist(Knowledge original, Element capsule, String name, boolean allowOverrides)
+	/*private void parseXMLlist(Knowledge original, Element capsule, String name, boolean allowOverrides)
 		throws XPathExpressionException
 	{
 		boolean exists = original.getList(name) != null;
@@ -199,111 +203,58 @@ public class XMLExpansions_Engine0
 			
 			descriptible.add(constant);
 		}
-	}
+	}*/
 	
-	private void parseXMLcondition(Knowledge original, Element capsule, String name, boolean allowOverrides)
-		throws XPathExpressionException
+	private void parseXMLcondition(Element capsule, String name) throws XPathExpressionException
 	{
-		boolean exists = original.getCondition(name) != null;
-		if (exists && !allowOverrides)
-			return;
-		
-		if (!exists)
-		{
-			original.addCondition(name);
-		}
-		
-		Condition descriptible = original.getCondition(name);
-		
 		String sheet = eltString(SHEET, capsule);
-		String key = eltString(KEY, capsule);
+		String index = eltString(KEY, capsule);
 		String dynamickey = eltString(DYNAMICKEY, capsule);
 		String symbol = eltString(SYMBOL, capsule);
 		String constant = eltString(CONSTANT, capsule);
 		String list = eltString(LIST, capsule);
 		
-		if (sheet != null)
+		if (dynamickey != null)
 		{
-			descriptible.setSheet(sheet);
+			sheet = "_DYNAMIC";
+			index = dynamickey;
 		}
-		
-		if (key != null)
-		{
-			descriptible.setKey(Integer.toString(toInt(key)));
-		}
-		
-		if (dynamickey != null && !dynamickey.equals(""))
-		{
-			descriptible.setDynamic(dynamickey);
-		}
-		
-		if (symbol != null)
-		{
-			setSymbolTo(descriptible, symbol);
-		}
-		
-		if (constant != null)
-		{
-			descriptible.setConstant(constant);
-		}
-		
 		if (list != null)
 		{
-			descriptible.setConstant(list);
+			constant = list;
 		}
 		
+		Named element =
+			new Condition(
+				name, this.providers.getSheetCommander(), new SheetEntry(sheet, index),
+				this.inverseSymbols.get(symbol), constant);
+		this.elements.add(element);
 	}
 	
-	private void setSymbolTo(Condition descriptible, String symbol)
+	private void parseXMLset(Element capsule, String name)
 	{
-		descriptible.setConditionType(this.inverseSymbols.get(symbol));
-	}
-	
-	private void parseXMLset(Knowledge original, Element capsule, String name, boolean allowOverrides)
-		throws XPathExpressionException
-	{
-		boolean exists = original.getConditionSet(name) != null;
-		if (exists && !allowOverrides)
-			return;
-		
-		if (!exists)
-		{
-			original.addConditionSet(name);
-		}
-		
-		Junction descriptible = original.getConditionSet(name);
+		List<String> yes = new ArrayList<String>();
+		List<String> no = new ArrayList<String>();
 		
 		for (Element eelt : DomUtil.getChildren(capsule, TRUEPART))
 		{
 			String truepart = textOf(eelt);
-			
-			descriptible.addCondition(truepart, true);
-			
+			yes.add(truepart);
 		}
 		
 		for (Element eelt : DomUtil.getChildren(capsule, FALSEPART))
 		{
 			String falsepart = textOf(eelt);
-			
-			descriptible.addCondition(falsepart, false);
-			
+			no.add(falsepart);
 		}
 		
+		Named element = new Junction(name, this.providers.getCondition(), yes, no);
+		this.elements.add(element);
 	}
 	
-	private void parseXMLevent(Knowledge original, Element capsule, String name, boolean allowOverrides)
-		throws XPathExpressionException
+	private void parseXMLevent(Element capsule, String name)
 	{
-		boolean exists = original.getEvent(name) != null;
-		if (exists && !allowOverrides)
-			return;
-		
-		if (!exists)
-		{
-			original.addEvent(name);
-		}
-		
-		Event descriptible = original.getEvent(name);
+		List<String> paths = new ArrayList<String>();
 		
 		String volmin = eltString(VOLMIN, capsule);
 		String volmax = eltString(VOLMAX, capsule);
@@ -311,125 +262,81 @@ public class XMLExpansions_Engine0
 		String pitchmax = eltString(PITCHMAX, capsule);
 		String metasound = eltString(METASOUND, capsule);
 		
-		if (volmin != null)
-		{
-			descriptible.volMin = Float.parseFloat(volmin);
-		}
-		
-		if (volmax != null)
-		{
-			descriptible.volMax = Float.parseFloat(volmax);
-		}
-		
-		if (pitchmin != null)
-		{
-			descriptible.pitchMin = Float.parseFloat(pitchmin);
-		}
-		
-		if (pitchmax != null)
-		{
-			descriptible.pitchMax = Float.parseFloat(pitchmax);
-		}
-		
-		if (metasound != null)
-		{
-			descriptible.distance = toInt(metasound);
-		}
+		float vol_min = volmin != null ? Float.parseFloat(volmin) : 1f;
+		float vol_max = volmax != null ? Float.parseFloat(volmax) : 1f;
+		float pitch_min = pitchmin != null ? Float.parseFloat(pitchmin) : 1f;
+		float pitch_max = pitchmax != null ? Float.parseFloat(pitchmax) : 1f;
+		int distance = metasound != null ? toInt(metasound) : 0;
 		
 		for (Element eelt : DomUtil.getChildren(capsule, PATH))
 		{
 			String path = textOf(eelt);
-			
-			descriptible.paths.add(path);
-			
+			paths.add(path);
 		}
 		
+		Named element =
+			new Event(name, this.providers.getSoundRelay(), paths, vol_min, vol_max, pitch_min, pitch_max, distance);
+		this.elements.add(element);
 	}
 	
-	private void parseXMLmachine(Knowledge original, Element capsule, String name, boolean allowOverrides)
-		throws XPathExpressionException
+	private void parseXMLmachine(Element capsule, String name)
 	{
-		boolean exists = original.getMachine(name) != null;
-		if (exists && !allowOverrides)
-			return;
-		
-		if (!exists)
-		{
-			original.addMachine(name);
-		}
-		
-		Machine descriptible = original.getMachine(name);
-		
+		List<TimedEvent> events = new ArrayList<TimedEvent>();
 		for (Element eelt : DomUtil.getChildren(capsule, EVENTTIMED))
 		{
-			int size = descriptible.addEventTimed();
-			inscriptXMLeventTimed(descriptible.getEventTimed(size - 1), eelt);
-			
+			events.add(inscriptXMLeventTimed(eelt));
 		}
 		
+		StreamInformation stream = null;
 		for (Element eelt : DomUtil.getChildren(capsule, STREAM))
 		{
-			int size = descriptible.addStream();
-			inscriptXMLstream(descriptible.getStream(size - 1), eelt);
-			
+			stream = inscriptXMLstream(eelt, name);
 		}
 		
+		List<String> allow = new ArrayList<String>();
 		for (Element eelt : DomUtil.getChildren(capsule, ALLOW))
 		{
-			descriptible.addAllow(textOf(eelt));
-			
+			allow.add(textOf(eelt));
 		}
 		
+		List<String> restrict = new ArrayList<String>();
 		for (Element eelt : DomUtil.getChildren(capsule, RESTRICT))
 		{
-			descriptible.addRestrict(textOf(eelt));
-			
+			restrict.add(textOf(eelt));
 		}
 		
+		TimedEventInformation tie = null;
+		if (events.size() > 0)
+		{
+			tie =
+				new TimedEventInformation(
+					name, this.providers.getMachine(), this.providers.getEvent(), this.providers.getReferenceTime(),
+					events);
+		}
+		
+		Named element = new Machine(name, this.providers.getJunction(), allow, restrict, tie, stream);
+		this.elements.add(element);
 	}
 	
-	private void inscriptXMLeventTimed(TimedEvent inscriptible, Element specs) throws XPathExpressionException
+	private TimedEvent inscriptXMLeventTimed(Element specs)
 	{
 		String eventname = eltString(EVENTNAME, specs);
 		String volmod = eltString(VOLMOD, specs);
 		String pitchmod = eltString(PITCHMOD, specs);
-		String delaystart = eltString(DELAYSTART, specs);
 		String delaymin = eltString(DELAYMIN, specs);
 		String delaymax = eltString(DELAYMAX, specs);
+		String delaystart = eltString(DELAYSTART, specs);
 		
-		if (eventname != null)
-		{
-			inscriptible.event = eventname;
-		}
+		float vol_mod = volmod != null ? Float.parseFloat(volmod) : 1f;
+		float pitch_mod = pitchmod != null ? Float.parseFloat(pitchmod) : 1f;
+		float delay_min = delaymin != null ? Float.parseFloat(delaymin) : 1f; // 1f is dummy
+		float delay_max = delaymax != null ? Float.parseFloat(delaymax) : 1f; // 1f is dummy
+		float delay_start = delaystart != null ? Float.parseFloat(delaystart) : 1f; // 1f is dummy
 		
-		if (volmod != null)
-		{
-			inscriptible.volMod = Float.parseFloat(volmod);
-		}
-		
-		if (pitchmod != null)
-		{
-			inscriptible.pitchMod = Float.parseFloat(pitchmod);
-		}
-		
-		if (delaystart != null)
-		{
-			inscriptible.delayStart = Float.parseFloat(delaystart);
-		}
-		
-		if (delaymin != null)
-		{
-			inscriptible.delayMin = Float.parseFloat(delaymin);
-		}
-		
-		if (delaymax != null)
-		{
-			inscriptible.delayMax = Float.parseFloat(delaymax);
-		}
-		
+		return new TimedEvent(eventname, vol_mod, pitch_mod, delay_min, delay_max, delay_start);
 	}
 	
-	private void inscriptXMLstream(StreamInformation inscriptible, Element specs) throws XPathExpressionException
+	private StreamInformation inscriptXMLstream(Element specs, String machineName)
 	{
 		String _PATH = eltString(PATH, specs);
 		String _VOLUME = eltString(VOLUME, specs);
@@ -441,60 +348,31 @@ public class XMLExpansions_Engine0
 		String _ISLOOPING = eltString(ISLOOPING, specs);
 		String _ISUSINGPAUSE = eltString(ISUSINGPAUSE, specs);
 		
-		if (_PATH != null)
-		{
-			inscriptible.path = _PATH;
-		}
+		float vol = _VOLUME != null ? Float.parseFloat(_VOLUME) : 1f;
+		float pitch = _PITCH != null ? Float.parseFloat(_PITCH) : 1f;
+		float fadein = _FADEINTIME != null ? Float.parseFloat(_FADEINTIME) : 1f; // 1f is dummy
+		float fadeout = _FADEOUTTIME != null ? Float.parseFloat(_FADEOUTTIME) : 1f; // 1f is dummy
+		float delaybeforefadein = _DELAYBEFOREFADEIN != null ? Float.parseFloat(_DELAYBEFOREFADEIN) : 1f; // 1f is dummy
+		float delaybeforefadeout = _DELAYBEFOREFADEOUT != null ? Float.parseFloat(_DELAYBEFOREFADEOUT) : 1f; // 1f is dummy
+		boolean looping = toInt(_ISLOOPING) == 1;
+		boolean pause = toInt(_ISUSINGPAUSE) == 1;
 		
-		if (_VOLUME != null)
-		{
-			inscriptible.volume = Float.parseFloat(_VOLUME);
-		}
-		
-		if (_PITCH != null)
-		{
-			inscriptible.pitch = Float.parseFloat(_PITCH);
-		}
-		
-		if (_FADEINTIME != null)
-		{
-			inscriptible.fadeInTime = Float.parseFloat(_FADEINTIME);
-		}
-		
-		if (_FADEOUTTIME != null)
-		{
-			inscriptible.fadeOutTime = Float.parseFloat(_FADEOUTTIME);
-		}
-		
-		if (_DELAYBEFOREFADEIN != null)
-		{
-			inscriptible.delayBeforeFadeIn = Float.parseFloat(_DELAYBEFOREFADEIN);
-		}
-		
-		if (_DELAYBEFOREFADEOUT != null)
-		{
-			inscriptible.delayBeforeFadeOut = Float.parseFloat(_DELAYBEFOREFADEOUT);
-		}
-		
-		if (_ISLOOPING != null)
-		{
-			inscriptible.isLooping = toInt(_ISLOOPING) == 1;
-		}
-		
-		if (_ISUSINGPAUSE != null)
-		{
-			inscriptible.usesPause = toInt(_ISUSINGPAUSE) == 1;
-		}
-		
+		return new StreamInformation(
+			machineName, this.providers.getMachine(), this.providers.getReferenceTime(),
+			this.providers.getSoundRelay(), _PATH, vol, pitch, delaybeforefadein, delaybeforefadeout, fadein, fadeout,
+			looping, pause);
 	}
 	
-	private void parseXML(Knowledge original, Document doc, boolean allowOverrides)
-		throws XPathExpressionException, DOMException
+	private void parseXML(Knowledge original, Document doc) throws XPathExpressionException, DOMException
 	{
 		Element elt = doc.getDocumentElement();
 		DomUtil.removeEmptyTextRecursive(elt);
 		
-		{
+		this.knowledgeWorkstation = original;
+		this.elements = new LinkedHashSet<Named>();
+		this.providers = this.knowledgeWorkstation.obtainProviders();
+		
+		/*{
 			NodeList cat = elt.getElementsByTagName(DYNAMIC);
 			for (int i = 0; i < cat.getLength(); i++)
 			{
@@ -503,15 +381,12 @@ public class XMLExpansions_Engine0
 				
 				if (nameNode != null)
 				{
-					parseXMLdynamic(original, capsule, nameNode.getNodeValue(), allowOverrides);
-					
+					parseXMLdynamic(original, capsule, nameNode.getNodeValue());
 				}
-				
 			}
-			
-		}
+		}*/
 		
-		{
+		/*{
 			NodeList cat = elt.getElementsByTagName(LIST);
 			for (int i = 0; i < cat.getLength(); i++)
 			{
@@ -520,13 +395,10 @@ public class XMLExpansions_Engine0
 				
 				if (nameNode != null)
 				{
-					parseXMLlist(original, capsule, nameNode.getNodeValue(), allowOverrides);
-					
+					parseXMLlist(original, capsule, nameNode.getNodeValue());
 				}
-				
 			}
-			
-		}
+		}*/
 		
 		{
 			for (Element capsule : DomUtil.getChildren(elt, CONDITION))
@@ -535,12 +407,10 @@ public class XMLExpansions_Engine0
 				
 				if (nameNode != null)
 				{
-					parseXMLcondition(original, capsule, nameNode.getNodeValue(), allowOverrides);
+					parseXMLcondition(capsule, nameNode.getNodeValue());
 					
 				}
-				
 			}
-			
 		}
 		
 		{
@@ -552,12 +422,10 @@ public class XMLExpansions_Engine0
 				
 				if (nameNode != null)
 				{
-					parseXMLset(original, capsule, nameNode.getNodeValue(), allowOverrides);
+					parseXMLset(capsule, nameNode.getNodeValue());
 					
 				}
-				
 			}
-			
 		}
 		
 		{
@@ -569,12 +437,9 @@ public class XMLExpansions_Engine0
 				
 				if (nameNode != null)
 				{
-					parseXMLevent(original, capsule, nameNode.getNodeValue(), allowOverrides);
-					
+					parseXMLevent(capsule, nameNode.getNodeValue());
 				}
-				
 			}
-			
 		}
 		
 		{
@@ -586,10 +451,8 @@ public class XMLExpansions_Engine0
 				
 				if (nameNode != null)
 				{
-					parseXMLmachine(original, capsule, nameNode.getNodeValue(), allowOverrides);
-					
+					parseXMLmachine(capsule, nameNode.getNodeValue());
 				}
-				
 			}
 			
 		}
