@@ -10,7 +10,7 @@ public class MAtAccessor_NetMinecraftEntity
 	
 	private MAtAccessor_NetMinecraftEntity()
 	{
-		System.err.println("THIS WON'T WORK");
+		System.err.println(MAtAccessor_NetMinecraftEntity.class.toString() + " WON'T WORK");
 	}
 	
 	public static MAtAccessor_NetMinecraftEntity getInstance()
