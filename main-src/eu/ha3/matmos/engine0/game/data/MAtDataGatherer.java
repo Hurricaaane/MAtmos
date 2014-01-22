@@ -249,6 +249,10 @@ public class MAtDataGatherer implements Collector, Processor
 				this.mod.getChatter().printChat(ChatColorsSimple.COLOR_RED, "Please report this issue :(");
 			}
 		}
+		//if (this.mod.util().getClientTick() % 40 == 0)
+		//{
+		//	System.out.println(DumpData.dumpData(this.data));
+		//}
 	}
 	
 	private void doProcess()

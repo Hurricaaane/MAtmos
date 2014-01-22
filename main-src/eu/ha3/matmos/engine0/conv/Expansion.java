@@ -9,10 +9,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import net.sf.practicalxml.DomUtil;
-
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import eu.ha3.easy.TimeStatistic;
 import eu.ha3.matmos.engine0.conv.volume.VolumeContainer;
@@ -68,6 +65,7 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 		this.data = data;
 		
 		this.knowledge = new Knowledge(this.capabilities, TIME);
+		this.knowledge.setData(data);
 		
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		
@@ -98,19 +96,6 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 			throw new RuntimeException();
 			
 		}
-	}
-	
-	private String eltString(String tagName, Element ele)
-	{
-		return textOf(DomUtil.getChild(ele, tagName));
-	}
-	
-	private String textOf(Element ele)
-	{
-		if (ele == null || ele.getFirstChild() == null)
-			return null;
-		
-		return ele.getFirstChild().getNodeValue();
 	}
 	
 	public void inputStructure(InputStream stream)

@@ -47,6 +47,10 @@ public class Condition extends DependableComponent
 		//if (!this.sheetCommander.exists(this.indexX))
 		//	return;
 		
+		//System.out.println(getName()
+		//	+ " -> " + this.indexX.getSheet() + " " + this.indexX.getIndex() + ": "
+		//	+ this.sheetCommander.get(this.indexX));
+		
 		if (this.sheetCommander.version(this.indexX) == this.siVersion)
 			return;
 		

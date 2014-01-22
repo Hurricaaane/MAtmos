@@ -14,6 +14,7 @@ import eu.ha3.matmos.engine0.core.interfaces.Dependable;
 import eu.ha3.matmos.engine0.core.interfaces.Evaluated;
 import eu.ha3.matmos.engine0.core.interfaces.EventInterface;
 import eu.ha3.matmos.engine0.core.interfaces.Named;
+import eu.ha3.matmos.engine0.core.interfaces.PossibilityList;
 import eu.ha3.matmos.engine0.core.interfaces.Provider;
 import eu.ha3.matmos.engine0.core.interfaces.ReferenceTime;
 import eu.ha3.matmos.engine0.core.interfaces.SheetCommander;
@@ -33,6 +34,7 @@ public class Knowledge implements Evaluated, Simulated
 	// 
 	
 	//private final Map<String, Dynamic> dynamicMapped = new TreeMap<String, Dynamic>();
+	private final Map<String, PossibilityList> possibilityMapped = new TreeMap<String, PossibilityList>();
 	private final Map<String, Condition> conditionMapped = new TreeMap<String, Condition>();
 	private final Map<String, Junction> junctionMapped = new TreeMap<String, Junction>();
 	private final Map<String, Machine> machineMapped = new TreeMap<String, Machine>();
@@ -49,7 +51,9 @@ public class Knowledge implements Evaluated, Simulated
 		public boolean listHas(String constantX, String value)
 		{
 			// XXX 2014-01-16
-			return false;
+			//System.out.println("does list " + constantX + " have " + value + "?");
+			return Knowledge.this.possibilityMapped.containsKey(constantX) ? Knowledge.this.possibilityMapped.get(
+				constantX).listHas(value) : false;
 		}
 		
 		@Override
@@ -86,8 +90,11 @@ public class Knowledge implements Evaluated, Simulated
 			new Providers(
 				this.time, this.relay, this.sheetCommander, this.conditionProvider, this.junctionProvider,
 				this.machineProvider, this.eventProvider);
-		
-		this.data = new SelfGeneratingData(GenericSheet.class);
+	}
+	
+	public void setData(Data data)
+	{
+		this.data = data;
 	}
 	
 	public ProviderCollection obtainProviders()
@@ -119,6 +126,10 @@ public class Knowledge implements Evaluated, Simulated
 			else if (n instanceof Event)
 			{
 				this.eventMapped.put(n.getName(), (Event) n);
+			}
+			else if (n instanceof PossibilityList)
+			{
+				this.possibilityMapped.put(n.getName(), (PossibilityList) n);
 			}
 		}
 	}

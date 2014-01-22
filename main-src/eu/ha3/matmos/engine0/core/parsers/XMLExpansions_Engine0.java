@@ -2,13 +2,13 @@ package eu.ha3.matmos.engine0.core.parsers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.xml.xpath.XPathExpressionException;
 
+import net.minecraft.block.Block;
 import net.sf.practicalxml.DomUtil;
 
 import org.w3c.dom.DOMException;
@@ -21,14 +21,17 @@ import eu.ha3.matmos.engine0.core.implem.Condition;
 import eu.ha3.matmos.engine0.core.implem.Event;
 import eu.ha3.matmos.engine0.core.implem.Junction;
 import eu.ha3.matmos.engine0.core.implem.Knowledge;
+import eu.ha3.matmos.engine0.core.implem.LongFloatSimplificator;
 import eu.ha3.matmos.engine0.core.implem.Machine;
 import eu.ha3.matmos.engine0.core.implem.Operator;
+import eu.ha3.matmos.engine0.core.implem.Possibilities;
 import eu.ha3.matmos.engine0.core.implem.SheetEntry;
 import eu.ha3.matmos.engine0.core.implem.StreamInformation;
 import eu.ha3.matmos.engine0.core.implem.TimedEvent;
 import eu.ha3.matmos.engine0.core.implem.TimedEventInformation;
 import eu.ha3.matmos.engine0.core.implem.abstractions.ProviderCollection;
 import eu.ha3.matmos.engine0.core.interfaces.Named;
+import eu.ha3.matmos.v170helper.Version170Helper;
 
 /* x-placeholder */
 
@@ -93,7 +96,7 @@ public class XMLExpansions_Engine0
 	private Map<String, Operator> inverseSymbols;
 	
 	private Knowledge knowledgeWorkstation;
-	private LinkedHashSet<Named> elements;
+	private List<Named> elements;
 	private ProviderCollection providers;
 	
 	public XMLExpansions_Engine0()
@@ -183,29 +186,20 @@ public class XMLExpansions_Engine0
 		
 	}*/
 	
-	/*private void parseXMLlist(Knowledge original, Element capsule, String name, boolean allowOverrides)
-		throws XPathExpressionException
+	private void parseXMLlist(Element capsule, String name)
 	{
-		boolean exists = original.getList(name) != null;
-		if (exists && !allowOverrides)
-			return;
-		
-		if (!exists)
-		{
-			original.addList(name);
-		}
-		
-		StringListContainer descriptible = original.getList(name);
+		List<String> list = new ArrayList<String>();
 		
 		for (Element eelt : DomUtil.getChildren(capsule, CONSTANT))
 		{
-			String constant = textOf(eelt);
-			
-			descriptible.add(constant);
+			list.add(textOf(eelt));
 		}
-	}*/
+		
+		Named element = new Possibilities(name, list);
+		this.elements.add(element);
+	}
 	
-	private void parseXMLcondition(Element capsule, String name) throws XPathExpressionException
+	private void parseXMLcondition(Element capsule, String name)
 	{
 		String sheet = eltString(SHEET, capsule);
 		String index = eltString(KEY, capsule);
@@ -222,6 +216,21 @@ public class XMLExpansions_Engine0
 		if (list != null)
 		{
 			constant = list;
+		}
+		
+		if (sheet.contains("Scan"))
+		{
+			Long l = LongFloatSimplificator.longOf(constant);
+			if (l != null && l < 256)
+			{
+				Object o = Block.field_149771_c.func_148754_a((int) (long) l);
+				if (o != null && o instanceof Block)
+				{
+					String ocst = constant;
+					constant = Version170Helper.nameOf((Block) o);
+					System.out.println("Converted " + sheet + " name from " + ocst + " to " + constant);
+				}
+			}
 		}
 		
 		Named element =
@@ -369,7 +378,7 @@ public class XMLExpansions_Engine0
 		DomUtil.removeEmptyTextRecursive(elt);
 		
 		this.knowledgeWorkstation = original;
-		this.elements = new LinkedHashSet<Named>();
+		this.elements = new ArrayList<Named>();
 		this.providers = this.knowledgeWorkstation.obtainProviders();
 		
 		/*{
@@ -386,7 +395,7 @@ public class XMLExpansions_Engine0
 			}
 		}*/
 		
-		/*{
+		{
 			NodeList cat = elt.getElementsByTagName(LIST);
 			for (int i = 0; i < cat.getLength(); i++)
 			{
@@ -395,10 +404,10 @@ public class XMLExpansions_Engine0
 				
 				if (nameNode != null)
 				{
-					parseXMLlist(original, capsule, nameNode.getNodeValue());
+					parseXMLlist(capsule, nameNode.getNodeValue());
 				}
 			}
-		}*/
+		}
 		
 		{
 			for (Element capsule : DomUtil.getChildren(elt, CONDITION))
@@ -456,6 +465,9 @@ public class XMLExpansions_Engine0
 			}
 			
 		}
+		
+		this.knowledgeWorkstation.addKnowledge(this.elements);
+		this.knowledgeWorkstation.compile();
 		
 		/*try
 		{
