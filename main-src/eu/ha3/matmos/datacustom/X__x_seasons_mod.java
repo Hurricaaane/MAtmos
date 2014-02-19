@@ -1,20 +1,13 @@
 package eu.ha3.matmos.datacustom;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
-import eu.ha3.matmos.engine0.core.interfaces.Data;
-import eu.ha3.matmos.game.data.abstractions.module.ModuleProcessor;
-import eu.ha3.matmos.game.system.MAtmosUtility;
 
 /*
 --filenotes-placeholder
 */
 
-public class X__x_seasons_mod extends ModuleProcessor
+public class X__x_seasons_mod //extends ModuleProcessor
 {
+	/*
 	private static final Map<Season, Integer> seasonsHash;
 	static
 	{
@@ -48,5 +41,5 @@ public class X__x_seasons_mod extends ModuleProcessor
 		
 		setValueLegacyIntIndexes(0, 1);
 		setValueLegacyIntIndexes(1, ic);
-	}
+	}*/
 }
