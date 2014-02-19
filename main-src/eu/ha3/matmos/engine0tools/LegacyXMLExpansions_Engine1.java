@@ -404,9 +404,7 @@ public class LegacyXMLExpansions_Engine1
 		if (events.size() > 0)
 		{
 			tie =
-				new TimedEventInformation(
-					name, this.providers.getMachine(), this.providers.getEvent(), this.providers.getReferenceTime(),
-					events);
+				new TimedEventInformation(name, this.providers.getMachine(), this.providers.getReferenceTime(), events);
 		}
 		
 		Named element = new Machine(name, this.providers.getJunction(), allow, restrict, tie, stream);
