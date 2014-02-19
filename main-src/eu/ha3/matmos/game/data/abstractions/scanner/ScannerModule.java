@@ -78,10 +78,13 @@ public class ScannerModule implements PassOnceModule, MAtScanCoordsOps, Progress
 		
 		this.base = new ExternalStringCountModule(data, baseName, true);
 		this.subModules.add(baseName);
+		data.getSheet(baseName).setDefaultValue("0");
 		if (requireThousand)
 		{
-			this.thousand = new ThousandStringCountModule(data, baseName + THOUSAND_SUFFIX, true);
-			this.subModules.add(baseName + THOUSAND_SUFFIX);
+			String thousandName = baseName + THOUSAND_SUFFIX;
+			this.thousand = new ThousandStringCountModule(data, thousandName, true);
+			this.subModules.add(thousandName);
+			data.getSheet(thousandName).setDefaultValue("0");
 		}
 		else
 		{
