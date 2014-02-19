@@ -1,8 +1,11 @@
 package eu.ha3.matmos.engine0.core.implem;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import eu.ha3.matmos.engine0.core.implem.abstractions.Component;
+import eu.ha3.matmos.engine0.core.interfaces.Dependable;
 import eu.ha3.matmos.engine0.core.interfaces.Evaluated;
 import eu.ha3.matmos.engine0.core.interfaces.InformationContainer;
 import eu.ha3.matmos.engine0.core.interfaces.SheetCommander;
@@ -10,12 +13,17 @@ import eu.ha3.matmos.engine0.core.interfaces.SheetIndex;
 
 /* x-placeholder */
 
-public class Dynamic extends Component implements Evaluated, InformationContainer<Long>
+public class Dynamic extends Component implements Evaluated, InformationContainer<Long>, Dependable
 {
+	public static final String DEDICATED_SHEET = "_DYNAMIC";
+	
 	private long value;
 	
 	private final List<SheetIndex> indexes;
+	
 	private final SheetCommander sheetCommander;
+	
+	private Collection<String> dependencies;
 	
 	public Dynamic(String name, SheetCommander sheetCommander, List<SheetIndex> indexes)
 	{
@@ -23,6 +31,12 @@ public class Dynamic extends Component implements Evaluated, InformationContaine
 		this.sheetCommander = sheetCommander;
 		
 		this.indexes = indexes;
+		
+		this.dependencies = new HashSet<String>();
+		for (SheetIndex index : indexes)
+		{
+			this.dependencies.add(index.getSheet());
+		}
 	}
 	
 	@Override
@@ -54,5 +68,11 @@ public class Dynamic extends Component implements Evaluated, InformationContaine
 	public Long getInformation()
 	{
 		return this.value;
+	}
+	
+	@Override
+	public Collection<String> getDependencies()
+	{
+		return this.dependencies;
 	}
 }

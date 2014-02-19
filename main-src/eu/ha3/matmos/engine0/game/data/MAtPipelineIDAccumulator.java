@@ -29,7 +29,6 @@ public class MAtPipelineIDAccumulator extends MAtScanCoordsPipeline
 		this.normalName = normalNameIn;
 		this.proportionnalName = proportionnalNameIn;
 		this.proportionnalTotal = proportionnalTotalIn;
-		
 	}
 	
 	@Override

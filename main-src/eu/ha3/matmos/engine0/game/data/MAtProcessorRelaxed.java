@@ -27,6 +27,7 @@ import eu.ha3.mc.haddon.PrivateAccessException;
 
 /* x-placeholder */
 
+@Deprecated
 public class MAtProcessorRelaxed extends MAtProcessorModel
 {
 	private final HashSet<String> serverData;
@@ -114,32 +115,32 @@ public class MAtProcessorRelaxed extends MAtProcessorModel
 				NAMEsec = "";
 			}
 			
-			setValueLegacyIntIndexes(75, 1);
-			setValueLegacyIntIndexes(76, serverData.serverIP.toLowerCase(Locale.ENGLISH).hashCode());
-			setValueLegacyIntIndexes(77, MOTDsec.hashCode());
-			setValueLegacyIntIndexes(78, NAMEsec.hashCode());
-			setValueLegacyIntIndexes(79, this.serverAddresses.get(playerIp));
-			setValueLegacyIntIndexes(80, this.serverPorts.get(playerIp));
+			conversionComplete(75, 1);
+			conversionComplete(76, serverData.serverIP.toLowerCase(Locale.ENGLISH).hashCode());
+			conversionComplete(77, MOTDsec.hashCode());
+			conversionComplete(78, NAMEsec.hashCode());
+			conversionComplete(79, this.serverAddresses.get(playerIp));
+			conversionComplete(80, this.serverPorts.get(playerIp));
 			
 		}
 		else
 		{
-			setValueLegacyIntIndexes(75, 0);
-			setValueLegacyIntIndexes(76, 0);
-			setValueLegacyIntIndexes(77, 0);
-			setValueLegacyIntIndexes(78, 0);
-			setValueLegacyIntIndexes(79, 0);
-			setValueLegacyIntIndexes(80, 0);
+			conversionComplete(75, 0);
+			conversionComplete(76, 0);
+			conversionComplete(77, 0);
+			conversionComplete(78, 0);
+			conversionComplete(79, 0);
+			conversionComplete(80, 0);
 		}
 		
 		setValueLegacyIntIndexes(5, w.provider.dimensionId);
-		setValueLegacyIntIndexes(12, w.isRemote ? 1 : 0);
-		setValueLegacyIntIndexes(13, 1 + this.random.nextInt(100)); // DICE A
-		setValueLegacyIntIndexes(14, 1 + this.random.nextInt(100)); // DICE B
-		setValueLegacyIntIndexes(15, 1 + this.random.nextInt(100)); // DICE C
-		setValueLegacyIntIndexes(16, 1 + this.random.nextInt(100)); // DICE D
-		setValueLegacyIntIndexes(17, 1 + this.random.nextInt(100)); // DICE E
-		setValueLegacyIntIndexes(18, 1 + this.random.nextInt(100)); // DICE F
+		conversionComplete(12, w.isRemote ? 1 : 0);
+		conversionComplete(13, 1 + this.random.nextInt(100)); // DICE A
+		conversionComplete(14, 1 + this.random.nextInt(100)); // DICE B
+		conversionComplete(15, 1 + this.random.nextInt(100)); // DICE C
+		conversionComplete(16, 1 + this.random.nextInt(100)); // DICE D
+		conversionComplete(17, 1 + this.random.nextInt(100)); // DICE E
+		conversionComplete(18, 1 + this.random.nextInt(100)); // DICE F
 		
 		int biomei = mod().getConfig().getInteger("useroptions.biome.override");
 		if (biomei <= -1)
@@ -156,18 +157,18 @@ public class MAtProcessorRelaxed extends MAtProcessorModel
 			setValueLegacyIntIndexes(29, biomei);
 		}
 		
-		setValueLegacyIntIndexes(30, (int) (w.getSeed() >> 32));
-		setValueLegacyIntIndexes(31, (int) (w.getSeed() & 0xFFFFFFFF));
-		setValueLegacyIntIndexes(88, w.getMoonPhase());
+		conversionComplete(30, (int) (w.getSeed() >> 32));
+		conversionComplete(31, (int) (w.getSeed() & 0xFFFFFFFF));
+		conversionComplete(88, w.getMoonPhase());
 		
 		int biomej = mod().getConfig().getInteger("useroptions.biome.override");
 		if (biomej <= -1)
 		{
-			setValueLegacyIntIndexes(93, calculateBiome().biomeID);
+			conversionComplete(93, calculateBiome().biomeID);
 		}
 		else
 		{
-			setValueLegacyIntIndexes(93, biomej);
+			conversionComplete(93, biomej);
 		}
 		
 	}

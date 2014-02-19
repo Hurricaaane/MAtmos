@@ -1,11 +1,10 @@
 package eu.ha3.matmos.engine0.game.data.abstractions.scanner;
 
 import net.minecraft.client.Minecraft;
-import eu.ha3.mc.convenience.Ha3Signal;
 
 /* x-placeholder */
 
-public class MAtScanVolumetricModel
+public class MAtScanVolumetricModel implements Progress
 {
 	private MAtScanCoordsOps pipeline;
 	
@@ -21,10 +20,14 @@ public class MAtScanVolumetricModel
 	
 	private boolean isScanning;
 	
-	private int finality;
-	private int progress;
+	private int finality = 1;
+	private int progress = 1; // We don't want progress to be zero, to avoid divide by zero
 	
-	private Ha3Signal onDone;
+	//
+	
+	private int xx;
+	private int yy;
+	private int zz;
 	
 	public MAtScanVolumetricModel()
 	{
@@ -35,11 +38,9 @@ public class MAtScanVolumetricModel
 	public void setPipeline(MAtScanCoordsOps pipelineIn)
 	{
 		this.pipeline = pipelineIn;
-		
 	}
 	
-	public void startScan(
-		int x, int y, int z, int xsizeIn, int ysizeIn, int zsizeIn, int opspercallIn, Ha3Signal onDoneIn) //throws MAtScannerTooLargeException
+	public void startScan(int x, int y, int z, int xsizeIn, int ysizeIn, int zsizeIn, int opspercallIn) //throws MAtScannerTooLargeException
 	{
 		if (this.isScanning)
 			return;
@@ -80,9 +81,12 @@ public class MAtScanVolumetricModel
 		this.progress = 0;
 		this.finality = this.xsize * this.ysize * this.zsize;
 		
+		this.xx = 0;
+		this.yy = 0;
+		this.zz = 0;
+		
 		this.pipeline.begin();
 		this.isScanning = true;
-		
 	}
 	
 	public boolean routine()
@@ -91,15 +95,29 @@ public class MAtScanVolumetricModel
 			return false;
 		
 		long ops = 0;
-		int x, y, z;
 		while (ops < this.opspercall && this.progress < this.finality)
 		{
 			// TODO Optimize this
-			x = this.xstart + this.progress % this.xsize;
-			z = this.zstart + this.progress / this.xsize % this.zsize;
-			y = this.ystart + this.progress / this.xsize / this.zsize;
+			//x = this.xstart + this.progress % this.xsize;
+			//z = this.zstart + this.progress / this.xsize % this.zsize;
+			//y = this.ystart + this.progress / this.xsize / this.zsize;
 			
-			this.pipeline.input(x, y, z);
+			//this.pipeline.input(this.xx, this.yy, this.zz);
+			this.pipeline.input(this.xstart + this.xx, this.ystart + this.yy, this.zstart + this.zz);
+			
+			this.xx = (this.xx + 1) % this.xsize;
+			if (this.xx == 0)
+			{
+				this.zz = (this.zz + 1) % this.zsize;
+				if (this.zz == 0)
+				{
+					this.yy = this.yy + 1;
+					if (this.yy >= this.ysize && this.progress != this.finality - 1)
+					{
+						System.err.println("LOGIC ERROR");
+					}
+				}
+			}
 			
 			ops++;
 			this.progress++;
@@ -110,14 +128,13 @@ public class MAtScanVolumetricModel
 		{
 			scanDoneEvent();
 		}
-		return true;
 		
+		return true;
 	}
 	
 	public void stopScan()
 	{
 		this.isScanning = false;
-		
 	}
 	
 	private void scanDoneEvent()
@@ -127,12 +144,18 @@ public class MAtScanVolumetricModel
 		
 		this.pipeline.finish();
 		stopScan();
-		
-		if (this.onDone != null)
-		{
-			this.onDone.signal();
-		}
-		
+	}
+	
+	@Override
+	public int getProgress_Current()
+	{
+		return this.progress;
+	}
+	
+	@Override
+	public int getProgress_Total()
+	{
+		return this.finality;
 	}
 	
 }

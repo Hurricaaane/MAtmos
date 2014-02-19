@@ -24,4 +24,6 @@ public interface ProviderCollection
 	public Provider getMachine();
 	
 	public Provider getEvent();
+	
+	public Provider getDynamic();
 }

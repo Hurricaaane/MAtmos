@@ -1,23 +1,25 @@
-package eu.ha3.matmos.engine0.game.data.modules;
+package eu.ha3.matmos.engine0.game.data.abstractions.module;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagList;
 import eu.ha3.matmos.engine0.core.interfaces.Data;
-import eu.ha3.matmos.engine0.game.data.MAtDataGatherer;
-import eu.ha3.matmos.engine0.game.data.abstractions.processor.ProcessorModel;
 
 /* x-placeholder */
 
-public abstract class AbstractEnchantmentModule extends ProcessorModel implements Module
+/**
+ * An abstract module that extracts all enchantments associated to an item
+ * defined by the implementing class.
+ * 
+ * @author Hurry
+ * 
+ */
+public abstract class AbstractEnchantmentModule extends ModuleProcessor implements Module
 {
-	private final String NAME;
-	
 	public AbstractEnchantmentModule(Data dataIn, String name)
 	{
-		super(dataIn, name, name + MAtDataGatherer.DELTA_SUFFIX);
-		this.NAME = name;
+		super(dataIn, name);
 	}
 	
 	@Override
@@ -48,12 +50,6 @@ public abstract class AbstractEnchantmentModule extends ProcessorModel implement
 				setValue("id_" + id, Short.toString(lvl));
 			}
 		}
-	}
-	
-	@Override
-	public String getModuleName()
-	{
-		return this.NAME;
 	}
 	
 	protected abstract ItemStack getItem(EntityPlayer player);

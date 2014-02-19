@@ -17,6 +17,7 @@ import eu.ha3.matmos.engine0.core.interfaces.Named;
 import eu.ha3.matmos.engine0.core.interfaces.PossibilityList;
 import eu.ha3.matmos.engine0.core.interfaces.Provider;
 import eu.ha3.matmos.engine0.core.interfaces.ReferenceTime;
+import eu.ha3.matmos.engine0.core.interfaces.Sheet;
 import eu.ha3.matmos.engine0.core.interfaces.SheetCommander;
 import eu.ha3.matmos.engine0.core.interfaces.SheetIndex;
 import eu.ha3.matmos.engine0.core.interfaces.Simulated;
@@ -33,7 +34,7 @@ public class Knowledge implements Evaluated, Simulated
 	
 	// 
 	
-	//private final Map<String, Dynamic> dynamicMapped = new TreeMap<String, Dynamic>();
+	private final Map<String, Dynamic> dynamicMapped = new TreeMap<String, Dynamic>();
 	private final Map<String, PossibilityList> possibilityMapped = new TreeMap<String, PossibilityList>();
 	private final Map<String, Condition> conditionMapped = new TreeMap<String, Condition>();
 	private final Map<String, Junction> junctionMapped = new TreeMap<String, Junction>();
@@ -68,7 +69,7 @@ public class Knowledge implements Evaluated, Simulated
 			return Knowledge.this.data.getSheet(sheetIndex.getSheet()).exists(sheetIndex.getIndex());
 		}
 	};
-	//private final Provider<Dynamic> dynamicProvider = new MappedProvider<Dynamic>(this.dynamicMapped);
+	private final Provider<Dynamic> dynamicProvider = new MappedProvider<Dynamic>(this.dynamicMapped);
 	private final Provider<Condition> conditionProvider = new MappedProvider<Condition>(this.conditionMapped);
 	private final Provider<Junction> junctionProvider = new MappedProvider<Junction>(this.junctionMapped);
 	private final Provider<Machine> machineProvider = new MappedProvider<Machine>(this.machineMapped);
@@ -89,7 +90,7 @@ public class Knowledge implements Evaluated, Simulated
 		this.providerCollection =
 			new Providers(
 				this.time, this.relay, this.sheetCommander, this.conditionProvider, this.junctionProvider,
-				this.machineProvider, this.eventProvider);
+				this.machineProvider, this.eventProvider, this.dynamicProvider);
 	}
 	
 	public void setData(Data data)
@@ -131,6 +132,14 @@ public class Knowledge implements Evaluated, Simulated
 			{
 				this.possibilityMapped.put(n.getName(), (PossibilityList) n);
 			}
+			else if (n instanceof Dynamic)
+			{
+				this.dynamicMapped.put(n.getName(), (Dynamic) n);
+			}
+			else
+			{
+				System.err.println("Cannot handle named element: " + n.getName() + " " + n.getClass());
+			}
 		}
 	}
 	
@@ -152,6 +161,10 @@ public class Knowledge implements Evaluated, Simulated
 		for (Condition c : this.conditionMapped.values())
 		{
 			requiredModules.addAll(c.getDependencies());
+		}
+		for (Dynamic d : this.dynamicMapped.values())
+		{
+			requiredModules.addAll(d.getDependencies());
 		}
 		
 		return requiredModules;
@@ -211,6 +224,16 @@ public class Knowledge implements Evaluated, Simulated
 	@Override
 	public void evaluate()
 	{
+		if (this.dynamicMapped.size() > 0)
+		{
+			Sheet dynamic = this.data.getSheet(Dynamic.DEDICATED_SHEET);
+			for (Evaluated o : this.dynamicMapped.values())
+			{
+				o.evaluate();
+				dynamic.set(((Dynamic) o).getName(), Long.toString(((Dynamic) o).getInformation()));
+			}
+		}
+		
 		for (Evaluated o : this.conditionMapped.values())
 		{
 			o.evaluate();

@@ -4,6 +4,7 @@ import eu.ha3.matmos.engine0.core.interfaces.Data;
 
 /* x-placeholder */
 
+@Deprecated
 public abstract class MAtScanCoordsPipeline implements MAtScanCoordsOps
 {
 	private Data data;
@@ -36,7 +37,6 @@ public abstract class MAtScanCoordsPipeline implements MAtScanCoordsOps
 		{
 			this.next.append(operator);
 		}
-		
 	}
 	
 	@Override
@@ -48,7 +48,6 @@ public abstract class MAtScanCoordsPipeline implements MAtScanCoordsOps
 		{
 			this.next.begin();
 		}
-		
 	}
 	
 	@Override
@@ -60,7 +59,6 @@ public abstract class MAtScanCoordsPipeline implements MAtScanCoordsOps
 		{
 			this.next.finish();
 		}
-		
 	}
 	
 	@Override
@@ -72,7 +70,5 @@ public abstract class MAtScanCoordsPipeline implements MAtScanCoordsOps
 		{
 			this.next.input(x, y, z);
 		}
-		
 	}
-	
 }

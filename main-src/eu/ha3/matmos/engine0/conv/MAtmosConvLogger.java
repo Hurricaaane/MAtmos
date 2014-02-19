@@ -35,7 +35,7 @@ public class MAtmosConvLogger
 	
 	public static void severe(String message)
 	{
-		print(message, "SEVERE", SEVERE);
+		printErr(message, "SEVERE", SEVERE);
 	}
 	
 	private static void print(String message, String type, int refinedLevel)
@@ -43,6 +43,14 @@ public class MAtmosConvLogger
 		if (refinedLevel >= refinedness)
 		{
 			System.out.println("(" + modName + ": " + type + ") " + message);
+		}
+	}
+	
+	private static void printErr(String message, String type, int refinedLevel)
+	{
+		if (refinedLevel >= refinedness)
+		{
+			System.err.println("(" + modName + ": " + type + ") " + message);
 		}
 	}
 }

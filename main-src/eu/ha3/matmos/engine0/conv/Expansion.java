@@ -3,7 +3,12 @@ package eu.ha3.matmos.engine0.conv;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -21,10 +26,11 @@ import eu.ha3.matmos.engine0.core.interfaces.Evaluated;
 import eu.ha3.matmos.engine0.core.interfaces.EventInterface;
 import eu.ha3.matmos.engine0.core.interfaces.ReferenceTime;
 import eu.ha3.matmos.engine0.core.interfaces.Simulated;
-import eu.ha3.matmos.engine0.core.parsers.XMLExpansions_Engine0;
+import eu.ha3.matmos.engine0.game.data.ModularDataGatherer;
 import eu.ha3.matmos.engine0.game.data.abstractions.Collector;
 import eu.ha3.matmos.engine0.game.system.SoundAccessor;
 import eu.ha3.matmos.engine0.game.system.SoundHelperRelay;
+import eu.ha3.matmos.engine0tools.LegacyXMLExpansions_Engine1;
 import eu.ha3.util.property.simple.ConfigProperty;
 
 /* x-placeholder */
@@ -52,17 +58,20 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 	
 	private boolean isReady;
 	private boolean isActive;
+	private boolean reliesOnLegacyModules;
 	
 	private final Data data;
+	private final Collector collector;
 	
 	public Expansion(
-		VolumeContainer masterVolume, SoundAccessor accessor, Data data, ExpansionIdentity identity,
-		File configurationSource)
+		ExpansionIdentity identity, Data data, Collector collector, SoundAccessor accessor,
+		VolumeContainer masterVolume, File configurationSource)
 	{
 		this.identity = identity;
 		this.masterVolume = masterVolume;
 		this.capabilities = new SoundHelperRelay(accessor);
 		this.data = data;
+		this.collector = collector;
 		
 		this.knowledge = new Knowledge(this.capabilities, TIME);
 		this.knowledge.setData(data);
@@ -87,14 +96,10 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 		try
 		{
 			this.documentBuilder = dbf.newDocumentBuilder();
-			
 		}
 		catch (ParserConfigurationException e)
 		{
-			// FIXME: Unhandled recoverable error thrown as unrecoverable
-			e.printStackTrace();
-			throw new RuntimeException();
-			
+			throw new RuntimeException(e);
 		}
 	}
 	
@@ -122,7 +127,7 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 		if (!this.initializedContents)
 			return;
 		
-		this.isReady = new XMLExpansions_Engine0().loadKnowledge(this.knowledge, this.document);
+		this.isReady = new LegacyXMLExpansions_Engine1().loadKnowledge(this.knowledge, this.document);
 	}
 	
 	@Override
@@ -186,6 +191,11 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 		return this.isReady;
 	}
 	
+	public boolean reliesOnLegacyModules()
+	{
+		return this.reliesOnLegacyModules;
+	}
+	
 	@Override
 	public boolean isActivated()
 	{
@@ -219,10 +229,31 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 		
 		if (this.isReady)
 		{
-			if (this.data instanceof Collector)
+			if (this.collector != null)
 			{
-				((Collector) this.data).addModuleStack(
-					this.identity.getUniqueName(), this.knowledge.calculateRequiredModules());
+				Set<String> requiredModules = this.knowledge.calculateRequiredModules();
+				this.collector.addModuleStack(this.identity.getUniqueName(), requiredModules);
+				
+				MAtmosConvLogger.info("Expansion "
+					+ this.identity.getUniqueName() + " requires " + requiredModules.size() + " found modules: "
+					+ Arrays.toString(requiredModules.toArray()));
+				
+				List<String> legacyModules = new ArrayList<String>();
+				for (String module : requiredModules)
+				{
+					if (module.startsWith(ModularDataGatherer.LEGACY_PREFIX))
+					{
+						legacyModules.add(module);
+					}
+				}
+				if (legacyModules.size() > 0)
+				{
+					Collections.sort(legacyModules);
+					MAtmosConvLogger.warning("Expansion "
+						+ this.identity.getUniqueName() + " uses LEGACY modules: "
+						+ Arrays.toString(legacyModules.toArray()));
+					this.reliesOnLegacyModules = true;
+				}
 			}
 		}
 		

@@ -3,17 +3,9 @@ package eu.ha3.matmos.engine0.game.data;
 // TODO 2013-12 : Remove all hard limits
 public class MAT_HARD_LIMITS
 {
-	@Deprecated
-	/**
-	 * Support for custom enchantments
-	 */
-	public static int ENCHANTMENTS_COUNT = 64;
-	
-	@Deprecated
-	/**
-	 * Support for custom or variable world heights
-	 */
-	public static int USE_MAX_HEIGHT_LIMIT = 256;
+	public static final int LEGACY_NO_ITEM = -1;
+	public static final int LEGACY_NO_BLOCK_IN_THIS_CONTEXT = 0;
+	public static final int LEGACY_NO_BLOCK_OUT_OF_BOUNDS = 0;
 	
 	/**
 	 * This is a magic value to designate a block that is outside the world

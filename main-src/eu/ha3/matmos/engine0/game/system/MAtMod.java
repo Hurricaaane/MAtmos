@@ -2,15 +2,24 @@ package eu.ha3.matmos.engine0.game.system;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.audio.SoundManager;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
+
+import org.apache.commons.lang3.StringUtils;
+
 import paulscode.sound.SoundSystem;
 import eu.ha3.easy.TimeStatistic;
 import eu.ha3.matmos.engine0.conv.Expansion;
@@ -18,7 +27,10 @@ import eu.ha3.matmos.engine0.conv.ExpansionManager;
 import eu.ha3.matmos.engine0.conv.MAtmosConvLogger;
 import eu.ha3.matmos.engine0.conv.Stable;
 import eu.ha3.matmos.engine0.conv.volume.VolumeUpdatable;
-import eu.ha3.matmos.engine0.game.data.MAtDataGatherer;
+import eu.ha3.matmos.engine0.core.implem.LongFloatSimplificator;
+import eu.ha3.matmos.engine0.core.interfaces.Sheet;
+import eu.ha3.matmos.engine0.game.data.ModularDataGatherer;
+import eu.ha3.matmos.engine0.game.data.abstractions.scanner.Progress;
 import eu.ha3.matmos.engine0.game.user.MAtUserControl;
 import eu.ha3.mc.haddon.Identity;
 import eu.ha3.mc.haddon.OperatorCaster;
@@ -27,6 +39,7 @@ import eu.ha3.mc.haddon.implem.HaddonIdentity;
 import eu.ha3.mc.haddon.implem.HaddonImpl;
 import eu.ha3.mc.haddon.supporting.SupportsFrameEvents;
 import eu.ha3.mc.haddon.supporting.SupportsTickEvents;
+import eu.ha3.mc.quick.chat.ChatColorsSimple;
 import eu.ha3.mc.quick.chat.Chatter;
 import eu.ha3.mc.quick.update.NotifiableHaddon;
 import eu.ha3.mc.quick.update.UpdateNotifier;
@@ -58,7 +71,7 @@ public class MAtMod extends HaddonImpl
 	// Components
 	private ExpansionManager expansionManager;
 	private MAtUserControl userControl;
-	private MAtDataGatherer dataGatherer;
+	private ModularDataGatherer dataGatherer;
 	
 	// Use once
 	private boolean hasFirstTickPassed;
@@ -93,7 +106,6 @@ public class MAtMod extends HaddonImpl
 		this.config.setProperty("useroptions.altitudes.high", true);
 		this.config.setProperty("useroptions.altitudes.low", true);
 		this.config.setProperty("useroptions.biome.override", -1);
-		this.config.setProperty("totalconversion.name", "default");
 		this.config.commit();
 		
 		// Load configuration from source
@@ -107,6 +119,8 @@ public class MAtMod extends HaddonImpl
 			e.printStackTrace();
 			throw new RuntimeException("Error caused config not to work: " + e.getMessage());
 		}
+		
+		this.expansionManager.setVolumeAndUpdate(this.config.getFloat("globalvolume.scale"));
 		
 		this.updateNotifier.loadConfig(this.config);
 		
@@ -150,9 +164,10 @@ public class MAtMod extends HaddonImpl
 		
 		TimeStatistic stat = new TimeStatistic(Locale.ENGLISH);
 		
-		this.dataGatherer = new MAtDataGatherer(this);
+		this.dataGatherer = new ModularDataGatherer(this);
 		this.dataGatherer.load();
 		this.expansionManager.setData(this.dataGatherer.getData());
+		this.expansionManager.setCollector(this.dataGatherer);
 		this.expansionManager.loadExpansions();
 		
 		MAtmosConvLogger.info("Expansions loaded (" + stat.getSecondsAsString(1) + "s).");
@@ -200,6 +215,131 @@ public class MAtMod extends HaddonImpl
 		
 		this.expansionManager.onFrame(semi);
 		this.userControl.onFrame(semi);
+		
+		if (util().getCurrentScreen() != null && !(util().getCurrentScreen() instanceof GuiChat))
+			return;
+		
+		/*List<String> names = new ArrayList<String>();
+		
+		for (String index : sheet.keySet())
+		{
+			if (!index.contains("^"))
+			{
+				names.add(index);
+			}
+		}*/
+		
+		final Sheet sheet = this.dataGatherer.getData().getSheet(true ? "scan_large" : "scan_small");
+		final int ALL = 50;
+		
+		List<String> sort = new ArrayList<String>(sheet.keySet());
+		try
+		{
+			Collections.sort(sort, new Comparator<String>() {
+				@Override
+				public int compare(String o1, String o2)
+				{
+					Long l1 = LongFloatSimplificator.longOf(sheet.get(o1));
+					Long l2 = LongFloatSimplificator.longOf(sheet.get(o2));
+					
+					if (l1 == null && l2 == null)
+						return o1.compareTo(o2);
+					else if (l1 == null)
+						return -1;
+					else if (l2 == null)
+						return 1;
+					
+					if (l1 > l2)
+						return 1;
+					else if (l1 < l2)
+						return -1;
+					else
+						return o1.compareTo(o2);
+				}
+			});
+			Collections.reverse(sort);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		int total = 0;
+		for (String index : sort)
+		{
+			if (!index.contains("^"))
+			{
+				Long l = LongFloatSimplificator.longOf(sheet.get(index));
+				if (l != null)
+				{
+					total = total + (int) (long) l;
+				}
+			}
+		}
+		
+		Minecraft mc = Minecraft.getMinecraft();
+		FontRenderer fontRenderer = mc.fontRenderer;
+		
+		int lineNumber = 0;
+		
+		Progress progressObject = this.dataGatherer.getLargeScanProgress();
+		float progress = (float) progressObject.getProgress_Current() / progressObject.getProgress_Total();
+		
+		fontRenderer.drawStringWithShadow(
+			"Scan ["
+				+ mc.theWorld.getHeight() + "]: " + StringUtils.repeat("|", (int) (100 * progress)) + " ("
+				+ (int) (progress * 100) + "%)", 20, 2 + 9 * lineNumber, 0xFFFFCC);
+		lineNumber = lineNumber + 1;
+		
+		for (String index : sort)
+		{
+			if (lineNumber <= 100 && !index.contains("^"))
+			{
+				Long count = LongFloatSimplificator.longOf(sheet.get(index));
+				if (count != null)
+				{
+					if (count > 0)
+					{
+						float scalar = (float) count / total;
+						int percentage = Math.round(scalar * 100f);
+						
+						int fill = Math.round(scalar * ALL * 2 /* * 2*/);
+						int superFill = 0;
+						if (fill > ALL * 2)
+						{
+							fill = ALL * 2;
+						}
+						if (fill > ALL)
+						{
+							superFill = fill - ALL;
+						}
+						
+						String bars = "";
+						if (superFill > 0)
+						{
+							bars = bars + ChatColorsSimple.COLOR_YELLOW + StringUtils.repeat("|", superFill);
+						}
+						bars =
+							bars
+								+ eu.ha3.mc.quick.chat.ChatColorsSimple.THEN_RESET
+								+ StringUtils.repeat("|", fill - superFill * 2);
+						
+						if (index.startsWith("minecraft:"))
+						{
+							index = index.substring(10);
+						}
+						
+						fontRenderer.drawStringWithShadow(bars
+							+ (fill == ALL * 2
+								? ChatColorsSimple.COLOR_YELLOW + "++" + ChatColorsSimple.THEN_RESET : "") + " ("
+							+ count + ", " + percentage + "%) " + index, 2, 2 + 9 * lineNumber, 0xFFFFFF);
+						lineNumber = lineNumber + 1;
+					}
+				}
+			}
+		}
+		
+		MAtmosConvLogger.setRefinedness(MAtmosConvLogger.INFO);
 	}
 	
 	@Override

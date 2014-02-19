@@ -20,6 +20,7 @@ import com.google.gson.JsonParser;
 
 import eu.ha3.matmos.engine0.conv.volume.VolumeUpdatable;
 import eu.ha3.matmos.engine0.core.interfaces.Data;
+import eu.ha3.matmos.engine0.game.data.abstractions.Collector;
 import eu.ha3.matmos.engine0.game.system.MAtResourcePackDealer;
 import eu.ha3.matmos.engine0.game.system.SoundAccessor;
 import eu.ha3.mc.haddon.supporting.SupportsFrameEvents;
@@ -39,6 +40,7 @@ public class ExpansionManager implements VolumeUpdatable, Stable, SupportsTickEv
 	private Data data;
 	
 	private float volume = 1f;
+	private Collector collector;
 	
 	public ExpansionManager(File userconfigFolder, SoundAccessor accessor)
 	{
@@ -111,8 +113,8 @@ public class ExpansionManager implements VolumeUpdatable, Stable, SupportsTickEv
 			String uniqueName = identity.getUniqueName();
 			
 			Expansion expansion =
-				new Expansion(this, this.accessor, this.data, identity, new File(this.userconfigFolder, uniqueName
-					+ ".cfg"));
+				new Expansion(identity, this.data, this.collector, this.accessor, this, new File(
+					this.userconfigFolder, uniqueName + ".cfg"));
 			this.expansions.put(uniqueName, expansion);
 			
 			expansion.inputStructure(identity.getPack().getInputStream(identity.getLocation()));
@@ -186,6 +188,11 @@ public class ExpansionManager implements VolumeUpdatable, Stable, SupportsTickEv
 	public void setData(Data data)
 	{
 		this.data = data;
+	}
+	
+	public void setCollector(Collector collector)
+	{
+		this.collector = collector;
 	}
 	
 	@Override

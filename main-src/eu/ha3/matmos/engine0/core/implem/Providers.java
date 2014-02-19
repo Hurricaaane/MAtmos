@@ -19,10 +19,12 @@ public class Providers implements ProviderCollection
 	private final Provider<Junction> junctionProvider;
 	private final Provider<Machine> machineProvider;
 	private final Provider<Event> eventProvider;
+	private final Provider<Dynamic> dynamicProvider;
 	
 	public Providers(
 		ReferenceTime time, SoundRelay soundRelay, SheetCommander commander, Provider<Condition> conditionProvider,
-		Provider<Junction> junctionProvider, Provider<Machine> machineProvider, Provider<Event> eventProvider)
+		Provider<Junction> junctionProvider, Provider<Machine> machineProvider, Provider<Event> eventProvider,
+		Provider<Dynamic> dynamicProvider)
 	{
 		this.time = time;
 		this.soundRelay = soundRelay;
@@ -32,6 +34,7 @@ public class Providers implements ProviderCollection
 		this.junctionProvider = junctionProvider;
 		this.machineProvider = machineProvider;
 		this.eventProvider = eventProvider;
+		this.dynamicProvider = dynamicProvider;
 	}
 	
 	@Override
@@ -74,6 +77,12 @@ public class Providers implements ProviderCollection
 	public Provider getEvent()
 	{
 		return this.eventProvider;
+	}
+	
+	@Override
+	public Provider getDynamic()
+	{
+		return this.dynamicProvider;
 	}
 	
 }

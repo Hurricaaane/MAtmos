@@ -8,7 +8,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.input.Keyboard;
 
 import eu.ha3.easy.TimeStatistic;
-import eu.ha3.matmos.engine0.game.gui.MAtGuiMenu;
+import eu.ha3.matmos.engine0.game.gui.MAtGuiMenu__Debug;
 import eu.ha3.matmos.engine0.game.system.MAtMod;
 import eu.ha3.matmos.v170helper.Version170Helper;
 import eu.ha3.mc.convenience.Ha3HoldActions;
@@ -226,7 +226,7 @@ public class MAtUserControl implements Ha3HoldActions, SupportsTickEvents, Suppo
 		{
 			// OBF displayGuiScreen
 			Minecraft.getMinecraft().displayGuiScreen(
-				new MAtGuiMenu((GuiScreen) this.mod.util().getCurrentScreen(), this.mod));
+				new MAtGuiMenu__Debug((GuiScreen) this.mod.util().getCurrentScreen(), this.mod));
 		}
 	}
 	

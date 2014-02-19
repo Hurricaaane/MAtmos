@@ -4,6 +4,7 @@ package net.minecraft.entity;
 --filenotes-placeholder
 */
 
+@Deprecated
 public class MAtAccessor_NetMinecraftEntity
 {
 	private static final MAtAccessor_NetMinecraftEntity instance = new MAtAccessor_NetMinecraftEntity();
@@ -18,11 +19,13 @@ public class MAtAccessor_NetMinecraftEntity
 		return instance;
 	}
 	
+	@Deprecated
 	public boolean isJumping(EntityLivingBase entityLiving)
 	{
 		return entityLiving.isJumping;
 	}
 	
+	@Deprecated
 	public boolean isInWeb(EntityLivingBase entityLiving)
 	{
 		return entityLiving.isInWeb;

@@ -1,0 +1,24 @@
+package eu.ha3.matmos.engine0.game.data.modules;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import eu.ha3.matmos.engine0.core.interfaces.Data;
+import eu.ha3.matmos.engine0.game.data.abstractions.module.AbstractEnchantmentModule;
+
+/*
+--filenotes-placeholder
+*/
+
+public class S__ench_current extends AbstractEnchantmentModule
+{
+	public S__ench_current(Data data)
+	{
+		super(data, "ench_current");
+	}
+	
+	@Override
+	protected ItemStack getItem(EntityPlayer player)
+	{
+		return player.getCurrentEquippedItem();
+	}
+}

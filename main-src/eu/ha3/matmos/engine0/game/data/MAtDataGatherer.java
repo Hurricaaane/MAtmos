@@ -17,55 +17,56 @@ import eu.ha3.matmos.engine0.core.implem.SelfGeneratingData;
 import eu.ha3.matmos.engine0.core.interfaces.Data;
 import eu.ha3.matmos.engine0.game.data.abstractions.Collector;
 import eu.ha3.matmos.engine0.game.data.abstractions.Processor;
+import eu.ha3.matmos.engine0.game.data.abstractions.module.AbstractEnchantmentModule;
+import eu.ha3.matmos.engine0.game.data.abstractions.module.AbstractPotionQualityModule;
+import eu.ha3.matmos.engine0.game.data.abstractions.module.Module;
+import eu.ha3.matmos.engine0.game.data.abstractions.module.PassOnceModule;
 import eu.ha3.matmos.engine0.game.data.abstractions.processor.ProcessorModel;
 import eu.ha3.matmos.engine0.game.data.abstractions.scanner.MAtScanCoordsPipeline;
 import eu.ha3.matmos.engine0.game.data.abstractions.scanner.MAtScanVolumetricModel;
-import eu.ha3.matmos.engine0.game.data.modules.AbstractEnchantmentModule;
-import eu.ha3.matmos.engine0.game.data.modules.AbstractPotionQualityModule;
-import eu.ha3.matmos.engine0.game.data.modules.Module;
-import eu.ha3.matmos.engine0.game.data.modules.PassOnceModule;
 import eu.ha3.matmos.engine0.game.system.MAtMod;
 import eu.ha3.mc.quick.chat.ChatColorsSimple;
 
 /* x-placeholder */
 
+@Deprecated
 public class MAtDataGatherer implements Collector, Processor
 {
-	public static final String DELTA_SUFFIX = "_delta";
+	//public static final String DELTA_SUFFIX = "_delta";
 	
-	final static String INSTANTS = "Instants";
-	final static String DELTAS = "Deltas";
-	final static String LARGESCAN = "LargeScan";
-	final static String SMALLSCAN = "SmallScan";
-	final static String LARGESCAN_THOUSAND = "LargeScanPerMil";
-	final static String SMALLSCAN_THOUSAND = "SmallScanPerMil";
-	final static String SPECIAL_LARGE = "SpecialLarge";
-	final static String SPECIAL_SMALL = "SpecialSmall";
-	final static String CONTACTSCAN = "ContactScan";
-	final static String CONFIGVARS = "ConfigVars";
+	private final static String INSTANTS = "Instants";
+	private final static String DELTAS = "Deltas";
+	private final static String LARGESCAN = "LargeScan";
+	private final static String SMALLSCAN = "SmallScan";
+	private final static String LARGESCAN_THOUSAND = "LargeScanPerMil";
+	private final static String SMALLSCAN_THOUSAND = "SmallScanPerMil";
+	private final static String SPECIAL_LARGE = "SpecialLarge";
+	private final static String SPECIAL_SMALL = "SpecialSmall";
+	private final static String CONTACTSCAN = "ContactScan";
+	private final static String CONFIGVARS = "ConfigVars";
 	
-	final static String POTIONPOWER = "PotionEffectsPower";
-	final static String POTIONDURATION = "PotionEffectsDuration";
+	private final static String POTIONPOWER = "PotionEffectsPower";
+	private final static String POTIONDURATION = "PotionEffectsDuration";
 	
-	final static String CURRENTITEM_E = "CurrentItemEnchantments";
-	final static String ARMOR1_E = "Armor1Enchantments";
-	final static String ARMOR2_E = "Armor2Enchantments";
-	final static String ARMOR3_E = "Armor3Enchantments";
-	final static String ARMOR4_E = "Armor4Enchantments";
+	private final static String CURRENTITEM_E = "CurrentItemEnchantments";
+	private final static String ARMOR1_E = "Armor1Enchantments";
+	private final static String ARMOR2_E = "Armor2Enchantments";
+	private final static String ARMOR3_E = "Armor3Enchantments";
+	private final static String ARMOR4_E = "Armor4Enchantments";
 	
-	final static String OPTIONS = "Options";
+	private final static String OPTIONS = "Options";
 	
-	final static int COUNT_WORLD_BLOCKS = 4096;
-	final static int COUNT_INSTANTS = 128;
-	final static int COUNT_CONFIGVARS = 256;
+	private final static int COUNT_WORLD_BLOCKS = 4096;
+	private final static int COUNT_INSTANTS = 128;
+	private final static int COUNT_CONFIGVARS = 256;
 	
-	final static int COUNT_POTIONEFFECTS = 32;
-	final static int COUNT_ENCHANTMENTS = 64;
+	private final static int COUNT_POTIONEFFECTS = 32;
+	private final static int COUNT_ENCHANTMENTS = 64;
 	
-	final static int MAX_LARGESCAN_PASS = 10;
+	private final static int MAX_LARGESCAN_PASS = 10;
 	private static final int ENTITYIDS_MAX = 256;
 	
-	public static final String NULL = "";
+	private static final String NULL = "";
 	
 	private MAtScanVolumetricModel largeScanner;
 	private MAtScanVolumetricModel smallScanner;
@@ -157,7 +158,7 @@ public class MAtDataGatherer implements Collector, Processor
 		} */
 		
 		this.frequent.add(new MAtProcessorFrequent(this.mod, this.data, INSTANTS, DELTAS));
-		this.frequent.add(new ProcessorContact(this.data, CONTACTSCAN));
+		//this.frequent.add(new ModuleContact(this.data, CONTACTSCAN));
 		this.frequent.add(new AbstractEnchantmentModule(this.data, CURRENTITEM_E) {
 			@Override
 			protected ItemStack getItem(EntityPlayer player)
@@ -196,16 +197,16 @@ public class MAtDataGatherer implements Collector, Processor
 		
 		this.frequent.add(new AbstractPotionQualityModule(this.data, POTIONPOWER) {
 			@Override
-			protected int getQuality(PotionEffect effect)
+			protected String getQuality(PotionEffect effect)
 			{
-				return effect.getAmplifier() + 1;
+				return Integer.toString(effect.getAmplifier() + 1);
 			}
 		});
 		this.frequent.add(new AbstractPotionQualityModule(this.data, POTIONDURATION) {
 			@Override
-			protected int getQuality(PotionEffect effect)
+			protected String getQuality(PotionEffect effect)
 			{
-				return effect.getDuration();
+				return Integer.toString(effect.getDuration());
 			}
 		});
 		
@@ -279,7 +280,7 @@ public class MAtDataGatherer implements Collector, Processor
 					this.lastLargeScanY = y;
 					this.lastLargeScanZ = z;
 					this.lastLargeScanPassed = 0;
-					this.largeScanner.startScan(x, y, z, 64, 32, 64, 8192, null);
+					this.largeScanner.startScan(x, y, z, 64, 32, 64, 8192);
 					
 				}
 				else
@@ -290,7 +291,7 @@ public class MAtDataGatherer implements Collector, Processor
 			
 			if (requires(SMALLSCAN) || requires(SMALLSCAN_THOUSAND))
 			{
-				this.smallScanner.startScan(x, y, z, 16, 8, 16, 2048, null);
+				this.smallScanner.startScan(x, y, z, 16, 8, 16, 2048);
 			}
 			this.relaxedProcessor.process();
 			

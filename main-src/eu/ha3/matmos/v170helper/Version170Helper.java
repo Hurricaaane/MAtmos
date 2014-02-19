@@ -10,6 +10,51 @@ import net.minecraft.world.World;
 
 public class Version170Helper
 {
+	public static int getPlayerX()
+	{
+		return (int) Math.floor(Minecraft.getMinecraft().thePlayer.posX);
+	}
+	
+	public static int getPlayerY()
+	{
+		return (int) Math.floor(Minecraft.getMinecraft().thePlayer.posY);
+	}
+	
+	public static int getPlayerZ()
+	{
+		return (int) Math.floor(Minecraft.getMinecraft().thePlayer.posZ);
+	}
+	
+	/**
+	 * Tells if y is within the height boundaries of the current world, where
+	 * blocks can exist.
+	 * 
+	 * @param y
+	 * @return
+	 */
+	public static boolean isWithinBounds(int y)
+	{
+		return y >= 0 && y < Minecraft.getMinecraft().theWorld.getHeight();
+	}
+	
+	/**
+	 * Clamps the y value to something that is within the current worlds'
+	 * boundaries.
+	 * 
+	 * @param y
+	 * @return
+	 */
+	public static int clampToBounds(int y)
+	{
+		if (y < 0)
+			return 0;
+		
+		if (y >= Minecraft.getMinecraft().theWorld.getHeight())
+			return Minecraft.getMinecraft().theWorld.getHeight() - 1;
+		
+		return y;
+	}
+	
 	/**
 	 * Gets the block at a certain location in the current world. This method is
 	 * not safe against locations in undefined space.
@@ -38,7 +83,7 @@ public class Version170Helper
 	 */
 	public static String getNameAt(int x, int y, int z, String defaultIfFail)
 	{
-		if (y <= 0 || y >= Minecraft.getMinecraft().theWorld.getHeight())
+		if (!isWithinBounds(y))
 			return defaultIfFail;
 		
 		try
@@ -167,5 +212,111 @@ public class Version170Helper
 	public static void playSound(String name, float nx, float ny, float nz, float volume, float pitch)
 	{
 		Minecraft.getMinecraft().theWorld.playSound(nx, ny, nz, name, volume, pitch, false);
+	}
+	
+	/**
+	 * Returns the PowerMeta of the block at the specified coordinates.<br>
+	 * The PowerMeta is a string that combines the block name and the metadata
+	 * of a certain block.
+	 * 
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param defaultIfFail
+	 * @return
+	 */
+	public static String getPowerMetaAt(int x, int y, int z, String defaultIfFail)
+	{
+		if (!isWithinBounds(y))
+			return defaultIfFail;
+		
+		try
+		{
+			return asPowerMeta(
+				getNameAt(Minecraft.getMinecraft().theWorld, x, y, z),
+				Minecraft.getMinecraft().theWorld.getBlockMetadata(x, y, z));
+		}
+		catch (Exception e)
+		{
+			return defaultIfFail;
+		}
+	}
+	
+	/**
+	 * Returns the PowerMeta, a string that combines the block name and the
+	 * metadata of a certain block.
+	 * 
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param defaultIfFail
+	 * @return
+	 */
+	public static String asPowerMeta(Block block, int meta)
+	{
+		return asPowerMeta(nameOf(block), meta);
+	}
+	
+	/**
+	 * Returns the PowerMeta, a string that combines the block name and the
+	 * metadata of a certain block.
+	 * 
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param defaultIfFail
+	 * @return
+	 */
+	public static String asPowerMeta(String block, int meta)
+	{
+		return block + "^" + Integer.toString(meta);
+	}
+	
+	/**
+	 * Returns the metadata of a certain block at the specified coordinates.
+	 * 
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param defaultIfFail
+	 * @return
+	 */
+	public static int getMetaAt(int x, int y, int z, int defaultIfFail)
+	{
+		if (!isWithinBounds(y))
+			return defaultIfFail;
+		
+		try
+		{
+			return Minecraft.getMinecraft().theWorld.getBlockMetadata(x, y, z);
+		}
+		catch (Exception e)
+		{
+			return defaultIfFail;
+		}
+	}
+	
+	/**
+	 * Returns the legacy number value of an item stack.
+	 * 
+	 * @param itemStack
+	 * @return
+	 */
+	public static int legacyOf(ItemStack itemStack)
+	{
+		// RegistryNamespaced
+		return Item.field_150901_e.func_148757_b(itemStack.getItem());
+	}
+	
+	/**
+	 * Returns the legacy number value of a block.
+	 * 
+	 * @param itemStack
+	 * @return
+	 */
+	public static int legacyOf(Block block)
+	{
+		// RegistryNamespaced
+		return Block.field_149771_c.func_148757_b(block);
 	}
 }

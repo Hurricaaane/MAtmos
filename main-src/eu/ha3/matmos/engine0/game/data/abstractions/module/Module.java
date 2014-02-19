@@ -1,4 +1,4 @@
-package eu.ha3.matmos.engine0.game.data.modules;
+package eu.ha3.matmos.engine0.game.data.abstractions.module;
 
 import eu.ha3.matmos.engine0.game.data.abstractions.Processor;
 

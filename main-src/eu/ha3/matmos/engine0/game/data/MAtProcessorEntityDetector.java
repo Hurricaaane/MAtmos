@@ -2,8 +2,10 @@ package eu.ha3.matmos.engine0.game.data;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -11,21 +13,26 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
 import eu.ha3.matmos.engine0.core.interfaces.Data;
+import eu.ha3.matmos.engine0.game.data.abstractions.Collector;
 import eu.ha3.matmos.engine0.game.data.abstractions.Processor;
-import eu.ha3.matmos.engine0.game.data.abstractions.processor.ProcessorModel;
+import eu.ha3.matmos.engine0.game.data.abstractions.module.ModuleProcessor;
+import eu.ha3.matmos.engine0.game.data.abstractions.module.PassOnceModule;
 
 /* x-placeholder */
 
-public class MAtProcessorEntityDetector implements Processor
+public class MAtProcessorEntityDetector implements Processor, PassOnceModule
 {
+	private final Set<String> submodules;
+	private final Collector collector;
+	
 	private AxisAlignedBB bbox;
 	
 	private int max;
 	
-	private ProcessorModel mindistModel;
+	private ModuleProcessor mindistModel;
 	private Map<Integer, Double> mindistMappy;
 	
-	private ProcessorModel[] radiModels;
+	private ModuleProcessor[] radiModels;
 	private int[] radi;
 	private Map<Integer, Integer>[] mappies;
 	
@@ -34,17 +41,23 @@ public class MAtProcessorEntityDetector implements Processor
 	private boolean isRequired;
 	
 	@SuppressWarnings("unchecked")
-	public MAtProcessorEntityDetector(Data dataIn, String mindist, String prefix, int max, int... radiis)
+	public MAtProcessorEntityDetector(
+		Data dataIn, Collector collector, String minDistModule, String radiModulePrefix, int max, int... radiis)
 	{
-		this.mindistModel = new ProcessorModel(dataIn, mindist, mindist + MAtDataGatherer.DELTA_SUFFIX) {
+		this.collector = collector;
+		this.submodules = new LinkedHashSet<String>();
+		
+		this.mindistModel = new ModuleProcessor(dataIn, minDistModule) {
 			@Override
 			protected void doProcess()
 			{
 			}
 		};
+		dataIn.getSheet(minDistModule).setDefaultValue("0");
+		this.submodules.add(minDistModule);
 		this.mindistMappy = new HashMap<Integer, Double>();
 		
-		this.radiModels = new ProcessorModel[radiis.length];
+		this.radiModels = new ModuleProcessor[radiis.length];
 		this.mappies = new Map[radiis.length];
 		
 		this.radi = Arrays.copyOf(radiis, radiis.length);
@@ -54,13 +67,14 @@ public class MAtProcessorEntityDetector implements Processor
 		for (int i = 0; i < this.radi.length; i++)
 		{
 			int radiNum = this.radi[i];
-			this.radiModels[i] =
-				new ProcessorModel(dataIn, prefix + radiNum, prefix + radiNum + MAtDataGatherer.DELTA_SUFFIX) {
-					@Override
-					protected void doProcess()
-					{
-					}
-				};
+			this.radiModels[i] = new ModuleProcessor(dataIn, radiModulePrefix + radiNum) {
+				@Override
+				protected void doProcess()
+				{
+				}
+			};
+			dataIn.getSheet(radiModulePrefix + radiNum).setDefaultValue("0");
+			this.submodules.add(radiModulePrefix + radiNum);
 			this.mappies[i] = new HashMap<Integer, Integer>();
 		}
 		
@@ -69,17 +83,15 @@ public class MAtProcessorEntityDetector implements Processor
 		this.max = max;
 	}
 	
-	public void refresh()
+	private void refresh()
 	{
 		this.isRequired = false;
 		
-		this.mindistModel.process();
-		this.isRequired = this.mindistModel.isRequired();
+		this.isRequired = this.collector.requires(this.mindistModel.getModuleName());
 		
-		for (ProcessorModel processor : this.radiModels)
+		for (ModuleProcessor processor : this.radiModels)
 		{
-			processor.process();
-			this.isRequired = this.isRequired || processor.isRequired();
+			this.isRequired = this.isRequired || this.collector.requires(processor.getModuleName());
 		}
 		for (Map<?, ?> mappy : this.mappies)
 		{
@@ -94,8 +106,14 @@ public class MAtProcessorEntityDetector implements Processor
 	{
 		refresh();
 		
+		// XXX: Normally, process() should only run if it's required
 		if (!this.isRequired)
 			return;
+		
+		else
+		{
+			System.err.println("EntityDetector is running but not required. Logic error?");
+		}
 		
 		Minecraft mc = Minecraft.getMinecraft();
 		
@@ -161,11 +179,12 @@ public class MAtProcessorEntityDetector implements Processor
 			}
 		}
 		
-		for (int i = 0; i < this.max; i++)
+		for (int rr = 0; rr < this.radi.length; rr++)
 		{
-			for (int rr = 0; rr < this.radi.length; rr++)
+			if (this.collector.requires(this.radiModels[rr].getModuleName()))
 			{
-				if (this.radiModels[rr].isRequired())
+				for (int i = 0; i < this.max; i++)
+				{
 					if (this.mappies[rr].containsKey(i))
 					{
 						this.radiModels[rr].setValueLegacyIntIndexes(i, this.mappies[rr].get(i));
@@ -174,8 +193,13 @@ public class MAtProcessorEntityDetector implements Processor
 					{
 						this.radiModels[rr].setValueLegacyIntIndexes(i, 0);
 					}
+				}
 			}
-			if (this.mindistModel.isRequired())
+		}
+		if (this.collector.requires(this.mindistModel.getModuleName()))
+		{
+			for (int i = 0; i < this.max; i++)
+			{
 				if (this.mindistMappy.containsKey(i))
 				{
 					this.mindistModel.setValueLegacyIntIndexes(i, (int) Math.floor(this.mindistMappy.get(i) * 1000));
@@ -184,7 +208,20 @@ public class MAtProcessorEntityDetector implements Processor
 				{
 					this.mindistModel.setValueLegacyIntIndexes(i, Integer.MAX_VALUE);
 				}
-			
+			}
+		}
+		
+		// Apply the virtual sheets
+		if (this.collector.requires(this.mindistModel.getModuleName()))
+		{
+			this.mindistModel.process();
+		}
+		for (int rr = 0; rr < this.radi.length; rr++)
+		{
+			if (this.collector.requires(this.radiModels[rr].getModuleName()))
+			{
+				this.radiModels[rr].process();
+			}
 		}
 	}
 	
@@ -206,6 +243,18 @@ public class MAtProcessorEntityDetector implements Processor
 		{
 			this.mindistMappy.put(key, distance);
 		}
+	}
+	
+	@Override
+	public String getModuleName()
+	{
+		return "_POM__entity_detector";
+	}
+	
+	@Override
+	public Set<String> getSubModules()
+	{
+		return this.submodules;
 	}
 	
 }

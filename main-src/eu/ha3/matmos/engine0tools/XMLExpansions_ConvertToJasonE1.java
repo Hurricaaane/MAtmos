@@ -1,14 +1,16 @@
-package eu.ha3.matmos.engine0.core.parsers;
+package eu.ha3.matmos.engine0tools;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import javax.xml.xpath.XPathExpressionException;
 
-import net.minecraft.block.Block;
 import net.sf.practicalxml.DomUtil;
 
 import org.w3c.dom.DOMException;
@@ -17,25 +19,18 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import eu.ha3.matmos.engine0.core.implem.Condition;
-import eu.ha3.matmos.engine0.core.implem.Event;
-import eu.ha3.matmos.engine0.core.implem.Junction;
-import eu.ha3.matmos.engine0.core.implem.Knowledge;
-import eu.ha3.matmos.engine0.core.implem.LongFloatSimplificator;
-import eu.ha3.matmos.engine0.core.implem.Machine;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import eu.ha3.matmos.engine0.core.implem.Operator;
-import eu.ha3.matmos.engine0.core.implem.Possibilities;
-import eu.ha3.matmos.engine0.core.implem.SheetEntry;
 import eu.ha3.matmos.engine0.core.implem.StreamInformation;
-import eu.ha3.matmos.engine0.core.implem.TimedEvent;
-import eu.ha3.matmos.engine0.core.implem.TimedEventInformation;
-import eu.ha3.matmos.engine0.core.implem.abstractions.ProviderCollection;
-import eu.ha3.matmos.engine0.core.interfaces.Named;
-import eu.ha3.matmos.v170helper.Version170Helper;
+import eu.ha3.matmos.engine0.core.parsers.UnexpectedDataException;
 
-/* x-placeholder */
+/*
+--filenotes-placeholder
+*/
 
-public class XMLExpansions_Engine0
+public class XMLExpansions_ConvertToJasonE1
 {
 	static final String NAME = "name";
 	
@@ -95,11 +90,11 @@ public class XMLExpansions_Engine0
 	
 	private Map<String, Operator> inverseSymbols;
 	
-	private Knowledge knowledgeWorkstation;
-	private List<Named> elements;
-	private ProviderCollection providers;
+	@SuppressWarnings("rawtypes")
+	private Map o;
+	private Map<String, String> names;
 	
-	public XMLExpansions_Engine0()
+	public XMLExpansions_ConvertToJasonE1()
 	{
 		this.inverseSymbols = new HashMap<String, Operator>();
 		
@@ -108,7 +103,7 @@ public class XMLExpansions_Engine0
 		symbols.put(Operator.EQUAL, "==");
 		symbols.put(Operator.GREATER, ">");
 		symbols.put(Operator.GREATER_OR_EQUAL, ">=");
-		symbols.put(Operator.LESSER_, "<");
+		symbols.put(Operator.LESSER, "<");
 		symbols.put(Operator.LESSER_OR_EQUAL, "<=");
 		symbols.put(Operator.IN_LIST, "in");
 		symbols.put(Operator.NOT_IN_LIST, "!in");
@@ -122,24 +117,25 @@ public class XMLExpansions_Engine0
 	
 	///
 	
-	public boolean loadKnowledge(Knowledge original, Document doc)
+	public String convertToJason(Document doc) throws UnexpectedDataException
 	{
+		this.o = new TreeMap<String, Object>();
+		this.names = new HashMap<String, String>();
+		
 		try
 		{
-			parseXML(original, doc);
-			return true;
+			parseToObject(this.o, doc);
 		}
-		catch (XPathExpressionException e)
+		catch (Exception e)
 		{
 			e.printStackTrace();
-			return false;
-			
+			throw new UnexpectedDataException();
 		}
-		catch (NumberFormatException e)
-		{
-			e.printStackTrace();
-			return false;
-		}
+		
+		Gson gson = new GsonBuilder().create();
+		String jason = gson.toJson(this.o);
+		
+		return jason;
 	}
 	
 	private int toInt(String source)
@@ -152,23 +148,12 @@ public class XMLExpansions_Engine0
 		{
 			// FIXME: Is cast from float to int safe for about everything?
 			return (int) Float.parseFloat(source);
-			
 		}
-		
 	}
 	
-	/*private void parseXMLdynamic(Knowledge original, Element capsule, String name) throws XPathExpressionException
+	private void parseXMLdynamic(Map o, Element capsule, String name) throws XPathExpressionException
 	{
-		boolean exists = original.getDynamic(name) != null;
-		if (exists && !allowOverrides)
-			return;
-		
-		if (!exists)
-		{
-			original.addDynamic(name);
-		}
-		
-		Dynamic descriptible = original.getDynamic(name);
+		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
 		
 		for (Element eelt : DomUtil.getChildren(capsule, ENTRY))
 		{
@@ -176,94 +161,113 @@ public class XMLExpansions_Engine0
 			
 			if (nameNode != null)
 			{
-				// 1.7 DERAIL
-				descriptible.addCouple(
-					nameNode.getNodeValue(), Integer.toString(Integer.parseInt(eelt.getTextContent())));
-				
+				Map<String, String> m = new TreeMap<String, String>();
+				m.put("sheet", nameNode.getNodeValue());
+				m.put("index", eelt.getTextContent());
+				list.add(m);
 			}
-			
 		}
 		
-	}*/
+		o.put(name, list);
+		
+	}
 	
-	private void parseXMLlist(Element capsule, String name)
+	private void parseXMLlist(Map o, Element capsule, String name) throws XPathExpressionException
 	{
 		List<String> list = new ArrayList<String>();
 		
 		for (Element eelt : DomUtil.getChildren(capsule, CONSTANT))
 		{
-			list.add(textOf(eelt));
+			String constant = textOf(eelt);
+			list.add(constant);
 		}
+		Collections.sort(list);
 		
-		Named element = new Possibilities(name, list);
-		this.elements.add(element);
+		o.put(name, list);
 	}
 	
-	private void parseXMLcondition(Element capsule, String name)
+	private void parseXMLcondition(Map o, Element capsule, String name) throws XPathExpressionException
 	{
+		Map<String, Object> m = new LinkedHashMap<String, Object>();
+		Map<String, String> a = new LinkedHashMap<String, String>();
+		Map<String, String> b = new LinkedHashMap<String, String>();
+		
 		String sheet = eltString(SHEET, capsule);
-		String index = eltString(KEY, capsule);
+		String key = eltString(KEY, capsule);
 		String dynamickey = eltString(DYNAMICKEY, capsule);
 		String symbol = eltString(SYMBOL, capsule);
 		String constant = eltString(CONSTANT, capsule);
 		String list = eltString(LIST, capsule);
 		
-		if (dynamickey != null)
+		m.put("a", a);
+		
+		a.put("type", "sheet");
+		if (sheet != null)
 		{
-			sheet = "_DYNAMIC";
-			index = dynamickey;
+			a.put("sheet", sheet);
 		}
+		
+		if (key != null)
+		{
+			a.put("index", key);
+		}
+		
+		if (dynamickey != null && !dynamickey.equals(""))
+		{
+			a.put("sheet", "_DYNAMIC");
+			a.put("index", key);
+		}
+		
+		if (symbol != null)
+		{
+			m.put("operator", symbol);
+		}
+		
+		m.put("b", b);
+		if (constant != null)
+		{
+			b.put("type", "constant");
+			b.put("constant", constant);
+		}
+		
 		if (list != null)
 		{
-			constant = list;
+			b.put("type", "list");
+			b.put("list", list);
 		}
 		
-		if (sheet.contains("Scan"))
-		{
-			Long l = LongFloatSimplificator.longOf(constant);
-			if (l != null && l < 256)
-			{
-				Object o = Block.field_149771_c.func_148754_a((int) (long) l);
-				if (o != null && o instanceof Block)
-				{
-					String ocst = constant;
-					constant = Version170Helper.nameOf((Block) o);
-					System.out.println("Converted " + sheet + " name from " + ocst + " to " + constant);
-				}
-			}
-		}
-		
-		Named element =
-			new Condition(
-				name, this.providers.getSheetCommander(), new SheetEntry(sheet, index),
-				this.inverseSymbols.get(symbol), constant);
-		this.elements.add(element);
+		o.put(name, m);
 	}
 	
-	private void parseXMLset(Element capsule, String name)
+	private void parseXMLset(Map o, Element capsule, String name) throws XPathExpressionException
 	{
-		List<String> yes = new ArrayList<String>();
-		List<String> no = new ArrayList<String>();
+		Map<String, Object> m = new TreeMap<String, Object>();
+		List<String> t = new ArrayList<String>();
+		List<String> f = new ArrayList<String>();
 		
+		m.put("truepart", t);
 		for (Element eelt : DomUtil.getChildren(capsule, TRUEPART))
 		{
 			String truepart = textOf(eelt);
-			yes.add(truepart);
+			t.add(truepart);
 		}
+		Collections.sort(t);
 		
+		m.put("falsepart", f);
 		for (Element eelt : DomUtil.getChildren(capsule, FALSEPART))
 		{
 			String falsepart = textOf(eelt);
-			no.add(falsepart);
+			f.add(falsepart);
 		}
+		Collections.sort(f);
 		
-		Named element = new Junction(name, this.providers.getCondition(), yes, no);
-		this.elements.add(element);
+		o.put(name, m);
 	}
 	
-	private void parseXMLevent(Element capsule, String name)
+	private void parseXMLevent(Map o, Element capsule, String name) throws XPathExpressionException
 	{
-		List<String> paths = new ArrayList<String>();
+		Map<String, Object> m = new TreeMap<String, Object>();
+		List<String> p = new ArrayList<String>();
 		
 		String volmin = eltString(VOLMIN, capsule);
 		String volmax = eltString(VOLMAX, capsule);
@@ -271,81 +275,120 @@ public class XMLExpansions_Engine0
 		String pitchmax = eltString(PITCHMAX, capsule);
 		String metasound = eltString(METASOUND, capsule);
 		
-		float vol_min = volmin != null ? Float.parseFloat(volmin) : 1f;
-		float vol_max = volmax != null ? Float.parseFloat(volmax) : 1f;
-		float pitch_min = pitchmin != null ? Float.parseFloat(pitchmin) : 1f;
-		float pitch_max = pitchmax != null ? Float.parseFloat(pitchmax) : 1f;
-		int distance = metasound != null ? toInt(metasound) : 0;
+		if (volmin != null)
+		{
+			m.put("vol_min", Float.parseFloat(volmin));
+		}
 		
+		if (volmax != null)
+		{
+			m.put("vol_max", Float.parseFloat(volmax));
+		}
+		
+		if (pitchmin != null)
+		{
+			m.put("pitch_min", Float.parseFloat(pitchmin));
+		}
+		
+		if (pitchmax != null)
+		{
+			m.put("pitch_max", Float.parseFloat(pitchmax));
+		}
+		
+		if (metasound != null)
+		{
+			m.put("distance", toInt(metasound));
+		}
+		
+		m.put("paths", p);
 		for (Element eelt : DomUtil.getChildren(capsule, PATH))
 		{
 			String path = textOf(eelt);
-			paths.add(path);
+			p.add(path);
 		}
+		Collections.sort(p);
 		
-		Named element =
-			new Event(name, this.providers.getSoundRelay(), paths, vol_min, vol_max, pitch_min, pitch_max, distance);
-		this.elements.add(element);
+		o.put(name, m);
 	}
 	
-	private void parseXMLmachine(Element capsule, String name)
+	private void parseXMLmachine(Map o, Element capsule, String name) throws XPathExpressionException
 	{
-		List<TimedEvent> events = new ArrayList<TimedEvent>();
+		Map<String, Object> m = new TreeMap<String, Object>();
+		Map<String, Object> timed = new TreeMap<String, Object>();
+		List<String> allow = new ArrayList<String>();
+		List<String> restrict = new ArrayList<String>();
+		
+		m.put("events", timed);
 		for (Element eelt : DomUtil.getChildren(capsule, EVENTTIMED))
 		{
-			events.add(inscriptXMLeventTimed(eelt));
+			Map<String, Object> event = new TreeMap<String, Object>();
+			inscriptXMLeventTimed(event, eelt);
 		}
 		
-		StreamInformation stream = null;
 		for (Element eelt : DomUtil.getChildren(capsule, STREAM))
 		{
-			stream = inscriptXMLstream(eelt, name);
+			int size = descriptible.addStream();
+			inscriptXMLstream(descriptible.getStream(size - 1), eelt);
 		}
 		
-		List<String> allow = new ArrayList<String>();
+		m.put("allow", allow);
 		for (Element eelt : DomUtil.getChildren(capsule, ALLOW))
 		{
 			allow.add(textOf(eelt));
 		}
+		Collections.sort(allow);
 		
-		List<String> restrict = new ArrayList<String>();
+		m.put("restrict", restrict);
 		for (Element eelt : DomUtil.getChildren(capsule, RESTRICT))
 		{
 			restrict.add(textOf(eelt));
 		}
+		Collections.sort(restrict);
 		
-		TimedEventInformation tie = null;
-		if (events.size() > 0)
-		{
-			tie =
-				new TimedEventInformation(
-					name, this.providers.getMachine(), this.providers.getEvent(), this.providers.getReferenceTime(),
-					events);
-		}
-		
-		Named element = new Machine(name, this.providers.getJunction(), allow, restrict, tie, stream);
-		this.elements.add(element);
+		o.put(name, m);
 	}
 	
-	private TimedEvent inscriptXMLeventTimed(Element specs)
+	private void inscriptXMLeventTimed(Map<String, Object> m, Element specs) throws XPathExpressionException
 	{
 		String eventname = eltString(EVENTNAME, specs);
 		String volmod = eltString(VOLMOD, specs);
 		String pitchmod = eltString(PITCHMOD, specs);
+		String delaystart = eltString(DELAYSTART, specs);
 		String delaymin = eltString(DELAYMIN, specs);
 		String delaymax = eltString(DELAYMAX, specs);
-		String delaystart = eltString(DELAYSTART, specs);
 		
-		float vol_mod = volmod != null ? Float.parseFloat(volmod) : 1f;
-		float pitch_mod = pitchmod != null ? Float.parseFloat(pitchmod) : 1f;
-		float delay_min = delaymin != null ? Float.parseFloat(delaymin) : 1f; // 1f is dummy
-		float delay_max = delaymax != null ? Float.parseFloat(delaymax) : 1f; // 1f is dummy
-		float delay_start = delaystart != null ? Float.parseFloat(delaystart) : 1f; // 1f is dummy
+		if (eventname != null)
+		{
+			m.put("event", eventname);
+		}
 		
-		return new TimedEvent(eventname, vol_mod, pitch_mod, delay_min, delay_max, delay_start);
+		if (volmod != null)
+		{
+			m.put("vol_mod", Float.parseFloat(volmod));
+		}
+		
+		if (pitchmod != null)
+		{
+			m.put("pitch_mod", Float.parseFloat(pitchmod));
+		}
+		
+		if (delaystart != null)
+		{
+			m.put("delay_start", Float.parseFloat(delaystart));
+		}
+		
+		if (delaymin != null)
+		{
+			m.put("delay_min", Float.parseFloat(delaymin));
+		}
+		
+		if (delaymax != null)
+		{
+			m.put("delay_max", Float.parseFloat(delaymax));
+		}
 	}
 	
-	private StreamInformation inscriptXMLstream(Element specs, String machineName)
+	private void inscriptXMLstream(StreamInformation inscriptible, Element specs) throws XPathExpressionException
 	{
 		String _PATH = eltString(PATH, specs);
 		String _VOLUME = eltString(VOLUME, specs);
@@ -357,31 +400,68 @@ public class XMLExpansions_Engine0
 		String _ISLOOPING = eltString(ISLOOPING, specs);
 		String _ISUSINGPAUSE = eltString(ISUSINGPAUSE, specs);
 		
-		float vol = _VOLUME != null ? Float.parseFloat(_VOLUME) : 1f;
-		float pitch = _PITCH != null ? Float.parseFloat(_PITCH) : 1f;
-		float fadein = _FADEINTIME != null ? Float.parseFloat(_FADEINTIME) : 1f; // 1f is dummy
-		float fadeout = _FADEOUTTIME != null ? Float.parseFloat(_FADEOUTTIME) : 1f; // 1f is dummy
-		float delaybeforefadein = _DELAYBEFOREFADEIN != null ? Float.parseFloat(_DELAYBEFOREFADEIN) : 1f; // 1f is dummy
-		float delaybeforefadeout = _DELAYBEFOREFADEOUT != null ? Float.parseFloat(_DELAYBEFOREFADEOUT) : 1f; // 1f is dummy
-		boolean looping = toInt(_ISLOOPING) == 1;
-		boolean pause = toInt(_ISUSINGPAUSE) == 1;
+		if (_PATH != null)
+		{
+			inscriptible.path = _PATH;
+		}
 		
-		return new StreamInformation(
-			machineName, this.providers.getMachine(), this.providers.getReferenceTime(),
-			this.providers.getSoundRelay(), _PATH, vol, pitch, delaybeforefadein, delaybeforefadeout, fadein, fadeout,
-			looping, pause);
+		if (_VOLUME != null)
+		{
+			inscriptible.volume = Float.parseFloat(_VOLUME);
+		}
+		
+		if (_PITCH != null)
+		{
+			inscriptible.pitch = Float.parseFloat(_PITCH);
+		}
+		
+		if (_FADEINTIME != null)
+		{
+			inscriptible.fadeInTime = Float.parseFloat(_FADEINTIME);
+		}
+		
+		if (_FADEOUTTIME != null)
+		{
+			inscriptible.fadeOutTime = Float.parseFloat(_FADEOUTTIME);
+		}
+		
+		if (_DELAYBEFOREFADEIN != null)
+		{
+			inscriptible.delayBeforeFadeIn = Float.parseFloat(_DELAYBEFOREFADEIN);
+		}
+		
+		if (_DELAYBEFOREFADEOUT != null)
+		{
+			inscriptible.delayBeforeFadeOut = Float.parseFloat(_DELAYBEFOREFADEOUT);
+		}
+		
+		if (_ISLOOPING != null)
+		{
+			inscriptible.isLooping = toInt(_ISLOOPING) == 1;
+		}
+		
+		if (_ISUSINGPAUSE != null)
+		{
+			inscriptible.usesPause = toInt(_ISUSINGPAUSE) == 1;
+		}
+		
 	}
 	
-	private void parseXML(Knowledge original, Document doc) throws XPathExpressionException, DOMException
+	private void parseToObject(Map<String, Object> o, Document doc) throws XPathExpressionException, DOMException
 	{
 		Element elt = doc.getDocumentElement();
 		DomUtil.removeEmptyTextRecursive(elt);
 		
-		this.knowledgeWorkstation = original;
-		this.elements = new ArrayList<Named>();
-		this.providers = this.knowledgeWorkstation.obtainProviders();
+		o.put("dynamics", new TreeMap<String, Object>());
+		o.put("lists", new TreeMap<String, Object>());
+		o.put("conditions", new TreeMap<String, Object>());
+		o.put("sets", new TreeMap<String, Object>());
+		o.put("events", new TreeMap<String, Object>());
+		o.put("machines", new TreeMap<String, Object>());
 		
-		/*{
+		{
+			Map w = (Map) o.get("dynamics");
+			
 			NodeList cat = elt.getElementsByTagName(DYNAMIC);
 			for (int i = 0; i < cat.getLength(); i++)
 			{
@@ -390,12 +470,15 @@ public class XMLExpansions_Engine0
 				
 				if (nameNode != null)
 				{
-					parseXMLdynamic(original, capsule, nameNode.getNodeValue());
+					String name = generateName(name);
+					parseXMLdynamic(w, capsule, nameNode.getNodeValue());
 				}
 			}
-		}*/
+		}
 		
 		{
+			Map w = (Map) o.get("lists");
+			
 			NodeList cat = elt.getElementsByTagName(LIST);
 			for (int i = 0; i < cat.getLength(); i++)
 			{
@@ -404,25 +487,34 @@ public class XMLExpansions_Engine0
 				
 				if (nameNode != null)
 				{
-					parseXMLlist(capsule, nameNode.getNodeValue());
+					parseXMLlist(w, capsule, nameNode.getNodeValue());
+					
 				}
+				
 			}
+			
 		}
 		
 		{
+			Map w = (Map) o.get("conditions");
+			
 			for (Element capsule : DomUtil.getChildren(elt, CONDITION))
 			{
 				Node nameNode = capsule.getAttributes().getNamedItem(NAME);
 				
 				if (nameNode != null)
 				{
-					parseXMLcondition(capsule, nameNode.getNodeValue());
+					parseXMLcondition(w, capsule, nameNode.getNodeValue());
 					
 				}
+				
 			}
+			
 		}
 		
 		{
+			Map w = (Map) o.get("sets");
+			
 			NodeList cat = elt.getElementsByTagName(SET);
 			for (int i = 0; i < cat.getLength(); i++)
 			{
@@ -431,13 +523,17 @@ public class XMLExpansions_Engine0
 				
 				if (nameNode != null)
 				{
-					parseXMLset(capsule, nameNode.getNodeValue());
+					parseXMLset(w, capsule, nameNode.getNodeValue());
 					
 				}
+				
 			}
+			
 		}
 		
 		{
+			Map w = (Map) o.get("events");
+			
 			NodeList cat = elt.getElementsByTagName(EVENT);
 			for (int i = 0; i < cat.getLength(); i++)
 			{
@@ -446,12 +542,14 @@ public class XMLExpansions_Engine0
 				
 				if (nameNode != null)
 				{
-					parseXMLevent(capsule, nameNode.getNodeValue());
+					parseXMLevent(w, capsule, nameNode.getNodeValue());
 				}
 			}
 		}
 		
 		{
+			Map w = (Map) o.get("machines");
+			
 			NodeList cat = elt.getElementsByTagName(MACHINE);
 			for (int i = 0; i < cat.getLength(); i++)
 			{
@@ -460,25 +558,39 @@ public class XMLExpansions_Engine0
 				
 				if (nameNode != null)
 				{
-					parseXMLmachine(capsule, nameNode.getNodeValue());
+					parseXMLmachine(w, capsule, nameNode.getNodeValue());
 				}
 			}
-			
+		}
+	}
+	
+	private String generateName(String name)
+	{
+		String newName = name.replaceAll("[^a-zA-Z0-9_ ]", "");
+		int add = 0;
+		if (this.names.containsKey(newName))
+		{
+			while (this.names.containsKey(newName + Integer.toString(add)))
+			{
+				add = add + 1;
+			}
+			newName = newName + Integer.toString(add);
 		}
 		
-		this.knowledgeWorkstation.addKnowledge(this.elements);
-		this.knowledgeWorkstation.compile();
+		this.names.put(name, newName);
 		
-		/*try
+		return newName;
+	}
+	
+	private String getName(String name)
+	{
+		if (!this.names.containsKey(name))
 		{
-			System.out.println(original.createXML());
+			System.err.println("Parser tried to obtain a name that didn't exist");
+			return generateName(name);
 		}
-		catch (XMLStreamException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		*/
+		
+		return this.names.get(name);
 	}
 	
 	private String eltString(String tagName, Element ele)
@@ -493,5 +605,4 @@ public class XMLExpansions_Engine0
 		
 		return ele.getFirstChild().getNodeValue();
 	}
-	
 }

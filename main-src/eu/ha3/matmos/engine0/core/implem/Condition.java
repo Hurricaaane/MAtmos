@@ -95,7 +95,7 @@ public class Condition extends DependableComponent
 				else if (this.operatorX == Operator.GREATER_OR_EQUAL)
 					return longValue >= this.constantLongX;
 				
-				else if (this.operatorX == Operator.LESSER_)
+				else if (this.operatorX == Operator.LESSER)
 					return longValue < this.constantLongX;
 				
 				else if (this.operatorX == Operator.LESSER_OR_EQUAL)
