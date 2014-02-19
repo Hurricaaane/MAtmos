@@ -2,7 +2,7 @@ package eu.ha3.matmos.engine0.core.implem;
 
 import java.util.Map;
 
-import eu.ha3.matmos.engine0.core.interfaces.Provider;
+import eu.ha3.matmos.engine0.core.implem.abstractions.Provider;
 import eu.ha3.matmos.engine0.core.interfaces.Versionned;
 
 /*

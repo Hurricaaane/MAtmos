@@ -2,7 +2,7 @@ package eu.ha3.matmos.engine0.core.implem;
 
 import java.util.Random;
 
-import eu.ha3.matmos.engine0.core.interfaces.Provider;
+import eu.ha3.matmos.engine0.core.implem.abstractions.Provider;
 import eu.ha3.matmos.engine0.core.interfaces.ReferenceTime;
 import eu.ha3.matmos.engine0.core.interfaces.TimedEventInterface;
 
@@ -13,6 +13,7 @@ public class TimedEvent implements TimedEventInterface
 	private static Random random = new Random();
 	
 	private String event;
+	private final Provider<Event> provider;
 	private final float volMod;
 	private final float pitchMod;
 	private final float delayMin;
@@ -21,9 +22,12 @@ public class TimedEvent implements TimedEventInterface
 	
 	private long nextPlayTime;
 	
-	public TimedEvent(String event, float volMod, float pitchMod, float delayMin, float delayMax, float delayStart)
+	public TimedEvent(
+		String event, Provider<Event> provider, float volMod, float pitchMod, float delayMin, float delayMax,
+		float delayStart)
 	{
 		this.event = event;
+		this.provider = provider;
 		this.volMod = volMod;
 		this.pitchMod = pitchMod;
 		this.delayMin = delayMin;
@@ -50,14 +54,14 @@ public class TimedEvent implements TimedEventInterface
 	}
 	
 	@Override
-	public void play(Provider<? extends Event> eventProvider, ReferenceTime time, float fadeFactor)
+	public void play(ReferenceTime time, float fadeFactor)
 	{
 		if (time.getMilliseconds() < this.nextPlayTime)
 			return;
 		
-		if (eventProvider.exists(this.event))
+		if (this.provider.exists(this.event))
 		{
-			eventProvider.get(this.event).playSound(this.volMod * fadeFactor, this.pitchMod);
+			this.provider.get(this.event).playSound(this.volMod * fadeFactor, this.pitchMod);
 		}
 		
 		if (this.delayMin == this.delayMax && this.delayMin > 0)

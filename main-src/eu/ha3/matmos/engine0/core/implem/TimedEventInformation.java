@@ -3,7 +3,7 @@ package eu.ha3.matmos.engine0.core.implem;
 import java.util.List;
 
 import eu.ha3.matmos.engine0.core.implem.abstractions.MultistateComponent;
-import eu.ha3.matmos.engine0.core.interfaces.Provider;
+import eu.ha3.matmos.engine0.core.implem.abstractions.Provider;
 import eu.ha3.matmos.engine0.core.interfaces.ReferenceTime;
 import eu.ha3.matmos.engine0.core.interfaces.Simulated;
 import eu.ha3.matmos.engine0.core.interfaces.TimedEventInterface;
@@ -22,8 +22,7 @@ public class TimedEventInformation extends MultistateComponent implements Simula
 	//
 	
 	private final String machineName;
-	private final Provider<? extends Machine> provider;
-	private final Provider<? extends Event> eventProvider;
+	private final Provider<Machine> provider;
 	private final ReferenceTime time;
 	private List<TimedEvent> events;
 	
@@ -32,14 +31,12 @@ public class TimedEventInformation extends MultistateComponent implements Simula
 	private long stopTime;
 	
 	public TimedEventInformation(
-		String machineName, Provider<? extends Machine> provider, Provider<? extends Event> eventProvider,
-		ReferenceTime time, List<TimedEvent> events)
+		String machineName, Provider<Machine> provider, ReferenceTime time, List<TimedEvent> events)
 	{
 		super("_TIMED:" + machineName);
 		
 		this.machineName = machineName;
 		this.provider = provider;
-		this.eventProvider = eventProvider;
 		this.time = time;
 		
 		this.events = events;
@@ -110,7 +107,7 @@ public class TimedEventInformation extends MultistateComponent implements Simula
 		float fadeFactor = calculateFadeFactor();
 		for (TimedEventInterface t : this.events)
 		{
-			t.play(this.eventProvider, this.time, fadeFactor);
+			t.play(this.time, fadeFactor);
 		}
 	}
 	

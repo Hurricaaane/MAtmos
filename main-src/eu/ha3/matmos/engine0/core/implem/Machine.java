@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.TreeSet;
 
 import eu.ha3.matmos.engine0.core.implem.abstractions.DependableComponent;
+import eu.ha3.matmos.engine0.core.implem.abstractions.Provider;
 import eu.ha3.matmos.engine0.core.interfaces.Overrided;
-import eu.ha3.matmos.engine0.core.interfaces.Provider;
 import eu.ha3.matmos.engine0.core.interfaces.Simulated;
 import eu.ha3.matmos.expansions.MAtmosConvLogger;
 
@@ -20,7 +20,7 @@ public class Machine extends DependableComponent implements Simulated, Overrided
 	private final TimedEventInformation timed;
 	private final StreamInformation stream;
 	
-	private final Provider<? extends Junction> provider;
+	private final Provider<Junction> provider;
 	
 	private boolean overrideUnderway;
 	private boolean overrideState;
@@ -28,7 +28,7 @@ public class Machine extends DependableComponent implements Simulated, Overrided
 	private final Collection<String> dependencies;
 	
 	public Machine(
-		String name, Provider<? extends Junction> provider, List<String> allow, List<String> restrict,
+		String name, Provider<Junction> provider, List<String> allow, List<String> restrict,
 		TimedEventInformation timed, StreamInformation stream)
 	{
 		super(name);

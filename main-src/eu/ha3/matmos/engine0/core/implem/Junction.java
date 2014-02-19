@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.TreeSet;
 
 import eu.ha3.matmos.engine0.core.implem.abstractions.DependableComponent;
-import eu.ha3.matmos.engine0.core.interfaces.Provider;
+import eu.ha3.matmos.engine0.core.implem.abstractions.Provider;
 import eu.ha3.matmos.expansions.MAtmosConvLogger;
 
 /* x-placeholder */
@@ -16,11 +16,11 @@ public class Junction extends DependableComponent
 	private final List<String> yes;
 	private final List<String> no;
 	
-	private final Provider<? extends Condition> provider;
+	private final Provider<Condition> provider;
 	
 	private final Collection<String> dependencies;
 	
-	public Junction(String name, Provider<? extends Condition> provider, List<String> yes, List<String> no)
+	public Junction(String name, Provider<Condition> provider, List<String> yes, List<String> no)
 	{
 		super(name);
 		this.provider = provider;

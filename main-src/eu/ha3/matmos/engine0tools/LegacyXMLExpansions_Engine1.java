@@ -428,7 +428,8 @@ public class LegacyXMLExpansions_Engine1
 		float delay_max = delaymax != null ? Float.parseFloat(delaymax) : 1f; // 1f is dummy
 		float delay_start = delaystart != null ? Float.parseFloat(delaystart) : 1f; // 1f is dummy
 		
-		return new TimedEvent(eventname, vol_mod, pitch_mod, delay_min, delay_max, delay_start);
+		return new TimedEvent(
+			eventname, this.providers.getEvent(), vol_mod, pitch_mod, delay_min, delay_max, delay_start);
 	}
 	
 	private StreamInformation inscriptXMLstream(Element specs, String machineName)

@@ -1,7 +1,7 @@
 package eu.ha3.matmos.engine0.core.implem;
 
+import eu.ha3.matmos.engine0.core.implem.abstractions.Provider;
 import eu.ha3.matmos.engine0.core.implem.abstractions.ProviderCollection;
-import eu.ha3.matmos.engine0.core.interfaces.Provider;
 import eu.ha3.matmos.engine0.core.interfaces.ReferenceTime;
 import eu.ha3.matmos.engine0.core.interfaces.SheetCommander;
 import eu.ha3.matmos.engine0.core.interfaces.SoundRelay;
@@ -56,31 +56,31 @@ public class Providers implements ProviderCollection
 	}
 	
 	@Override
-	public Provider<? extends Condition> getCondition()
+	public Provider<Condition> getCondition()
 	{
 		return this.conditionProvider;
 	}
 	
 	@Override
-	public Provider<? extends Junction> getJunction()
+	public Provider<Junction> getJunction()
 	{
 		return this.junctionProvider;
 	}
 	
 	@Override
-	public Provider<? extends Machine> getMachine()
+	public Provider<Machine> getMachine()
 	{
 		return this.machineProvider;
 	}
 	
 	@Override
-	public Provider<? extends Event> getEvent()
+	public Provider<Event> getEvent()
 	{
 		return this.eventProvider;
 	}
 	
 	@Override
-	public Provider<? extends Dynamic> getDynamic()
+	public Provider<Dynamic> getDynamic()
 	{
 		return this.dynamicProvider;
 	}
