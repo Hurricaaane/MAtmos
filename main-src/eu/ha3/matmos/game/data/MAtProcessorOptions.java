@@ -1,0 +1,23 @@
+package eu.ha3.matmos.game.data;
+
+import eu.ha3.matmos.engine0.core.interfaces.Data;
+import eu.ha3.matmos.game.data.abstractions.processor.MAtProcessorModel;
+import eu.ha3.matmos.game.system.MAtMod;
+
+/* x-placeholder */
+
+public class MAtProcessorOptions extends MAtProcessorModel
+{
+	public MAtProcessorOptions(MAtMod modIn, Data dataIn, String normalNameIn, String deltaNameIn)
+	{
+		super(modIn, dataIn, normalNameIn, deltaNameIn);
+	}
+	
+	@Override
+	protected void doProcess()
+	{
+		setValueLegacyIntIndexes(0, mod().getConfig().getBoolean("useroptions.altitudes.high") ? 1 : 0);
+		setValueLegacyIntIndexes(1, mod().getConfig().getBoolean("useroptions.altitudes.low") ? 1 : 0);
+	}
+	
+}

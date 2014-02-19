@@ -23,7 +23,7 @@ public class StreamInformation extends MultistateComponent implements Simulated
 	//
 	
 	private final String machineName;
-	private final Provider<Machine> provider;
+	private final Provider<? extends Machine> provider;
 	private final ReferenceTime time;
 	private final SoundRelay relay;
 	
@@ -35,7 +35,7 @@ public class StreamInformation extends MultistateComponent implements Simulated
 	private long stopTime;
 	
 	public StreamInformation(
-		String machineName, Provider<Machine> provider, ReferenceTime time, SoundRelay relay, String path,
+		String machineName, Provider<? extends Machine> provider, ReferenceTime time, SoundRelay relay, String path,
 		float volume, float pitch, float delayBeforeFadeIn, float delayBeforeFadeOut, float fadeInTime,
 		float fadeOutTime, boolean isLooping, boolean usesPause)
 	{

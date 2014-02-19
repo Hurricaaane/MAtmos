@@ -22,8 +22,8 @@ public class TimedEventInformation extends MultistateComponent implements Simula
 	//
 	
 	private final String machineName;
-	private final Provider<Machine> provider;
-	private final Provider<Event> eventProvider;
+	private final Provider<? extends Machine> provider;
+	private final Provider<? extends Event> eventProvider;
 	private final ReferenceTime time;
 	private List<TimedEvent> events;
 	
@@ -32,8 +32,8 @@ public class TimedEventInformation extends MultistateComponent implements Simula
 	private long stopTime;
 	
 	public TimedEventInformation(
-		String machineName, Provider<Machine> provider, Provider<Event> eventProvider, ReferenceTime time,
-		List<TimedEvent> events)
+		String machineName, Provider<? extends Machine> provider, Provider<? extends Event> eventProvider,
+		ReferenceTime time, List<TimedEvent> events)
 	{
 		super("_TIMED:" + machineName);
 		

@@ -1,5 +1,10 @@
 package eu.ha3.matmos.engine0.core.implem.abstractions;
 
+import eu.ha3.matmos.engine0.core.implem.Condition;
+import eu.ha3.matmos.engine0.core.implem.Dynamic;
+import eu.ha3.matmos.engine0.core.implem.Event;
+import eu.ha3.matmos.engine0.core.implem.Junction;
+import eu.ha3.matmos.engine0.core.implem.Machine;
 import eu.ha3.matmos.engine0.core.interfaces.Provider;
 import eu.ha3.matmos.engine0.core.interfaces.ReferenceTime;
 import eu.ha3.matmos.engine0.core.interfaces.SheetCommander;
@@ -17,13 +22,13 @@ public interface ProviderCollection
 	
 	public SheetCommander getSheetCommander();
 	
-	public Provider getCondition();
+	public Provider<? extends Condition> getCondition();
 	
-	public Provider getJunction();
+	public Provider<? extends Junction> getJunction();
 	
-	public Provider getMachine();
+	public Provider<? extends Machine> getMachine();
 	
-	public Provider getEvent();
+	public Provider<? extends Event> getEvent();
 	
-	public Provider getDynamic();
+	public Provider<? extends Dynamic> getDynamic();
 }

@@ -5,7 +5,7 @@ import java.util.TreeMap;
 
 import eu.ha3.matmos.engine0.core.implem.LongFloatSimplificator;
 import eu.ha3.matmos.engine0.core.interfaces.SheetIndex;
-import eu.ha3.matmos.engine0.game.data.abstractions.module.ModuleProcessor;
+import eu.ha3.matmos.game.data.abstractions.module.ModuleProcessor;
 
 /*
 --filenotes-placeholder
@@ -270,8 +270,8 @@ public class LegacySheetIndex_Engine0to1 implements SheetIndex
 			this.index = index;
 		}
 		
-		this.isItem = this.items.containsKey(sheet + "@@@" + index);
-		this.isBlock = this.blocks.containsKey(sheet + "@@@" + index);
+		this.isItem = LegacySheetIndex_Engine0to1.items.containsKey(sheet + "@@@" + index);
+		this.isBlock = LegacySheetIndex_Engine0to1.blocks.containsKey(sheet + "@@@" + index);
 		
 	}
 	

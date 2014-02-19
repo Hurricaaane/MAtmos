@@ -56,31 +56,31 @@ public class Providers implements ProviderCollection
 	}
 	
 	@Override
-	public Provider getCondition()
+	public Provider<? extends Condition> getCondition()
 	{
 		return this.conditionProvider;
 	}
 	
 	@Override
-	public Provider getJunction()
+	public Provider<? extends Junction> getJunction()
 	{
 		return this.junctionProvider;
 	}
 	
 	@Override
-	public Provider getMachine()
+	public Provider<? extends Machine> getMachine()
 	{
 		return this.machineProvider;
 	}
 	
 	@Override
-	public Provider getEvent()
+	public Provider<? extends Event> getEvent()
 	{
 		return this.eventProvider;
 	}
 	
 	@Override
-	public Provider getDynamic()
+	public Provider<? extends Dynamic> getDynamic()
 	{
 		return this.dynamicProvider;
 	}

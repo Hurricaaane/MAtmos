@@ -35,11 +35,11 @@ import eu.ha3.matmos.engine0.core.implem.TimedEventInformation;
 import eu.ha3.matmos.engine0.core.implem.abstractions.ProviderCollection;
 import eu.ha3.matmos.engine0.core.interfaces.Named;
 import eu.ha3.matmos.engine0.core.interfaces.SheetIndex;
-import eu.ha3.matmos.v170helper.Jason;
-import eu.ha3.matmos.v170helper.Jason.Blob;
-import eu.ha3.matmos.v170helper.Jason.Plot;
-import eu.ha3.matmos.v170helper.Jason.Uniq;
-import eu.ha3.matmos.v170helper.Version170Helper;
+import eu.ha3.matmos.game.system.MAtmosUtility;
+import eu.ha3.matmos.jason.Jason;
+import eu.ha3.matmos.jason.Jason.Blob;
+import eu.ha3.matmos.jason.Jason.Plot;
+import eu.ha3.matmos.jason.Jason.Uniq;
 
 /* x-placeholder */
 
@@ -221,11 +221,11 @@ public class LegacyXMLExpansions_Engine1
 				int il = (int) (long) l;
 				if (Block.func_149729_e(il) != null)
 				{
-					asBlock.add(Version170Helper.nameOf(Block.func_149729_e(il)));
+					asBlock.add(MAtmosUtility.nameOf(Block.func_149729_e(il)));
 				}
 				if (Item.func_150899_d(il) != null)
 				{
-					asItem.add(Version170Helper.nameOf(Item.func_150899_d(il)));
+					asItem.add(MAtmosUtility.nameOf(Item.func_150899_d(il)));
 				}
 			}
 		}
@@ -294,7 +294,7 @@ public class LegacyXMLExpansions_Engine1
 			if (o != null && o instanceof Block)
 			{
 				//String ocst = index;
-				index = Version170Helper.nameOf((Block) o);
+				index = MAtmosUtility.nameOf((Block) o);
 				//System.out.println("Converted index from " + ocst + " to " + index);
 			}
 			else
@@ -338,7 +338,6 @@ public class LegacyXMLExpansions_Engine1
 		}
 		joson(JasonExpansions_Engine1.ROOT_SET).put(name, Jason.blob("yes", yes, "no", no));
 		
-		@SuppressWarnings("unchecked")
 		Named element = new Junction(name, this.providers.getCondition(), yes, no);
 		this.elements.add(element);
 	}
@@ -375,7 +374,6 @@ public class LegacyXMLExpansions_Engine1
 		this.elements.add(element);
 	}
 	
-	@SuppressWarnings("unchecked")
 	private void parseXMLmachine(Element capsule, String name)
 	{
 		List<TimedEvent> events = new ArrayList<TimedEvent>();
@@ -433,7 +431,6 @@ public class LegacyXMLExpansions_Engine1
 		return new TimedEvent(eventname, vol_mod, pitch_mod, delay_min, delay_max, delay_start);
 	}
 	
-	@SuppressWarnings("unchecked")
 	private StreamInformation inscriptXMLstream(Element specs, String machineName)
 	{
 		String _PATH = eltString(PATH, specs);

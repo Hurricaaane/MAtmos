@@ -50,7 +50,7 @@ public class TimedEvent implements TimedEventInterface
 	}
 	
 	@Override
-	public void play(Provider<Event> eventProvider, ReferenceTime time, float fadeFactor)
+	public void play(Provider<? extends Event> eventProvider, ReferenceTime time, float fadeFactor)
 	{
 		if (time.getMilliseconds() < this.nextPlayTime)
 			return;

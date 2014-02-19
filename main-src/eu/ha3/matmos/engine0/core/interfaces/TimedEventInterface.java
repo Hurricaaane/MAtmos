@@ -10,5 +10,5 @@ public interface TimedEventInterface
 {
 	public void restart(ReferenceTime time);
 	
-	public void play(Provider<Event> eventProvider, ReferenceTime time, float fadeFactor);
+	public void play(Provider<? extends Event> eventProvider, ReferenceTime time, float fadeFactor);
 }
