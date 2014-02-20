@@ -30,7 +30,7 @@ public class MAtmosConvLogger
 	
 	public static void warning(String message)
 	{
-		print(message, "WARNING", WARNING);
+		printErr(message, "WARNING", WARNING);
 	}
 	
 	public static void severe(String message)

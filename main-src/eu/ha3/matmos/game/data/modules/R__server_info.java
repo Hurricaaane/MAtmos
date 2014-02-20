@@ -16,9 +16,6 @@ import eu.ha3.matmos.engine0.core.interfaces.Data;
 import eu.ha3.matmos.expansions.MAtmosConvLogger;
 import eu.ha3.matmos.game.data.abstractions.module.Module;
 import eu.ha3.matmos.game.data.abstractions.module.ModuleProcessor;
-import eu.ha3.matmos.game.system.IDontKnowHowToCode;
-import eu.ha3.matmos.game.system.MAtMod;
-import eu.ha3.mc.haddon.PrivateAccessException;
 
 /*
 --filenotes-placeholder
@@ -26,16 +23,12 @@ import eu.ha3.mc.haddon.PrivateAccessException;
 
 public class R__server_info extends ModuleProcessor implements Module
 {
-	private final MAtMod mod;
-	
 	private final Map<String, Integer> serverAddresses;
 	private final Map<String, Integer> serverPorts;
 	
-	public R__server_info(Data data, MAtMod mod)
+	public R__server_info(Data data)
 	{
-		super(data, "server_info");
-		
-		this.mod = mod;
+		super(data, "server_info", true);
 		
 		this.serverAddresses = new HashMap<String, Integer>();
 		this.serverPorts = new HashMap<String, Integer>();
@@ -44,15 +37,7 @@ public class R__server_info extends ModuleProcessor implements Module
 	@Override
 	protected void doProcess()
 	{
-		ServerData serverData = null;
-		try
-		{
-			serverData = (ServerData) this.mod.util().getPrivate(Minecraft.getMinecraft(), "serverData");
-		}
-		catch (PrivateAccessException e)
-		{
-			IDontKnowHowToCode.whoops__printExceptionToChat(this.mod.getChatter(), e, this);
-		}
+		ServerData serverData = Minecraft.getMinecraft().func_147104_D();
 		
 		if (serverData != null && serverData.serverIP != null)
 		{

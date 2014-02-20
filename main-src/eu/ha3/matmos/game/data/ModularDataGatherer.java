@@ -10,6 +10,7 @@ import java.util.TreeSet;
 import eu.ha3.matmos.engine0.core.implem.GenericSheet;
 import eu.ha3.matmos.engine0.core.implem.SelfGeneratingData;
 import eu.ha3.matmos.engine0.core.interfaces.Data;
+import eu.ha3.matmos.engine0.debug.DumpData;
 import eu.ha3.matmos.expansions.MAtmosConvLogger;
 import eu.ha3.matmos.game.data.abstractions.Collector;
 import eu.ha3.matmos.game.data.abstractions.Processor;
@@ -21,6 +22,7 @@ import eu.ha3.matmos.game.data.abstractions.scanner.Progress;
 import eu.ha3.matmos.game.data.abstractions.scanner.ScannerModule;
 import eu.ha3.matmos.game.data.modules.L__legacy;
 import eu.ha3.matmos.game.data.modules.L__legacy_hitscan;
+import eu.ha3.matmos.game.data.modules.L__legacy_random;
 import eu.ha3.matmos.game.data.modules.L__meta_mod;
 import eu.ha3.matmos.game.data.modules.M__cb_column;
 import eu.ha3.matmos.game.data.modules.M__cb_light;
@@ -33,6 +35,8 @@ import eu.ha3.matmos.game.data.modules.M__ply_stats;
 import eu.ha3.matmos.game.data.modules.M__ride_motion;
 import eu.ha3.matmos.game.data.modules.M__w_biome;
 import eu.ha3.matmos.game.data.modules.M__w_general;
+import eu.ha3.matmos.game.data.modules.R__server_info;
+import eu.ha3.matmos.game.data.modules.S__detect;
 import eu.ha3.matmos.game.data.modules.S__ench_armor;
 import eu.ha3.matmos.game.data.modules.S__ench_current;
 import eu.ha3.matmos.game.data.modules.S__potion_duration;
@@ -107,8 +111,9 @@ public class ModularDataGatherer implements Collector, Processor
 	{
 		this.data = new SelfGeneratingData(GenericSheet.class);
 		
-		addModule(new L__legacy(this.data));
 		addModule(new L__legacy_hitscan(this.data));
+		addModule(new L__legacy_random(this.data));
+		addModule(new L__legacy(this.data));
 		addModule(new L__meta_mod(this.data, this.mod));
 		addModule(new M__cb_column(this.data));
 		addModule(new M__cb_light(this.data));
@@ -121,12 +126,19 @@ public class ModularDataGatherer implements Collector, Processor
 		addModule(new M__ride_motion(this.data));
 		addModule(new M__w_biome(this.data, this.mod), 20);
 		addModule(new M__w_general(this.data));
+		addModule(new R__server_info(this.data), 200);
+		addModule(new S__detect(this.data, this, "detect_mindist", "detect_radius", 256, 2, 5, 10, 20, 50));
 		addModule(new S__ench_armor(this.data, 0));
 		addModule(new S__ench_armor(this.data, 1));
 		addModule(new S__ench_armor(this.data, 2));
 		addModule(new S__ench_armor(this.data, 3));
 		addModule(new S__ench_current(this.data));
+		addModule(new S__potion_duration(this.data));
+		addModule(new S__potion_power(this.data));
 		addModule(new S__scan_contact(this.data));
+		
+		//this.frequent.add(new MAtProcessorEntityDetector(
+		//	this.mod, this.data, "DetectMinDist", "Detect", "_Deltas", ENTITYIDS_MAX, 2, 5, 10, 20, 50));
 		
 		this.largeScanner =
 			new ScannerModule(
@@ -134,9 +146,6 @@ public class ModularDataGatherer implements Collector, Processor
 		addModule(this.largeScanner);
 		addModule(new ScannerModule(
 			this.data, "_POM__scan_small", "scan_small", true, -1, 2 /*64*/, 16, 8, 16, 16 * 8 * 16));
-		
-		addModule(new S__potion_power(this.data));
-		addModule(new S__potion_duration(this.data));
 		
 		MAtmosConvLogger.info("Modules initialized.");
 	}
@@ -149,7 +158,10 @@ public class ModularDataGatherer implements Collector, Processor
 	@Override
 	public void process()
 	{
-		for (String requiredModule : this.requiredModules)
+		@SuppressWarnings("unused")
+		Set<String> iterateOver = false ? this.requiredModules : this.modules.keySet();
+		
+		for (String requiredModule : iterateOver)
 		{
 			try
 			{
@@ -164,10 +176,10 @@ public class ModularDataGatherer implements Collector, Processor
 		
 		this.ticksPassed = this.ticksPassed + 1;
 		
-		/*if (this.mod.util().getClientTick() % 40 == 0)
+		if (this.mod.util().getClientTick() % 40 == 0)
 		{
 			System.out.println(DumpData.dumpData(this.data));
-		}*/
+		}
 	}
 	
 	@Override

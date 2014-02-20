@@ -1,4 +1,4 @@
-package eu.ha3.matmos.game.data;
+package eu.ha3.matmos.game.data.modules;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -17,10 +17,11 @@ import eu.ha3.matmos.game.data.abstractions.Collector;
 import eu.ha3.matmos.game.data.abstractions.Processor;
 import eu.ha3.matmos.game.data.abstractions.module.ModuleProcessor;
 import eu.ha3.matmos.game.data.abstractions.module.PassOnceModule;
+import eu.ha3.matmos.game.system.IDontKnowHowToCode;
 
 /* x-placeholder */
 
-public class MAtProcessorEntityDetector implements Processor, PassOnceModule
+public class S__detect implements Processor, PassOnceModule
 {
 	private final Set<String> submodules;
 	private final Collector collector;
@@ -30,18 +31,19 @@ public class MAtProcessorEntityDetector implements Processor, PassOnceModule
 	private int max;
 	
 	private ModuleProcessor mindistModel;
-	private Map<Integer, Double> mindistMappy;
+	private Map<Integer, Double> minimumDistanceReports;
 	
-	private ModuleProcessor[] radiModels;
-	private int[] radi;
-	private Map<Integer, Integer>[] mappies;
+	private ModuleProcessor[] radiusSheets;
+	private int[] radiusValuesSorted;
+	private Map<Integer, Integer>[] entityCount;
 	
 	private int maxel;
 	
 	private boolean isRequired;
 	
+	// TODO 2014-02 
 	@SuppressWarnings("unchecked")
-	public MAtProcessorEntityDetector(
+	public S__detect(
 		Data dataIn, Collector collector, String minDistModule, String radiModulePrefix, int max, int... radiis)
 	{
 		this.collector = collector;
@@ -55,19 +57,19 @@ public class MAtProcessorEntityDetector implements Processor, PassOnceModule
 		};
 		dataIn.getSheet(minDistModule).setDefaultValue("0");
 		this.submodules.add(minDistModule);
-		this.mindistMappy = new HashMap<Integer, Double>();
+		this.minimumDistanceReports = new HashMap<Integer, Double>();
 		
-		this.radiModels = new ModuleProcessor[radiis.length];
-		this.mappies = new Map[radiis.length];
+		this.radiusSheets = new ModuleProcessor[radiis.length];
+		this.entityCount = (Map<Integer, Integer>[]) new Map<?, ?>[radiis.length];
 		
-		this.radi = Arrays.copyOf(radiis, radiis.length);
-		Arrays.sort(this.radi);
-		this.maxel = this.radi[this.radi.length - 1] + 10;
+		this.radiusValuesSorted = Arrays.copyOf(radiis, radiis.length);
+		Arrays.sort(this.radiusValuesSorted);
+		this.maxel = this.radiusValuesSorted[this.radiusValuesSorted.length - 1] + 10;
 		
-		for (int i = 0; i < this.radi.length; i++)
+		for (int i = 0; i < this.radiusValuesSorted.length; i++)
 		{
-			int radiNum = this.radi[i];
-			this.radiModels[i] = new ModuleProcessor(dataIn, radiModulePrefix + radiNum) {
+			int radiNum = this.radiusValuesSorted[i];
+			this.radiusSheets[i] = new ModuleProcessor(dataIn, radiModulePrefix + radiNum) {
 				@Override
 				protected void doProcess()
 				{
@@ -75,7 +77,7 @@ public class MAtProcessorEntityDetector implements Processor, PassOnceModule
 			};
 			dataIn.getSheet(radiModulePrefix + radiNum).setDefaultValue("0");
 			this.submodules.add(radiModulePrefix + radiNum);
-			this.mappies[i] = new HashMap<Integer, Integer>();
+			this.entityCount[i] = new HashMap<Integer, Integer>();
 		}
 		
 		this.bbox = AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
@@ -89,30 +91,27 @@ public class MAtProcessorEntityDetector implements Processor, PassOnceModule
 		
 		this.isRequired = this.collector.requires(this.mindistModel.getModuleName());
 		
-		for (ModuleProcessor processor : this.radiModels)
+		for (ModuleProcessor processor : this.radiusSheets)
 		{
 			this.isRequired = this.isRequired || this.collector.requires(processor.getModuleName());
 		}
-		for (Map<?, ?> mappy : this.mappies)
+		for (Map<Integer, Integer> mappy : this.entityCount)
 		{
 			mappy.clear();
 		}
-		this.mindistMappy.clear();
+		this.minimumDistanceReports.clear();
 	}
 	
 	@Override
-	@SuppressWarnings("unchecked")
 	public void process()
 	{
 		refresh();
 		
 		// XXX: Normally, process() should only run if it's required
 		if (!this.isRequired)
-			return;
-		
-		else
 		{
-			System.err.println("EntityDetector is running but not required. Logic error?");
+			IDontKnowHowToCode.warnOnce("EntityDetector is running but not required. Logic error?");
+			return;
 		}
 		
 		Minecraft mc = Minecraft.getMinecraft();
@@ -124,6 +123,7 @@ public class MAtProcessorEntityDetector implements Processor, PassOnceModule
 		this.bbox.setBounds(x - this.maxel, y - this.maxel, z - this.maxel, x + this.maxel, y + this.maxel, z
 			+ this.maxel);
 		
+		@SuppressWarnings("unchecked")
 		List<Entity> entityList = mc.theWorld.getEntitiesWithinAABB(Entity.class, this.bbox);
 		
 		for (Entity e : entityList)
@@ -134,42 +134,45 @@ public class MAtProcessorEntityDetector implements Processor, PassOnceModule
 				double dy = e.posY - y;
 				double dz = e.posZ - z;
 				
-				double dd = Math.sqrt(dx * dx + dy * dy + dz * dz);
+				double distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 				
 				if (e instanceof EntityPlayer)
 				{
-					mindist(0, dd);
+					reportDistance(0, distance);
 				}
 				else
 				{
-					int eID = EntityList.getEntityID(e);
-					if (eID != 0)
+					int entityID = EntityList.getEntityID(e);
+					if (entityID != 0)
 					{
-						mindist(eID, dd);
+						reportDistance(entityID, distance);
 					}
 				}
 				
 				int i = 0;
-				while (i < this.radi.length)
+				boolean reported = false;
+				while (i < this.radiusValuesSorted.length && !reported)
 				{
-					if (dd <= this.radi[i])
+					if (distance <= this.radiusValuesSorted[i])
 					{
-						for (int j = i; j < this.radi.length; j++)
+						// If something is within 1 meter, it certainly also is within 5 meters:
+						// expand now and exit the loop.
+						for (int above = i; above < this.radiusValuesSorted.length; above++)
 						{
 							if (e instanceof EntityPlayer)
 							{
-								add(j, 0, 1);
+								addToEntityCount(above, 0, 1);
 							}
 							else
 							{
 								int eID = EntityList.getEntityID(e);
 								if (eID != 0)
 								{
-									add(j, eID, 1);
+									addToEntityCount(above, eID, 1);
 								}
 							}
 						}
-						i = this.radi.length;
+						reported = true;
 					}
 					else
 					{
@@ -179,34 +182,35 @@ public class MAtProcessorEntityDetector implements Processor, PassOnceModule
 			}
 		}
 		
-		for (int rr = 0; rr < this.radi.length; rr++)
+		for (int i = 0; i < this.radiusValuesSorted.length; i++)
 		{
-			if (this.collector.requires(this.radiModels[rr].getModuleName()))
+			if (this.collector.requires(this.radiusSheets[i].getModuleName()))
 			{
-				for (int i = 0; i < this.max; i++)
+				for (int entityID = 0; entityID < this.max; entityID++)
 				{
-					if (this.mappies[rr].containsKey(i))
+					if (this.entityCount[i].containsKey(entityID))
 					{
-						this.radiModels[rr].setValueLegacyIntIndexes(i, this.mappies[rr].get(i));
+						this.radiusSheets[i].setValueLegacyIntIndexes(entityID, this.entityCount[i].get(entityID));
 					}
 					else
 					{
-						this.radiModels[rr].setValueLegacyIntIndexes(i, 0);
+						this.radiusSheets[i].setValueLegacyIntIndexes(entityID, 0);
 					}
 				}
 			}
 		}
 		if (this.collector.requires(this.mindistModel.getModuleName()))
 		{
-			for (int i = 0; i < this.max; i++)
+			for (int entityID = 0; entityID < this.max; entityID++)
 			{
-				if (this.mindistMappy.containsKey(i))
+				if (this.minimumDistanceReports.containsKey(entityID))
 				{
-					this.mindistModel.setValueLegacyIntIndexes(i, (int) Math.floor(this.mindistMappy.get(i) * 1000));
+					this.mindistModel.setValueLegacyIntIndexes(
+						entityID, (int) Math.floor(this.minimumDistanceReports.get(entityID) * 1000));
 				}
 				else
 				{
-					this.mindistModel.setValueLegacyIntIndexes(i, Integer.MAX_VALUE);
+					this.mindistModel.setValueLegacyIntIndexes(entityID, Integer.MAX_VALUE);
 				}
 			}
 		}
@@ -216,32 +220,32 @@ public class MAtProcessorEntityDetector implements Processor, PassOnceModule
 		{
 			this.mindistModel.process();
 		}
-		for (int rr = 0; rr < this.radi.length; rr++)
+		for (int i = 0; i < this.radiusValuesSorted.length; i++)
 		{
-			if (this.collector.requires(this.radiModels[rr].getModuleName()))
+			if (this.collector.requires(this.radiusSheets[i].getModuleName()))
 			{
-				this.radiModels[rr].process();
+				this.radiusSheets[i].process();
 			}
 		}
 	}
 	
-	protected void add(int radiIndex, int key, int count)
+	protected void addToEntityCount(int radiIndex, int entityID, int count)
 	{
-		if (this.mappies[radiIndex].containsKey(key))
+		if (this.entityCount[radiIndex].containsKey(entityID))
 		{
-			this.mappies[radiIndex].put(key, this.mappies[radiIndex].get(key) + count);
+			this.entityCount[radiIndex].put(entityID, this.entityCount[radiIndex].get(entityID) + count);
 		}
 		else
 		{
-			this.mappies[radiIndex].put(key, count);
+			this.entityCount[radiIndex].put(entityID, count);
 		}
 	}
 	
-	protected void mindist(int key, double distance)
+	protected void reportDistance(int entityID, double distance)
 	{
-		if (!this.mindistMappy.containsKey(key) || this.mindistMappy.get(key) > distance)
+		if (!this.minimumDistanceReports.containsKey(entityID) || this.minimumDistanceReports.get(entityID) > distance)
 		{
-			this.mindistMappy.put(key, distance);
+			this.minimumDistanceReports.put(entityID, distance);
 		}
 	}
 	

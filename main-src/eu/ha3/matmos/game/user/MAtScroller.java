@@ -38,7 +38,7 @@ public class MAtScroller extends Ha3Scroller
 		Minecraft mc = Minecraft.getMinecraft();
 		FontRenderer fontRenderer = mc.fontRenderer;
 		
-		final String msgper = (int) Math.floor(this.doneValue * 100) + "%";
+		String msgper = (int) Math.floor(this.doneValue * 100) + "%";
 		
 		ScaledResolution screenRes = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
 		
