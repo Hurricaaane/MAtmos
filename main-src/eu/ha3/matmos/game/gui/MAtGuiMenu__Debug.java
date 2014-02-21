@@ -2,6 +2,7 @@ package eu.ha3.matmos.game.gui;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -71,12 +72,18 @@ public class MAtGuiMenu__Debug extends GuiScreen
 	{
 		final int _GAP = 2;
 		final int _UNIT = 20;
-		final int _WIDTH = 155 * 2;
+		final int _ELEMENT_WIDTH = 155 * 2;
 		
 		final int _MIX = _GAP + _UNIT;
 		
-		final int _LEFT = this.width / 2 - _WIDTH / 2;
-		final int _RIGHT = this.width / 2 + _WIDTH / 2;
+		final int _LEFT = this.width / 2 - _ELEMENT_WIDTH / 2;
+		final int _RIGHT = this.width / 2 + _ELEMENT_WIDTH / 2;
+		
+		final int _PREVNEWTWIDTH = _ELEMENT_WIDTH / 3;
+		final int _ASPLIT = 2;
+		final int _AWID = _ELEMENT_WIDTH / _ASPLIT - _GAP * (_ASPLIT - 1) / 2;
+		
+		final int _SEPARATOR = 10;
 		
 		Map<String, Expansion> expansions = this.mod.getExpansionList();
 		int id = 0;
@@ -85,7 +92,8 @@ public class MAtGuiMenu__Debug extends GuiScreen
 			final VolumeUpdatable globalVolumeControl = this.mod.getGlobalVolumeControl();
 			
 			HGuiSliderControl sliderControl =
-				new HGuiSliderControl(id, _LEFT, _MIX, _WIDTH, _UNIT, "", globalVolumeControl.getVolume() * 0.5f);
+				new HGuiSliderControl(
+					id, _LEFT, _MIX, _ELEMENT_WIDTH, _UNIT, "", globalVolumeControl.getVolume() * 0.5f);
 			sliderControl.setListener(new HSliderListener() {
 				@Override
 				public void sliderValueChanged(HGuiSliderControl slider, float value)
@@ -133,7 +141,8 @@ public class MAtGuiMenu__Debug extends GuiScreen
 			
 			HGuiSliderControl sliderControl =
 				new HGuiSliderControl(
-					id, _LEFT + _MIX, _MIX * (id + 1), _WIDTH - _MIX * 2, _UNIT, "", expansion.getVolume() * 0.5f);
+					id, _LEFT + _MIX, _MIX * (id + 1), _ELEMENT_WIDTH - _MIX * 2, _UNIT, "",
+					expansion.getVolume() * 0.5f);
 			sliderControl.setListener(new HSliderListener() {
 				@Override
 				public void sliderValueChanged(HGuiSliderControl slider, float value)
@@ -154,7 +163,7 @@ public class MAtGuiMenu__Debug extends GuiScreen
 				@Override
 				public void sliderReleased(HGuiSliderControl hGuiSliderControl)
 				{
-					if (MAtGuiMenu__Debug.this.mod.getConfig().getBoolean("sound.autopreview"))
+					if (MAtGuiMenu__Debug.this.isAutopreviewEnabled())
 					{
 						expansion.playSample();
 					}
@@ -189,16 +198,25 @@ public class MAtGuiMenu__Debug extends GuiScreen
 			
 			this.buttonList.add(sliderControl);
 			
-			this.buttonList.add(new GuiButton(400 + id - 1, _RIGHT - _UNIT, _MIX * (id + 1), _UNIT, _UNIT, "?"));
+			this.buttonList.add(new GuiButton(Make.make(new ActionPerformed() {
+				@Override
+				public void actionPerformed()
+				{
+					/*if (expansion.isActivated())
+					{
+						expansion.playSample();
+					}*/
+					MAtGuiMenu__Debug.this.mc.displayGuiScreen(new MAtGuiExpansionDetails(
+						MAtGuiMenu__Debug.this, MAtGuiMenu__Debug.this.mod, expansion));
+				}
+			}), _RIGHT - _UNIT, _MIX * (id + 1), _UNIT, _UNIT, "+"));
 			
 			id++;
 			
 		}
 		
-		this.buttonList.add(new GuiButton(220, _RIGHT - _UNIT, _MIX * (this.IDS_PER_PAGE + 2), _UNIT, _UNIT, this.mod
-			.getConfig().getBoolean("sound.autopreview") ? "^o^" : "^_^"));
-		
-		final int _PREVNEWTWIDTH = _WIDTH / 3;
+		this.buttonList.add(new GuiButton(
+			220, _RIGHT - _UNIT, _MIX * (this.IDS_PER_PAGE + 2), _UNIT, _UNIT, isAutopreviewEnabled() ? "^o^" : "^_^"));
 		
 		if (this.pageFromZero != 0)
 		{
@@ -211,11 +229,6 @@ public class MAtGuiMenu__Debug extends GuiScreen
 				202, _RIGHT - _MIX - _PREVNEWTWIDTH, _MIX * (this.IDS_PER_PAGE + 2), _PREVNEWTWIDTH, _UNIT, "Next"));
 		}
 		
-		final int _ASPLIT = 2;
-		final int _AWID = _WIDTH / _ASPLIT - _GAP * (_ASPLIT - 1) / 2;
-		
-		final int _SEPARATOR = 10;
-		
 		this.buttonList.add(new GuiButton(
 			210, _LEFT, _SEPARATOR + _MIX * (this.IDS_PER_PAGE + 3), _AWID, _UNIT, this.mod.getConfig().getBoolean(
 				"start.enabled") ? "Start Enabled: ON" : "Start Enabled: OFF"));
@@ -225,10 +238,11 @@ public class MAtGuiMenu__Debug extends GuiScreen
 				211, _LEFT + _AWID + _GAP, _SEPARATOR + _MIX * (this.IDS_PER_PAGE + 3), _AWID, _UNIT,
 				"Advanced options..."));
 		
-		final int _TURNOFFWIDTH = _WIDTH / 5;
+		final int _TURNOFFWIDTH = _ELEMENT_WIDTH / 5;
 		
-		this.buttonList.add(new GuiButton(200, _LEFT + _MIX, _SEPARATOR + _MIX * (this.IDS_PER_PAGE + 4), _WIDTH
-			- _MIX * 2 - _GAP - _TURNOFFWIDTH, _UNIT, "Done"));
+		this.buttonList.add(new GuiButton(
+			200, _LEFT + _MIX, _SEPARATOR + _MIX * (this.IDS_PER_PAGE + 4), _ELEMENT_WIDTH
+				- _MIX * 2 - _GAP - _TURNOFFWIDTH, _UNIT, "Done"));
 		
 		this.buttonList.add(new GuiButton(212, _RIGHT - _TURNOFFWIDTH - _MIX, _SEPARATOR
 			+ _MIX * (this.IDS_PER_PAGE + 4), _TURNOFFWIDTH, _UNIT, "Turn Off"));
@@ -276,12 +290,15 @@ public class MAtGuiMenu__Debug extends GuiScreen
 		}
 		else if (par1GuiButton.id == 220)
 		{
-			this.mod
-				.getConfig().setProperty("sound.autopreview", !this.mod.getConfig().getBoolean("sound.autopreview"));
-			par1GuiButton.displayString = this.mod.getConfig().getBoolean("sound.autopreview") ? "^o^" : "^_^";
+			this.mod.getConfig().setProperty("sound.autopreview", !isAutopreviewEnabled());
+			par1GuiButton.displayString = isAutopreviewEnabled() ? "^o^" : "^_^";
 			this.mod.saveConfig();
 		}
-		else if (par1GuiButton.id >= 400)
+		else
+		{
+			Make.perform(par1GuiButton.id);
+		}
+		/*else if (par1GuiButton.id >= 400)
 		{
 			int id = par1GuiButton.id - 400;
 			Expansion expansion = this.expansionList.get(id);
@@ -289,11 +306,14 @@ public class MAtGuiMenu__Debug extends GuiScreen
 			if (expansion.isActivated())
 			{
 				expansion.playSample();
-				
 			}
-			
-		}
+		}*/
 		
+	}
+	
+	private boolean isAutopreviewEnabled()
+	{
+		return this.mod.getConfig().getBoolean("sound.autopreview");
 	}
 	
 	private void aboutToClose()
@@ -337,6 +357,35 @@ public class MAtGuiMenu__Debug extends GuiScreen
 		
 		super.drawScreen(par1, par2, par3);
 		
+	}
+	
+	private static class Make
+	{
+		private static int makeIn = 1000;
+		private static Map<Integer, ActionPerformed> actions = new HashMap<Integer, ActionPerformed>();
+		
+		public static int make(ActionPerformed callback)
+		{
+			int make = makeIn;
+			makeIn = makeIn + 1;
+			
+			Make.actions.put(make, callback);
+			
+			return make;
+		}
+		
+		public static void perform(int action)
+		{
+			if (!Make.actions.containsKey(action))
+				return;
+			
+			Make.actions.get(action).actionPerformed();
+		}
+	}
+	
+	private interface ActionPerformed
+	{
+		public void actionPerformed();
 	}
 	
 }

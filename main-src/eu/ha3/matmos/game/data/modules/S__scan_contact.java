@@ -20,6 +20,7 @@ public class S__scan_contact extends AbstractStringCountModule
 	public S__scan_contact(Data dataIn)
 	{
 		super(dataIn, "block_contact", true);
+		dataIn.getSheet(getModuleName()).setDefaultValue("0");
 	}
 	
 	@Override

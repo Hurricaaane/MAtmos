@@ -1,6 +1,7 @@
 package eu.ha3.matmos.engine0.core.implem;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TreeSet;
@@ -9,11 +10,12 @@ import eu.ha3.matmos.engine0.core.implem.abstractions.DependableComponent;
 import eu.ha3.matmos.engine0.core.implem.abstractions.Provider;
 import eu.ha3.matmos.engine0.core.interfaces.Overrided;
 import eu.ha3.matmos.engine0.core.interfaces.Simulated;
+import eu.ha3.matmos.engine0.core.visualize.VisualizedSpecialDependencies;
 import eu.ha3.matmos.expansions.MAtmosConvLogger;
 
 /* x-placeholder */
 
-public class Machine extends DependableComponent implements Simulated, Overrided
+public class Machine extends DependableComponent implements Simulated, Overrided, VisualizedSpecialDependencies
 {
 	private final List<String> allow;
 	private final List<String> restrict;
@@ -145,5 +147,22 @@ public class Machine extends DependableComponent implements Simulated, Overrided
 	public Collection<String> getDependencies()
 	{
 		return this.dependencies;
+	}
+	
+	@Override
+	public String getFeed()
+	{
+		return "";
+	}
+	
+	@Override
+	public Collection<String> getSpecialDependencies(String type)
+	{
+		if (type.equals("allow"))
+			return this.allow;
+		else if (type.equals("restrict"))
+			return this.restrict;
+		
+		return new HashSet<String>();
 	}
 }

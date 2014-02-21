@@ -62,8 +62,11 @@ public class SoundHelper implements SoundCapabilities
 		if (this.isInterrupt)
 			return;
 		
-		if (this.streaming.containsKey(customName))
-			throw new RuntimeException();
+		if (!this.streaming.containsKey(customName))
+		{
+			IDontKnowHowToCode.warnOnce("Tried to play missing stream " + customName);
+			return;
+		}
 		
 		this.streaming.get(customName).play(fadeIn);
 	}
@@ -74,8 +77,11 @@ public class SoundHelper implements SoundCapabilities
 		if (this.isInterrupt)
 			return;
 		
-		if (this.streaming.containsKey(customName))
-			throw new RuntimeException();
+		if (!this.streaming.containsKey(customName))
+		{
+			IDontKnowHowToCode.warnOnce("Tried to stop missing stream " + customName);
+			return;
+		}
 		
 		this.streaming.get(customName).stop(fadeOut);
 	}

@@ -33,6 +33,7 @@ import eu.ha3.matmos.expansions.Stable;
 import eu.ha3.matmos.expansions.volume.VolumeUpdatable;
 import eu.ha3.matmos.game.data.ModularDataGatherer;
 import eu.ha3.matmos.game.data.abstractions.scanner.Progress;
+import eu.ha3.matmos.game.debug.ExpansionDebug;
 import eu.ha3.matmos.game.user.MAtUserControl;
 import eu.ha3.mc.haddon.Identity;
 import eu.ha3.mc.haddon.OperatorCaster;
@@ -77,6 +78,7 @@ public class MAtMod extends HaddonImpl
 	
 	// Use once
 	private boolean hasFirstTickPassed;
+	private ExpansionDebug debugExpansion;
 	
 	public MAtMod()
 	{
@@ -224,6 +226,19 @@ public class MAtMod extends HaddonImpl
 		if (util().getCurrentScreen() != null && !(util().getCurrentScreen() instanceof GuiChat))
 			return;
 		
+		if (this.debugExpansion == null)
+		{
+			debugScan();
+		}
+		else
+		{
+			this.debugExpansion.onFrame(semi);
+		}
+		
+	}
+	
+	public void debugScan()
+	{
 		@SuppressWarnings("unused")
 		final Sheet sheet = this.dataGatherer.getData().getSheet(true ? "scan_large" : "scan_small");
 		final int ALL = 50;
@@ -335,7 +350,7 @@ public class MAtMod extends HaddonImpl
 			}
 		}
 		
-		MAtmosConvLogger.setRefinedness(MAtmosConvLogger.INFO);
+		MAtmosConvLogger.setRefinedness(MAtmosConvLogger.FINE);
 	}
 	
 	@Override
@@ -472,5 +487,10 @@ public class MAtMod extends HaddonImpl
 	public void saveExpansions()
 	{
 		this.expansionManager.saveConfig();
+	}
+	
+	public void setDebugExpansion(ExpansionDebug debug)
+	{
+		this.debugExpansion = debug;
 	}
 }

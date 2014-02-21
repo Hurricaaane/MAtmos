@@ -1,17 +1,19 @@
 package eu.ha3.matmos.engine0.core.implem;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TreeSet;
 
 import eu.ha3.matmos.engine0.core.implem.abstractions.DependableComponent;
 import eu.ha3.matmos.engine0.core.implem.abstractions.Provider;
+import eu.ha3.matmos.engine0.core.visualize.VisualizedSpecialDependencies;
 import eu.ha3.matmos.expansions.MAtmosConvLogger;
 
 /* x-placeholder */
 
-public class Junction extends DependableComponent
+public class Junction extends DependableComponent implements VisualizedSpecialDependencies
 {
 	private final List<String> yes;
 	private final List<String> no;
@@ -80,5 +82,22 @@ public class Junction extends DependableComponent
 	public Collection<String> getDependencies()
 	{
 		return this.dependencies;
+	}
+	
+	@Override
+	public String getFeed()
+	{
+		return "";
+	}
+	
+	@Override
+	public Collection<String> getSpecialDependencies(String type)
+	{
+		if (type.equals("yes"))
+			return this.yes;
+		else if (type.equals("no"))
+			return this.no;
+		
+		return new HashSet<String>();
 	}
 }

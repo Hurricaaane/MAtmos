@@ -1,0 +1,191 @@
+package eu.ha3.matmos.game.debug;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeMap;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import eu.ha3.matmos.engine0.core.implem.Junction;
+import eu.ha3.matmos.engine0.core.implem.Machine;
+import eu.ha3.matmos.engine0.core.implem.abstractions.Provider;
+import eu.ha3.matmos.engine0.core.implem.abstractions.ProviderCollection;
+import eu.ha3.matmos.engine0.core.interfaces.Dependable;
+import eu.ha3.matmos.engine0.core.visualize.Visualized;
+import eu.ha3.matmos.game.system.IDontKnowHowToCode;
+import eu.ha3.matmos.game.system.MAtMod;
+import eu.ha3.mc.haddon.supporting.SupportsFrameEvents;
+
+/*
+--filenotes-placeholder
+*/
+
+public class ExpansionDebug implements SupportsFrameEvents
+{
+	private final MAtMod mod;
+	private final String ex;
+	
+	private int GAP = 10;
+	
+	public ExpansionDebug(MAtMod mod, String ex)
+	{
+		this.mod = mod;
+		this.ex = ex;
+	}
+	
+	@Override
+	public void onFrame(float semi)
+	{
+		if (!this.mod.getExpansionList().containsKey(this.ex))
+		{
+			IDontKnowHowToCode.warnOnce("Problem getting expansion " + this.ex + " to debug");
+			return;
+		}
+		
+		try
+		{
+			ProviderCollection providers = this.mod.getExpansionList().get(this.ex).obtainProviders();
+			Distances condition = distances(providers.getCondition());
+			Distances junction = distances(providers.getJunction());
+			Distances machine = distances(providers.getMachine());
+			
+			int yyBase = 30;
+			
+			scrub(condition, 20, yyBase);
+			scrub(junction, 400, yyBase);
+			scrub(machine, 600, yyBase);
+			
+			//link(condition, 0, 0, junction, 40, 0);
+			//link(junction, 40, 0, machine, 80, 0);
+		}
+		catch (Exception e)
+		{
+			IDontKnowHowToCode.whoops__printExceptionToChat(this.mod.getChatter(), e, this);
+		}
+		
+	}
+	
+	private void link(Distances reliables, int xR, int yR, Distances dependables, int xD, int yD)
+	{
+		for (String name : dependables.keySet())
+		{
+			int yDapplied = yD + this.GAP * dependables.get(name);
+			Dependable dependable = dependables.dependable(name);
+			
+			if (dependable instanceof Junction)
+			{
+				link(reliables, xR, yR, ((Junction) dependable).getSpecialDependencies("yes"), xD, yDapplied, true);
+				link(reliables, xR, yR, ((Junction) dependable).getSpecialDependencies("no"), xD, yDapplied, false);
+			}
+			else if (dependable instanceof Machine)
+			{
+				link(reliables, xR, yR, ((Junction) dependable).getSpecialDependencies("allow"), xD, yDapplied, true);
+				link(
+					reliables, xR, yR, ((Junction) dependable).getSpecialDependencies("restrict"), xD, yDapplied, false);
+			}
+		}
+	}
+	
+	private void link(
+		Distances reliables, int xR, int yR, Collection<String> dependencies, int xD, int yDapplied, boolean right)
+	{
+		for (String dependency : dependencies)
+		{
+			int yRapplied = yR + this.GAP * reliables.get(dependency);
+			
+			// Equivalent of isOn = isActive; if (!right) isOn = !isOn;
+			boolean isOn = reliables.visualize(dependency).isActive() == right;
+			
+		}
+	}
+	
+	private void scrub(Distances subject, int x, int y)
+	{
+		for (String name : subject.keySet())
+		{
+			Visualized vis = subject.visualize(name);
+			
+			paint(x, y + subject.get(name) * this.GAP, vis);
+		}
+	}
+	
+	private void paint(int x, int y, Visualized vis)
+	{
+		String name = vis.getName();
+		String feed = vis.getFeed();
+		boolean isActive = vis.isActive();
+		
+		Minecraft mc = Minecraft.getMinecraft();
+		FontRenderer fontRenderer = mc.fontRenderer;
+		
+		fontRenderer.drawStringWithShadow(name + "(" + feed + ")", x, y, isActive ? 0x0099FF : 0xFF0000);
+		
+		// PAINT
+	}
+	
+	public Distances distances(Provider<? extends Visualized> provider)
+	{
+		Distances map = new Distances(provider);
+		
+		List<String> list = new ArrayList<String>(provider.keySet());
+		Collections.sort(list);
+		
+		int i = 0;
+		for (String name : list)
+		{
+			map.put(name, i);
+			i = i + 1;
+		}
+		
+		return map;
+	}
+	
+	@SuppressWarnings("serial")
+	private class Distances extends TreeMap<String, Integer>
+	{
+		private Provider<? extends Visualized> provider;
+		
+		public Distances(Provider<? extends Visualized> provider)
+		{
+			super();
+			this.provider = provider;
+		}
+		
+		public Visualized visualize(String name)
+		{
+			return this.provider.get(name);
+		}
+		
+		public Dependable dependable(String name)
+		{
+			Visualized vis = this.provider.get(name);
+			if (vis instanceof Dependable)
+				return (Dependable) vis;
+			
+			return new DependableNullObject();
+		}
+		
+		/**
+		 * A shortcut so that we don't waste time checking for nulls in case a
+		 * dependable doesn't exist
+		 * 
+		 * @author Hurry
+		 * 
+		 */
+		public class DependableNullObject implements Dependable
+		{
+			private Set<String> dep = new HashSet<String>();
+			
+			@Override
+			public Collection<String> getDependencies()
+			{
+				return this.dep;
+			}
+		}
+	}
+	
+}

@@ -25,6 +25,8 @@ public abstract class AbstractPotionQualityModule extends ModuleProcessor implem
 	public AbstractPotionQualityModule(Data data, String name)
 	{
 		super(data, name);
+		data.getSheet(name).setDefaultValue("0");
+		data.getSheet(name + ModuleProcessor.DELTA_SUFFIX).setDefaultValue("0");
 	}
 	
 	@Override
@@ -36,6 +38,7 @@ public abstract class AbstractPotionQualityModule extends ModuleProcessor implem
 		{
 			setValue(i, 0);
 		}
+		this.oldThings.clear();
 		
 		for (Object oeffect : player.getActivePotionEffects())
 		{

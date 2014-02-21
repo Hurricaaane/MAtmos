@@ -19,6 +19,7 @@ import org.w3c.dom.Document;
 import eu.ha3.easy.TimeStatistic;
 import eu.ha3.matmos.engine0.core.implem.Knowledge;
 import eu.ha3.matmos.engine0.core.implem.SystemClock;
+import eu.ha3.matmos.engine0.core.implem.abstractions.ProviderCollection;
 import eu.ha3.matmos.engine0.core.interfaces.Data;
 import eu.ha3.matmos.engine0.core.interfaces.Evaluated;
 import eu.ha3.matmos.engine0.core.interfaces.EventInterface;
@@ -159,7 +160,7 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 		if (!isActivated())
 			return;
 		
-		EventInterface event = (EventInterface) this.knowledge.obtainProviders().getEvent().get("__SAMPLE");
+		EventInterface event = this.knowledge.obtainProviders().getEvent().get("__SAMPLE");
 		if (event != null)
 		{
 			event.playSound(1f, 1f);
@@ -313,5 +314,10 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 	public void interrupt()
 	{
 		this.capabilities.interrupt();
+	}
+	
+	public ProviderCollection obtainProviders()
+	{
+		return this.knowledge.obtainProviders();
 	}
 }

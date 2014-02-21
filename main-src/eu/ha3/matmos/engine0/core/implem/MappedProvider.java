@@ -1,6 +1,7 @@
 package eu.ha3.matmos.engine0.core.implem;
 
 import java.util.Map;
+import java.util.Set;
 
 import eu.ha3.matmos.engine0.core.implem.abstractions.Provider;
 import eu.ha3.matmos.engine0.core.interfaces.Versionned;
@@ -40,5 +41,11 @@ public class MappedProvider<T extends Versionned> implements Provider<T>
 	public T instance()
 	{
 		return null;
+	}
+	
+	@Override
+	public Set<String> keySet()
+	{
+		return this.map.keySet();
 	}
 }

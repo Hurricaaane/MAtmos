@@ -1,5 +1,7 @@
 package eu.ha3.matmos.engine0.core.implem.abstractions;
 
+import java.util.Set;
+
 /*
 --filenotes-placeholder
 */
@@ -38,4 +40,11 @@ public interface Provider<T>
 	 * @return
 	 */
 	public T instance();
+	
+	/**
+	 * Returns the keySet. Use with care, preferably for debugging purposes.
+	 * 
+	 * @return
+	 */
+	public Set<String> keySet();
 }

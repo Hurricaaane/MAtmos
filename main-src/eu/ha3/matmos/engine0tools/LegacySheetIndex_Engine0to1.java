@@ -163,8 +163,11 @@ public class LegacySheetIndex_Engine0to1 implements SheetIndex
 		//
 		
 		setWork("Options");
-		add(0, "legacy_options", "altitudes_high");
-		add(1, "legacy_options", "altitudes_low");
+		add(0, "meta_option", "altitudes_high");
+		add(1, "meta_option", "altitudes_low");
+		
+		setWork("ConfigVars");
+		fillOut(64, "legacy_configvars");
 		
 		// fillOut (done)
 		
@@ -190,24 +193,26 @@ public class LegacySheetIndex_Engine0to1 implements SheetIndex
 		fillOut(256, "potion_duration");
 	}
 	
+	@Deprecated
 	private static void tagAsBlock(int id, String sheet, String index)
 	{
-		blocks.put(sheetWork + "@@@" + id, new LegacyMapping(sheet, index));
+		//blocks.put(sheetWork + "@@@" + id, new LegacyMapping(sheet, index));
 		
-		if (deltaWork != null)
+		/*if (deltaWork != null)
 		{
 			forward.put(deltaWork + "@@@" + id, new LegacyMapping(sheet + ModuleProcessor.DELTA_SUFFIX, index));
-		}
+		}*/
 	}
 	
+	@Deprecated
 	private static void tagAsItem(int id, String sheet, String index)
 	{
-		blocks.put(sheetWork + "@@@" + id, new LegacyMapping(sheet, index));
+		//blocks.put(sheetWork + "@@@" + id, new LegacyMapping(sheet, index));
 		
-		if (deltaWork != null)
+		/*if (deltaWork != null)
 		{
 			forward.put(deltaWork + "@@@" + id, new LegacyMapping(sheet + ModuleProcessor.DELTA_SUFFIX, index));
-		}
+		}*/
 	}
 	
 	public boolean isItem()

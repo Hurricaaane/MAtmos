@@ -20,6 +20,7 @@ public abstract class ModuleProcessor extends ProcessorModel implements Module
 	public static final String DELTA_SUFFIX = "_delta";
 	
 	private final String name;
+	private final boolean usesDelta;
 	
 	public ModuleProcessor(Data data, String name)
 	{
@@ -30,6 +31,7 @@ public abstract class ModuleProcessor extends ProcessorModel implements Module
 	{
 		super(data, name, doNotUseDelta ? null : name + DELTA_SUFFIX);
 		this.name = name;
+		this.usesDelta = !doNotUseDelta;
 	}
 	
 	@Override

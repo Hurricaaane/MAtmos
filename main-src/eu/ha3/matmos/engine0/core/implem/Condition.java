@@ -6,11 +6,13 @@ import java.util.HashSet;
 import eu.ha3.matmos.engine0.core.implem.abstractions.DependableComponent;
 import eu.ha3.matmos.engine0.core.interfaces.SheetCommander;
 import eu.ha3.matmos.engine0.core.interfaces.SheetIndex;
+import eu.ha3.matmos.engine0.core.visualize.VisualizeOperator;
+import eu.ha3.matmos.engine0.core.visualize.Visualized;
 import eu.ha3.matmos.expansions.MAtmosConvLogger;
 
 /* x-placeholder */
 
-public class Condition extends DependableComponent
+public class Condition extends DependableComponent implements Visualized
 {
 	private final SheetIndex indexX;
 	private final Operator operatorX;
@@ -122,5 +124,14 @@ public class Condition extends DependableComponent
 	public Collection<String> getDependencies()
 	{
 		return this.dependencies;
+	}
+	
+	@Override
+	public String getFeed()
+	{
+		String value = (String) this.sheetCommander.get(this.indexX);
+		String op = VisualizeOperator.get(this.operatorX);
+		
+		return this.indexX.getSheet() + ">" + this.indexX.getIndex() + ":[" + value + "] " + op + " " + this.constantX;
 	}
 }

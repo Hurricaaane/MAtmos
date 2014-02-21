@@ -15,7 +15,7 @@ public class S__ench_armor extends AbstractEnchantmentModule
 	
 	public S__ench_armor(Data data, int indexZeroOrdinal)
 	{
-		super(data, "ench_current" + (indexZeroOrdinal + 1));
+		super(data, "ench_armor" + (indexZeroOrdinal + 1));
 		this.zeronth = indexZeroOrdinal;
 	}
 	
