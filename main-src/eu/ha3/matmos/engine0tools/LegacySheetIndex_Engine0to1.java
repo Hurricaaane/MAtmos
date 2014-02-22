@@ -193,26 +193,24 @@ public class LegacySheetIndex_Engine0to1 implements SheetIndex
 		fillOut(256, "potion_duration");
 	}
 	
-	@Deprecated
 	private static void tagAsBlock(int id, String sheet, String index)
 	{
-		//blocks.put(sheetWork + "@@@" + id, new LegacyMapping(sheet, index));
+		blocks.put(sheetWork + "@@@" + id, new LegacyMapping(sheet, index));
 		
-		/*if (deltaWork != null)
+		if (deltaWork != null)
 		{
-			forward.put(deltaWork + "@@@" + id, new LegacyMapping(sheet + ModuleProcessor.DELTA_SUFFIX, index));
-		}*/
+			blocks.put(deltaWork + "@@@" + id, new LegacyMapping(sheet + ModuleProcessor.DELTA_SUFFIX, index));
+		}
 	}
 	
-	@Deprecated
 	private static void tagAsItem(int id, String sheet, String index)
 	{
-		//blocks.put(sheetWork + "@@@" + id, new LegacyMapping(sheet, index));
+		items.put(sheetWork + "@@@" + id, new LegacyMapping(sheet, index));
 		
-		/*if (deltaWork != null)
+		if (deltaWork != null)
 		{
-			forward.put(deltaWork + "@@@" + id, new LegacyMapping(sheet + ModuleProcessor.DELTA_SUFFIX, index));
-		}*/
+			items.put(deltaWork + "@@@" + id, new LegacyMapping(sheet + ModuleProcessor.DELTA_SUFFIX, index));
+		}
 	}
 	
 	public boolean isItem()
@@ -277,7 +275,6 @@ public class LegacySheetIndex_Engine0to1 implements SheetIndex
 		
 		this.isItem = LegacySheetIndex_Engine0to1.items.containsKey(sheet + "@@@" + index);
 		this.isBlock = LegacySheetIndex_Engine0to1.blocks.containsKey(sheet + "@@@" + index);
-		
 	}
 	
 	@Override

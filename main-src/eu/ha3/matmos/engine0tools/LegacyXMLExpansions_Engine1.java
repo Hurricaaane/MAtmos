@@ -1,11 +1,13 @@
 package eu.ha3.matmos.engine0tools;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Random;
 
 import javax.xml.xpath.XPathExpressionException;
 
@@ -17,7 +19,6 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import eu.ha3.matmos.engine0.core.implem.Condition;
 import eu.ha3.matmos.engine0.core.implem.Dynamic;
@@ -45,6 +46,8 @@ import eu.ha3.matmos.jason.Jason.Uniq;
 
 public class LegacyXMLExpansions_Engine1
 {
+	private static final String AS_ITEM = "__AS_ITEM";
+	private static final String AS_BLOCK = "__AS_BLOCK";
 	private static final String NAME = "name";
 	private static final String LIST = "list";
 	
@@ -97,6 +100,7 @@ public class LegacyXMLExpansions_Engine1
 	private Map<Operator, String> serializedSymbols;
 	private Map<String, String> scanDicts;
 	
+	private String UID;
 	private Knowledge knowledgeWorkstation;
 	private List<Named> elements;
 	private ProviderCollection providers;
@@ -142,43 +146,233 @@ public class LegacyXMLExpansions_Engine1
 		this.scanDicts.put("ContactScan", "scan_contact");
 	}
 	
-	///
-	
-	public boolean loadKnowledge(Knowledge original, Document doc)
+	public boolean loadKnowledge_andConvertToJason(
+		String UID, Knowledge original, Document doc, File whereToPutTheJsonFile)
 	{
 		try
 		{
-			parseXML(original, doc);
+			parseXML(UID, original, doc, whereToPutTheJsonFile);
 			return true;
 		}
-		catch (XPathExpressionException e)
-		{
-			e.printStackTrace();
-			return false;
-			
-		}
-		catch (NumberFormatException e)
+		catch (Exception e)
 		{
 			e.printStackTrace();
 			return false;
 		}
 	}
 	
-	private int toInt(String source)
+	private String asBlock(int il)
 	{
-		try
-		{
-			return Integer.parseInt(source);
-		}
-		catch (NumberFormatException e)
-		{
-			return (int) Float.parseFloat(source);
-		}
+		Block block = Block.func_149729_e(il);
+		if (block == null)
+			return null;
+		
+		return MAtmosUtility.nameOf(block);
 	}
 	
-	private Map<String, String> oxDynamic = new HashMap<String, String>();
+	private String asBlock(String longFloatSimplificated)
+	{
+		if (longFloatSimplificated == null)
+			return null;
+		
+		Long l = LongFloatSimplificator.longOf(longFloatSimplificated);
+		if (l == null)
+			return null;
+		
+		return asBlock((int) (long) l);
+	}
 	
-	private void parseXMLdynamic(Element capsule, String name)
+	private String asItem(int il)
+	{
+		Item item = Item.func_150899_d(il);
+		if (item == null)
+			return null;
+		
+		return MAtmosUtility.nameOf(item);
+	}
+	
+	private String asItem(String longFloatSimplificated)
+	{
+		if (longFloatSimplificated == null)
+			return null;
+		
+		Long l = LongFloatSimplificator.longOf(longFloatSimplificated);
+		if (l == null)
+			return null;
+		
+		return asItem((int) (long) l);
+	}
+	
+	private String dynamicSheetHash(String name)
+	{
+		return this.UID.hashCode() % 1000 + "_" + name;
+	}
+	
+	private String eltString(String tagName, Element ele)
+	{
+		return textOf(DomUtil.getChild(ele, tagName));
+	}
+	
+	private TimedEvent inscriptXMLeventTimed(Element specs, Blob eventBlob)
+	{
+		String eventname = eltString(EVENTNAME, specs);
+		String volmod = eltString(VOLMOD, specs);
+		String pitchmod = eltString(PITCHMOD, specs);
+		String delaymin = eltString(DELAYMIN, specs);
+		String delaymax = eltString(DELAYMAX, specs);
+		String delaystart = eltString(DELAYSTART, specs);
+		
+		float vol_mod = volmod != null ? Float.parseFloat(volmod) : 1f;
+		float pitch_mod = pitchmod != null ? Float.parseFloat(pitchmod) : 1f;
+		float delay_min = delaymin != null ? Float.parseFloat(delaymin) : 1f; // 1f is dummy
+		float delay_max = delaymax != null ? Float.parseFloat(delaymax) : 1f; // 1f is dummy
+		float delay_start = delaystart != null ? Float.parseFloat(delaystart) : 1f; // 1f is dummy
+		
+		eventBlob.blob(
+			"vol_mod", vol_mod, "pitch_mod", pitch_mod, "delay_min", delay_min, "delay_max", delay_max, "delay_start",
+			delay_start);
+		
+		return new TimedEvent(
+			eventname, this.providers.getEvent(), vol_mod, pitch_mod, delay_min, delay_max, delay_start);
+	}
+	
+	private StreamInformation inscriptXMLstream(Element specs, String machineName, Blob streamBlob)
+	{
+		String _PATH = eltString(PATH, specs);
+		String _VOLUME = eltString(VOLUME, specs);
+		String _PITCH = eltString(PITCH, specs);
+		String _FADEINTIME = eltString(FADEINTIME, specs);
+		String _FADEOUTTIME = eltString(FADEOUTTIME, specs);
+		String _DELAYBEFOREFADEIN = eltString(DELAYBEFOREFADEIN, specs);
+		String _DELAYBEFOREFADEOUT = eltString(DELAYBEFOREFADEOUT, specs);
+		String _ISLOOPING = eltString(ISLOOPING, specs);
+		String _ISUSINGPAUSE = eltString(ISUSINGPAUSE, specs);
+		
+		String path = _PATH;
+		float vol = _VOLUME != null ? Float.parseFloat(_VOLUME) : 1f;
+		float pitch = _PITCH != null ? Float.parseFloat(_PITCH) : 1f;
+		float fadein = _FADEINTIME != null ? Float.parseFloat(_FADEINTIME) : 1f; // 1f is dummy
+		float fadeout = _FADEOUTTIME != null ? Float.parseFloat(_FADEOUTTIME) : 1f; // 1f is dummy
+		float delay_fadein = _DELAYBEFOREFADEIN != null ? Float.parseFloat(_DELAYBEFOREFADEIN) : 1f; // 1f is dummy
+		float delay_fadeout = _DELAYBEFOREFADEOUT != null ? Float.parseFloat(_DELAYBEFOREFADEOUT) : 1f; // 1f is dummy
+		boolean looping = toInt(_ISLOOPING) == 1;
+		boolean pause = toInt(_ISUSINGPAUSE) == 1;
+		
+		streamBlob.blob(
+			"path", path, "vol", vol, "pitch", pitch, "fadein", fadein, "fadeout", fadeout, "delay_fadein",
+			delay_fadein, "delay_fadeout", delay_fadeout, "looping", looping, "pause", pause);
+		
+		return new StreamInformation(
+			machineName, this.providers.getMachine(), this.providers.getReferenceTime(),
+			this.providers.getSoundRelay(), path, vol, pitch, delay_fadein, delay_fadeout, fadein, fadeout, looping,
+			pause);
+	}
+	
+	/**
+	 * Returns the named blob from the root blob, creating it if it didn't
+	 * exist.
+	 * 
+	 * @param klass
+	 * @return
+	 */
+	private Blob joson(String klass)
+	{
+		if (!this.o_json.containsKey(klass))
+		{
+			this.o_json.put(klass, Jason.blob());
+		}
+		
+		return (Blob) this.o_json.get(klass);
+	}
+	
+	private String nameOf(Element element)
+	{
+		if (element == null)
+			return null;
+		
+		Node nameNode = element.getAttributes().getNamedItem(NAME);
+		if (nameNode == null)
+			return null;
+		
+		return nameNode.getNodeValue();
+	}
+	
+	private void parseXML(String UID, Knowledge original, Document doc, File whereToPutTheJsonFile)
+		throws XPathExpressionException, DOMException
+	{
+		Element elt = doc.getDocumentElement();
+		DomUtil.removeEmptyTextRecursive(elt);
+		
+		this.UID = UID;
+		this.knowledgeWorkstation = original;
+		this.elements = new ArrayList<Named>();
+		this.providers = this.knowledgeWorkstation.obtainProviders();
+		
+		this.o_json = Jason.blob();
+		
+		for (Element capsule : DomUtil.getChildren(elt, DYNAMIC))
+		{
+			if (nameOf(capsule) != null)
+			{
+				parseXML_1_dynamic(capsule, nameOf(capsule));
+			}
+		}
+		for (Element capsule : DomUtil.getChildren(elt, LIST))
+		{
+			if (nameOf(capsule) != null)
+			{
+				parseXML_2_list(capsule, nameOf(capsule));
+			}
+		}
+		for (Element capsule : DomUtil.getChildren(elt, CONDITION))
+		{
+			if (nameOf(capsule) != null)
+			{
+				parseXML_3_condition(capsule, nameOf(capsule));
+			}
+		}
+		for (Element capsule : DomUtil.getChildren(elt, SET))
+		{
+			if (nameOf(capsule) != null)
+			{
+				parseXML_4_set(capsule, nameOf(capsule));
+			}
+		}
+		for (Element capsule : DomUtil.getChildren(elt, EVENT))
+		{
+			if (nameOf(capsule) != null)
+			{
+				parseXML_5_event(capsule, nameOf(capsule));
+			}
+		}
+		for (Element capsule : DomUtil.getChildren(elt, MACHINE))
+		{
+			if (nameOf(capsule) != null)
+			{
+				parseXML_6_machine(capsule, nameOf(capsule));
+			}
+		}
+		
+		System.out.println(Jason.toJson(this.o_json));
+		if (whereToPutTheJsonFile != null)
+		{
+			try
+			{
+				FileWriter write = new FileWriter(whereToPutTheJsonFile);
+				write.append(Jason.toJsonPretty(this.o_json));
+				write.close();
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+		
+		this.knowledgeWorkstation.addKnowledge(this.elements);
+		this.knowledgeWorkstation.compile();
+	}
+	
+	private void parseXML_1_dynamic(Element capsule, String name)
 	{
 		List<SheetIndex> sheetIndexes = new ArrayList<SheetIndex>();
 		
@@ -200,12 +394,11 @@ public class LegacyXMLExpansions_Engine1
 		joson(JasonExpansions_Engine1.ROOT_DYNAMIC).put(
 			name, Jason.blob(JasonExpansions_Engine1.GENERIC_ENTRIES, entries));
 		
-		this.oxDynamic.put(name, new Random().nextInt() + "__" + name);
-		Named element = new Dynamic(this.oxDynamic.get(name), this.providers.getSheetCommander(), sheetIndexes);
+		Named element = new Dynamic(dynamicSheetHash(name), this.providers.getSheetCommander(), sheetIndexes);
 		this.elements.add(element);
 	}
 	
-	private void parseXMLlist(Element capsule, String name)
+	private void parseXML_2_list(Element capsule, String name)
 	{
 		List<String> list = new ArrayList<String>();
 		
@@ -219,27 +412,27 @@ public class LegacyXMLExpansions_Engine1
 			if (l != null)
 			{
 				int il = (int) (long) l;
-				if (Block.func_149729_e(il) != null)
+				if (asBlock(il) != null)
 				{
-					asBlock.add(MAtmosUtility.nameOf(Block.func_149729_e(il)));
+					asBlock.add(asBlock(il));
 				}
-				if (Item.func_150899_d(il) != null)
+				if (asItem(il) != null)
 				{
-					asItem.add(MAtmosUtility.nameOf(Item.func_150899_d(il)));
+					asItem.add(asItem(il));
 				}
 			}
 		}
 		joson(JasonExpansions_Engine1.ROOT_LIST).put(name, Jason.blob(JasonExpansions_Engine1.GENERIC_ENTRIES, list));
 		joson(JasonExpansions_Engine1.ROOT_LIST).put(
-			name + "__as_block", Jason.blob(JasonExpansions_Engine1.GENERIC_ENTRIES, asBlock));
+			name + AS_BLOCK, Jason.blob(JasonExpansions_Engine1.GENERIC_ENTRIES, asBlock));
 		joson(JasonExpansions_Engine1.ROOT_LIST).put(
-			name + "__as_item", Jason.blob(JasonExpansions_Engine1.GENERIC_ENTRIES, asItem));
+			name + AS_ITEM, Jason.blob(JasonExpansions_Engine1.GENERIC_ENTRIES, asItem));
 		
 		Named element = new Possibilities(name, list);
 		this.elements.add(element);
 	}
 	
-	private void parseXMLcondition(Element capsule, String name)
+	private void parseXML_3_condition(Element capsule, String name)
 	{
 		String sheetNotComputed = eltString(SHEET, capsule);
 		String indexNotComputed = eltString(KEY, capsule);
@@ -269,19 +462,150 @@ public class LegacyXMLExpansions_Engine1
 		
 		SheetIndex si =
 			!dynamic ? new LegacySheetIndex_Engine0to1(sheetNotComputed, indexNotComputed) : new SheetEntry(
-				sheetNotComputed, this.oxDynamic.containsKey(indexNotComputed)
-					? this.oxDynamic.get(indexNotComputed) : "__INVALID__" + indexNotComputed);
+				sheetNotComputed, dynamicSheetHash(indexNotComputed));
 		
 		// Get the sheet and index directly from the SheetIndex, because
-		// the LegacySheetIndex computed the new values for us. 
-		Blob blob =
-			Jason.blob(
-				"sheet", si.getSheet(), "index", si.getIndex(), "symbol",
-				this.serializedSymbols.get(this.inverseSymbols.get(symbol)), "value", value);
+		// the LegacySheetIndex computed the new values for us.
 		
-		joson("condition").put(name, blob);
+		String jasonIndexExcludeDynamic = dynamic ? indexNotComputed : si.getIndex();
+		{
+			joson("condition").put(
+				name,
+				Jason.blob(
+					"sheet", si.getSheet(), "index", jasonIndexExcludeDynamic, "symbol",
+					this.serializedSymbols.get(this.inverseSymbols.get(symbol)), "value", value));
+		}
+		if (si instanceof LegacySheetIndex_Engine0to1)
+		{
+			if (((LegacySheetIndex_Engine0to1) si).isBlock() && asBlock(value) != null)
+			{
+				joson("condition").put(
+					name + AS_BLOCK,
+					Jason.blob(
+						"sheet", si.getSheet(), "index", jasonIndexExcludeDynamic, "symbol",
+						this.serializedSymbols.get(this.inverseSymbols.get(symbol)), "value", asBlock(value)));
+			}
+			
+			if (((LegacySheetIndex_Engine0to1) si).isItem() && asItem(value) != null)
+			{
+				joson("condition").put(
+					name + AS_ITEM,
+					Jason.blob(
+						"sheet", si.getSheet(), "index", jasonIndexExcludeDynamic, "symbol",
+						this.serializedSymbols.get(this.inverseSymbols.get(symbol)), "value", asItem(value)));
+			}
+		}
+		
 		Named element =
 			new Condition(name, this.providers.getSheetCommander(), si, this.inverseSymbols.get(symbol), value);
+		this.elements.add(element);
+	}
+	
+	private void parseXML_4_set(Element capsule, String name)
+	{
+		List<String> yes = new ArrayList<String>();
+		List<String> no = new ArrayList<String>();
+		
+		for (Element eelt : DomUtil.getChildren(capsule, TRUEPART))
+		{
+			String truepart = textOf(eelt);
+			yes.add(truepart);
+		}
+		
+		for (Element eelt : DomUtil.getChildren(capsule, FALSEPART))
+		{
+			String falsepart = textOf(eelt);
+			no.add(falsepart);
+		}
+		joson(JasonExpansions_Engine1.ROOT_SET).put(name, Jason.blob("yes", yes, "no", no));
+		
+		Named element = new Junction(name, this.providers.getCondition(), yes, no);
+		this.elements.add(element);
+	}
+	
+	private void parseXML_5_event(Element capsule, String name)
+	{
+		List<String> paths = new ArrayList<String>();
+		
+		String volmin = eltString(VOLMIN, capsule);
+		String volmax = eltString(VOLMAX, capsule);
+		String pitchmin = eltString(PITCHMIN, capsule);
+		String pitchmax = eltString(PITCHMAX, capsule);
+		String metasound = eltString(METASOUND, capsule);
+		
+		float vol_min = volmin != null ? Float.parseFloat(volmin) : 1f;
+		float vol_max = volmax != null ? Float.parseFloat(volmax) : 1f;
+		float pitch_min = pitchmin != null ? Float.parseFloat(pitchmin) : 1f;
+		float pitch_max = pitchmax != null ? Float.parseFloat(pitchmax) : 1f;
+		int distance = metasound != null ? toInt(metasound) : 0;
+		
+		for (Element eelt : DomUtil.getChildren(capsule, PATH))
+		{
+			String path = textOf(eelt);
+			paths.add(path);
+		}
+		joson(JasonExpansions_Engine1.ROOT_EVENT).put(
+			name,
+			Jason.blob(
+				"vol_min", vol_min, "vol_max", vol_max, "pitch_min", pitch_min, "pitch_min", pitch_max, "distance",
+				distance, "paths", paths));
+		
+		Named element =
+			new Event(name, this.providers.getSoundRelay(), paths, vol_min, vol_max, pitch_min, pitch_max, distance);
+		this.elements.add(element);
+	}
+	
+	private void parseXML_6_machine(Element capsule, String name)
+	{
+		Blob blob = Jason.blob();
+		
+		List<TimedEvent> events = new ArrayList<TimedEvent>();
+		Plot eventPlot = Jason.plot();
+		for (Element eelt : DomUtil.getChildren(capsule, EVENTTIMED))
+		{
+			Blob eventBlob = Jason.blob();
+			events.add(inscriptXMLeventTimed(eelt, eventBlob));
+			eventPlot.add(eventBlob);
+		}
+		if (events.size() > 0)
+		{
+			blob.put("event", eventPlot);
+		}
+		
+		StreamInformation stream = null;
+		Blob streamBlob = Jason.blob();
+		for (Element eelt : DomUtil.getChildren(capsule, STREAM))
+		{
+			stream = inscriptXMLstream(eelt, name, streamBlob);
+		}
+		if (stream != null)
+		{
+			blob.put("stream", streamBlob);
+		}
+		
+		List<String> allow = new ArrayList<String>();
+		for (Element eelt : DomUtil.getChildren(capsule, ALLOW))
+		{
+			allow.add(textOf(eelt));
+		}
+		
+		List<String> restrict = new ArrayList<String>();
+		for (Element eelt : DomUtil.getChildren(capsule, RESTRICT))
+		{
+			restrict.add(textOf(eelt));
+		}
+		
+		TimedEventInformation tie = null;
+		if (events.size() > 0)
+		{
+			tie =
+				new TimedEventInformation(name, this.providers.getMachine(), this.providers.getReferenceTime(), events);
+		}
+		
+		blob.blob("allow", allow, "restrict", restrict);
+		joson(JasonExpansions_Engine1.ROOT_MACHINE).put(name, blob);
+		
+		Named element = new Machine(name, this.providers.getJunction(), allow, restrict, tie, stream);
 		this.elements.add(element);
 	}
 	
@@ -320,273 +644,24 @@ public class LegacyXMLExpansions_Engine1
 		
 	}
 	
-	private void parseXMLset(Element capsule, String name)
-	{
-		List<String> yes = new ArrayList<String>();
-		List<String> no = new ArrayList<String>();
-		
-		for (Element eelt : DomUtil.getChildren(capsule, TRUEPART))
-		{
-			String truepart = textOf(eelt);
-			yes.add(truepart);
-		}
-		
-		for (Element eelt : DomUtil.getChildren(capsule, FALSEPART))
-		{
-			String falsepart = textOf(eelt);
-			no.add(falsepart);
-		}
-		joson(JasonExpansions_Engine1.ROOT_SET).put(name, Jason.blob("yes", yes, "no", no));
-		
-		Named element = new Junction(name, this.providers.getCondition(), yes, no);
-		this.elements.add(element);
-	}
-	
-	private void parseXMLevent(Element capsule, String name)
-	{
-		List<String> paths = new ArrayList<String>();
-		
-		String volmin = eltString(VOLMIN, capsule);
-		String volmax = eltString(VOLMAX, capsule);
-		String pitchmin = eltString(PITCHMIN, capsule);
-		String pitchmax = eltString(PITCHMAX, capsule);
-		String metasound = eltString(METASOUND, capsule);
-		
-		float vol_min = volmin != null ? Float.parseFloat(volmin) : 1f;
-		float vol_max = volmax != null ? Float.parseFloat(volmax) : 1f;
-		float pitch_min = pitchmin != null ? Float.parseFloat(pitchmin) : 1f;
-		float pitch_max = pitchmax != null ? Float.parseFloat(pitchmax) : 1f;
-		int distance = metasound != null ? toInt(metasound) : 0;
-		
-		for (Element eelt : DomUtil.getChildren(capsule, PATH))
-		{
-			String path = textOf(eelt);
-			paths.add(path);
-		}
-		joson("event").put(
-			name,
-			Jason.blob(
-				"vol_min", vol_min, "vol_max", vol_max, "pitch_min", pitch_min, "pitch_min", pitch_max, "distance",
-				distance, "paths", paths));
-		
-		Named element =
-			new Event(name, this.providers.getSoundRelay(), paths, vol_min, vol_max, pitch_min, pitch_max, distance);
-		this.elements.add(element);
-	}
-	
-	private void parseXMLmachine(Element capsule, String name)
-	{
-		List<TimedEvent> events = new ArrayList<TimedEvent>();
-		for (Element eelt : DomUtil.getChildren(capsule, EVENTTIMED))
-		{
-			events.add(inscriptXMLeventTimed(eelt));
-		}
-		
-		StreamInformation stream = null;
-		for (Element eelt : DomUtil.getChildren(capsule, STREAM))
-		{
-			stream = inscriptXMLstream(eelt, name);
-		}
-		
-		List<String> allow = new ArrayList<String>();
-		for (Element eelt : DomUtil.getChildren(capsule, ALLOW))
-		{
-			allow.add(textOf(eelt));
-		}
-		
-		List<String> restrict = new ArrayList<String>();
-		for (Element eelt : DomUtil.getChildren(capsule, RESTRICT))
-		{
-			restrict.add(textOf(eelt));
-		}
-		
-		TimedEventInformation tie = null;
-		if (events.size() > 0)
-		{
-			tie =
-				new TimedEventInformation(name, this.providers.getMachine(), this.providers.getReferenceTime(), events);
-		}
-		
-		Named element = new Machine(name, this.providers.getJunction(), allow, restrict, tie, stream);
-		this.elements.add(element);
-	}
-	
-	private TimedEvent inscriptXMLeventTimed(Element specs)
-	{
-		String eventname = eltString(EVENTNAME, specs);
-		String volmod = eltString(VOLMOD, specs);
-		String pitchmod = eltString(PITCHMOD, specs);
-		String delaymin = eltString(DELAYMIN, specs);
-		String delaymax = eltString(DELAYMAX, specs);
-		String delaystart = eltString(DELAYSTART, specs);
-		
-		float vol_mod = volmod != null ? Float.parseFloat(volmod) : 1f;
-		float pitch_mod = pitchmod != null ? Float.parseFloat(pitchmod) : 1f;
-		float delay_min = delaymin != null ? Float.parseFloat(delaymin) : 1f; // 1f is dummy
-		float delay_max = delaymax != null ? Float.parseFloat(delaymax) : 1f; // 1f is dummy
-		float delay_start = delaystart != null ? Float.parseFloat(delaystart) : 1f; // 1f is dummy
-		
-		return new TimedEvent(
-			eventname, this.providers.getEvent(), vol_mod, pitch_mod, delay_min, delay_max, delay_start);
-	}
-	
-	private StreamInformation inscriptXMLstream(Element specs, String machineName)
-	{
-		String _PATH = eltString(PATH, specs);
-		String _VOLUME = eltString(VOLUME, specs);
-		String _PITCH = eltString(PITCH, specs);
-		String _FADEINTIME = eltString(FADEINTIME, specs);
-		String _FADEOUTTIME = eltString(FADEOUTTIME, specs);
-		String _DELAYBEFOREFADEIN = eltString(DELAYBEFOREFADEIN, specs);
-		String _DELAYBEFOREFADEOUT = eltString(DELAYBEFOREFADEOUT, specs);
-		String _ISLOOPING = eltString(ISLOOPING, specs);
-		String _ISUSINGPAUSE = eltString(ISUSINGPAUSE, specs);
-		
-		float vol = _VOLUME != null ? Float.parseFloat(_VOLUME) : 1f;
-		float pitch = _PITCH != null ? Float.parseFloat(_PITCH) : 1f;
-		float fadein = _FADEINTIME != null ? Float.parseFloat(_FADEINTIME) : 1f; // 1f is dummy
-		float fadeout = _FADEOUTTIME != null ? Float.parseFloat(_FADEOUTTIME) : 1f; // 1f is dummy
-		float delaybeforefadein = _DELAYBEFOREFADEIN != null ? Float.parseFloat(_DELAYBEFOREFADEIN) : 1f; // 1f is dummy
-		float delaybeforefadeout = _DELAYBEFOREFADEOUT != null ? Float.parseFloat(_DELAYBEFOREFADEOUT) : 1f; // 1f is dummy
-		boolean looping = toInt(_ISLOOPING) == 1;
-		boolean pause = toInt(_ISUSINGPAUSE) == 1;
-		
-		return new StreamInformation(
-			machineName, this.providers.getMachine(), this.providers.getReferenceTime(),
-			this.providers.getSoundRelay(), _PATH, vol, pitch, delaybeforefadein, delaybeforefadeout, fadein, fadeout,
-			looping, pause);
-	}
-	
-	/**
-	 * Returns the named blob from the root blob, creating it if it didn't
-	 * exist.
-	 * 
-	 * @param klass
-	 * @return
-	 */
-	private Blob joson(String klass)
-	{
-		if (!this.o_json.containsKey(klass))
-		{
-			this.o_json.put(klass, Jason.blob());
-		}
-		
-		return (Blob) this.o_json.get(klass);
-	}
-	
-	private void parseXML(Knowledge original, Document doc) throws XPathExpressionException, DOMException
-	{
-		Element elt = doc.getDocumentElement();
-		DomUtil.removeEmptyTextRecursive(elt);
-		
-		this.knowledgeWorkstation = original;
-		this.elements = new ArrayList<Named>();
-		this.providers = this.knowledgeWorkstation.obtainProviders();
-		
-		this.o_json = Jason.blob();
-		
-		{
-			NodeList cat = elt.getElementsByTagName(DYNAMIC);
-			for (int i = 0; i < cat.getLength(); i++)
-			{
-				Element capsule = (Element) cat.item(i);
-				Node nameNode = capsule.getAttributes().getNamedItem(NAME);
-				
-				if (nameNode != null)
-				{
-					parseXMLdynamic(capsule, nameNode.getNodeValue());
-				}
-			}
-		}
-		
-		{
-			NodeList cat = elt.getElementsByTagName(LIST);
-			for (int i = 0; i < cat.getLength(); i++)
-			{
-				Element capsule = (Element) cat.item(i);
-				Node nameNode = capsule.getAttributes().getNamedItem(NAME);
-				
-				if (nameNode != null)
-				{
-					parseXMLlist(capsule, nameNode.getNodeValue());
-				}
-			}
-		}
-		
-		{
-			for (Element capsule : DomUtil.getChildren(elt, CONDITION))
-			{
-				Node nameNode = capsule.getAttributes().getNamedItem(NAME);
-				
-				if (nameNode != null)
-				{
-					parseXMLcondition(capsule, nameNode.getNodeValue());
-					
-				}
-			}
-		}
-		
-		{
-			NodeList cat = elt.getElementsByTagName(SET);
-			for (int i = 0; i < cat.getLength(); i++)
-			{
-				Element capsule = (Element) cat.item(i);
-				Node nameNode = capsule.getAttributes().getNamedItem(NAME);
-				
-				if (nameNode != null)
-				{
-					parseXMLset(capsule, nameNode.getNodeValue());
-					
-				}
-			}
-		}
-		
-		{
-			NodeList cat = elt.getElementsByTagName(EVENT);
-			for (int i = 0; i < cat.getLength(); i++)
-			{
-				Element capsule = (Element) cat.item(i);
-				Node nameNode = capsule.getAttributes().getNamedItem(NAME);
-				
-				if (nameNode != null)
-				{
-					parseXMLevent(capsule, nameNode.getNodeValue());
-				}
-			}
-		}
-		
-		{
-			NodeList cat = elt.getElementsByTagName(MACHINE);
-			for (int i = 0; i < cat.getLength(); i++)
-			{
-				Element capsule = (Element) cat.item(i);
-				Node nameNode = capsule.getAttributes().getNamedItem(NAME);
-				
-				if (nameNode != null)
-				{
-					parseXMLmachine(capsule, nameNode.getNodeValue());
-				}
-			}
-			
-		}
-		
-		System.out.println(Jason.toJson(this.o_json));
-		
-		this.knowledgeWorkstation.addKnowledge(this.elements);
-		this.knowledgeWorkstation.compile();
-	}
-	
-	private String eltString(String tagName, Element ele)
-	{
-		return textOf(DomUtil.getChild(ele, tagName));
-	}
-	
 	private String textOf(Element ele)
 	{
 		if (ele == null || ele.getFirstChild() == null)
 			return null;
 		
 		return ele.getFirstChild().getNodeValue();
+	}
+	
+	private int toInt(String source)
+	{
+		try
+		{
+			return Integer.parseInt(source);
+		}
+		catch (NumberFormatException e)
+		{
+			return (int) Float.parseFloat(source);
+		}
 	}
 	
 }
