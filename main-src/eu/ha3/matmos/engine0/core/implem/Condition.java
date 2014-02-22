@@ -75,13 +75,7 @@ public class Condition extends DependableComponent implements Visualized
 			Long longValue = LongFloatSimplificator.longOf(value);
 			//Float floatValue = LongFloatSimplificator.floatOf(this.constant);
 			
-			if (this.operatorX == Operator.NOT_EQUAL)
-				return !value.equals(this.constantX);
-			
-			else if (this.operatorX == Operator.EQUAL)
-				return value.equals(this.constantX);
-			
-			else if (this.operatorX == Operator.IN_LIST)
+			if (this.operatorX == Operator.IN_LIST)
 				return this.sheetCommander.listHas(this.constantX, value);
 			
 			else if (this.operatorX == Operator.NOT_IN_LIST)
@@ -91,7 +85,19 @@ public class Condition extends DependableComponent implements Visualized
 			{
 				// if (both values are integers), then
 				
-				if (this.operatorX == Operator.GREATER)
+				//
+				
+				// We treat the EQUAL operator separately if it's a number
+				// because we want to make sure the string resolve to
+				// the same number, even though they are different in string format.
+				
+				if (this.operatorX == Operator.NOT_EQUAL)
+					return longValue != this.constantLongX;
+				
+				else if (this.operatorX == Operator.EQUAL)
+					return longValue == this.constantLongX;
+				
+				else if (this.operatorX == Operator.GREATER)
 					return longValue > this.constantLongX;
 				
 				else if (this.operatorX == Operator.GREATER_OR_EQUAL)
@@ -106,6 +112,12 @@ public class Condition extends DependableComponent implements Visualized
 				else
 					return false;
 			}
+			
+			else if (this.operatorX == Operator.NOT_EQUAL)
+				return !value.equals(this.constantX);
+			
+			else if (this.operatorX == Operator.EQUAL)
+				return value.equals(this.constantX);
 			
 			else
 				return false;
