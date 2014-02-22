@@ -2,19 +2,12 @@ package eu.ha3.matmos.expansions;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.w3c.dom.Document;
 
 import eu.ha3.easy.TimeStatistic;
 import eu.ha3.matmos.engine0.core.implem.Knowledge;
@@ -25,7 +18,7 @@ import eu.ha3.matmos.engine0.core.interfaces.Evaluated;
 import eu.ha3.matmos.engine0.core.interfaces.EventInterface;
 import eu.ha3.matmos.engine0.core.interfaces.ReferenceTime;
 import eu.ha3.matmos.engine0.core.interfaces.Simulated;
-import eu.ha3.matmos.engine0tools.LegacyXMLExpansions_Engine1;
+import eu.ha3.matmos.expansions.agents.LoadingAgent;
 import eu.ha3.matmos.expansions.volume.VolumeContainer;
 import eu.ha3.matmos.expansions.volume.VolumeUpdatable;
 import eu.ha3.matmos.game.data.ModularDataGatherer;
@@ -39,12 +32,6 @@ import eu.ha3.util.property.simple.ConfigProperty;
 public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 {
 	private static ReferenceTime TIME = new SystemClock();
-	
-	private DocumentBuilder documentBuilder;
-	private Document document;
-	private Knowledge knowledge;
-	
-	private boolean initializedContents;
 	
 	private ConfigProperty myConfiguration;
 	private boolean isBuilding;
@@ -64,6 +51,11 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 	private final Data data;
 	private final Collector collector;
 	
+	//
+	
+	private Knowledge knowledge; // Knowledge is not final
+	private LoadingAgent agent;
+	
 	public Expansion(
 		ExpansionIdentity identity, Data data, Collector collector, SoundAccessor accessor,
 		VolumeContainer masterVolume, File configurationSource)
@@ -74,10 +66,8 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 		this.data = data;
 		this.collector = collector;
 		
-		this.knowledge = new Knowledge(this.capabilities, TIME);
-		this.knowledge.setData(data);
-		
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		// This generates a dummy knowledge.
+		buildKnowledge();
 		
 		this.myConfiguration = new ConfigProperty();
 		this.myConfiguration.setProperty("volume", 1f);
@@ -93,42 +83,23 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 		}
 		
 		setVolumeAndUpdate(this.myConfiguration.getFloat("volume"));
-		
-		try
-		{
-			this.documentBuilder = dbf.newDocumentBuilder();
-		}
-		catch (ParserConfigurationException e)
-		{
-			throw new RuntimeException(e);
-		}
 	}
 	
-	public void inputStructure(InputStream stream)
+	public void setLoadingAgent(LoadingAgent agent)
 	{
-		this.initializedContents = false;
-		try
-		{
-			this.document = this.documentBuilder.parse(stream);
-			this.initializedContents = true;
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			this.document = null;
-			this.initializedContents = false;
-		}
+		this.agent = agent;
 	}
 	
 	private void buildKnowledge()
 	{
-		if (this.document == null)
+		this.knowledge = new Knowledge(this.capabilities, TIME);
+		this.knowledge.setData(this.data);
+		
+		if (this.agent == null)
 			return;
 		
-		if (!this.initializedContents)
-			return;
-		
-		this.isReady = new LegacyXMLExpansions_Engine1().loadKnowledge(this.knowledge, this.document);
+		this.isReady = this.agent.load(this, this.knowledge);
+		this.knowledge.cacheSounds();
 	}
 	
 	@Override
@@ -166,6 +137,11 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 			event.playSound(1f, 1f);
 		}
 		
+	}
+	
+	public ExpansionIdentity getIdentity()
+	{
+		return this.identity;
 	}
 	
 	public String getName()
@@ -215,16 +191,15 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 		if (this.isBuilding)
 			return;
 		
-		if (!this.isReady && this.initializedContents)
+		if (!this.isReady && this.agent != null)
 		{
 			this.isBuilding = true;
 			
 			TimeStatistic stat = new TimeStatistic(Locale.ENGLISH);
 			buildKnowledge();
-			this.knowledge.cacheSounds();
-			
 			MAtmosConvLogger.info("Expansion "
 				+ this.identity.getUniqueName() + " loaded (" + stat.getSecondsAsString(3) + "s).");
+			
 			this.isBuilding = false;
 		}
 		

@@ -1,7 +1,6 @@
 package eu.ha3.matmos.expansions;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +18,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import eu.ha3.matmos.engine0.core.interfaces.Data;
+import eu.ha3.matmos.expansions.agents.LegacyXMLLoadingAgent;
 import eu.ha3.matmos.expansions.volume.VolumeUpdatable;
 import eu.ha3.matmos.game.data.abstractions.Collector;
 import eu.ha3.matmos.game.system.MAtResourcePackDealer;
@@ -108,22 +108,16 @@ public class ExpansionManager implements VolumeUpdatable, Stable, SupportsTickEv
 	
 	private void addExpansion(ExpansionIdentity identity)
 	{
-		try
-		{
-			String uniqueName = identity.getUniqueName();
-			
-			Expansion expansion =
-				new Expansion(identity, this.data, this.collector, this.accessor, this, new File(
-					this.userconfigFolder, uniqueName + ".cfg"));
-			this.expansions.put(uniqueName, expansion);
-			
-			expansion.inputStructure(identity.getPack().getInputStream(identity.getLocation()));
-			expansion.updateVolume();
-		}
-		catch (IOException e)
-		{
-			MAtmosConvLogger.warning("Error on ExpansionLoader (on expression " + identity.getUniqueName() + ").");
-		}
+		Expansion expansion =
+			new Expansion(identity, this.data, this.collector, this.accessor, this, new File(
+				this.userconfigFolder, identity.getUniqueName() + ".cfg"));
+		this.expansions.put(identity.getUniqueName(), expansion);
+		
+		System.out.println(identity.getLocation().getResourcePath()
+			+ "ends with XML?: " + identity.getLocation().getResourcePath().endsWith(".xml"));
+		expansion.setLoadingAgent(new LegacyXMLLoadingAgent());
+		
+		expansion.updateVolume();
 	}
 	
 	private void synchronizeStable(Expansion expansion)
