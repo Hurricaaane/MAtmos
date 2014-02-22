@@ -358,6 +358,11 @@ public class LegacyXMLExpansions_Engine1
 		{
 			try
 			{
+				if (!whereToPutTheJsonFile.exists())
+				{
+					whereToPutTheJsonFile.createNewFile();
+				}
+				
 				FileWriter write = new FileWriter(whereToPutTheJsonFile);
 				write.append(Jason.toJsonPretty(this.o_json));
 				write.close();

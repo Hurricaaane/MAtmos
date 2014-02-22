@@ -23,6 +23,7 @@ import eu.ha3.matmos.expansions.agents.LegacyXMLLoadingAgent;
 import eu.ha3.matmos.expansions.volume.VolumeUpdatable;
 import eu.ha3.matmos.game.data.abstractions.Collector;
 import eu.ha3.matmos.game.system.MAtResourcePackDealer;
+import eu.ha3.matmos.game.system.MAtmosUtility;
 import eu.ha3.matmos.game.system.SoundAccessor;
 import eu.ha3.mc.haddon.supporting.SupportsFrameEvents;
 import eu.ha3.mc.haddon.supporting.SupportsTickEvents;
@@ -83,7 +84,7 @@ public class ExpansionManager implements VolumeUpdatable, Stable, SupportsTickEv
 				for (JsonElement element : expansions)
 				{
 					JsonObject o = element.getAsJsonObject();
-					String uniqueName = o.get("uniquename").getAsString();
+					String uniqueName = MAtmosUtility.sanitizeUniqueName(o.get("uniquename").getAsString());
 					String friendlyName = o.get("friendlyname").getAsString();
 					String pointer = o.get("pointer").getAsString();
 					ResourceLocation location = new ResourceLocation("matmos", pointer);
@@ -116,7 +117,13 @@ public class ExpansionManager implements VolumeUpdatable, Stable, SupportsTickEv
 		
 		if (identity.getLocation().getResourcePath().endsWith(".xml"))
 		{
-			expansion.setLoadingAgent(new LegacyXMLLoadingAgent());
+			File folder = new File(this.userconfigFolder, "DO NOT EDIT UNLESS COPIED/");
+			if (!folder.exists())
+			{
+				folder.mkdirs();
+			}
+			expansion.setLoadingAgent(new LegacyXMLLoadingAgent(new File(folder, identity.getUniqueName()
+				+ ".json_NO_EDIT")));
 		}
 		else
 		{

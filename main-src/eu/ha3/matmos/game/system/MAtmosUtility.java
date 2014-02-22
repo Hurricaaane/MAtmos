@@ -312,4 +312,9 @@ public class MAtmosUtility
 		// RegistryNamespaced
 		return Block.field_149771_c.func_148757_b(block);
 	}
+	
+	public static String sanitizeUniqueName(String name)
+	{
+		return name.replaceAll("[^a-zA-Z0-9.-_]", "");
+	}
 }

@@ -2,39 +2,27 @@ package eu.ha3.matmos.game.system;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.audio.SoundManager;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-
-import org.apache.commons.lang3.StringUtils;
-
 import paulscode.sound.SoundSystem;
 import eu.ha3.easy.TimeStatistic;
-import eu.ha3.matmos.engine0.core.implem.LongFloatSimplificator;
-import eu.ha3.matmos.engine0.core.interfaces.Sheet;
 import eu.ha3.matmos.expansions.Expansion;
 import eu.ha3.matmos.expansions.ExpansionManager;
 import eu.ha3.matmos.expansions.MAtmosConvLogger;
 import eu.ha3.matmos.expansions.Stable;
 import eu.ha3.matmos.expansions.volume.VolumeUpdatable;
 import eu.ha3.matmos.game.data.ModularDataGatherer;
-import eu.ha3.matmos.game.data.abstractions.scanner.Progress;
-import eu.ha3.matmos.game.debug.ExpansionDebug;
 import eu.ha3.matmos.game.user.MAtUserControl;
+import eu.ha3.matmos.game.user.VisualDebugger;
 import eu.ha3.mc.haddon.Identity;
 import eu.ha3.mc.haddon.OperatorCaster;
 import eu.ha3.mc.haddon.PrivateAccessException;
@@ -42,7 +30,6 @@ import eu.ha3.mc.haddon.implem.HaddonIdentity;
 import eu.ha3.mc.haddon.implem.HaddonImpl;
 import eu.ha3.mc.haddon.supporting.SupportsFrameEvents;
 import eu.ha3.mc.haddon.supporting.SupportsTickEvents;
-import eu.ha3.mc.quick.chat.ChatColorsSimple;
 import eu.ha3.mc.quick.chat.Chatter;
 import eu.ha3.mc.quick.update.NotifiableHaddon;
 import eu.ha3.mc.quick.update.UpdateNotifier;
@@ -75,10 +62,10 @@ public class MAtMod extends HaddonImpl
 	private ExpansionManager expansionManager;
 	private MAtUserControl userControl;
 	private ModularDataGatherer dataGatherer;
+	private VisualDebugger visualDebugger;
 	
 	// Use once
 	private boolean hasFirstTickPassed;
-	private ExpansionDebug debugExpansion;
 	
 	public MAtMod()
 	{
@@ -173,6 +160,7 @@ public class MAtMod extends HaddonImpl
 		
 		this.dataGatherer = new ModularDataGatherer(this);
 		this.dataGatherer.load();
+		this.visualDebugger = new VisualDebugger(this, this.dataGatherer);
 		this.expansionManager.setData(this.dataGatherer.getData());
 		this.expansionManager.setCollector(this.dataGatherer);
 		this.expansionManager.loadExpansions();
@@ -222,135 +210,8 @@ public class MAtMod extends HaddonImpl
 		
 		this.expansionManager.onFrame(semi);
 		this.userControl.onFrame(semi);
+		this.visualDebugger.onFrame(semi);
 		
-		if (util().getCurrentScreen() != null && !(util().getCurrentScreen() instanceof GuiChat))
-			return;
-		
-		if (this.debugExpansion == null)
-		{
-			debugScan();
-		}
-		else
-		{
-			this.debugExpansion.onFrame(semi);
-		}
-		
-	}
-	
-	public void debugScan()
-	{
-		@SuppressWarnings("unused")
-		final Sheet sheet = this.dataGatherer.getData().getSheet(true ? "scan_large" : "scan_small");
-		final int ALL = 50;
-		
-		List<String> sort = new ArrayList<String>(sheet.keySet());
-		try
-		{
-			Collections.sort(sort, new Comparator<String>() {
-				@Override
-				public int compare(String o1, String o2)
-				{
-					Long l1 = LongFloatSimplificator.longOf(sheet.get(o1));
-					Long l2 = LongFloatSimplificator.longOf(sheet.get(o2));
-					
-					if (l1 == null && l2 == null)
-						return o1.compareTo(o2);
-					else if (l1 == null)
-						return -1;
-					else if (l2 == null)
-						return 1;
-					
-					if (l1 > l2)
-						return 1;
-					else if (l1 < l2)
-						return -1;
-					else
-						return o1.compareTo(o2);
-				}
-			});
-			Collections.reverse(sort);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		
-		int total = 0;
-		for (String index : sort)
-		{
-			if (!index.contains("^"))
-			{
-				Long l = LongFloatSimplificator.longOf(sheet.get(index));
-				if (l != null)
-				{
-					total = total + (int) (long) l;
-				}
-			}
-		}
-		
-		Minecraft mc = Minecraft.getMinecraft();
-		FontRenderer fontRenderer = mc.fontRenderer;
-		
-		int lineNumber = 0;
-		
-		Progress progressObject = this.dataGatherer.getLargeScanProgress();
-		float progress = (float) progressObject.getProgress_Current() / progressObject.getProgress_Total();
-		
-		fontRenderer.drawStringWithShadow(
-			"Scan ["
-				+ mc.theWorld.getHeight() + "]: " + StringUtils.repeat("|", (int) (100 * progress)) + " ("
-				+ (int) (progress * 100) + "%)", 20, 2 + 9 * lineNumber, 0xFFFFCC);
-		lineNumber = lineNumber + 1;
-		
-		for (String index : sort)
-		{
-			if (lineNumber <= 100 && !index.contains("^"))
-			{
-				Long count = LongFloatSimplificator.longOf(sheet.get(index));
-				if (count != null)
-				{
-					if (count > 0)
-					{
-						float scalar = (float) count / total;
-						int percentage = Math.round(scalar * 100f);
-						
-						int fill = Math.round(scalar * ALL * 2 /* * 2*/);
-						int superFill = 0;
-						if (fill > ALL * 2)
-						{
-							fill = ALL * 2;
-						}
-						if (fill > ALL)
-						{
-							superFill = fill - ALL;
-						}
-						
-						String bars = "";
-						if (superFill > 0)
-						{
-							bars = bars + ChatColorsSimple.COLOR_YELLOW + StringUtils.repeat("|", superFill);
-						}
-						bars =
-							bars
-								+ eu.ha3.mc.quick.chat.ChatColorsSimple.THEN_RESET
-								+ StringUtils.repeat("|", fill - superFill * 2);
-						
-						if (index.startsWith("minecraft:"))
-						{
-							index = index.substring(10);
-						}
-						
-						fontRenderer.drawStringWithShadow(bars
-							+ (fill == ALL * 2
-								? ChatColorsSimple.COLOR_YELLOW + "++" + ChatColorsSimple.THEN_RESET : "") + " ("
-							+ count + ", " + percentage + "%) " + index, 2, 2 + 9 * lineNumber, 0xFFFFFF);
-						lineNumber = lineNumber + 1;
-					}
-				}
-			}
-		}
-		
-		MAtmosConvLogger.setRefinedness(MAtmosConvLogger.FINE);
 	}
 	
 	@Override
@@ -489,8 +350,8 @@ public class MAtMod extends HaddonImpl
 		this.expansionManager.saveConfig();
 	}
 	
-	public void setDebugExpansion(ExpansionDebug debug)
+	public VisualDebugger getVisualDebugger()
 	{
-		this.debugExpansion = debug;
+		return this.visualDebugger;
 	}
 }

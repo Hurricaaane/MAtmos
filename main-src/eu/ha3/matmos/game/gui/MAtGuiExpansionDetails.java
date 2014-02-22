@@ -64,14 +64,14 @@ public class MAtGuiExpansionDetails extends GuiScreen
 		
 		if (par1GuiButton.id == 200)
 		{
-			this.mod.setDebugExpansion(null);
+			this.mod.getVisualDebugger().debugModeScan("scan_large");
 			
 			// This triggers onGuiClosed
 			mc.displayGuiScreen(this.parentScreen);
 		}
 		else if (par1GuiButton.id == 201)
 		{
-			this.mod.setDebugExpansion(this.debug);
+			this.mod.getVisualDebugger().debugModeExpansion(this.debug);
 			
 			// This triggers onGuiClosed
 			mc.displayGuiScreen(this.parentScreen);
