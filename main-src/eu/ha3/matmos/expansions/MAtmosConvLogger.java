@@ -30,12 +30,12 @@ public class MAtmosConvLogger
 	
 	public static void warning(String message)
 	{
-		printErr(message, "WARNING", WARNING);
+		print(message, "WARNING", WARNING);
 	}
 	
 	public static void severe(String message)
 	{
-		printErr(message, "SEVERE", SEVERE);
+		print(message, "SEVERE", SEVERE);
 	}
 	
 	private static void print(String message, String type, int refinedLevel)

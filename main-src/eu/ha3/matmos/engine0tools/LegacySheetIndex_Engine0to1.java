@@ -98,10 +98,23 @@ public class LegacySheetIndex_Engine0to1 implements SheetIndex
 		add(73, "ride_motion", "z_1k");
 		add(74, "ride_motion", "sqrt_xx_zz");
 		
-		add(36, "cb_column", "y-1");
+		add(36, "legacy_column", "y-1");
+		add(37, "legacy_column", "y-2");
+		add(94, "legacy_column", "y0");
+		add(95, "legacy_column", "y1");
+		
+		tagAsBlock(36, "cb_column", "y-1");
+		tagAsBlock(37, "cb_column", "y-2");
+		tagAsBlock(94, "cb_column", "y0");
+		tagAsBlock(95, "cb_column", "y1");
+		add(36, "legacy_column", "y-1");
+		add(37, "legacy_column", "y-2");
+		add(94, "legacy_column", "y0");
+		add(95, "legacy_column", "y1");
+		/*add(36, "cb_column", "y-1");
 		add(37, "cb_column", "y-2");
 		add(94, "cb_column", "y0");
-		add(95, "cb_column", "y1");
+		add(95, "cb_column", "y1");*/
 		add(27, "cb_column", "topmost_block");
 		add(28, "cb_column", "thickness_overhead");
 		

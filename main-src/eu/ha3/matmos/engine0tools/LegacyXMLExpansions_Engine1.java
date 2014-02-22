@@ -1,5 +1,44 @@
 package eu.ha3.matmos.engine0tools;
 
+import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.CONDITION_SYMBOL;
+import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.CONDITION_VALUE;
+import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.EVENT_DISTANCE;
+import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.EVENT_PATH;
+import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.EVENT_PITCH_MAX;
+import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.EVENT_PITCH_MIN;
+import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.EVENT_VOL_MAX;
+import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.EVENT_VOL_MIN;
+import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.GENERIC_ENTRIES;
+import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.GENERIC_INDEX;
+import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.GENERIC_SHEET;
+import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.MACHINE_ALLOW;
+import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.MACHINE_EVENT;
+import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.MACHINE_RESTRICT;
+import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.MACHINE_STREAM;
+import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.ROOT_CONDITION;
+import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.ROOT_DYNAMIC;
+import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.ROOT_EVENT;
+import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.ROOT_LIST;
+import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.ROOT_MACHINE;
+import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.ROOT_SET;
+import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.SET_NO;
+import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.SET_YES;
+import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.STREAM_DELAY_FADEIN;
+import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.STREAM_DELAY_FADEOUT;
+import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.STREAM_FADEIN;
+import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.STREAM_FADEOUT;
+import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.STREAM_LOOPING;
+import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.STREAM_PATH;
+import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.STREAM_PAUSE;
+import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.STREAM_PITCH;
+import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.STREAM_VOL;
+import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.TIMED_DELAY_MAX;
+import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.TIMED_DELAY_MIN;
+import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.TIMED_DELAY_START;
+import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.TIMED_EVENT;
+import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.TIMED_PITCH_MOD;
+import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.TIMED_VOL_MOD;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -229,8 +268,8 @@ public class LegacyXMLExpansions_Engine1
 		float delay_start = delaystart != null ? Float.parseFloat(delaystart) : 1f; // 1f is dummy
 		
 		eventBlob.blob(
-			"vol_mod", vol_mod, "pitch_mod", pitch_mod, "delay_min", delay_min, "delay_max", delay_max, "delay_start",
-			delay_start);
+			TIMED_EVENT, eventname, TIMED_VOL_MOD, vol_mod, TIMED_PITCH_MOD, pitch_mod, TIMED_DELAY_MIN, delay_min,
+			TIMED_DELAY_MAX, delay_max, TIMED_DELAY_START, delay_start);
 		
 		return new TimedEvent(
 			eventname, this.providers.getEvent(), vol_mod, pitch_mod, delay_min, delay_max, delay_start);
@@ -259,8 +298,9 @@ public class LegacyXMLExpansions_Engine1
 		boolean pause = toInt(_ISUSINGPAUSE) == 1;
 		
 		streamBlob.blob(
-			"path", path, "vol", vol, "pitch", pitch, "fadein", fadein, "fadeout", fadeout, "delay_fadein",
-			delay_fadein, "delay_fadeout", delay_fadeout, "looping", looping, "pause", pause);
+			STREAM_PATH, path, STREAM_VOL, vol, STREAM_PITCH, pitch, STREAM_FADEIN, fadein, STREAM_FADEOUT, fadeout,
+			STREAM_DELAY_FADEIN, delay_fadein, STREAM_DELAY_FADEOUT, delay_fadeout, STREAM_LOOPING, looping,
+			STREAM_PAUSE, pause);
 		
 		return new StreamInformation(
 			machineName, this.providers.getMachine(), this.providers.getReferenceTime(),
@@ -393,11 +433,12 @@ public class LegacyXMLExpansions_Engine1
 				sheet = recomputeScanSheetName(sheet);
 			}
 			
-			entries.add(Jason.blob("sheet", sheet, "index", index));
-			sheetIndexes.add(new LegacySheetIndex_Engine0to1(sheet, index));
+			SheetIndex si = new LegacySheetIndex_Engine0to1(sheet, index);
+			
+			entries.add(Jason.blob(GENERIC_SHEET, si.getSheet(), GENERIC_INDEX, si.getIndex()));
+			sheetIndexes.add(si);
 		}
-		joson(JasonExpansions_Engine1.ROOT_DYNAMIC).put(
-			name, Jason.blob(JasonExpansions_Engine1.GENERIC_ENTRIES, entries));
+		joson(ROOT_DYNAMIC).put(name, Jason.blob(GENERIC_ENTRIES, entries));
 		
 		Named element = new Dynamic(dynamicSheetHash(name), this.providers.getSheetCommander(), sheetIndexes);
 		this.elements.add(element);
@@ -427,11 +468,9 @@ public class LegacyXMLExpansions_Engine1
 				}
 			}
 		}
-		joson(JasonExpansions_Engine1.ROOT_LIST).put(name, Jason.blob(JasonExpansions_Engine1.GENERIC_ENTRIES, list));
-		joson(JasonExpansions_Engine1.ROOT_LIST).put(
-			name + AS_BLOCK, Jason.blob(JasonExpansions_Engine1.GENERIC_ENTRIES, asBlock));
-		joson(JasonExpansions_Engine1.ROOT_LIST).put(
-			name + AS_ITEM, Jason.blob(JasonExpansions_Engine1.GENERIC_ENTRIES, asItem));
+		joson(ROOT_LIST).put(name, Jason.blob(GENERIC_ENTRIES, list));
+		joson(ROOT_LIST).put(name + AS_BLOCK, Jason.blob(GENERIC_ENTRIES, asBlock));
+		joson(ROOT_LIST).put(name + AS_ITEM, Jason.blob(GENERIC_ENTRIES, asItem));
 		
 		Named element = new Possibilities(name, list);
 		this.elements.add(element);
@@ -474,30 +513,30 @@ public class LegacyXMLExpansions_Engine1
 		
 		String jasonIndexExcludeDynamic = dynamic ? indexNotComputed : si.getIndex();
 		{
-			joson("condition").put(
+			joson(ROOT_CONDITION).put(
 				name,
 				Jason.blob(
-					"sheet", si.getSheet(), "index", jasonIndexExcludeDynamic, "symbol",
-					this.serializedSymbols.get(this.inverseSymbols.get(symbol)), "value", value));
+					GENERIC_SHEET, si.getSheet(), GENERIC_INDEX, jasonIndexExcludeDynamic, CONDITION_SYMBOL,
+					this.serializedSymbols.get(this.inverseSymbols.get(symbol)), CONDITION_VALUE, value));
 		}
 		if (si instanceof LegacySheetIndex_Engine0to1)
 		{
 			if (((LegacySheetIndex_Engine0to1) si).isBlock() && asBlock(value) != null)
 			{
-				joson("condition").put(
+				joson(ROOT_CONDITION).put(
 					name + AS_BLOCK,
 					Jason.blob(
-						"sheet", si.getSheet(), "index", jasonIndexExcludeDynamic, "symbol",
-						this.serializedSymbols.get(this.inverseSymbols.get(symbol)), "value", asBlock(value)));
+						GENERIC_SHEET, si.getSheet(), GENERIC_INDEX, jasonIndexExcludeDynamic, CONDITION_SYMBOL,
+						this.serializedSymbols.get(this.inverseSymbols.get(symbol)), CONDITION_VALUE, asBlock(value)));
 			}
 			
 			if (((LegacySheetIndex_Engine0to1) si).isItem() && asItem(value) != null)
 			{
-				joson("condition").put(
+				joson(ROOT_CONDITION).put(
 					name + AS_ITEM,
 					Jason.blob(
-						"sheet", si.getSheet(), "index", jasonIndexExcludeDynamic, "symbol",
-						this.serializedSymbols.get(this.inverseSymbols.get(symbol)), "value", asItem(value)));
+						GENERIC_SHEET, si.getSheet(), GENERIC_INDEX, jasonIndexExcludeDynamic, CONDITION_SYMBOL,
+						this.serializedSymbols.get(this.inverseSymbols.get(symbol)), CONDITION_VALUE, asItem(value)));
 			}
 		}
 		
@@ -522,7 +561,7 @@ public class LegacyXMLExpansions_Engine1
 			String falsepart = textOf(eelt);
 			no.add(falsepart);
 		}
-		joson(JasonExpansions_Engine1.ROOT_SET).put(name, Jason.blob("yes", yes, "no", no));
+		joson(ROOT_SET).put(name, Jason.blob(SET_YES, yes, SET_NO, no));
 		
 		Named element = new Junction(name, this.providers.getCondition(), yes, no);
 		this.elements.add(element);
@@ -549,11 +588,11 @@ public class LegacyXMLExpansions_Engine1
 			String path = textOf(eelt);
 			paths.add(path);
 		}
-		joson(JasonExpansions_Engine1.ROOT_EVENT).put(
+		joson(ROOT_EVENT).put(
 			name,
 			Jason.blob(
-				"vol_min", vol_min, "vol_max", vol_max, "pitch_min", pitch_min, "pitch_min", pitch_max, "distance",
-				distance, "paths", paths));
+				EVENT_VOL_MIN, vol_min, EVENT_VOL_MAX, vol_max, EVENT_PITCH_MIN, pitch_min, EVENT_PITCH_MAX, pitch_max,
+				EVENT_DISTANCE, distance, EVENT_PATH, paths));
 		
 		Named element =
 			new Event(name, this.providers.getSoundRelay(), paths, vol_min, vol_max, pitch_min, pitch_max, distance);
@@ -574,7 +613,7 @@ public class LegacyXMLExpansions_Engine1
 		}
 		if (events.size() > 0)
 		{
-			blob.put("event", eventPlot);
+			blob.put(MACHINE_EVENT, eventPlot);
 		}
 		
 		StreamInformation stream = null;
@@ -585,7 +624,7 @@ public class LegacyXMLExpansions_Engine1
 		}
 		if (stream != null)
 		{
-			blob.put("stream", streamBlob);
+			blob.put(MACHINE_STREAM, streamBlob);
 		}
 		
 		List<String> allow = new ArrayList<String>();
@@ -607,8 +646,8 @@ public class LegacyXMLExpansions_Engine1
 				new TimedEventInformation(name, this.providers.getMachine(), this.providers.getReferenceTime(), events);
 		}
 		
-		blob.blob("allow", allow, "restrict", restrict);
-		joson(JasonExpansions_Engine1.ROOT_MACHINE).put(name, blob);
+		blob.blob(MACHINE_ALLOW, allow, MACHINE_RESTRICT, restrict);
+		joson(ROOT_MACHINE).put(name, blob);
 		
 		Named element = new Machine(name, this.providers.getJunction(), allow, restrict, tie, stream);
 		this.elements.add(element);

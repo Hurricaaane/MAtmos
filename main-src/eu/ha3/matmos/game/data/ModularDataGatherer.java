@@ -21,6 +21,7 @@ import eu.ha3.matmos.game.data.abstractions.processor.ProcessorModel;
 import eu.ha3.matmos.game.data.abstractions.scanner.Progress;
 import eu.ha3.matmos.game.data.abstractions.scanner.ScannerModule;
 import eu.ha3.matmos.game.data.modules.L__legacy;
+import eu.ha3.matmos.game.data.modules.L__legacy_column;
 import eu.ha3.matmos.game.data.modules.L__legacy_hitscan;
 import eu.ha3.matmos.game.data.modules.L__legacy_random;
 import eu.ha3.matmos.game.data.modules.L__meta_mod;
@@ -113,6 +114,7 @@ public class ModularDataGatherer implements Collector, Processor
 	{
 		this.data = new SelfGeneratingData(GenericSheet.class);
 		
+		addModule(new L__legacy_column(this.data));
 		addModule(new L__legacy_hitscan(this.data));
 		addModule(new L__legacy_random(this.data));
 		addModule(new L__legacy(this.data));

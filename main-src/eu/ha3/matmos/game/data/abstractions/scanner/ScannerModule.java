@@ -178,6 +178,14 @@ public class ScannerModule implements PassOnceModule, MAtScanCoordsOps, Progress
 	@Override
 	public void input(int x, int y, int z)
 	{
+		if (Minecraft.getMinecraft().thePlayer.dimension != this.dimension)
+		{
+			this.base.increment("minecraft:air");
+			this.base.increment("minecraft:air^0");
+			this.thousand.increment("minecraft:air");
+			return;
+		}
+		
 		this.base.increment(MAtmosUtility.getNameAt(x, y, z, ""));
 		this.base.increment(MAtmosUtility.getPowerMetaAt(x, y, z, ""));
 		this.thousand.increment(MAtmosUtility.getNameAt(x, y, z, ""));

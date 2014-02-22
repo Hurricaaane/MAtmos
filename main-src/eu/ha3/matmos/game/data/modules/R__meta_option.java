@@ -15,7 +15,7 @@ public class R__meta_option extends ModuleProcessor implements Module
 	
 	public R__meta_option(Data data, MAtMod mod)
 	{
-		super(data, "R__meta_option", true);
+		super(data, "meta_option", true);
 		this.mod = mod;
 	}
 	

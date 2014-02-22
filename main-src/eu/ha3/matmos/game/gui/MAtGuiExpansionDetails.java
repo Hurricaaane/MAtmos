@@ -53,8 +53,9 @@ public class MAtGuiExpansionDetails extends GuiScreen
 		final int _GAP = 2;
 		final int _UNIT = 20;
 		
-		this.buttonList.add(new GuiButton(200, _GAP, _GAP, 100, _UNIT, "Close"));
-		this.buttonList.add(new GuiButton(201, _GAP * 2 + 100, _GAP, 100, _UNIT, "Keep open"));
+		this.buttonList.add(new GuiButton(200, _GAP, _GAP, 70, _UNIT, "Close"));
+		this.buttonList.add(new GuiButton(201, _GAP * 2 + 70, _GAP, 70, _UNIT, "Keep open"));
+		this.buttonList.add(new GuiButton(202, _GAP * 3 + 70 * 2, _GAP, 110, _UNIT, "Reload file"));
 	}
 	
 	@Override
@@ -75,6 +76,10 @@ public class MAtGuiExpansionDetails extends GuiScreen
 			
 			// This triggers onGuiClosed
 			mc.displayGuiScreen(this.parentScreen);
+		}
+		else if (par1GuiButton.id == 202)
+		{
+			this.expansion.refreshKnowledge();
 		}
 	}
 }

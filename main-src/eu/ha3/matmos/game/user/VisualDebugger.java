@@ -139,13 +139,10 @@ public class VisualDebugger implements SupportsFrameEvents
 			Progress progressObject = this.dataGatherer.getLargeScanProgress();
 			float progress = (float) progressObject.getProgress_Current() / progressObject.getProgress_Total();
 			
-			String percent =
-				!this.scanDebug.endsWith(ScannerModule.THOUSAND_SUFFIX)
-					? " (" + (int) (progress * 1000) / 10f + "%)" : "";
-			
 			fontRenderer.drawStringWithShadow(
-				"Scan [" + mc.theWorld.getHeight() + "]: " + StringUtils.repeat("|", (int) (100 * progress)) + percent,
-				20, 2 + 9 * lineNumber, 0xFFFFCC);
+				"Scan ["
+					+ mc.theWorld.getHeight() + "]: " + StringUtils.repeat("|", (int) (100 * progress)) + " ("
+					+ (int) (progress * 100) + "%)", 20, 2 + 9 * lineNumber, 0xFFFFCC);
 		}
 		
 		lineNumber = lineNumber + 1;
@@ -160,7 +157,13 @@ public class VisualDebugger implements SupportsFrameEvents
 					if (count > 0)
 					{
 						float scalar = (float) count / total;
-						int percentage = Math.round(scalar * 100f);
+						String percentage =
+							!this.scanDebug.endsWith(ScannerModule.THOUSAND_SUFFIX) ? Float.toString(Math
+								.round(scalar * 1000f) / 10f) : Integer.toString(Math.round(scalar * 100f));
+						if (percentage.equals("0.0"))
+						{
+							percentage = "0";
+						}
 						
 						int fill = Math.round(scalar * ALL * 2 /* * 2*/);
 						int superFill = 0;

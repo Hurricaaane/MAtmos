@@ -91,7 +91,7 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 		newKnowledge();
 		this.isSuccessfullyBuilt = false;
 		
-		if (reactivate)
+		if (true || reactivate)
 		{
 			activate();
 		}
@@ -161,7 +161,15 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 		if (!this.isActive)
 			return;
 		
-		this.knowledge.simulate();
+		try
+		{
+			this.knowledge.simulate();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			deactivate();
+		}
 	}
 	
 	@Override
@@ -170,7 +178,15 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 		if (!this.isActive)
 			return;
 		
-		this.knowledge.evaluate();
+		try
+		{
+			this.knowledge.evaluate();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			deactivate();
+		}
 	}
 	
 	@Override
