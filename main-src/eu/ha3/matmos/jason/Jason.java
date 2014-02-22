@@ -22,6 +22,12 @@ public class Jason
 		return gson.toJson(blob);
 	}
 	
+	public static String toJsonPretty(Object blob)
+	{
+		Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+		return gson.toJson(blob);
+	}
+	
 	public static Blob blob()
 	{
 		return X.new Blob();
@@ -29,19 +35,7 @@ public class Jason
 	
 	public static Blob blob(Object... oxox)
 	{
-		Blob blob = X.new Blob();
-		
-		if (oxox.length % 2 != 0)
-			throw new RuntimeException("Jason Blob has an odd number of args");
-		
-		int i = 0;
-		while (i < oxox.length)
-		{
-			blob.put(oxox[i].toString(), oxox[i + 1]);
-			i = i + 2;
-		}
-		
-		return blob;
+		return X.new Blob().blob(oxox);
 	}
 	
 	public static Plot plot()
@@ -51,9 +45,7 @@ public class Jason
 	
 	public static Plot plot(Object... ox)
 	{
-		Plot plot = X.new Plot();
-		plot.addAll(Arrays.asList(ox));
-		return plot;
+		return X.new Plot().plot(ox);
 	}
 	
 	public static Uniq uniq()
@@ -63,23 +55,47 @@ public class Jason
 	
 	public static Uniq uniq(Object... ox)
 	{
-		Uniq uniq = X.new Uniq();
-		uniq.addAll(Arrays.asList(ox));
-		return uniq;
+		return X.new Uniq().uniq(ox);
 	}
 	
 	@SuppressWarnings("serial")
 	public class Blob extends LinkedHashMap<String, Object>
 	{
+		public Blob blob(Object... oxox)
+		{
+			if (oxox.length % 2 != 0)
+				throw new RuntimeException("Jason Blob has an odd number of args");
+			
+			int i = 0;
+			while (i < oxox.length)
+			{
+				put(oxox[i].toString(), oxox[i + 1]);
+				i = i + 2;
+			}
+			
+			return this;
+		}
 	}
 	
 	@SuppressWarnings("serial")
 	public class Plot extends ArrayList<Object>
 	{
+		public Plot plot(Object ox)
+		{
+			addAll(Arrays.asList(ox));
+			
+			return this;
+		}
 	}
 	
 	@SuppressWarnings("serial")
 	public class Uniq extends LinkedHashSet<Object>
 	{
+		public Uniq uniq(Object ox)
+		{
+			addAll(Arrays.asList(ox));
+			
+			return this;
+		}
 	}
 }
