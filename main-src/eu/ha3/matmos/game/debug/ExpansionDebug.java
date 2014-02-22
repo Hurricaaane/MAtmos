@@ -48,7 +48,7 @@ public class ExpansionDebug implements SupportsFrameEvents
 		
 		try
 		{
-			ProviderCollection providers = this.mod.getExpansionList().get(this.ex).obtainProviders();
+			ProviderCollection providers = this.mod.getExpansionList().get(this.ex).obtainProvidersForDebugging();
 			Distances condition = distances(providers.getCondition());
 			Distances junction = distances(providers.getJunction());
 			Distances machine = distances(providers.getMachine());

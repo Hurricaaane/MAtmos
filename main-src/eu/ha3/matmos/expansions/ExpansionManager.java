@@ -18,6 +18,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import eu.ha3.matmos.engine0.core.interfaces.Data;
+import eu.ha3.matmos.expansions.agents.JasonLoadingAgent;
 import eu.ha3.matmos.expansions.agents.LegacyXMLLoadingAgent;
 import eu.ha3.matmos.expansions.volume.VolumeUpdatable;
 import eu.ha3.matmos.game.data.abstractions.Collector;
@@ -78,8 +79,8 @@ public class ExpansionManager implements VolumeUpdatable, Stable, SupportsTickEv
 				String jasonString = IOUtils.toString(is, "UTF-8");
 				
 				JsonObject jason = new JsonParser().parse(jasonString).getAsJsonObject();
-				JsonArray versions = jason.get("expansions").getAsJsonArray();
-				for (JsonElement element : versions)
+				JsonArray expansions = jason.get("expansions").getAsJsonArray();
+				for (JsonElement element : expansions)
 				{
 					JsonObject o = element.getAsJsonObject();
 					String uniqueName = o.get("uniquename").getAsString();
@@ -113,9 +114,14 @@ public class ExpansionManager implements VolumeUpdatable, Stable, SupportsTickEv
 				this.userconfigFolder, identity.getUniqueName() + ".cfg"));
 		this.expansions.put(identity.getUniqueName(), expansion);
 		
-		System.out.println(identity.getLocation().getResourcePath()
-			+ "ends with XML?: " + identity.getLocation().getResourcePath().endsWith(".xml"));
-		expansion.setLoadingAgent(new LegacyXMLLoadingAgent());
+		if (identity.getLocation().getResourcePath().endsWith(".xml"))
+		{
+			expansion.setLoadingAgent(new LegacyXMLLoadingAgent());
+		}
+		else
+		{
+			expansion.setLoadingAgent(new JasonLoadingAgent());
+		}
 		
 		expansion.updateVolume();
 	}

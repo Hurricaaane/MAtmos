@@ -33,23 +33,17 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 {
 	private static ReferenceTime TIME = new SystemClock();
 	
-	private ConfigProperty myConfiguration;
-	private boolean isBuilding;
-	
-	private float volume;
-	
-	//
-	
 	private final ExpansionIdentity identity;
-	private final VolumeContainer masterVolume;
-	private final SoundHelperRelay capabilities;
-	
-	private boolean isReady;
-	private boolean isActive;
-	private boolean reliesOnLegacyModules;
-	
 	private final Data data;
 	private final Collector collector;
+	private final SoundHelperRelay capabilities;
+	private final VolumeContainer masterVolume;
+	private final ConfigProperty myConfiguration;
+	
+	private float volume;
+	private boolean isSuccessfullyBuilt;
+	private boolean isActive;
+	private boolean reliesOnLegacyModules;
 	
 	//
 	
@@ -66,8 +60,7 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 		this.data = data;
 		this.collector = collector;
 		
-		// This generates a dummy knowledge.
-		buildKnowledge();
+		newKnowledge();
 		
 		this.myConfiguration = new ConfigProperty();
 		this.myConfiguration.setProperty("volume", 1f);
@@ -90,40 +83,40 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 		this.agent = agent;
 	}
 	
-	private void buildKnowledge()
+	public void refreshKnowledge()
+	{
+		boolean reactivate = isActivated();
+		deactivate();
+		
+		newKnowledge();
+		this.isSuccessfullyBuilt = false;
+		
+		if (reactivate)
+		{
+			activate();
+		}
+	}
+	
+	private void newKnowledge()
 	{
 		this.knowledge = new Knowledge(this.capabilities, TIME);
 		this.knowledge.setData(this.data);
-		
+	}
+	
+	private void buildKnowledge()
+	{
 		if (this.agent == null)
 			return;
 		
-		this.isReady = this.agent.load(this, this.knowledge);
+		newKnowledge();
+		
+		this.isSuccessfullyBuilt = this.agent.load(this.identity, this.knowledge);
+		if (!this.isSuccessfullyBuilt)
+		{
+			newKnowledge();
+		}
+		
 		this.knowledge.cacheSounds();
-	}
-	
-	@Override
-	public void simulate()
-	{
-		if (!this.isReady)
-			return;
-		
-		if (!this.isActive)
-			return;
-		
-		this.knowledge.simulate();
-	}
-	
-	@Override
-	public void evaluate()
-	{
-		if (!this.isReady)
-			return;
-		
-		if (!this.isActive)
-			return;
-		
-		this.knowledge.evaluate();
 	}
 	
 	public void playSample()
@@ -136,12 +129,6 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 		{
 			event.playSound(1f, 1f);
 		}
-		
-	}
-	
-	public ExpansionIdentity getIdentity()
-	{
-		return this.identity;
 	}
 	
 	public String getName()
@@ -163,14 +150,27 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 		}
 	}
 	
-	public boolean isReady()
-	{
-		return this.isReady;
-	}
-	
 	public boolean reliesOnLegacyModules()
 	{
 		return this.reliesOnLegacyModules;
+	}
+	
+	@Override
+	public void simulate()
+	{
+		if (!this.isActive)
+			return;
+		
+		this.knowledge.simulate();
+	}
+	
+	@Override
+	public void evaluate()
+	{
+		if (!this.isActive)
+			return;
+		
+		this.knowledge.evaluate();
 	}
 	
 	@Override
@@ -188,48 +188,46 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 		if (getVolume() <= 0f)
 			return;
 		
-		if (this.isBuilding)
-			return;
-		
-		if (!this.isReady && this.agent != null)
+		if (!this.isSuccessfullyBuilt && this.agent != null)
 		{
-			this.isBuilding = true;
-			
+			MAtmosConvLogger.info("Building expansion " + getName() + "...");
 			TimeStatistic stat = new TimeStatistic(Locale.ENGLISH);
 			buildKnowledge();
-			MAtmosConvLogger.info("Expansion "
-				+ this.identity.getUniqueName() + " loaded (" + stat.getSecondsAsString(3) + "s).");
-			
-			this.isBuilding = false;
+			if (this.isSuccessfullyBuilt)
+			{
+				MAtmosConvLogger.info("Expansion " + getName() + " built (" + stat.getSecondsAsString(3) + "s).");
+			}
+			else
+			{
+				MAtmosConvLogger.warning("Expansion "
+					+ getName() + " failed to build!!! (" + stat.getSecondsAsString(3) + "s).");
+			}
 		}
 		
-		if (this.isReady)
+		if (this.collector != null)
 		{
-			if (this.collector != null)
+			Set<String> requiredModules = this.knowledge.calculateRequiredModules();
+			this.collector.addModuleStack(this.identity.getUniqueName(), requiredModules);
+			
+			MAtmosConvLogger.info("Expansion "
+				+ this.identity.getUniqueName() + " requires " + requiredModules.size() + " found modules: "
+				+ Arrays.toString(requiredModules.toArray()));
+			
+			List<String> legacyModules = new ArrayList<String>();
+			for (String module : requiredModules)
 			{
-				Set<String> requiredModules = this.knowledge.calculateRequiredModules();
-				this.collector.addModuleStack(this.identity.getUniqueName(), requiredModules);
-				
-				MAtmosConvLogger.info("Expansion "
-					+ this.identity.getUniqueName() + " requires " + requiredModules.size() + " found modules: "
-					+ Arrays.toString(requiredModules.toArray()));
-				
-				List<String> legacyModules = new ArrayList<String>();
-				for (String module : requiredModules)
+				if (module.startsWith(ModularDataGatherer.LEGACY_PREFIX))
 				{
-					if (module.startsWith(ModularDataGatherer.LEGACY_PREFIX))
-					{
-						legacyModules.add(module);
-					}
+					legacyModules.add(module);
 				}
-				if (legacyModules.size() > 0)
-				{
-					Collections.sort(legacyModules);
-					MAtmosConvLogger.warning("Expansion "
-						+ this.identity.getUniqueName() + " uses LEGACY modules: "
-						+ Arrays.toString(legacyModules.toArray()));
-					this.reliesOnLegacyModules = true;
-				}
+			}
+			if (legacyModules.size() > 0)
+			{
+				Collections.sort(legacyModules);
+				MAtmosConvLogger.warning("Expansion "
+					+ this.identity.getUniqueName() + " uses LEGACY modules: "
+					+ Arrays.toString(legacyModules.toArray()));
+				this.reliesOnLegacyModules = true;
 			}
 		}
 		
@@ -240,15 +238,12 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 	@Override
 	public void deactivate()
 	{
-		if (!this.isReady)
-			return;
-		
 		if (!this.isActive)
 			return;
 		
-		if (this.data instanceof Collector)
+		if (this.collector != null)
 		{
-			((Collector) this.data).removeModuleStack(this.identity.getUniqueName());
+			this.collector.removeModuleStack(this.identity.getUniqueName());
 		}
 		
 		this.isActive = false;
@@ -259,8 +254,8 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 	{
 		deactivate();
 		this.capabilities.cleanUp();
-		
-		this.isReady = false;
+		newKnowledge();
+		setLoadingAgent(null);
 	}
 	
 	@Override
@@ -291,7 +286,12 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 		this.capabilities.interrupt();
 	}
 	
-	public ProviderCollection obtainProviders()
+	/**
+	 * Obtain the providers of the knowledge, for debugging purposes.
+	 * 
+	 * @return
+	 */
+	public ProviderCollection obtainProvidersForDebugging()
 	{
 		return this.knowledge.obtainProviders();
 	}

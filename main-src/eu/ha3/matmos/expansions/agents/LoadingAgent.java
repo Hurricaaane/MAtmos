@@ -1,7 +1,7 @@
 package eu.ha3.matmos.expansions.agents;
 
 import eu.ha3.matmos.engine0.core.implem.Knowledge;
-import eu.ha3.matmos.expansions.Expansion;
+import eu.ha3.matmos.expansions.ExpansionIdentity;
 
 /*
 --filenotes-placeholder
@@ -9,5 +9,5 @@ import eu.ha3.matmos.expansions.Expansion;
 
 public interface LoadingAgent
 {
-	public boolean load(Expansion expansion, Knowledge knowledge);
+	public boolean load(ExpansionIdentity identity, Knowledge knowledge);
 }

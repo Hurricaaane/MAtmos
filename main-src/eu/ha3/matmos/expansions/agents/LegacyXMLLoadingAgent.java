@@ -9,7 +9,7 @@ import org.w3c.dom.Document;
 
 import eu.ha3.matmos.engine0.core.implem.Knowledge;
 import eu.ha3.matmos.engine0tools.LegacyXMLExpansions_Engine1;
-import eu.ha3.matmos.expansions.Expansion;
+import eu.ha3.matmos.expansions.ExpansionIdentity;
 
 /*
 --filenotes-placeholder
@@ -30,19 +30,17 @@ public class LegacyXMLLoadingAgent implements LoadingAgent
 	}
 	
 	@Override
-	public boolean load(Expansion expansion, Knowledge knowledge)
+	public boolean load(ExpansionIdentity identity, Knowledge knowledge)
 	{
 		try
 		{
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			DocumentBuilder documentBuilder = dbf.newDocumentBuilder();
 			
-			Document document =
-				documentBuilder.parse(expansion
-					.getIdentity().getPack().getInputStream(expansion.getIdentity().getLocation()));
+			Document document = documentBuilder.parse(identity.getPack().getInputStream(identity.getLocation()));
 			
 			return new LegacyXMLExpansions_Engine1().loadKnowledge_andConvertToJason(
-				expansion.getName(), knowledge, document, this.jsonOutput);
+				identity.getUniqueName(), knowledge, document, this.jsonOutput);
 		}
 		catch (Exception e)
 		{
