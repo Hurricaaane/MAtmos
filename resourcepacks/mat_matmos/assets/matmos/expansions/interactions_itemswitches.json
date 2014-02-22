@@ -1,0 +1,714 @@
+{
+  "list": {
+    "Consumable Food": {
+      "entries": [
+        "260",
+        "319",
+        "320",
+        "322",
+        "349",
+        "350",
+        "354",
+        "357",
+        "360",
+        "363",
+        "364",
+        "365",
+        "366",
+        "367",
+        "382",
+        "391",
+        "392",
+        "393",
+        "394",
+        "396"
+      ]
+    },
+    "Consumable Food__AS_BLOCK": {
+      "entries": [
+        "minecraft:air"
+      ]
+    },
+    "Consumable Food__AS_ITEM": {
+      "entries": [
+        "minecraft:apple",
+        "minecraft:porkchop",
+        "minecraft:cooked_porkchop",
+        "minecraft:golden_apple",
+        "minecraft:fish",
+        "minecraft:cooked_fished",
+        "minecraft:cake",
+        "minecraft:cookie",
+        "minecraft:melon",
+        "minecraft:beef",
+        "minecraft:cooked_beef",
+        "minecraft:chicken",
+        "minecraft:cooked_chicken",
+        "minecraft:rotten_flesh",
+        "minecraft:speckled_melon",
+        "minecraft:carrot",
+        "minecraft:potato",
+        "minecraft:baked_potato",
+        "minecraft:poisonous_potato",
+        "minecraft:golden_carrot"
+      ]
+    },
+    "Sword Sharp": {
+      "entries": [
+        "267",
+        "276",
+        "283"
+      ]
+    },
+    "Sword Sharp__AS_BLOCK": {
+      "entries": [
+        "minecraft:air"
+      ]
+    },
+    "Sword Sharp__AS_ITEM": {
+      "entries": [
+        "minecraft:iron_sword",
+        "minecraft:diamond_sword",
+        "minecraft:golden_sword"
+      ]
+    },
+    "Sword Soft": {
+      "entries": [
+        "268",
+        "272"
+      ]
+    },
+    "Sword Soft__AS_BLOCK": {
+      "entries": [
+        "minecraft:air"
+      ]
+    },
+    "Sword Soft__AS_ITEM": {
+      "entries": [
+        "minecraft:wooden_sword",
+        "minecraft:stone_sword"
+      ]
+    },
+    "Tool Sharp": {
+      "entries": [
+        "256",
+        "257",
+        "258",
+        "277",
+        "278",
+        "279",
+        "284",
+        "285",
+        "286",
+        "292",
+        "293",
+        "294"
+      ]
+    },
+    "Tool Sharp__AS_BLOCK": {
+      "entries": [
+        "minecraft:air"
+      ]
+    },
+    "Tool Sharp__AS_ITEM": {
+      "entries": [
+        "minecraft:iron_shovel",
+        "minecraft:iron_pickaxe",
+        "minecraft:iron_axe",
+        "minecraft:diamond_shovel",
+        "minecraft:diamond_pickaxe",
+        "minecraft:diamond_axe",
+        "minecraft:golden_shovel",
+        "minecraft:golden_pickaxe",
+        "minecraft:golden_axe",
+        "minecraft:iron_hoe",
+        "minecraft:diamond_hoe",
+        "minecraft:golden_hoe"
+      ]
+    },
+    "Tool Soft": {
+      "entries": [
+        "269",
+        "270",
+        "271",
+        "273",
+        "274",
+        "275",
+        "290",
+        "291",
+        "346"
+      ]
+    },
+    "Tool Soft__AS_BLOCK": {
+      "entries": [
+        "minecraft:air"
+      ]
+    },
+    "Tool Soft__AS_ITEM": {
+      "entries": [
+        "minecraft:wooden_shovel",
+        "minecraft:wooden_pickaxe",
+        "minecraft:wooden_axe",
+        "minecraft:stone_shovel",
+        "minecraft:stone_pickaxe",
+        "minecraft:stone_axe",
+        "minecraft:wooden_hoe",
+        "minecraft:stone_hoe",
+        "minecraft:fishing_rod"
+      ]
+    },
+    "Utility": {
+      "entries": [
+        "345",
+        "347"
+      ]
+    },
+    "Utility__AS_BLOCK": {
+      "entries": [
+        "minecraft:air"
+      ]
+    },
+    "Utility__AS_ITEM": {
+      "entries": [
+        "minecraft:compass",
+        "minecraft:clock"
+      ]
+    }
+  },
+  "condition": {
+    "Interact Block Stance To Off": {
+      "sheet": "ply_general_delta",
+      "index": "blocking",
+      "symbol": "LESSER",
+      "value": "0"
+    },
+    "Interact Block Stance To On": {
+      "sheet": "ply_general_delta",
+      "index": "blocking",
+      "symbol": "GREATER",
+      "value": "0"
+    },
+    "Interact Bow": {
+      "sheet": "legacy",
+      "index": "player_current_item_as_number",
+      "symbol": "EQUAL",
+      "value": "261"
+    },
+    "Interact Bow__AS_ITEM": {
+      "sheet": "legacy",
+      "index": "player_current_item_as_number",
+      "symbol": "EQUAL",
+      "value": "minecraft:bow"
+    },
+    "Interact Consumable Food": {
+      "sheet": "legacy",
+      "index": "player_current_item_as_number",
+      "symbol": "IN_LIST",
+      "value": "Consumable Food"
+    },
+    "Interact Different Item Select": {
+      "sheet": "legacy_delta",
+      "index": "player_current_item_as_number",
+      "symbol": "NOT_EQUAL",
+      "value": "0"
+    },
+    "Interact Hands": {
+      "sheet": "legacy",
+      "index": "player_current_item_as_number",
+      "symbol": "EQUAL",
+      "value": "-1"
+    },
+    "Interact Hit": {
+      "sheet": "ply_action",
+      "index": "swing_progress16",
+      "symbol": "GREATER",
+      "value": "1"
+    },
+    "Interact Item Select": {
+      "sheet": "ply_inventory_delta",
+      "index": "held_slot",
+      "symbol": "NOT_EQUAL",
+      "value": "0"
+    },
+    "Interact Sword Sharp": {
+      "sheet": "legacy",
+      "index": "player_current_item_as_number",
+      "symbol": "IN_LIST",
+      "value": "Sword Sharp"
+    },
+    "Interact Sword Soft": {
+      "sheet": "legacy",
+      "index": "player_current_item_as_number",
+      "symbol": "IN_LIST",
+      "value": "Sword Soft"
+    },
+    "Interact Tool Sharp": {
+      "sheet": "legacy",
+      "index": "player_current_item_as_number",
+      "symbol": "IN_LIST",
+      "value": "Tool Sharp"
+    },
+    "Interact Tool Soft": {
+      "sheet": "legacy",
+      "index": "player_current_item_as_number",
+      "symbol": "IN_LIST",
+      "value": "Tool Soft"
+    },
+    "Interact Utility": {
+      "sheet": "legacy",
+      "index": "player_current_item_as_number",
+      "symbol": "IN_LIST",
+      "value": "Utility"
+    },
+    "Is underwater": {
+      "sheet": "ply_general",
+      "index": "oxygen",
+      "symbol": "LESSER",
+      "value": "300"
+    }
+  },
+  "set": {
+    "Interact Block Stance To Off": {
+      "yes": [
+        "Interact Block Stance To Off"
+      ],
+      "no": []
+    },
+    "Interact Block Stance To On": {
+      "yes": [
+        "Interact Block Stance To On"
+      ],
+      "no": []
+    },
+    "Interact Bow Draw": {
+      "yes": [
+        "Interact Bow",
+        "Interact Item Select"
+      ],
+      "no": []
+    },
+    "Interact Consumable Food Draw": {
+      "yes": [
+        "Interact Consumable Food",
+        "Interact Item Select"
+      ],
+      "no": []
+    },
+    "Interact Hands": {
+      "yes": [
+        "Interact Hands"
+      ],
+      "no": []
+    },
+    "Interact Hands Select": {
+      "yes": [
+        "Interact Hands",
+        "Interact Different Item Select"
+      ],
+      "no": []
+    },
+    "Interact Item Select": {
+      "yes": [
+        "Interact Item Select"
+      ],
+      "no": []
+    },
+    "Interact Sword Sharp Draw": {
+      "yes": [
+        "Interact Sword Sharp",
+        "Interact Item Select"
+      ],
+      "no": []
+    },
+    "Interact Sword Soft Draw": {
+      "yes": [
+        "Interact Sword Soft",
+        "Interact Item Select"
+      ],
+      "no": []
+    },
+    "Interact Sword Soft Hit": {
+      "yes": [
+        "Interact Target",
+        "Interact Sword Soft",
+        "Interact Hit"
+      ],
+      "no": []
+    },
+    "Interact Tool Sharp Draw": {
+      "yes": [
+        "Interact Tool Sharp",
+        "Interact Item Select"
+      ],
+      "no": []
+    },
+    "Interact Tool Soft Draw": {
+      "yes": [
+        "Interact Tool Soft",
+        "Interact Item Select"
+      ],
+      "no": []
+    },
+    "Interact Utility Draw": {
+      "yes": [
+        "Interact Utility",
+        "Interact Item Select"
+      ],
+      "no": []
+    },
+    "Is out of water": {
+      "yes": [],
+      "no": [
+        "Is underwater"
+      ]
+    },
+    "Is underwater": {
+      "yes": [
+        "Is underwater"
+      ],
+      "no": []
+    }
+  },
+  "event": {
+    "Interact Bow Draw": {
+      "vol_min": 1.0,
+      "vol_max": 1.0,
+      "pitch_min": 0.95,
+      "pitch_max": 1.1,
+      "distance": 0,
+      "path": [
+        "matmos_interactions/bow_draw.ogg"
+      ]
+    },
+    "Interact Consumable Food Draw": {
+      "vol_min": 1.0,
+      "vol_max": 1.0,
+      "pitch_min": 0.9,
+      "pitch_max": 1.1,
+      "distance": 0,
+      "path": [
+        "matmos_interactions/food_draw.ogg"
+      ]
+    },
+    "Interact Generic Draw": {
+      "vol_min": 1.0,
+      "vol_max": 1.0,
+      "pitch_min": 0.9,
+      "pitch_max": 1.1,
+      "distance": 0,
+      "path": [
+        "matmos_interactions/generic_draw.ogg"
+      ]
+    },
+    "Interact Generic Holster": {
+      "vol_min": 1.0,
+      "vol_max": 1.0,
+      "pitch_min": 0.7,
+      "pitch_max": 0.8,
+      "distance": 0,
+      "path": [
+        "matmos_interactions/generic_draw.ogg"
+      ]
+    },
+    "Interact Sword Sharp Draw": {
+      "vol_min": 1.0,
+      "vol_max": 1.0,
+      "pitch_min": 0.95,
+      "pitch_max": 1.05,
+      "distance": 0,
+      "path": [
+        "matmos_interactions/sword_draw.ogg"
+      ]
+    },
+    "Interact Sword Soft Draw": {
+      "vol_min": 1.0,
+      "vol_max": 1.0,
+      "pitch_min": 0.95,
+      "pitch_max": 1.05,
+      "distance": 0,
+      "path": [
+        "matmos_interactions/blunt_draw.ogg"
+      ]
+    },
+    "Interact Tool Sharp Draw": {
+      "vol_min": 1.0,
+      "vol_max": 1.0,
+      "pitch_min": 0.95,
+      "pitch_max": 1.05,
+      "distance": 0,
+      "path": [
+        "matmos_interactions/tool_draw.ogg"
+      ]
+    },
+    "Interact Tool Soft Draw": {
+      "vol_min": 1.0,
+      "vol_max": 1.0,
+      "pitch_min": 0.95,
+      "pitch_max": 1.05,
+      "distance": 0,
+      "path": [
+        "matmos_interactions/blunt_draw.ogg"
+      ]
+    },
+    "Interact Underwater Switch": {
+      "vol_min": 1.0,
+      "vol_max": 1.0,
+      "pitch_min": 0.7,
+      "pitch_max": 0.8,
+      "distance": 0,
+      "path": [
+        "matmos_interactions/water_underwater_a.ogg",
+        "matmos_interactions/water_underwater_b.ogg",
+        "matmos_interactions/water_underwater_c.ogg",
+        "matmos_interactions/water_underwater_d.ogg"
+      ]
+    },
+    "Interact Utility Draw": {
+      "vol_min": 1.0,
+      "vol_max": 1.0,
+      "pitch_min": 0.95,
+      "pitch_max": 1.05,
+      "distance": 0,
+      "path": [
+        "matmos_interactions/utility_draw.ogg"
+      ]
+    },
+    "__SAMPLE": {
+      "vol_min": 1.0,
+      "vol_max": 1.0,
+      "pitch_min": 0.95,
+      "pitch_max": 1.05,
+      "distance": 0,
+      "path": [
+        "matmos_interactions/sword_draw.ogg"
+      ]
+    }
+  },
+  "machine": {
+    "Interact Block Stance To Off": {
+      "event": [
+        {
+          "event": "Interact Generic Holster",
+          "vol_mod": 1.0,
+          "pitch_mod": 1.0,
+          "delay_min": 10.0,
+          "delay_max": 10.0,
+          "delay_start": -1.0
+        }
+      ],
+      "allow": [
+        "Interact Block Stance To Off"
+      ],
+      "restrict": [
+        "Is underwater"
+      ]
+    },
+    "Interact Block Stance To On": {
+      "event": [
+        {
+          "event": "Interact Generic Draw",
+          "vol_mod": 1.0,
+          "pitch_mod": 1.0,
+          "delay_min": 10.0,
+          "delay_max": 10.0,
+          "delay_start": -1.0
+        }
+      ],
+      "allow": [
+        "Interact Block Stance To On"
+      ],
+      "restrict": [
+        "Is underwater"
+      ]
+    },
+    "Interact Bow Draw": {
+      "event": [
+        {
+          "event": "Interact Bow Draw",
+          "vol_mod": 1.0,
+          "pitch_mod": 1.0,
+          "delay_min": 10.0,
+          "delay_max": 10.0,
+          "delay_start": -1.0
+        }
+      ],
+      "allow": [
+        "Interact Bow Draw"
+      ],
+      "restrict": [
+        "Is underwater"
+      ]
+    },
+    "Interact Consumable Food Draw": {
+      "event": [
+        {
+          "event": "Interact Consumable Food Draw",
+          "vol_mod": 1.0,
+          "pitch_mod": 1.0,
+          "delay_min": 10.0,
+          "delay_max": 10.0,
+          "delay_start": -1.0
+        }
+      ],
+      "allow": [
+        "Interact Consumable Food Draw"
+      ],
+      "restrict": [
+        "Is underwater"
+      ]
+    },
+    "Interact Generic Draw": {
+      "event": [
+        {
+          "event": "Interact Generic Draw",
+          "vol_mod": 1.0,
+          "pitch_mod": 1.0,
+          "delay_min": 10.0,
+          "delay_max": 10.0,
+          "delay_start": -1.0
+        }
+      ],
+      "allow": [
+        "Interact Item Select"
+      ],
+      "restrict": [
+        "Interact Hands",
+        "Interact Sword Sharp Draw",
+        "Interact Sword Soft Draw",
+        "Interact Tool Sharp Draw",
+        "Interact Bow Draw",
+        "Interact Consumable Food Draw",
+        "Interact Tool Soft Draw",
+        "Interact Utility Draw",
+        "Is underwater"
+      ]
+    },
+    "Interact Generic Hands Select": {
+      "event": [
+        {
+          "event": "Interact Generic Holster",
+          "vol_mod": 0.5,
+          "pitch_mod": 1.0,
+          "delay_min": 10.0,
+          "delay_max": 10.0,
+          "delay_start": -1.0
+        }
+      ],
+      "allow": [
+        "Interact Hands Select"
+      ],
+      "restrict": [
+        "Is underwater"
+      ]
+    },
+    "Interact Sword Sharp Draw": {
+      "event": [
+        {
+          "event": "Interact Sword Sharp Draw",
+          "vol_mod": 1.0,
+          "pitch_mod": 1.0,
+          "delay_min": 10.0,
+          "delay_max": 10.0,
+          "delay_start": -1.0
+        }
+      ],
+      "allow": [
+        "Interact Sword Sharp Draw"
+      ],
+      "restrict": [
+        "Is underwater"
+      ]
+    },
+    "Interact Sword Soft Draw": {
+      "event": [
+        {
+          "event": "Interact Sword Soft Draw",
+          "vol_mod": 1.0,
+          "pitch_mod": 1.0,
+          "delay_min": 10.0,
+          "delay_max": 10.0,
+          "delay_start": -1.0
+        }
+      ],
+      "allow": [
+        "Interact Sword Soft Draw"
+      ],
+      "restrict": [
+        "Is underwater"
+      ]
+    },
+    "Interact Tool Sharp Draw": {
+      "event": [
+        {
+          "event": "Interact Tool Sharp Draw",
+          "vol_mod": 1.0,
+          "pitch_mod": 1.0,
+          "delay_min": 10.0,
+          "delay_max": 10.0,
+          "delay_start": -1.0
+        }
+      ],
+      "allow": [
+        "Interact Tool Sharp Draw"
+      ],
+      "restrict": [
+        "Is underwater"
+      ]
+    },
+    "Interact Tool Soft Draw": {
+      "event": [
+        {
+          "event": "Interact Tool Soft Draw",
+          "vol_mod": 1.0,
+          "pitch_mod": 1.0,
+          "delay_min": 10.0,
+          "delay_max": 10.0,
+          "delay_start": -1.0
+        }
+      ],
+      "allow": [
+        "Interact Tool Soft Draw"
+      ],
+      "restrict": [
+        "Is underwater"
+      ]
+    },
+    "Interact Underwater Stance": {
+      "event": [
+        {
+          "event": "Interact Underwater Switch",
+          "vol_mod": 1.0,
+          "pitch_mod": 1.0,
+          "delay_min": 100.0,
+          "delay_max": 100.0,
+          "delay_start": -1.0
+        }
+      ],
+      "allow": [
+        "Interact Hands Select",
+        "Interact Item Select"
+      ],
+      "restrict": [
+        "Is out of water"
+      ]
+    },
+    "Interact Utility Draw": {
+      "event": [
+        {
+          "event": "Interact Utility Draw",
+          "vol_mod": 1.0,
+          "pitch_mod": 1.0,
+          "delay_min": 10.0,
+          "delay_max": 10.0,
+          "delay_start": -1.0
+        }
+      ],
+      "allow": [
+        "Interact Utility Draw"
+      ],
+      "restrict": [
+        "Is underwater"
+      ]
+    }
+  }
+}

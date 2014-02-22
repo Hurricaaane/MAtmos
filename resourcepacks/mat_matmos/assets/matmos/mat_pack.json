@@ -1,0 +1,9 @@
+{
+	"type"	: "pack_matmos",
+	"engineversion"	: 0,
+	"metadata"	: {
+		"name"	: "MAtmos",
+		"author"	: "Ha3",
+		"website"	: "http://matmos.ha3.eu"
+	}
+}

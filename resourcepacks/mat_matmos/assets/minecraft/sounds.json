@@ -1,0 +1,575 @@
+{
+  "matmos_extras.chimes_bamboo": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_extras/chimes_bamboo"
+    ]
+  },
+  "matmos_extras.chimes_loop": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_extras/chimes_loop"
+    ]
+  },
+  "matmos_extras.positive_action": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_extras/positive_action"
+    ]
+  },
+  "matmos_extras.simple_signal": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_extras/simple_signal"
+    ]
+  },
+  "matmos_hl.atmosphere.cave_hit": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_hl/atmosphere/cave_hit1",
+      "matmos_hl/atmosphere/cave_hit2",
+      "matmos_hl/atmosphere/cave_hit3",
+      "matmos_hl/atmosphere/cave_hit4",
+      "matmos_hl/atmosphere/cave_hit5",
+      "matmos_hl/atmosphere/cave_hit6"
+    ]
+  },
+  "matmos_hl.atmosphere.citadeloutsidefx": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_hl/atmosphere/citadeloutsidefx1",
+      "matmos_hl/atmosphere/citadeloutsidefx2",
+      "matmos_hl/atmosphere/citadeloutsidefx3",
+      "matmos_hl/atmosphere/citadeloutsidefx4",
+      "matmos_hl/atmosphere/citadeloutsidefx5",
+      "matmos_hl/atmosphere/citadeloutsidefx6",
+      "matmos_hl/atmosphere/citadeloutsidefx7",
+      "matmos_hl/atmosphere/citadeloutsidefx8",
+      "matmos_hl/atmosphere/citadeloutsidefx9"
+    ]
+  },
+  "matmos_hl.atmosphere.flame_thrower_fire_hit": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_hl/atmosphere/flame_thrower_fire_hit"
+    ]
+  },
+  "matmos_hl.atmosphere.plaza_amb": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_hl/atmosphere/plaza_amb"
+    ]
+  },
+  "matmos_hl.cave.rumble": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_hl/cave/rumble1",
+      "matmos_hl/cave/rumble2",
+      "matmos_hl/cave/rumble3"
+    ]
+  },
+  "matmos_hl.stereo.rainhittingwindows": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_hl/stereo/rainhittingwindows"
+    ]
+  },
+  "matmos_hl.stereo.treeoflife": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_hl/stereo/treeoflife"
+    ]
+  },
+  "matmos_hl.water.lake": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_hl/water/lake1",
+      "matmos_hl/water/lake2",
+      "matmos_hl/water/lake3"
+    ]
+  },
+  "matmos_hl.water.rain_drip": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_hl/water/rain_drip1",
+      "matmos_hl/water/rain_drip2",
+      "matmos_hl/water/rain_drip3",
+      "matmos_hl/water/rain_drip4"
+    ]
+  },
+  "matmos_hl.water.wave": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_hl/water/wave1",
+      "matmos_hl/water/wave2",
+      "matmos_hl/water/wave3",
+      "matmos_hl/water/wave4",
+      "matmos_hl/water/wave5",
+      "matmos_hl/water/wave6"
+    ]
+  },
+  "matmos_hl.weather.rainonwindow": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_hl/weather/rainonwindow1",
+      "matmos_hl/weather/rainonwindow2",
+      "matmos_hl/weather/rainonwindow3",
+      "matmos_hl/weather/rainonwindow4",
+      "matmos_hl/weather/rainonwindow5",
+      "matmos_hl/weather/rainonwindow6"
+    ]
+  },
+  "matmos_hl.weather.thunder": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_hl/weather/thunder1",
+      "matmos_hl/weather/thunder2",
+      "matmos_hl/weather/thunder3",
+      "matmos_hl/weather/thunder4"
+    ]
+  },
+  "matmos_hl.wildlife.chicka": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_hl/wildlife/chicka1",
+      "matmos_hl/wildlife/chicka2",
+      "matmos_hl/wildlife/chicka3"
+    ]
+  },
+  "matmos_hl.wildlife.chirp": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_hl/wildlife/chirp1",
+      "matmos_hl/wildlife/chirp2",
+      "matmos_hl/wildlife/chirp3"
+    ]
+  },
+  "matmos_hl.wildlife.coastbird": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_hl/wildlife/coastbird1",
+      "matmos_hl/wildlife/coastbird2",
+      "matmos_hl/wildlife/coastbird3",
+      "matmos_hl/wildlife/coastbird4",
+      "matmos_hl/wildlife/coastbird5",
+      "matmos_hl/wildlife/coastbird6",
+      "matmos_hl/wildlife/coastbird7"
+    ]
+  },
+  "matmos_hl.wildlife.critter": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_hl/wildlife/critter1",
+      "matmos_hl/wildlife/critter2",
+      "matmos_hl/wildlife/critter3",
+      "matmos_hl/wildlife/critter4",
+      "matmos_hl/wildlife/critter5",
+      "matmos_hl/wildlife/critter6",
+      "matmos_hl/wildlife/critter7",
+      "matmos_hl/wildlife/critter8"
+    ]
+  },
+  "matmos_hl.wildlife.flit": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_hl/wildlife/flit1"
+    ]
+  },
+  "matmos_hl.wildlife.seagulls_ambient": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_hl/wildlife/seagulls_ambient1",
+      "matmos_hl/wildlife/seagulls_ambient2",
+      "matmos_hl/wildlife/seagulls_ambient3",
+      "matmos_hl/wildlife/seagulls_ambient4",
+      "matmos_hl/wildlife/seagulls_ambient5"
+    ]
+  },
+  "matmos_hl.wildlife.squeek": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_hl/wildlife/squeek1",
+      "matmos_hl/wildlife/squeek2",
+      "matmos_hl/wildlife/squeek3"
+    ]
+  },
+  "matmos_hl.wind.treewind": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_hl/wind/treewind1",
+      "matmos_hl/wind/treewind2",
+      "matmos_hl/wind/treewind3",
+      "matmos_hl/wind/treewind4"
+    ]
+  },
+  "matmos_hl.wind.windgust": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_hl/wind/windgust"
+    ]
+  },
+  "matmos_hl.wind.windgust_strong": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_hl/wind/windgust_strong"
+    ]
+  },
+  "matmos_hl.wind.windmill_wind_stream": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "matmos_hl/wind/windmill_wind_stream",
+        "stream": true
+      }
+    ]
+  },
+  "matmos_hl.wind.wind_hit": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_hl/wind/wind_hit1",
+      "matmos_hl/wind/wind_hit2",
+      "matmos_hl/wind/wind_hit3"
+    ]
+  },
+  "matmos_hl.wind.wind_moan": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_hl/wind/wind_moan1",
+      "matmos_hl/wind/wind_moan2",
+      "matmos_hl/wind/wind_moan3"
+    ]
+  },
+  "matmos_hl.wind.wind_rooftop": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_hl/wind/wind_rooftop1"
+    ]
+  },
+  "matmos_hl.wind.wind_snippet": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_hl/wind/wind_snippet1",
+      "matmos_hl/wind/wind_snippet2",
+      "matmos_hl/wind/wind_snippet3",
+      "matmos_hl/wind/wind_snippet4",
+      "matmos_hl/wind/wind_snippet5"
+    ]
+  },
+  "matmos_interactions.blunt_attack_a": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/blunt_attack_a"
+    ]
+  },
+  "matmos_interactions.blunt_attack_b": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/blunt_attack_b"
+    ]
+  },
+  "matmos_interactions.blunt_attack_c": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/blunt_attack_c"
+    ]
+  },
+  "matmos_interactions.blunt_attack_d": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/blunt_attack_d"
+    ]
+  },
+  "matmos_interactions.blunt_attack_e": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/blunt_attack_e"
+    ]
+  },
+  "matmos_interactions.blunt_draw": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/blunt_draw"
+    ]
+  },
+  "matmos_interactions.blunt_hit_a": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/blunt_hit_a"
+    ]
+  },
+  "matmos_interactions.blunt_hit_b": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/blunt_hit_b"
+    ]
+  },
+  "matmos_interactions.blunt_hit_c": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/blunt_hit_c"
+    ]
+  },
+  "matmos_interactions.blunt_hit_d": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/blunt_hit_d"
+    ]
+  },
+  "matmos_interactions.blunt_hit_e": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/blunt_hit_e"
+    ]
+  },
+  "matmos_interactions.bow_draw": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/bow_draw"
+    ]
+  },
+  "matmos_interactions.bow_flame_a": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/bow_flame_a"
+    ]
+  },
+  "matmos_interactions.bow_flame_b": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/bow_flame_b"
+    ]
+  },
+  "matmos_interactions.bow_flame_c": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/bow_flame_c"
+    ]
+  },
+  "matmos_interactions.bow_stretch_a": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/bow_stretch_a"
+    ]
+  },
+  "matmos_interactions.bow_stretch_b": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/bow_stretch_b"
+    ]
+  },
+  "matmos_interactions.bow_stretch_c": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/bow_stretch_c"
+    ]
+  },
+  "matmos_interactions.bow_stretch_d": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/bow_stretch_d"
+    ]
+  },
+  "matmos_interactions.bow_stretch_e": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/bow_stretch_e"
+    ]
+  },
+  "matmos_interactions.crit_emit_a": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/crit_emit_a"
+    ]
+  },
+  "matmos_interactions.crit_emit_b": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/crit_emit_b"
+    ]
+  },
+  "matmos_interactions.crit_emit_c": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/crit_emit_c"
+    ]
+  },
+  "matmos_interactions.fire_burst": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/fire_burst"
+    ]
+  },
+  "matmos_interactions.food_draw": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/food_draw"
+    ]
+  },
+  "matmos_interactions.generic_draw": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/generic_draw"
+    ]
+  },
+  "matmos_interactions.itemsound": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/itemsound",
+      "matmos_interactions/itemsound",
+      "matmos_interactions/itemsound"
+    ]
+  },
+  "matmos_interactions.speed_wind": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/speed_wind"
+    ]
+  },
+  "matmos_interactions.sword_attack_a": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/sword_attack_a"
+    ]
+  },
+  "matmos_interactions.sword_attack_b": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/sword_attack_b"
+    ]
+  },
+  "matmos_interactions.sword_attack_c": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/sword_attack_c"
+    ]
+  },
+  "matmos_interactions.sword_attack_d": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/sword_attack_d"
+    ]
+  },
+  "matmos_interactions.sword_attack_e": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/sword_attack_e"
+    ]
+  },
+  "matmos_interactions.sword_attack_f": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/sword_attack_f"
+    ]
+  },
+  "matmos_interactions.sword_attack_g": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/sword_attack_g"
+    ]
+  },
+  "matmos_interactions.sword_attack_h": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/sword_attack_h"
+    ]
+  },
+  "matmos_interactions.sword_attack_i": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/sword_attack_i"
+    ]
+  },
+  "matmos_interactions.sword_draw": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/sword_draw"
+    ]
+  },
+  "matmos_interactions.sword_hit_a": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/sword_hit_a"
+    ]
+  },
+  "matmos_interactions.sword_hit_b": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/sword_hit_b"
+    ]
+  },
+  "matmos_interactions.sword_hit_c": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/sword_hit_c"
+    ]
+  },
+  "matmos_interactions.sword_hit_d": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/sword_hit_d"
+    ]
+  },
+  "matmos_interactions.tool_draw": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/tool_draw"
+    ]
+  },
+  "matmos_interactions.tool_swing": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/tool_swing"
+    ]
+  },
+  "matmos_interactions.utility_draw": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/utility_draw"
+    ]
+  },
+  "matmos_interactions.water_divein": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/water_divein"
+    ]
+  },
+  "matmos_interactions.water_jumpin": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/water_jumpin"
+    ]
+  },
+  "matmos_interactions.water_underwater_a": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/water_underwater_a"
+    ]
+  },
+  "matmos_interactions.water_underwater_b": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/water_underwater_b"
+    ]
+  },
+  "matmos_interactions.water_underwater_c": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/water_underwater_c"
+    ]
+  },
+  "matmos_interactions.water_underwater_d": {
+    "category": "neutral",
+    "sounds": [
+      "matmos_interactions/water_underwater_d"
+    ]
+  },
+  "matmos_interactions.water_underwater_stream": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "matmos_interactions/water_underwater_stream",
+        "stream": true
+      }
+    ]
+  }
+}
