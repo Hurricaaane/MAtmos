@@ -232,23 +232,19 @@ public class MAtProcessorFrequent extends MAtProcessorModel
 		// 88 - moon phase
 		
 		conversionComplete(
-			89,
-			player.inventory.armorInventory[0] != null
+			89, player.inventory.armorInventory[0] != null
 				? MAtmosUtility.nameOf(player.inventory.armorInventory[0]) : MAT_HARD_LIMITS.NO_ITEM);
 		
 		conversionComplete(
-			90,
-			player.inventory.armorInventory[1] != null
+			90, player.inventory.armorInventory[1] != null
 				? MAtmosUtility.nameOf(player.inventory.armorInventory[1]) : MAT_HARD_LIMITS.NO_ITEM);
 		
 		conversionComplete(
-			91,
-			player.inventory.armorInventory[2] != null
+			91, player.inventory.armorInventory[2] != null
 				? MAtmosUtility.nameOf(player.inventory.armorInventory[2]) : MAT_HARD_LIMITS.NO_ITEM);
 		
 		conversionComplete(
-			92,
-			player.inventory.armorInventory[3] != null
+			92, player.inventory.armorInventory[3] != null
 				? MAtmosUtility.nameOf(player.inventory.armorInventory[3]) : MAT_HARD_LIMITS.NO_ITEM);
 		
 		// 93 - ME BiomeID
@@ -264,8 +260,7 @@ public class MAtProcessorFrequent extends MAtProcessorModel
 		conversionComplete(95, MAtmosUtility.getNameAt(x, y + 1, z, MAT_HARD_LIMITS.NO_BLOCK_OUT_OF_BOUNDS));
 		
 		ItemStack currentItem = player.inventory.getCurrentItem();
-		setValueLegacyIntIndexes(96, currentItem != null
-			? MAtmosUtility.nameOf(currentItem) : MAT_HARD_LIMITS.NO_ITEM);
+		setValueLegacyIntIndexes(96, currentItem != null ? MAtmosUtility.nameOf(currentItem) : MAT_HARD_LIMITS.NO_ITEM);
 		
 		conversionComplete(97, mc.currentScreen != null && mc.currentScreen instanceof GuiContainer ? 1 : 0);
 		

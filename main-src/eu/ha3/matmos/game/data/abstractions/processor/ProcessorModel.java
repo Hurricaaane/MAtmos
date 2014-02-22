@@ -15,7 +15,6 @@ import eu.ha3.matmos.game.data.abstractions.Processor;
  * Data is a virtual sheet, or if the sheet is a delta sheet.
  * 
  * @author Hurry
- * 
  */
 public abstract class ProcessorModel implements Processor
 {

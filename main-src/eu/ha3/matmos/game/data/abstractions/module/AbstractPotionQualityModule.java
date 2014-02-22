@@ -16,7 +16,6 @@ import eu.ha3.matmos.engine0.core.interfaces.Data;
  * quality is defined by the implementing class.
  * 
  * @author Hurry
- * 
  */
 public abstract class AbstractPotionQualityModule extends ModuleProcessor implements Module
 {

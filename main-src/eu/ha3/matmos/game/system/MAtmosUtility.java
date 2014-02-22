@@ -169,7 +169,6 @@ public class MAtmosUtility
 	/**
 	 * Returns the Minecraft sound volume as a scalar value.
 	 * 
-	 * @param item
 	 * @return
 	 */
 	@Deprecated
@@ -182,14 +181,14 @@ public class MAtmosUtility
 	/**
 	 * Play a sound.
 	 * 
-	 * @param equivalent
+	 * @param name
 	 * @param nx
 	 * @param ny
 	 * @param nz
-	 * @param soundEffectiveVolume
+	 * @param volume
 	 * @param pitch
-	 * @param attenuationNone
-	 * @param f
+	 * @param attenuation
+	 * @param rollf
 	 */
 	public static void playSound(
 		String name, float nx, float ny, float nz, float volume, float pitch, int attenuation, float rollf)
@@ -200,14 +199,12 @@ public class MAtmosUtility
 	/**
 	 * Play a sound.
 	 * 
-	 * @param equivalent
+	 * @param name
 	 * @param nx
 	 * @param ny
 	 * @param nz
-	 * @param soundEffectiveVolume
+	 * @param volume
 	 * @param pitch
-	 * @param attenuationNone
-	 * @param f
 	 */
 	public static void playSound(String name, float nx, float ny, float nz, float volume, float pitch)
 	{
@@ -246,10 +243,8 @@ public class MAtmosUtility
 	 * Returns the PowerMeta, a string that combines the block name and the
 	 * metadata of a certain block.
 	 * 
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param defaultIfFail
+	 * @param block
+	 * @param meta
 	 * @return
 	 */
 	public static String asPowerMeta(Block block, int meta)
@@ -261,10 +256,8 @@ public class MAtmosUtility
 	 * Returns the PowerMeta, a string that combines the block name and the
 	 * metadata of a certain block.
 	 * 
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param defaultIfFail
+	 * @param block
+	 * @param meta
 	 * @return
 	 */
 	public static String asPowerMeta(String block, int meta)
@@ -311,7 +304,7 @@ public class MAtmosUtility
 	/**
 	 * Returns the legacy number value of a block.
 	 * 
-	 * @param itemStack
+	 * @param block
 	 * @return
 	 */
 	public static int legacyOf(Block block)

@@ -16,7 +16,6 @@ import eu.ha3.matmos.engine0.core.interfaces.Data;
  * An abstract module that specializes in counting things in one pass.
  * 
  * @author Hurry
- * 
  */
 public abstract class AbstractStringCountModule extends ModuleProcessor implements Module
 {

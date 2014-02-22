@@ -24,14 +24,13 @@ public interface StreamingSound
 	 * Instantly applies a volume modulation to this stream, upon the initially
 	 * set volume.
 	 * 
-	 * @param fadeOut
+	 * @param volumeMod
 	 */
 	public void applyVolume(float volumeMod);
 	
 	/**
 	 * Dispose of this StreamingSound. The StreamingSound should never be able
 	 * to be used again.
-	 * 
 	 */
 	public void dispose();
 	

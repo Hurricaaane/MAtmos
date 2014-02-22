@@ -174,7 +174,6 @@ public class ExpansionDebug implements SupportsFrameEvents
 		 * dependable doesn't exist
 		 * 
 		 * @author Hurry
-		 * 
 		 */
 		public class DependableNullObject implements Dependable
 		{

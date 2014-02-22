@@ -46,15 +46,12 @@ public class MAtGuiExpansionDetails extends GuiScreen
 		return false;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui()
 	{
 		final int _GAP = 2;
 		final int _UNIT = 20;
-		final int _ELEMENT_WIDTH = 155 * 2;
-		final int _MIX = _GAP + _UNIT;
-		final int _LEFT = this.width / 2 - _ELEMENT_WIDTH / 2;
-		final int _SEPARATOR = 10;
 		
 		this.buttonList.add(new GuiButton(200, _GAP, _GAP, 100, _UNIT, "Close"));
 		this.buttonList.add(new GuiButton(201, _GAP * 2 + 100, _GAP, 100, _UNIT, "Keep open"));

@@ -1,7 +1,5 @@
 package net.minecraft.entity;
 
-import net.minecraft.entity.EntityLivingBase;
-
 /*
 --filenotes-placeholder
 */

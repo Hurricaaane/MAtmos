@@ -19,7 +19,7 @@ public interface Sheet
 	 * Sets the value of a certain position.
 	 * 
 	 * @param key
-	 * @return
+	 * @param value
 	 */
 	public void set(String key, String value);
 	
@@ -58,7 +58,7 @@ public interface Sheet
 	 * uninitialized entry. This is useful in case some sheet want to consider
 	 * uninitialized values to be false or zero.
 	 * 
-	 * @param o
+	 * @param def
 	 */
 	public void setDefaultValue(String def);
 	
@@ -67,7 +67,7 @@ public interface Sheet
 	 * uninitialized entry. This is useful in case some sheet want to consider
 	 * uninitialized values to be false or zero.
 	 * 
-	 * @param o
+	 * @return
 	 */
 	public String getDefaultValue();
 }

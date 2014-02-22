@@ -16,7 +16,6 @@ import eu.ha3.matmos.engine0.core.interfaces.Data;
  * defined by the implementing class.
  * 
  * @author Hurry
- * 
  */
 public abstract class AbstractEnchantmentModule extends ModuleProcessor implements Module
 {

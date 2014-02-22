@@ -36,7 +36,6 @@ public interface Provider<T>
 	/**
 	 * Returns a commanding instance of the provider.
 	 * 
-	 * @param name
 	 * @return
 	 */
 	public T instance();

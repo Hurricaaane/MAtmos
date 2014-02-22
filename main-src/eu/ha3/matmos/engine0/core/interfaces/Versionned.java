@@ -20,6 +20,8 @@ public interface Versionned
 	
 	/**
 	 * Registers a version listener that is called after incrementation.
+	 * 
+	 * @param listener
 	 */
 	public void registerVersionListener(VersionListener listener);
 }

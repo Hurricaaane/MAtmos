@@ -11,7 +11,6 @@ import eu.ha3.matmos.engine0.core.interfaces.VirtualSheet;
  * Call commit() to apply the changes.
  * 
  * @author Hurry
- * 
  */
 public class ExternalStringCountModule extends AbstractStringCountModule
 {

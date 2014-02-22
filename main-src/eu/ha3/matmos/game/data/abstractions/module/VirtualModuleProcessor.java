@@ -14,7 +14,6 @@ import eu.ha3.matmos.engine0.core.interfaces.Data;
  * module processor contains.
  * 
  * @author Hurry
- * 
  */
 public class VirtualModuleProcessor extends ModuleProcessor
 {

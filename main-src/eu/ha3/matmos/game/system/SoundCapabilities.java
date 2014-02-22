@@ -30,7 +30,12 @@ public interface SoundCapabilities
 	/**
 	 * Registers a streaming sound.
 	 * 
-	 * @return
+	 * @param customName
+	 * @param path
+	 * @param volume
+	 * @param pitch
+	 * @param isLooping
+	 * @param usesPause
 	 */
 	public void registerStreaming(
 		String customName, String path, float volume, float pitch, boolean isLooping, boolean usesPause);
@@ -41,7 +46,6 @@ public interface SoundCapabilities
 	 * 
 	 * @param customName
 	 * @param fadeIn
-	 * @return
 	 */
 	public void playStreaming(String customName, int fadeIn);
 	
@@ -50,8 +54,7 @@ public interface SoundCapabilities
 	 * unit is in seconds.
 	 * 
 	 * @param customName
-	 * @param fadeIn
-	 * @return
+	 * @param fadeOut
 	 */
 	public void stopStreaming(String customName, int fadeOut);
 	
@@ -59,31 +62,25 @@ public interface SoundCapabilities
 	 * Instantly applies a volume modulation of all currently running stuff and
 	 * future ones.
 	 * 
-	 * @param volume
+	 * @param volumeMod
 	 */
 	public void applyVolume(float volumeMod);
 	
 	/**
 	 * Gracefully stops all activities provided by the implementation. It should
 	 * stop all sounds from playing.
-	 * 
-	 * @return
 	 */
 	public void stop();
 	
 	/**
 	 * Clean up all resources that are not freed up. SoundCapabilities should be
 	 * able to be used again.
-	 * 
-	 * @return
 	 */
 	public void cleanUp();
 	
 	/**
 	 * Brutally interrupts all activities provided by the implementation. This
 	 * indicates the sound engine may have been dumped during runtime.
-	 * 
-	 * @return
 	 */
 	public void interrupt();
 }

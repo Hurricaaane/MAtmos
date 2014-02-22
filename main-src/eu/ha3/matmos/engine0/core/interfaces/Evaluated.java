@@ -8,8 +8,6 @@ public interface Evaluated
 {
 	/**
 	 * Evaluate this.
-	 * 
-	 * @return
 	 */
 	public void evaluate();
 }

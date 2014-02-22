@@ -59,6 +59,11 @@ public class ScannerModule implements PassOnceModule, MAtScanCoordsOps, Progress
 	 * @param baseName
 	 * @param requireThousand
 	 * @param movement
+	 * @param pulse
+	 * @param xS
+	 * @param yS
+	 * @param zS
+	 * @param blocksPerCall
 	 */
 	public ScannerModule(
 		Data data, String passOnceName, String baseName, boolean requireThousand, int movement, int pulse, int xS,
