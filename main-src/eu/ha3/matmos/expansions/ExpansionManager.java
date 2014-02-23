@@ -122,8 +122,13 @@ public class ExpansionManager implements VolumeUpdatable, Stable, SupportsTickEv
 			{
 				folder.mkdirs();
 			}
-			expansion.setLoadingAgent(new LegacyXMLLoadingAgent(new File(folder, identity.getUniqueName()
-				+ ".json_NO_EDIT")));
+			
+			String filename = identity.getUniqueName() + ".json";
+			if (filename.startsWith("legacy__"))
+			{
+				filename = filename.substring("legacy__".length());
+			}
+			expansion.setLoadingAgent(new LegacyXMLLoadingAgent(new File(folder, filename)));
 		}
 		else
 		{
