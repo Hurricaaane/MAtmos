@@ -37,7 +37,7 @@
   "condition": {
     "Block is water": {
       "sheet": "legacy_column",
-      "index": "y0",
+      "index": "y0_as_number",
       "symbol": "IN_LIST",
       "value": "Water blocks"
     },
@@ -49,7 +49,7 @@
     },
     "Contact Lava": {
       "sheet": "legacy_column",
-      "index": "y-1",
+      "index": "y-1_as_number",
       "symbol": "EQUAL",
       "value": "11"
     },
@@ -61,7 +61,7 @@
     },
     "Contact Lava (Flowing)": {
       "sheet": "legacy_column",
-      "index": "y-1",
+      "index": "y-1_as_number",
       "symbol": "EQUAL",
       "value": "10"
     },
@@ -73,7 +73,7 @@
     },
     "Contact Water": {
       "sheet": "legacy_column",
-      "index": "y-1",
+      "index": "y-1_as_number",
       "symbol": "EQUAL",
       "value": "9"
     },
@@ -85,7 +85,7 @@
     },
     "Contact Water (Flowing)": {
       "sheet": "legacy_column",
-      "index": "y-1",
+      "index": "y-1_as_number",
       "symbol": "EQUAL",
       "value": "8"
     },

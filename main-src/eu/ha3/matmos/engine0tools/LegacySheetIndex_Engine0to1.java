@@ -103,10 +103,10 @@ public class LegacySheetIndex_Engine0to1 implements SheetIndex
 		add(94, "legacy_column", "y0");
 		add(95, "legacy_column", "y1");
 		
-		tagAsBlock(36, "cb_column", "y-1");
-		tagAsBlock(37, "cb_column", "y-2");
-		tagAsBlock(94, "cb_column", "y0");
-		tagAsBlock(95, "cb_column", "y1");
+		tagAsBlock(36, "cb_column", "y-1_as_number");
+		tagAsBlock(37, "cb_column", "y-2_as_number");
+		tagAsBlock(94, "cb_column", "y0_as_number");
+		tagAsBlock(95, "cb_column", "y1_as_number");
 		add(36, "legacy_column", "y-1");
 		add(37, "legacy_column", "y-2");
 		add(94, "legacy_column", "y0");
