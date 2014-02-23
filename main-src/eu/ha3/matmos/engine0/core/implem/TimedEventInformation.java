@@ -31,7 +31,8 @@ public class TimedEventInformation extends MultistateComponent implements Simula
 	private long stopTime;
 	
 	public TimedEventInformation(
-		String machineName, Provider<Machine> provider, ReferenceTime time, List<TimedEvent> events)
+		String machineName, Provider<Machine> provider, ReferenceTime time, List<TimedEvent> events,
+		float delayBeforeFadeIn, float delayBeforeFadeOut, float fadeInTime, float fadeOutTime)
 	{
 		super("_TIMED:" + machineName);
 		
@@ -40,6 +41,10 @@ public class TimedEventInformation extends MultistateComponent implements Simula
 		this.time = time;
 		
 		this.events = events;
+		this.delayBeforeFadeIn = delayBeforeFadeIn;
+		this.delayBeforeFadeOut = delayBeforeFadeOut;
+		this.fadeInTime = fadeInTime;
+		this.fadeOutTime = fadeOutTime;
 	}
 	
 	private void signalPlayable()

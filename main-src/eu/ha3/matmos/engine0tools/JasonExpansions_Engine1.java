@@ -59,10 +59,10 @@ public class JasonExpansions_Engine1
 	public static final String ROOT_SET = "set";
 	public static final String SET_NO = "no";
 	public static final String SET_YES = "yes";
-	public static final String STREAM_DELAY_FADEIN = "delay_fadein";
-	public static final String STREAM_DELAY_FADEOUT = "delay_fadeout";
-	public static final String STREAM_FADEIN = "fadein";
-	public static final String STREAM_FADEOUT = "fadeout";
+	public static final String GENERIC_DELAY_FADEIN = "delay_fadein";
+	public static final String GENERIC_DELAY_FADEOUT = "delay_fadeout";
+	public static final String GENERIC_FADEIN = "fadein";
+	public static final String GENERIC_FADEOUT = "fadeout";
 	public static final String STREAM_LOOPING = "looping";
 	public static final String STREAM_PATH = "path";
 	public static final String STREAM_PAUSE = "pause";
@@ -204,22 +204,20 @@ public class JasonExpansions_Engine1
 			eventname, this.providers.getEvent(), vol_mod, pitch_mod, delay_min, delay_max, delay_start);
 	}
 	
-	private StreamInformation inscriptXMLstream(JsonObject specs, String machineName)
+	private StreamInformation inscriptXMLstream(
+		JsonObject specs, String machineName, float delayBeforeFadeIn, float delayBeforeFadeOut, float fadeInTime,
+		float fadeOutTime)
 	{
 		String path = eltString(STREAM_PATH, specs);
 		float vol = Float.parseFloat(eltString(STREAM_VOL, specs));
 		float pitch = Float.parseFloat(eltString(STREAM_PITCH, specs));
-		float fadein = Float.parseFloat(eltString(STREAM_FADEIN, specs));
-		float fadeout = Float.parseFloat(eltString(STREAM_FADEOUT, specs));
-		float delay_fadein = Float.parseFloat(eltString(STREAM_DELAY_FADEIN, specs));
-		float delay_fadeout = Float.parseFloat(eltString(STREAM_DELAY_FADEOUT, specs));
 		boolean looping = Boolean.parseBoolean(eltString(STREAM_LOOPING, specs));
 		boolean pause = Boolean.parseBoolean(eltString(STREAM_PAUSE, specs));
 		
 		return new StreamInformation(
 			machineName, this.providers.getMachine(), this.providers.getReferenceTime(),
-			this.providers.getSoundRelay(), path, vol, pitch, delay_fadein, delay_fadeout, fadein, fadeout, looping,
-			pause);
+			this.providers.getSoundRelay(), path, vol, pitch, delayBeforeFadeIn, delayBeforeFadeOut, fadeInTime,
+			fadeOutTime, looping, pause);
 	}
 	
 	private JsonArray iterArray(String category, JsonObject capsule)
@@ -323,6 +321,11 @@ public class JasonExpansions_Engine1
 	{
 		List<TimedEvent> events = new ArrayList<TimedEvent>();
 		
+		float fadein = Float.parseFloat(eltString(GENERIC_FADEIN, capsule));
+		float fadeout = Float.parseFloat(eltString(GENERIC_FADEOUT, capsule));
+		float delay_fadein = Float.parseFloat(eltString(GENERIC_DELAY_FADEIN, capsule));
+		float delay_fadeout = Float.parseFloat(eltString(GENERIC_DELAY_FADEOUT, capsule));
+		
 		if (capsule.has(MACHINE_EVENT))
 		{
 			for (JsonElement eelt : iterArray(MACHINE_EVENT, capsule))
@@ -334,7 +337,9 @@ public class JasonExpansions_Engine1
 		StreamInformation stream = null;
 		if (capsule.has(MACHINE_STREAM))
 		{
-			stream = inscriptXMLstream(capsule.getAsJsonObject(MACHINE_STREAM), name);
+			stream =
+				inscriptXMLstream(
+					capsule.getAsJsonObject(MACHINE_STREAM), name, delay_fadein, delay_fadeout, fadein, fadeout);
 		}
 		
 		List<String> allow = new ArrayList<String>();
@@ -353,7 +358,9 @@ public class JasonExpansions_Engine1
 		if (events.size() > 0)
 		{
 			tie =
-				new TimedEventInformation(name, this.providers.getMachine(), this.providers.getReferenceTime(), events);
+				new TimedEventInformation(
+					name, this.providers.getMachine(), this.providers.getReferenceTime(), events, delay_fadein,
+					delay_fadeout, fadein, fadeout);
 		}
 		
 		Named element = new Machine(name, this.providers.getJunction(), allow, restrict, tie, stream);

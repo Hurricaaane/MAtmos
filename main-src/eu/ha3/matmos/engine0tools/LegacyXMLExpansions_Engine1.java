@@ -8,7 +8,11 @@ import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.EVENT_PITCH_MAX
 import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.EVENT_PITCH_MIN;
 import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.EVENT_VOL_MAX;
 import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.EVENT_VOL_MIN;
+import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.GENERIC_DELAY_FADEIN;
+import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.GENERIC_DELAY_FADEOUT;
 import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.GENERIC_ENTRIES;
+import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.GENERIC_FADEIN;
+import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.GENERIC_FADEOUT;
 import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.GENERIC_INDEX;
 import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.GENERIC_SHEET;
 import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.MACHINE_ALLOW;
@@ -23,10 +27,6 @@ import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.ROOT_MACHINE;
 import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.ROOT_SET;
 import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.SET_NO;
 import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.SET_YES;
-import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.STREAM_DELAY_FADEIN;
-import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.STREAM_DELAY_FADEOUT;
-import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.STREAM_FADEIN;
-import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.STREAM_FADEOUT;
 import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.STREAM_LOOPING;
 import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.STREAM_PATH;
 import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.STREAM_PAUSE;
@@ -298,8 +298,8 @@ public class LegacyXMLExpansions_Engine1
 		boolean pause = toInt(_ISUSINGPAUSE) == 1;
 		
 		streamBlob.blob(
-			STREAM_PATH, path, STREAM_VOL, vol, STREAM_PITCH, pitch, STREAM_FADEIN, fadein, STREAM_FADEOUT, fadeout,
-			STREAM_DELAY_FADEIN, delay_fadein, STREAM_DELAY_FADEOUT, delay_fadeout, STREAM_LOOPING, looping,
+			STREAM_PATH, path, STREAM_VOL, vol, STREAM_PITCH, pitch, GENERIC_FADEIN, fadein, GENERIC_FADEOUT, fadeout,
+			GENERIC_DELAY_FADEIN, delay_fadein, GENERIC_DELAY_FADEOUT, delay_fadeout, STREAM_LOOPING, looping,
 			STREAM_PAUSE, pause);
 		
 		return new StreamInformation(
@@ -603,6 +603,31 @@ public class LegacyXMLExpansions_Engine1
 	{
 		Blob blob = Jason.blob();
 		
+		StreamInformation stream = null;
+		Blob streamBlob = Jason.blob();
+		for (Element eelt : DomUtil.getChildren(capsule, STREAM))
+		{
+			stream = inscriptXMLstream(eelt, name, streamBlob);
+		}
+		if (stream != null)
+		{
+			// Remove these information from the stream to put these on the machine
+			
+			blob.put(GENERIC_DELAY_FADEIN, streamBlob.remove(GENERIC_DELAY_FADEIN));
+			blob.put(GENERIC_DELAY_FADEOUT, streamBlob.remove(GENERIC_DELAY_FADEOUT));
+			blob.put(GENERIC_FADEIN, streamBlob.remove(GENERIC_FADEIN));
+			blob.put(GENERIC_FADEOUT, streamBlob.remove(GENERIC_FADEOUT));
+			
+			blob.put(MACHINE_STREAM, streamBlob);
+		}
+		else
+		{
+			blob.put(GENERIC_DELAY_FADEIN, 0f);
+			blob.put(GENERIC_DELAY_FADEOUT, 0f);
+			blob.put(GENERIC_FADEIN, 0f);
+			blob.put(GENERIC_FADEOUT, 0f);
+		}
+		
 		List<TimedEvent> events = new ArrayList<TimedEvent>();
 		Plot eventPlot = Jason.plot();
 		for (Element eelt : DomUtil.getChildren(capsule, EVENTTIMED))
@@ -614,17 +639,6 @@ public class LegacyXMLExpansions_Engine1
 		if (events.size() > 0)
 		{
 			blob.put(MACHINE_EVENT, eventPlot);
-		}
-		
-		StreamInformation stream = null;
-		Blob streamBlob = Jason.blob();
-		for (Element eelt : DomUtil.getChildren(capsule, STREAM))
-		{
-			stream = inscriptXMLstream(eelt, name, streamBlob);
-		}
-		if (stream != null)
-		{
-			blob.put(MACHINE_STREAM, streamBlob);
 		}
 		
 		List<String> allow = new ArrayList<String>();
@@ -642,8 +656,10 @@ public class LegacyXMLExpansions_Engine1
 		TimedEventInformation tie = null;
 		if (events.size() > 0)
 		{
+			// Ignore fade/delay values for XML expansions
 			tie =
-				new TimedEventInformation(name, this.providers.getMachine(), this.providers.getReferenceTime(), events);
+				new TimedEventInformation(
+					name, this.providers.getMachine(), this.providers.getReferenceTime(), events, 0f, 0f, 0f, 0f);
 		}
 		
 		blob.blob(MACHINE_ALLOW, allow, MACHINE_RESTRICT, restrict);
