@@ -110,6 +110,7 @@ public class LegacySheetIndex_Engine0to1 implements SheetIndex
 		add(37, "cb_column", "y-2");
 		add(94, "cb_column", "y0");
 		add(95, "cb_column", "y1");*/
+		add(26, "cb_column", "can_rain_reach");
 		add(27, "cb_column", "topmost_block");
 		add(28, "cb_column", "thickness_overhead");
 		
