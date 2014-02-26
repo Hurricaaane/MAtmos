@@ -57,18 +57,21 @@ public class StreamingSoundUsingAccessor implements StreamingSound
 		SoundSystem sys = this.accessor.getSoundSystem();
 		
 		sys.newStreamingSource(
-			false, this.path, generateResourceLocation(this.path), this.identifier, this.isLooping, 0f, 0f, 0f,
+			false, this.identifier, generateResourceLocation(this.path), this.path, this.isLooping, 0f, 0f, 0f,
 			AttenuationType.NONE.func_148586_a(), 0f);
 		
 		sys.setVolume(this.identifier, this.volume * this.volumeModulator);
 		sys.setPitch(this.identifier, this.pitch);
 		sys.setLooping(this.identifier, this.isLooping);
+		
+		this.isSetup = true;
 	}
 	
 	private URL generateResourceLocation(String path)
 	{
 		URL url = null;
-		final ResourceLocation loc = new ResourceLocation("assets/sounds/" + path);
+		final ResourceLocation loc = new ResourceLocation("sounds/" + path);
+		//final ResourceLocation loc = new ResourceLocation("assets/sounds/" + path);
 		
 		String opth =
 			String.format("%s:%s:%s", new Object[] { "mcsounddomain", loc.getResourceDomain(), loc.getResourcePath() });
