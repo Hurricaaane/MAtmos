@@ -75,11 +75,10 @@ import eu.ha3.matmos.engine0.core.implem.TimedEventInformation;
 import eu.ha3.matmos.engine0.core.implem.abstractions.ProviderCollection;
 import eu.ha3.matmos.engine0.core.interfaces.Named;
 import eu.ha3.matmos.engine0.core.interfaces.SheetIndex;
+import eu.ha3.matmos.engine0tools.Jason.Blob;
+import eu.ha3.matmos.engine0tools.Jason.Plot;
+import eu.ha3.matmos.engine0tools.Jason.Uniq;
 import eu.ha3.matmos.game.system.MAtmosUtility;
-import eu.ha3.matmos.jason.Jason;
-import eu.ha3.matmos.jason.Jason.Blob;
-import eu.ha3.matmos.jason.Jason.Plot;
-import eu.ha3.matmos.jason.Jason.Uniq;
 
 /* x-placeholder */
 
