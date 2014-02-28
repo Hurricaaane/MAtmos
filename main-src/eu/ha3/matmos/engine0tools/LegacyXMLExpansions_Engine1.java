@@ -1,43 +1,43 @@
 package eu.ha3.matmos.engine0tools;
 
-import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.CONDITION_SYMBOL;
-import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.CONDITION_VALUE;
-import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.EVENT_DISTANCE;
-import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.EVENT_PATH;
-import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.EVENT_PITCH_MAX;
-import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.EVENT_PITCH_MIN;
-import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.EVENT_VOL_MAX;
-import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.EVENT_VOL_MIN;
-import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.GENERIC_DELAY_FADEIN;
-import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.GENERIC_DELAY_FADEOUT;
-import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.GENERIC_ENTRIES;
-import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.GENERIC_FADEIN;
-import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.GENERIC_FADEOUT;
-import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.GENERIC_INDEX;
-import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.GENERIC_SHEET;
-import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.MACHINE_ALLOW;
-import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.MACHINE_EVENT;
-import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.MACHINE_RESTRICT;
-import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.MACHINE_STREAM;
-import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.ROOT_CONDITION;
-import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.ROOT_DYNAMIC;
-import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.ROOT_EVENT;
-import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.ROOT_LIST;
-import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.ROOT_MACHINE;
-import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.ROOT_SET;
-import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.SET_NO;
-import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.SET_YES;
-import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.STREAM_LOOPING;
-import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.STREAM_PATH;
-import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.STREAM_PAUSE;
-import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.STREAM_PITCH;
-import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.STREAM_VOL;
-import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.TIMED_DELAY_MAX;
-import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.TIMED_DELAY_MIN;
-import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.TIMED_DELAY_START;
-import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.TIMED_EVENT;
-import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.TIMED_PITCH_MOD;
-import static eu.ha3.matmos.engine0tools.JasonExpansions_Engine1.TIMED_VOL_MOD;
+import static eu.ha3.matmos.jsonformat.JaF.CONDITION_SYMBOL;
+import static eu.ha3.matmos.jsonformat.JaF.CONDITION_VALUE;
+import static eu.ha3.matmos.jsonformat.JaF.EVENT_DISTANCE;
+import static eu.ha3.matmos.jsonformat.JaF.EVENT_PATH;
+import static eu.ha3.matmos.jsonformat.JaF.EVENT_PITCH_MAX;
+import static eu.ha3.matmos.jsonformat.JaF.EVENT_PITCH_MIN;
+import static eu.ha3.matmos.jsonformat.JaF.EVENT_VOL_MAX;
+import static eu.ha3.matmos.jsonformat.JaF.EVENT_VOL_MIN;
+import static eu.ha3.matmos.jsonformat.JaF.GENERIC_DELAY_FADEIN;
+import static eu.ha3.matmos.jsonformat.JaF.GENERIC_DELAY_FADEOUT;
+import static eu.ha3.matmos.jsonformat.JaF.GENERIC_ENTRIES;
+import static eu.ha3.matmos.jsonformat.JaF.GENERIC_FADEIN;
+import static eu.ha3.matmos.jsonformat.JaF.GENERIC_FADEOUT;
+import static eu.ha3.matmos.jsonformat.JaF.GENERIC_INDEX;
+import static eu.ha3.matmos.jsonformat.JaF.GENERIC_SHEET;
+import static eu.ha3.matmos.jsonformat.JaF.MACHINE_ALLOW;
+import static eu.ha3.matmos.jsonformat.JaF.MACHINE_EVENT;
+import static eu.ha3.matmos.jsonformat.JaF.MACHINE_RESTRICT;
+import static eu.ha3.matmos.jsonformat.JaF.MACHINE_STREAM;
+import static eu.ha3.matmos.jsonformat.JaF.ROOT_CONDITION;
+import static eu.ha3.matmos.jsonformat.JaF.ROOT_DYNAMIC;
+import static eu.ha3.matmos.jsonformat.JaF.ROOT_EVENT;
+import static eu.ha3.matmos.jsonformat.JaF.ROOT_LIST;
+import static eu.ha3.matmos.jsonformat.JaF.ROOT_MACHINE;
+import static eu.ha3.matmos.jsonformat.JaF.ROOT_SET;
+import static eu.ha3.matmos.jsonformat.JaF.SET_NO;
+import static eu.ha3.matmos.jsonformat.JaF.SET_YES;
+import static eu.ha3.matmos.jsonformat.JaF.STREAM_LOOPING;
+import static eu.ha3.matmos.jsonformat.JaF.STREAM_PATH;
+import static eu.ha3.matmos.jsonformat.JaF.STREAM_PAUSE;
+import static eu.ha3.matmos.jsonformat.JaF.STREAM_PITCH;
+import static eu.ha3.matmos.jsonformat.JaF.STREAM_VOL;
+import static eu.ha3.matmos.jsonformat.JaF.TIMED_DELAY_MAX;
+import static eu.ha3.matmos.jsonformat.JaF.TIMED_DELAY_MIN;
+import static eu.ha3.matmos.jsonformat.JaF.TIMED_DELAY_START;
+import static eu.ha3.matmos.jsonformat.JaF.TIMED_EVENT;
+import static eu.ha3.matmos.jsonformat.JaF.TIMED_PITCH_MOD;
+import static eu.ha3.matmos.jsonformat.JaF.TIMED_VOL_MOD;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -46,7 +46,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.xml.xpath.XPathExpressionException;
 
@@ -135,7 +134,6 @@ public class LegacyXMLExpansions_Engine1
 	private static final String ISUSINGPAUSE = "isusingpause";
 	
 	private Map<String, Operator> inverseSymbols;
-	private Map<Operator, String> serializedSymbols;
 	private Map<String, String> scanDicts;
 	
 	private String UID;
@@ -148,33 +146,10 @@ public class LegacyXMLExpansions_Engine1
 	public LegacyXMLExpansions_Engine1()
 	{
 		this.inverseSymbols = new HashMap<String, Operator>();
-		
-		Map<Operator, String> symbols = new HashMap<Operator, String>();
-		symbols.put(Operator.NOT_EQUAL, "!=");
-		symbols.put(Operator.EQUAL, "==");
-		symbols.put(Operator.GREATER, ">");
-		symbols.put(Operator.GREATER_OR_EQUAL, ">=");
-		symbols.put(Operator.LESSER, "<");
-		symbols.put(Operator.LESSER_OR_EQUAL, "<=");
-		symbols.put(Operator.IN_LIST, "in");
-		symbols.put(Operator.NOT_IN_LIST, "!in");
-		symbols.put(Operator.ALWAYS_FALSE, "><");
-		
-		for (Entry<Operator, String> is : symbols.entrySet())
+		for (Operator op : Operator.values())
 		{
-			this.inverseSymbols.put(is.getValue(), is.getKey());
+			this.inverseSymbols.put(op.getSymbol(), op);
 		}
-		
-		this.serializedSymbols = new HashMap<Operator, String>();
-		this.serializedSymbols.put(Operator.NOT_EQUAL, "NOT_EQUAL");
-		this.serializedSymbols.put(Operator.EQUAL, "EQUAL");
-		this.serializedSymbols.put(Operator.GREATER, "GREATER");
-		this.serializedSymbols.put(Operator.GREATER_OR_EQUAL, "GREATER_OR_EQUAL");
-		this.serializedSymbols.put(Operator.LESSER, "LESSER");
-		this.serializedSymbols.put(Operator.LESSER_OR_EQUAL, "LESSER_OR_EQUAL");
-		this.serializedSymbols.put(Operator.IN_LIST, "IN_LIST");
-		this.serializedSymbols.put(Operator.NOT_IN_LIST, "NOT_IN_LIST");
-		this.serializedSymbols.put(Operator.ALWAYS_FALSE, "ALWAYS_FALSE");
 		
 		this.scanDicts = new HashMap<String, String>();
 		this.scanDicts.put("LargeScan", "scan_large");
@@ -516,7 +491,7 @@ public class LegacyXMLExpansions_Engine1
 				name,
 				Jason.blob(
 					GENERIC_SHEET, si.getSheet(), GENERIC_INDEX, jasonIndexExcludeDynamic, CONDITION_SYMBOL,
-					this.serializedSymbols.get(this.inverseSymbols.get(symbol)), CONDITION_VALUE, value));
+					this.inverseSymbols.get(symbol).toString(), CONDITION_VALUE, value));
 		}
 		if (si instanceof LegacySheetIndex_Engine0to1)
 		{
@@ -526,7 +501,7 @@ public class LegacyXMLExpansions_Engine1
 					name + AS_BLOCK,
 					Jason.blob(
 						GENERIC_SHEET, si.getSheet(), GENERIC_INDEX, jasonIndexExcludeDynamic, CONDITION_SYMBOL,
-						this.serializedSymbols.get(this.inverseSymbols.get(symbol)), CONDITION_VALUE, asBlock(value)));
+						this.inverseSymbols.get(symbol).toString(), CONDITION_VALUE, asBlock(value)));
 			}
 			
 			if (((LegacySheetIndex_Engine0to1) si).isItem() && asItem(value) != null)
@@ -535,7 +510,7 @@ public class LegacyXMLExpansions_Engine1
 					name + AS_ITEM,
 					Jason.blob(
 						GENERIC_SHEET, si.getSheet(), GENERIC_INDEX, jasonIndexExcludeDynamic, CONDITION_SYMBOL,
-						this.serializedSymbols.get(this.inverseSymbols.get(symbol)), CONDITION_VALUE, asItem(value)));
+						this.inverseSymbols.get(symbol).toString(), CONDITION_VALUE, asItem(value)));
 			}
 		}
 		

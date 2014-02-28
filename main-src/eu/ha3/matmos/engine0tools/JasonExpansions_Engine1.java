@@ -1,5 +1,44 @@
 package eu.ha3.matmos.engine0tools;
 
+import static eu.ha3.matmos.jsonformat.JaF.CONDITION_SYMBOL;
+import static eu.ha3.matmos.jsonformat.JaF.CONDITION_VALUE;
+import static eu.ha3.matmos.jsonformat.JaF.EVENT_DISTANCE;
+import static eu.ha3.matmos.jsonformat.JaF.EVENT_PATH;
+import static eu.ha3.matmos.jsonformat.JaF.EVENT_PITCH_MAX;
+import static eu.ha3.matmos.jsonformat.JaF.EVENT_PITCH_MIN;
+import static eu.ha3.matmos.jsonformat.JaF.EVENT_VOL_MAX;
+import static eu.ha3.matmos.jsonformat.JaF.EVENT_VOL_MIN;
+import static eu.ha3.matmos.jsonformat.JaF.GENERIC_DELAY_FADEIN;
+import static eu.ha3.matmos.jsonformat.JaF.GENERIC_DELAY_FADEOUT;
+import static eu.ha3.matmos.jsonformat.JaF.GENERIC_ENTRIES;
+import static eu.ha3.matmos.jsonformat.JaF.GENERIC_FADEIN;
+import static eu.ha3.matmos.jsonformat.JaF.GENERIC_FADEOUT;
+import static eu.ha3.matmos.jsonformat.JaF.GENERIC_INDEX;
+import static eu.ha3.matmos.jsonformat.JaF.GENERIC_SHEET;
+import static eu.ha3.matmos.jsonformat.JaF.MACHINE_ALLOW;
+import static eu.ha3.matmos.jsonformat.JaF.MACHINE_EVENT;
+import static eu.ha3.matmos.jsonformat.JaF.MACHINE_RESTRICT;
+import static eu.ha3.matmos.jsonformat.JaF.MACHINE_STREAM;
+import static eu.ha3.matmos.jsonformat.JaF.ROOT_CONDITION;
+import static eu.ha3.matmos.jsonformat.JaF.ROOT_DYNAMIC;
+import static eu.ha3.matmos.jsonformat.JaF.ROOT_EVENT;
+import static eu.ha3.matmos.jsonformat.JaF.ROOT_LIST;
+import static eu.ha3.matmos.jsonformat.JaF.ROOT_MACHINE;
+import static eu.ha3.matmos.jsonformat.JaF.ROOT_SET;
+import static eu.ha3.matmos.jsonformat.JaF.SET_NO;
+import static eu.ha3.matmos.jsonformat.JaF.SET_YES;
+import static eu.ha3.matmos.jsonformat.JaF.STREAM_LOOPING;
+import static eu.ha3.matmos.jsonformat.JaF.STREAM_PATH;
+import static eu.ha3.matmos.jsonformat.JaF.STREAM_PAUSE;
+import static eu.ha3.matmos.jsonformat.JaF.STREAM_PITCH;
+import static eu.ha3.matmos.jsonformat.JaF.STREAM_VOL;
+import static eu.ha3.matmos.jsonformat.JaF.TIMED_DELAY_MAX;
+import static eu.ha3.matmos.jsonformat.JaF.TIMED_DELAY_MIN;
+import static eu.ha3.matmos.jsonformat.JaF.TIMED_DELAY_START;
+import static eu.ha3.matmos.jsonformat.JaF.TIMED_EVENT;
+import static eu.ha3.matmos.jsonformat.JaF.TIMED_PITCH_MOD;
+import static eu.ha3.matmos.jsonformat.JaF.TIMED_VOL_MOD;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,74 +74,20 @@ import eu.ha3.matmos.expansions.ExpansionIdentity;
 
 public class JasonExpansions_Engine1
 {
-	public static final String CONDITION_SYMBOL = "symbol";
-	public static final String CONDITION_VALUE = "value";
-	public static final String EVENT_DISTANCE = "distance";
-	public static final String EVENT_PATH = "path";
-	public static final String EVENT_PITCH_MAX = "pitch_max";
-	public static final String EVENT_PITCH_MIN = "pitch_min";
-	public static final String EVENT_VOL_MAX = "vol_max";
-	public static final String EVENT_VOL_MIN = "vol_min";
-	public static final String GENERIC_ENTRIES = "entries";
-	public static final String GENERIC_INDEX = "index";
-	public static final String GENERIC_SHEET = "sheet";
-	public static final String MACHINE_ALLOW = "allow";
-	public static final String MACHINE_EVENT = "event";
-	public static final String MACHINE_RESTRICT = "restrict";
-	public static final String MACHINE_STREAM = "stream";
-	public static final String ROOT_CONDITION = "condition";
-	public static final String ROOT_DYNAMIC = "dynamic";
-	
-	public static final String ROOT_EVENT = "event";
-	public static final String ROOT_LIST = "list";
-	public static final String ROOT_MACHINE = "machine";
-	public static final String ROOT_SET = "set";
-	public static final String SET_NO = "no";
-	public static final String SET_YES = "yes";
-	public static final String GENERIC_DELAY_FADEIN = "delay_fadein";
-	public static final String GENERIC_DELAY_FADEOUT = "delay_fadeout";
-	public static final String GENERIC_FADEIN = "fadein";
-	public static final String GENERIC_FADEOUT = "fadeout";
-	public static final String STREAM_LOOPING = "looping";
-	public static final String STREAM_PATH = "path";
-	public static final String STREAM_PAUSE = "pause";
-	public static final String STREAM_PITCH = "pitch";
-	public static final String STREAM_VOL = "vol";
-	public static final String TIMED_DELAY_MAX = "delay_max";
-	public static final String TIMED_DELAY_MIN = "delay_min";
-	public static final String TIMED_DELAY_START = "delay_start";
-	public static final String TIMED_EVENT = "event";
-	public static final String TIMED_PITCH_MOD = "pitch_mod";
-	public static final String TIMED_VOL_MOD = "vol_mod";
-	
 	private ArrayList<Named> elements;
 	private Knowledge knowledgeWorkstation;
 	private ProviderCollection providers;
 	
-	private Map<Operator, String> serializedSymbols;
 	private Map<String, Operator> inverseSymbols;
 	
 	private String UID;
 	
 	public JasonExpansions_Engine1()
 	{
-		this.serializedSymbols = new HashMap<Operator, String>();
 		this.inverseSymbols = new HashMap<String, Operator>();
-		
-		this.serializedSymbols = new HashMap<Operator, String>();
-		this.serializedSymbols.put(Operator.NOT_EQUAL, "NOT_EQUAL");
-		this.serializedSymbols.put(Operator.EQUAL, "EQUAL");
-		this.serializedSymbols.put(Operator.GREATER, "GREATER");
-		this.serializedSymbols.put(Operator.GREATER_OR_EQUAL, "GREATER_OR_EQUAL");
-		this.serializedSymbols.put(Operator.LESSER, "LESSER");
-		this.serializedSymbols.put(Operator.LESSER_OR_EQUAL, "LESSER_OR_EQUAL");
-		this.serializedSymbols.put(Operator.IN_LIST, "IN_LIST");
-		this.serializedSymbols.put(Operator.NOT_IN_LIST, "NOT_IN_LIST");
-		this.serializedSymbols.put(Operator.ALWAYS_FALSE, "ALWAYS_FALSE");
-		
-		for (Entry<Operator, String> is : this.serializedSymbols.entrySet())
+		for (Operator op : Operator.values())
 		{
-			this.inverseSymbols.put(is.getValue(), is.getKey());
+			this.inverseSymbols.put(op.toString(), op);
 		}
 	}
 	
@@ -181,9 +166,19 @@ public class JasonExpansions_Engine1
 		return this.UID.hashCode() % 1000 + "_" + name;
 	}
 	
-	private String eltString(String member, JsonElement capsule)
+	private Boolean eltBool(String member, JsonObject capsule)
 	{
-		return eltString(member, capsule.getAsJsonObject());
+		return capsule.get(member).getAsBoolean();
+	}
+	
+	private Integer eltInt(String member, JsonObject capsule)
+	{
+		return capsule.get(member).getAsInt();
+	}
+	
+	private Float eltFloat(String member, JsonObject capsule)
+	{
+		return capsule.get(member).getAsFloat();
 	}
 	
 	private String eltString(String member, JsonObject capsule)
@@ -193,15 +188,15 @@ public class JasonExpansions_Engine1
 	
 	private TimedEvent inscriptXMLeventTimed(JsonObject specs)
 	{
-		String eventname = eltString(TIMED_EVENT, specs);
-		float vol_mod = Float.parseFloat(eltString(TIMED_VOL_MOD, specs));
-		float pitch_mod = Float.parseFloat(eltString(TIMED_PITCH_MOD, specs));
-		float delay_min = Float.parseFloat(eltString(TIMED_DELAY_MIN, specs));
-		float delay_max = Float.parseFloat(eltString(TIMED_DELAY_MAX, specs));
-		float delay_start = Float.parseFloat(eltString(TIMED_DELAY_START, specs));
+		String event = eltString(TIMED_EVENT, specs);
+		float vol_mod = eltFloat(TIMED_VOL_MOD, specs);
+		float pitch_mod = eltFloat(TIMED_PITCH_MOD, specs);
+		float delay_min = eltFloat(TIMED_DELAY_MIN, specs);
+		float delay_max = eltFloat(TIMED_DELAY_MAX, specs);
+		float delay_start = eltFloat(TIMED_DELAY_START, specs);
 		
 		return new TimedEvent(
-			eventname, this.providers.getEvent(), vol_mod, pitch_mod, delay_min, delay_max, delay_start);
+			event, this.providers.getEvent(), vol_mod, pitch_mod, delay_min, delay_max, delay_start);
 	}
 	
 	private StreamInformation inscriptXMLstream(
@@ -209,10 +204,10 @@ public class JasonExpansions_Engine1
 		float fadeOutTime)
 	{
 		String path = eltString(STREAM_PATH, specs);
-		float vol = Float.parseFloat(eltString(STREAM_VOL, specs));
-		float pitch = Float.parseFloat(eltString(STREAM_PITCH, specs));
-		boolean looping = Boolean.parseBoolean(eltString(STREAM_LOOPING, specs));
-		boolean pause = Boolean.parseBoolean(eltString(STREAM_PAUSE, specs));
+		float vol = eltFloat(STREAM_VOL, specs);
+		float pitch = eltFloat(STREAM_PITCH, specs);
+		boolean looping = eltBool(STREAM_LOOPING, specs);
+		boolean pause = eltBool(STREAM_PAUSE, specs);
 		
 		return new StreamInformation(
 			machineName, this.providers.getMachine(), this.providers.getReferenceTime(),
@@ -236,8 +231,8 @@ public class JasonExpansions_Engine1
 		
 		for (JsonElement eelt : iterArray(GENERIC_ENTRIES, capsule))
 		{
-			String sheet = eltString(GENERIC_SHEET, eelt);
-			String index = eltString(GENERIC_INDEX, eelt);
+			String sheet = eltString(GENERIC_SHEET, eelt.getAsJsonObject());
+			String index = eltString(GENERIC_INDEX, eelt.getAsJsonObject());
 			
 			sheetIndexes.add(new SheetEntry(sheet, index));
 		}
@@ -261,19 +256,19 @@ public class JasonExpansions_Engine1
 	
 	private void parseXML_3_condition(JsonObject capsule, String name)
 	{
-		String sheetNotComputed = eltString(GENERIC_SHEET, capsule);
+		String sheet = eltString(GENERIC_SHEET, capsule);
 		String indexNotComputed = eltString(GENERIC_INDEX, capsule);
 		String serializedSymbol = eltString(CONDITION_SYMBOL, capsule);
 		String value = eltString(CONDITION_VALUE, capsule);
 		
-		if (sheetNotComputed.equals(Dynamic.DEDICATED_SHEET))
+		if (sheet.equals(Dynamic.DEDICATED_SHEET))
 		{
 			indexNotComputed = dynamicSheetHash(indexNotComputed);
 		}
 		
 		Named element =
 			new Condition(
-				name, this.providers.getSheetCommander(), new SheetEntry(sheetNotComputed, indexNotComputed),
+				name, this.providers.getSheetCommander(), new SheetEntry(sheet, indexNotComputed),
 				this.inverseSymbols.get(serializedSymbol), value);
 		this.elements.add(element);
 	}
@@ -301,11 +296,11 @@ public class JasonExpansions_Engine1
 	{
 		List<String> paths = new ArrayList<String>();
 		
-		float vol_min = Float.parseFloat(eltString(EVENT_VOL_MIN, capsule));
-		float vol_max = Float.parseFloat(eltString(EVENT_VOL_MAX, capsule));
-		float pitch_min = Float.parseFloat(eltString(EVENT_PITCH_MIN, capsule));
-		float pitch_max = Float.parseFloat(eltString(EVENT_PITCH_MAX, capsule));
-		int distance = toInt(eltString(EVENT_DISTANCE, capsule));
+		float vol_min = eltFloat(EVENT_VOL_MIN, capsule);
+		float vol_max = eltFloat(EVENT_VOL_MAX, capsule);
+		float pitch_min = eltFloat(EVENT_PITCH_MIN, capsule);
+		float pitch_max = eltFloat(EVENT_PITCH_MAX, capsule);
+		int distance = eltInt(EVENT_DISTANCE, capsule);
 		
 		for (JsonElement eelt : iterArray(EVENT_PATH, capsule))
 		{
@@ -321,10 +316,10 @@ public class JasonExpansions_Engine1
 	{
 		List<TimedEvent> events = new ArrayList<TimedEvent>();
 		
-		float fadein = Float.parseFloat(eltString(GENERIC_FADEIN, capsule));
-		float fadeout = Float.parseFloat(eltString(GENERIC_FADEOUT, capsule));
-		float delay_fadein = Float.parseFloat(eltString(GENERIC_DELAY_FADEIN, capsule));
-		float delay_fadeout = Float.parseFloat(eltString(GENERIC_DELAY_FADEOUT, capsule));
+		float fadein = eltFloat(GENERIC_FADEIN, capsule);
+		float fadeout = eltFloat(GENERIC_FADEOUT, capsule);
+		float delay_fadein = eltFloat(GENERIC_DELAY_FADEIN, capsule);
+		float delay_fadeout = eltFloat(GENERIC_DELAY_FADEOUT, capsule);
 		
 		if (capsule.has(MACHINE_EVENT))
 		{
@@ -365,17 +360,5 @@ public class JasonExpansions_Engine1
 		
 		Named element = new Machine(name, this.providers.getJunction(), allow, restrict, tie, stream);
 		this.elements.add(element);
-	}
-	
-	private int toInt(String source)
-	{
-		try
-		{
-			return Integer.parseInt(source);
-		}
-		catch (NumberFormatException e)
-		{
-			return (int) Float.parseFloat(source);
-		}
 	}
 }
