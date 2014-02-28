@@ -1,0 +1,196 @@
+package eu.ha3.matmos.engine0tools;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonParser;
+
+import eu.ha3.matmos.engine0.core.implem.Condition;
+import eu.ha3.matmos.engine0.core.implem.Dynamic;
+import eu.ha3.matmos.engine0.core.implem.Event;
+import eu.ha3.matmos.engine0.core.implem.Junction;
+import eu.ha3.matmos.engine0.core.implem.Knowledge;
+import eu.ha3.matmos.engine0.core.implem.Machine;
+import eu.ha3.matmos.engine0.core.implem.Operator;
+import eu.ha3.matmos.engine0.core.implem.Possibilities;
+import eu.ha3.matmos.engine0.core.implem.SheetEntry;
+import eu.ha3.matmos.engine0.core.implem.StreamInformation;
+import eu.ha3.matmos.engine0.core.implem.TimedEvent;
+import eu.ha3.matmos.engine0.core.implem.TimedEventInformation;
+import eu.ha3.matmos.engine0.core.implem.abstractions.ProviderCollection;
+import eu.ha3.matmos.engine0.core.interfaces.Named;
+import eu.ha3.matmos.engine0.core.interfaces.SheetIndex;
+import eu.ha3.matmos.expansions.ExpansionIdentity;
+import eu.ha3.matmos.jsonformat.serializable.SerialCondition;
+import eu.ha3.matmos.jsonformat.serializable.SerialDynamic;
+import eu.ha3.matmos.jsonformat.serializable.SerialDynamicSheetIndex;
+import eu.ha3.matmos.jsonformat.serializable.SerialEvent;
+import eu.ha3.matmos.jsonformat.serializable.SerialList;
+import eu.ha3.matmos.jsonformat.serializable.SerialMachine;
+import eu.ha3.matmos.jsonformat.serializable.SerialMachineEvent;
+import eu.ha3.matmos.jsonformat.serializable.SerialRoot;
+import eu.ha3.matmos.jsonformat.serializable.SerialSet;
+
+/*
+--filenotes-placeholder
+*/
+
+public class JasonExpansions_Engine1Deserializer2000
+{
+	private List<Named> elements;
+	private Knowledge knowledgeWorkstation;
+	private ProviderCollection providers;
+	
+	private Map<String, Operator> inverseSymbols;
+	
+	private String UID;
+	
+	public JasonExpansions_Engine1Deserializer2000()
+	{
+		this.inverseSymbols = new HashMap<String, Operator>();
+		for (Operator op : Operator.values())
+		{
+			this.inverseSymbols.put(op.toString(), op);
+		}
+	}
+	
+	public boolean parseJson(String jasonString, ExpansionIdentity identity, Knowledge knowledge)
+	{
+		try
+		{
+			parseJSONUnsafe(jasonString, identity, knowledge);
+			return true;
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public void parseJSONUnsafe(String jasonString, ExpansionIdentity identity, Knowledge knowledge)
+	{
+		this.UID = identity.getUniqueName();
+		this.knowledgeWorkstation = knowledge;
+		this.elements = new ArrayList<Named>();
+		this.providers = this.knowledgeWorkstation.obtainProviders();
+		
+		SerialRoot root = new Gson().fromJson(new JsonParser().parse(jasonString).getAsJsonObject(), SerialRoot.class);
+		
+		if (root.dynamic != null)
+		{
+			for (Entry<String, SerialDynamic> entry : root.dynamic.entrySet())
+			{
+				List<SheetIndex> sheetIndexes = new ArrayList<SheetIndex>();
+				for (SerialDynamicSheetIndex eelt : entry.getValue().entries)
+				{
+					sheetIndexes.add(new SheetEntry(eelt.sheet, eelt.index));
+				}
+				this.elements.add(new Dynamic(
+					dynamicSheetHash(entry.getKey()), this.providers.getSheetCommander(), sheetIndexes));
+			}
+		}
+		if (root.list != null)
+		{
+			for (Entry<String, SerialList> entry : root.list.entrySet())
+			{
+				this.elements.add(new Possibilities(entry.getKey(), asList(entry.getValue().entries)));
+			}
+		}
+		if (root.condition != null)
+		{
+			for (Entry<String, SerialCondition> entry : root.condition.entrySet())
+			{
+				String indexNotComputed = entry.getValue().index;
+				if (entry.getValue().sheet.equals(Dynamic.DEDICATED_SHEET))
+				{
+					indexNotComputed = dynamicSheetHash(indexNotComputed);
+				}
+				
+				this.elements.add(new Condition(entry.getKey(), this.providers.getSheetCommander(), new SheetEntry(
+					entry.getValue().sheet, indexNotComputed), this.inverseSymbols.get(entry.getValue().symbol), entry
+					.getValue().value));
+			}
+		}
+		if (root.set != null)
+		{
+			for (Entry<String, SerialSet> entry : root.set.entrySet())
+			{
+				this.elements.add(new Junction(
+					entry.getKey(), this.providers.getCondition(), asList(entry.getValue().yes), asList(entry
+						.getValue().no)));
+			}
+		}
+		if (root.event != null)
+		{
+			for (Entry<String, SerialEvent> entry : root.event.entrySet())
+			{
+				this.elements.add(new Event(
+					entry.getKey(), this.providers.getSoundRelay(), asList(entry.getValue().path),
+					entry.getValue().vol_min, entry.getValue().vol_max, entry.getValue().pitch_min,
+					entry.getValue().pitch_max, entry.getValue().distance));
+			}
+		}
+		if (root.machine != null)
+		{
+			for (Entry<String, SerialMachine> entry : root.machine.entrySet())
+			{
+				SerialMachine serial = entry.getValue();
+				
+				List<TimedEvent> events = new ArrayList<TimedEvent>();
+				
+				if (serial.event != null)
+				{
+					for (SerialMachineEvent eelt : serial.event)
+					{
+						events.add(new TimedEvent(
+							eelt.event, this.providers.getEvent(), eelt.vol_mod, eelt.pitch_mod, eelt.delay_min,
+							eelt.delay_max, eelt.delay_start));
+					}
+				}
+				
+				StreamInformation stream = null;
+				if (serial.stream != null)
+				{
+					stream =
+						new StreamInformation(
+							entry.getKey(), this.providers.getMachine(), this.providers.getReferenceTime(),
+							this.providers.getSoundRelay(), serial.stream.path, serial.stream.vol, serial.stream.pitch,
+							serial.delay_fadein, serial.delay_fadeout, serial.fadein, serial.fadeout,
+							serial.stream.looping, serial.stream.pause);
+				}
+				
+				TimedEventInformation tie = null;
+				if (serial.event.length > 0)
+				{
+					tie =
+						new TimedEventInformation(
+							entry.getKey(), this.providers.getMachine(), this.providers.getReferenceTime(), events,
+							serial.delay_fadein, serial.delay_fadeout, serial.fadein, serial.fadeout);
+				}
+				
+				Named element =
+					new Machine(
+						entry.getKey(), this.providers.getJunction(), asList(serial.allow), asList(serial.restrict),
+						tie, stream);
+				this.elements.add(element);
+			}
+		}
+		
+	}
+	
+	private String dynamicSheetHash(String name)
+	{
+		return this.UID.hashCode() % 1000 + "_" + name;
+	}
+	
+	private <T> List<T> asList(T[] thing)
+	{
+		return new ArrayList<T>(Arrays.asList(thing));
+	}
+}
