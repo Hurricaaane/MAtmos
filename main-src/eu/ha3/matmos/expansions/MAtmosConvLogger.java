@@ -46,6 +46,9 @@ public class MAtmosConvLogger
 		}
 	}
 	
+	// Don't use printErr, the messages come out unsync with print  
+	@SuppressWarnings("unused")
+	@Deprecated
 	private static void printErr(String message, String type, int refinedLevel)
 	{
 		if (refinedLevel >= refinedness)
