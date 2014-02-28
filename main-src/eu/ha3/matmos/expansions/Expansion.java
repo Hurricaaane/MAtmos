@@ -91,7 +91,7 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 		newKnowledge();
 		this.isSuccessfullyBuilt = false;
 		
-		if (true || reactivate)
+		if (reactivate)
 		{
 			activate();
 		}

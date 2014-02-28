@@ -105,7 +105,6 @@ public class MAtUserControl implements Ha3HoldActions, SupportsTickEvents, Suppo
 					"Sounds are turned off in your game settings!");
 			}
 		}
-		
 	}
 	
 	@Override

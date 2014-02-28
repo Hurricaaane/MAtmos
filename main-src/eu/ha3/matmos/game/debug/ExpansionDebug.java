@@ -10,6 +10,9 @@ import java.util.TreeMap;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+
+import org.lwjgl.opengl.GL11;
+
 import eu.ha3.matmos.engine0.core.implem.Junction;
 import eu.ha3.matmos.engine0.core.implem.Machine;
 import eu.ha3.matmos.engine0.core.implem.abstractions.Provider;
@@ -40,6 +43,9 @@ public class ExpansionDebug implements SupportsFrameEvents
 	@Override
 	public void onFrame(float semi)
 	{
+		float scale = 1f;
+		GL11.glPushMatrix();
+		GL11.glScalef(scale, scale, 1.0F);
 		if (!this.mod.getExpansionList().containsKey(this.ex))
 		{
 			IDontKnowHowToCode.warnOnce("Problem getting expansion " + this.ex + " to debug");
@@ -66,6 +72,7 @@ public class ExpansionDebug implements SupportsFrameEvents
 		{
 			IDontKnowHowToCode.whoops__printExceptionToChat(this.mod.getChatter(), e, this);
 		}
+		GL11.glPopMatrix();
 		
 	}
 	
