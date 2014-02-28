@@ -1,9 +1,7 @@
-package eu.ha3.matmos.engine0.core.visualize;
+package eu.ha3.matmos.engine0.core.implem;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import eu.ha3.matmos.engine0.core.implem.Operator;
 
 /*
 --filenotes-placeholder

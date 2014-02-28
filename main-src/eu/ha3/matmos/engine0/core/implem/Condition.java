@@ -6,7 +6,6 @@ import java.util.HashSet;
 import eu.ha3.matmos.engine0.core.implem.abstractions.DependableComponent;
 import eu.ha3.matmos.engine0.core.interfaces.SheetCommander;
 import eu.ha3.matmos.engine0.core.interfaces.SheetIndex;
-import eu.ha3.matmos.engine0.core.visualize.VisualizeOperator;
 import eu.ha3.matmos.engine0.core.visualize.Visualized;
 import eu.ha3.matmos.expansions.MAtmosConvLogger;
 
