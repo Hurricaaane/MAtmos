@@ -16,7 +16,6 @@ import eu.ha3.matmos.engine0.core.implem.Event;
 import eu.ha3.matmos.engine0.core.implem.Junction;
 import eu.ha3.matmos.engine0.core.implem.Knowledge;
 import eu.ha3.matmos.engine0.core.implem.Machine;
-import eu.ha3.matmos.engine0.core.implem.Operator;
 import eu.ha3.matmos.engine0.core.implem.Possibilities;
 import eu.ha3.matmos.engine0.core.implem.SheetEntry;
 import eu.ha3.matmos.engine0.core.implem.StreamInformation;
@@ -24,6 +23,7 @@ import eu.ha3.matmos.engine0.core.implem.TimedEvent;
 import eu.ha3.matmos.engine0.core.implem.TimedEventInformation;
 import eu.ha3.matmos.engine0.core.implem.abstractions.ProviderCollection;
 import eu.ha3.matmos.engine0.core.interfaces.Named;
+import eu.ha3.matmos.engine0.core.interfaces.Operator;
 import eu.ha3.matmos.engine0.core.interfaces.SheetIndex;
 import eu.ha3.matmos.expansions.ExpansionIdentity;
 import eu.ha3.matmos.jsonformat.serializable.SerialCondition;
@@ -73,7 +73,12 @@ public class JasonExpansions_Engine1Deserializer2000
 		}
 	}
 	
-	public void parseJSONUnsafe(String jasonString, ExpansionIdentity identity, Knowledge knowledge)
+	public SerialRoot fromJson(String jasonString)
+	{
+		return new Gson().fromJson(new JsonParser().parse(jasonString).getAsJsonObject(), SerialRoot.class);
+	}
+	
+	private void parseJSONUnsafe(String jasonString, ExpansionIdentity identity, Knowledge knowledge)
 	{
 		this.UID = identity.getUniqueName();
 		this.knowledgeWorkstation = knowledge;

@@ -65,7 +65,6 @@ import eu.ha3.matmos.engine0.core.implem.Junction;
 import eu.ha3.matmos.engine0.core.implem.Knowledge;
 import eu.ha3.matmos.engine0.core.implem.LongFloatSimplificator;
 import eu.ha3.matmos.engine0.core.implem.Machine;
-import eu.ha3.matmos.engine0.core.implem.Operator;
 import eu.ha3.matmos.engine0.core.implem.Possibilities;
 import eu.ha3.matmos.engine0.core.implem.SheetEntry;
 import eu.ha3.matmos.engine0.core.implem.StreamInformation;
@@ -73,6 +72,7 @@ import eu.ha3.matmos.engine0.core.implem.TimedEvent;
 import eu.ha3.matmos.engine0.core.implem.TimedEventInformation;
 import eu.ha3.matmos.engine0.core.implem.abstractions.ProviderCollection;
 import eu.ha3.matmos.engine0.core.interfaces.Named;
+import eu.ha3.matmos.engine0.core.interfaces.Operator;
 import eu.ha3.matmos.engine0.core.interfaces.SheetIndex;
 import eu.ha3.matmos.engine0tools.Jason.Blob;
 import eu.ha3.matmos.engine0tools.Jason.Plot;
@@ -133,7 +133,6 @@ public class LegacyXMLExpansions_Engine1
 	private static final String ISLOOPING = "islooping";
 	private static final String ISUSINGPAUSE = "isusingpause";
 	
-	private Map<String, Operator> inverseSymbols;
 	private Map<String, String> scanDicts;
 	
 	private String UID;
@@ -145,12 +144,6 @@ public class LegacyXMLExpansions_Engine1
 	
 	public LegacyXMLExpansions_Engine1()
 	{
-		this.inverseSymbols = new HashMap<String, Operator>();
-		for (Operator op : Operator.values())
-		{
-			this.inverseSymbols.put(op.getSymbol(), op);
-		}
-		
 		this.scanDicts = new HashMap<String, String>();
 		this.scanDicts.put("LargeScan", "scan_large");
 		this.scanDicts.put("LargeScanPerMil", "scan_large_p1k");
@@ -367,7 +360,11 @@ public class LegacyXMLExpansions_Engine1
 			}
 		}
 		
+		// Uncleaned field order
 		System.out.println(Jason.toJson(this.o_json));
+		
+		//SerialRoot cleanedFieldOrder =
+		//	new JasonExpansions_Engine1Deserializer2000().fromJson(Jason.toJson(this.o_json));
 		if (whereToPutTheJsonFile != null)
 		{
 			try
@@ -379,6 +376,7 @@ public class LegacyXMLExpansions_Engine1
 				
 				FileWriter write = new FileWriter(whereToPutTheJsonFile);
 				write.append(Jason.toJsonPretty(this.o_json));
+				//write.append(Jason.toJsonPretty(this.cleanedFieldOrder));
 				write.close();
 			}
 			catch (IOException e)
@@ -490,8 +488,8 @@ public class LegacyXMLExpansions_Engine1
 			joson(ROOT_CONDITION).put(
 				name,
 				Jason.blob(
-					GENERIC_SHEET, si.getSheet(), GENERIC_INDEX, jasonIndexExcludeDynamic, CONDITION_SYMBOL,
-					this.inverseSymbols.get(symbol).toString(), CONDITION_VALUE, value));
+					GENERIC_SHEET, si.getSheet(), GENERIC_INDEX, jasonIndexExcludeDynamic, CONDITION_SYMBOL, Operator
+						.fromSymbol(symbol).getSerializedForm(), CONDITION_VALUE, value));
 		}
 		if (si instanceof LegacySheetIndex_Engine0to1)
 		{
@@ -501,7 +499,7 @@ public class LegacyXMLExpansions_Engine1
 					name + AS_BLOCK,
 					Jason.blob(
 						GENERIC_SHEET, si.getSheet(), GENERIC_INDEX, jasonIndexExcludeDynamic, CONDITION_SYMBOL,
-						this.inverseSymbols.get(symbol).toString(), CONDITION_VALUE, asBlock(value)));
+						Operator.fromSymbol(symbol).getSerializedForm(), CONDITION_VALUE, asBlock(value)));
 			}
 			
 			if (((LegacySheetIndex_Engine0to1) si).isItem() && asItem(value) != null)
@@ -510,12 +508,11 @@ public class LegacyXMLExpansions_Engine1
 					name + AS_ITEM,
 					Jason.blob(
 						GENERIC_SHEET, si.getSheet(), GENERIC_INDEX, jasonIndexExcludeDynamic, CONDITION_SYMBOL,
-						this.inverseSymbols.get(symbol).toString(), CONDITION_VALUE, asItem(value)));
+						Operator.fromSymbol(symbol).getSerializedForm(), CONDITION_VALUE, asItem(value)));
 			}
 		}
 		
-		Named element =
-			new Condition(name, this.providers.getSheetCommander(), si, this.inverseSymbols.get(symbol), value);
+		Named element = new Condition(name, this.providers.getSheetCommander(), si, Operator.fromSymbol(symbol), value);
 		this.elements.add(element);
 	}
 	

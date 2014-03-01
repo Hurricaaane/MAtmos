@@ -40,9 +40,7 @@ import static eu.ha3.matmos.jsonformat.JaF.TIMED_PITCH_MOD;
 import static eu.ha3.matmos.jsonformat.JaF.TIMED_VOL_MOD;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -57,7 +55,6 @@ import eu.ha3.matmos.engine0.core.implem.Event;
 import eu.ha3.matmos.engine0.core.implem.Junction;
 import eu.ha3.matmos.engine0.core.implem.Knowledge;
 import eu.ha3.matmos.engine0.core.implem.Machine;
-import eu.ha3.matmos.engine0.core.implem.Operator;
 import eu.ha3.matmos.engine0.core.implem.Possibilities;
 import eu.ha3.matmos.engine0.core.implem.SheetEntry;
 import eu.ha3.matmos.engine0.core.implem.StreamInformation;
@@ -65,6 +62,7 @@ import eu.ha3.matmos.engine0.core.implem.TimedEvent;
 import eu.ha3.matmos.engine0.core.implem.TimedEventInformation;
 import eu.ha3.matmos.engine0.core.implem.abstractions.ProviderCollection;
 import eu.ha3.matmos.engine0.core.interfaces.Named;
+import eu.ha3.matmos.engine0.core.interfaces.Operator;
 import eu.ha3.matmos.engine0.core.interfaces.SheetIndex;
 import eu.ha3.matmos.expansions.ExpansionIdentity;
 
@@ -78,17 +76,10 @@ public class JasonExpansions_Engine1
 	private Knowledge knowledgeWorkstation;
 	private ProviderCollection providers;
 	
-	private Map<String, Operator> inverseSymbols;
-	
 	private String UID;
 	
 	public JasonExpansions_Engine1()
 	{
-		this.inverseSymbols = new HashMap<String, Operator>();
-		for (Operator op : Operator.values())
-		{
-			this.inverseSymbols.put(op.toString(), op);
-		}
 	}
 	
 	public boolean parseJson(String jasonString, ExpansionIdentity identity, Knowledge knowledge)
@@ -195,8 +186,7 @@ public class JasonExpansions_Engine1
 		float delay_max = eltFloat(TIMED_DELAY_MAX, specs);
 		float delay_start = eltFloat(TIMED_DELAY_START, specs);
 		
-		return new TimedEvent(
-			event, this.providers.getEvent(), vol_mod, pitch_mod, delay_min, delay_max, delay_start);
+		return new TimedEvent(event, this.providers.getEvent(), vol_mod, pitch_mod, delay_min, delay_max, delay_start);
 	}
 	
 	private StreamInformation inscriptXMLstream(
@@ -258,7 +248,7 @@ public class JasonExpansions_Engine1
 	{
 		String sheet = eltString(GENERIC_SHEET, capsule);
 		String indexNotComputed = eltString(GENERIC_INDEX, capsule);
-		String serializedSymbol = eltString(CONDITION_SYMBOL, capsule);
+		String serializedFormSymbol = eltString(CONDITION_SYMBOL, capsule);
 		String value = eltString(CONDITION_VALUE, capsule);
 		
 		if (sheet.equals(Dynamic.DEDICATED_SHEET))
@@ -269,7 +259,7 @@ public class JasonExpansions_Engine1
 		Named element =
 			new Condition(
 				name, this.providers.getSheetCommander(), new SheetEntry(sheet, indexNotComputed),
-				this.inverseSymbols.get(serializedSymbol), value);
+				Operator.fromSerializedForm(serializedFormSymbol), value);
 		this.elements.add(element);
 	}
 	

@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import eu.ha3.matmos.engine0.core.implem.abstractions.DependableComponent;
+import eu.ha3.matmos.engine0.core.interfaces.Operator;
 import eu.ha3.matmos.engine0.core.interfaces.SheetCommander;
 import eu.ha3.matmos.engine0.core.interfaces.SheetIndex;
 import eu.ha3.matmos.engine0.core.visualize.Visualized;
@@ -141,7 +142,7 @@ public class Condition extends DependableComponent implements Visualized
 	public String getFeed()
 	{
 		String value = (String) this.sheetCommander.get(this.indexX);
-		String op = VisualizeOperator.get(this.operatorX);
+		String op = this.operatorX.getSymbol();
 		
 		return this.indexX.getSheet() + ">" + this.indexX.getIndex() + ":[" + value + "] " + op + " " + this.constantX;
 	}
