@@ -2,9 +2,7 @@ package eu.ha3.matmos.engine0tools;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import com.google.gson.Gson;
@@ -46,24 +44,17 @@ public class JasonExpansions_Engine1Deserializer2000
 	private Knowledge knowledgeWorkstation;
 	private ProviderCollection providers;
 	
-	private Map<String, Operator> inverseSymbols;
-	
 	private String UID;
 	
 	public JasonExpansions_Engine1Deserializer2000()
 	{
-		this.inverseSymbols = new HashMap<String, Operator>();
-		for (Operator op : Operator.values())
-		{
-			this.inverseSymbols.put(op.toString(), op);
-		}
 	}
 	
-	public boolean parseJson(String jasonString, ExpansionIdentity identity, Knowledge knowledge)
+	public boolean loadJson(String jasonString, ExpansionIdentity identity, Knowledge knowledge)
 	{
 		try
 		{
-			parseJSONUnsafe(jasonString, identity, knowledge);
+			parseJsonUnsafe(jasonString, identity, knowledge);
 			return true;
 		}
 		catch (Exception e)
@@ -73,20 +64,34 @@ public class JasonExpansions_Engine1Deserializer2000
 		}
 	}
 	
-	public SerialRoot fromJson(String jasonString)
+	public void loadSerial(SerialRoot root, ExpansionIdentity identity, Knowledge knowledge)
+	{
+		prepare(identity, knowledge);
+		continueFromSerial(root, identity, knowledge);
+	}
+	
+	public SerialRoot jsonToSerial(String jasonString)
 	{
 		return new Gson().fromJson(new JsonParser().parse(jasonString).getAsJsonObject(), SerialRoot.class);
 	}
 	
-	private void parseJSONUnsafe(String jasonString, ExpansionIdentity identity, Knowledge knowledge)
+	private void prepare(ExpansionIdentity identity, Knowledge knowledge)
 	{
 		this.UID = identity.getUniqueName();
 		this.knowledgeWorkstation = knowledge;
 		this.elements = new ArrayList<Named>();
 		this.providers = this.knowledgeWorkstation.obtainProviders();
-		
+	}
+	
+	private void parseJsonUnsafe(String jasonString, ExpansionIdentity identity, Knowledge knowledge)
+	{
+		prepare(identity, knowledge);
 		SerialRoot root = new Gson().fromJson(new JsonParser().parse(jasonString).getAsJsonObject(), SerialRoot.class);
-		
+		continueFromSerial(root, identity, knowledge);
+	}
+	
+	private void continueFromSerial(SerialRoot root, ExpansionIdentity identity, Knowledge knowledge)
+	{
 		if (root.dynamic != null)
 		{
 			for (Entry<String, SerialDynamic> entry : root.dynamic.entrySet())
@@ -117,9 +122,10 @@ public class JasonExpansions_Engine1Deserializer2000
 					indexNotComputed = dynamicSheetHash(indexNotComputed);
 				}
 				
-				this.elements.add(new Condition(entry.getKey(), this.providers.getSheetCommander(), new SheetEntry(
-					entry.getValue().sheet, indexNotComputed), this.inverseSymbols.get(entry.getValue().symbol), entry
-					.getValue().value));
+				this.elements.add(new Condition(
+					entry.getKey(), this.providers.getSheetCommander(), new SheetEntry(
+						entry.getValue().sheet, indexNotComputed),
+					Operator.fromSerializedForm(entry.getValue().symbol), entry.getValue().value));
 			}
 		}
 		if (root.set != null)
