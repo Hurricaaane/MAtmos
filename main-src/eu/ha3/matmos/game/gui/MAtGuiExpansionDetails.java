@@ -3,7 +3,12 @@ package eu.ha3.matmos.game.gui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import eu.ha3.matmos.editor.EditorMaster;
+import eu.ha3.matmos.editor.PluggableIntoMinecraft;
+import eu.ha3.matmos.engine0.core.implem.abstractions.ProviderCollection;
+import eu.ha3.matmos.engine0.core.interfaces.Data;
 import eu.ha3.matmos.expansions.Expansion;
+import eu.ha3.matmos.expansions.ExpansionDebugUnit;
 import eu.ha3.matmos.game.debug.ExpansionDebug;
 import eu.ha3.matmos.game.system.MAtMod;
 
@@ -17,6 +22,8 @@ public class MAtGuiExpansionDetails extends GuiScreen
 	private final MAtMod mod;
 	private final Expansion expansion;
 	private final ExpansionDebug debug;
+	
+	private GuiButton edit;
 	
 	public MAtGuiExpansionDetails(MAtGuiMenu__Debug menu, MAtMod mod, Expansion expansion)
 	{
@@ -56,6 +63,7 @@ public class MAtGuiExpansionDetails extends GuiScreen
 		this.buttonList.add(new GuiButton(200, _GAP, _GAP, 70, _UNIT, "Close"));
 		this.buttonList.add(new GuiButton(201, _GAP * 2 + 70, _GAP, 70, _UNIT, "Keep open"));
 		this.buttonList.add(new GuiButton(202, _GAP * 3 + 70 * 2, _GAP, 110, _UNIT, "Reload file"));
+		this.buttonList.add(new GuiButton(203, _GAP * 4 + 70 * 3, _GAP, 110, _UNIT, "Edit..."));
 	}
 	
 	@Override
@@ -80,6 +88,48 @@ public class MAtGuiExpansionDetails extends GuiScreen
 		else if (par1GuiButton.id == 202)
 		{
 			this.expansion.refreshKnowledge();
+		}
+		else if (par1GuiButton.id == 203)
+		{
+			final ExpansionDebugUnit k = this.expansion.obtainDebugUnit();
+			if (k != null)
+			{
+				new EditorMaster(new PluggableIntoMinecraft() {
+					
+					@Override
+					public void reloadFromDisk()
+					{
+					}
+					
+					@Override
+					public void pushJason(String jason)
+					{
+					}
+					
+					@Override
+					public void overrideMachine(String machineName, boolean overrideOnStatus)
+					{
+					}
+					
+					@Override
+					public void liftOverrides()
+					{
+					}
+					
+					@Override
+					public ProviderCollection getProviders()
+					{
+						return k.obtainKnowledge().obtainProviders();
+					}
+					
+					@Override
+					public Data getData()
+					{
+						return null;
+					}
+				}, k.getExpansionFile()).run();
+				
+			}
 		}
 	}
 }

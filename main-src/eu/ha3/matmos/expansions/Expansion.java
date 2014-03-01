@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.FolderResourcePack;
 import eu.ha3.easy.TimeStatistic;
 import eu.ha3.matmos.engine0.core.implem.Knowledge;
 import eu.ha3.matmos.engine0.core.implem.SystemClock;
@@ -310,5 +312,40 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 	public ProviderCollection obtainProvidersForDebugging()
 	{
 		return this.knowledge.obtainProviders();
+	}
+	
+	public ExpansionDebugUnit obtainDebugUnit()
+	{
+		try
+		{
+			File file = null;
+			if (this.identity.getPack() instanceof FolderResourcePack)
+			{
+				FolderResourcePack frp = (FolderResourcePack) this.identity.getPack();
+				String folderName = frp.getPackName();
+				
+				file = new File(Minecraft.getMinecraft().mcDataDir, "resourcepacks/" + folderName);
+				System.out.println(file.getAbsolutePath());
+				if (file.exists() && file.isDirectory())
+				{
+					System.out.println("kkkkkkkkkkk");
+					System.out.println(this.identity.getLocation().getResourcePath());
+					file = new File(file, "assets/matmos/" + this.identity.getLocation().getResourcePath());
+					return new ExpansionDebugUnit(file) {
+						@Override
+						public Knowledge obtainKnowledge()
+						{
+							return Expansion.this.knowledge;
+						}
+					};
+				}
+			}
+			return null;
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			return null;
+		}
 	}
 }
