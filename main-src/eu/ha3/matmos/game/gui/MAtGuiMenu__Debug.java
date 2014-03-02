@@ -383,6 +383,12 @@ public class MAtGuiMenu__Debug extends GuiScreen
 		}
 	}
 	
+	@Override
+	public boolean doesGuiPauseGame()
+	{
+		return false;
+	}
+	
 	private interface ActionPerformed
 	{
 		public void actionPerformed();

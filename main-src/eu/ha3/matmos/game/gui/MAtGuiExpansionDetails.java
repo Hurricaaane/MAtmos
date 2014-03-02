@@ -23,8 +23,6 @@ public class MAtGuiExpansionDetails extends GuiScreen
 	private final Expansion expansion;
 	private final ExpansionDebug debug;
 	
-	private GuiButton edit;
-	
 	public MAtGuiExpansionDetails(MAtGuiMenu__Debug menu, MAtMod mod, Expansion expansion)
 	{
 		this.parentScreen = menu;
