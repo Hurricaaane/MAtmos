@@ -91,23 +91,27 @@ public class Condition extends DependableComponent implements Visualized
 				// because we want to make sure the string resolve to
 				// the same number, even though they are different in string format.
 				
+				// Also unbox them so we can use the not equal / equal operators safely.
+				long lv = longValue;
+				long clx = this.constantLongX;
+				
 				if (this.operatorX == Operator.NOT_EQUAL)
-					return longValue != this.constantLongX;
+					return lv != clx;
 				
 				else if (this.operatorX == Operator.EQUAL)
-					return longValue == this.constantLongX;
+					return lv == clx;
 				
 				else if (this.operatorX == Operator.GREATER)
-					return longValue > this.constantLongX;
+					return lv > clx;
 				
 				else if (this.operatorX == Operator.GREATER_OR_EQUAL)
-					return longValue >= this.constantLongX;
+					return lv >= clx;
 				
 				else if (this.operatorX == Operator.LESSER)
-					return longValue < this.constantLongX;
+					return lv < clx;
 				
 				else if (this.operatorX == Operator.LESSER_OR_EQUAL)
-					return longValue <= this.constantLongX;
+					return lv <= clx;
 				
 				else
 					return false;
