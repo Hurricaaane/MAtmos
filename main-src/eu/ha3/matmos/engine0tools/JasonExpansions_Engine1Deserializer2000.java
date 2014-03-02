@@ -2,6 +2,7 @@ package eu.ha3.matmos.engine0tools;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -177,7 +178,7 @@ public class JasonExpansions_Engine1Deserializer2000
 				}
 				
 				TimedEventInformation tie = null;
-				if (serial.event.length > 0)
+				if (serial.event.size() > 0)
 				{
 					tie =
 						new TimedEventInformation(
@@ -198,6 +199,11 @@ public class JasonExpansions_Engine1Deserializer2000
 	private String dynamicSheetHash(String name)
 	{
 		return this.UID.hashCode() % 1000 + "_" + name;
+	}
+	
+	private <T> List<T> asList(Collection<T> thing)
+	{
+		return new ArrayList<T>(thing);
 	}
 	
 	private <T> List<T> asList(T[] thing)

@@ -70,6 +70,7 @@ import eu.ha3.matmos.expansions.ExpansionIdentity;
 --filenotes-placeholder
 */
 
+@Deprecated
 public class JasonExpansions_Engine1
 {
 	private ArrayList<Named> elements;
