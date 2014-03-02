@@ -75,6 +75,7 @@ import eu.ha3.matmos.engine.core.interfaces.Named;
 import eu.ha3.matmos.engine.core.interfaces.Operator;
 import eu.ha3.matmos.engine.core.interfaces.SheetIndex;
 import eu.ha3.matmos.game.system.MAtmosUtility;
+import eu.ha3.matmos.jsonformat.serializable.SerialRoot;
 import eu.ha3.matmos.tools.Jason.Blob;
 import eu.ha3.matmos.tools.Jason.Plot;
 import eu.ha3.matmos.tools.Jason.Uniq;
@@ -363,8 +364,8 @@ public class LegacyXMLExpansions_Engine1
 		// Uncleaned field order
 		System.out.println(Jason.toJson(this.o_json));
 		
-		//SerialRoot cleanedFieldOrder =
-		//	new JasonExpansions_Engine1Deserializer2000().fromJson(Jason.toJson(this.o_json));
+		SerialRoot cleanedFieldOrder =
+			new JasonExpansions_Engine1Deserializer2000().jsonToSerial(Jason.toJson(this.o_json));
 		if (whereToPutTheJsonFile != null)
 		{
 			try
@@ -375,8 +376,7 @@ public class LegacyXMLExpansions_Engine1
 				}
 				
 				FileWriter write = new FileWriter(whereToPutTheJsonFile);
-				write.append(Jason.toJsonPretty(this.o_json));
-				//write.append(Jason.toJsonPretty(this.cleanedFieldOrder));
+				write.append(Jason.toJsonPretty(cleanedFieldOrder));
 				write.close();
 			}
 			catch (IOException e)
