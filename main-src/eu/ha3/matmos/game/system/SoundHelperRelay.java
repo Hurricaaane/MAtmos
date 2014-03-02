@@ -54,7 +54,7 @@ public class SoundHelperRelay extends SoundHelper implements SoundRelay
 	public boolean setupStreamingToken(
 		int token, String path, float volume, float pitch, boolean isLooping, boolean usesPause)
 	{
-		registerStreaming(tokenToString(token), path, volume, pitch, isLooping, usesPause);
+		//registerStreaming(tokenToString(token), path, volume, pitch, isLooping, usesPause);
 		return true;
 	}
 	
@@ -66,13 +66,13 @@ public class SoundHelperRelay extends SoundHelper implements SoundRelay
 	@Override
 	public void startStreaming(int token, float fadeDuration)
 	{
-		playStreaming(tokenToString(token), (int) (fadeDuration * 1000));
+		//playStreaming(tokenToString(token), (int) (fadeDuration * 1000));
 	}
 	
 	@Override
 	public void stopStreaming(int token, float fadeDuration)
 	{
-		stopStreaming(tokenToString(token), (int) (fadeDuration * 1000));
+		//stopStreaming(tokenToString(token), (int) (fadeDuration * 1000));
 	}
 	
 	@Override
