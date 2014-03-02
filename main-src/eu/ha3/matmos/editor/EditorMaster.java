@@ -10,9 +10,9 @@ import javax.swing.UIManager;
 
 import eu.ha3.matmos.editor.interfaces.EditorModel;
 import eu.ha3.matmos.editor.interfaces.IEditorWindow;
-import eu.ha3.matmos.engine0.core.implem.abstractions.ProviderCollection;
-import eu.ha3.matmos.engine0tools.JasonExpansions_Engine1Deserializer2000;
+import eu.ha3.matmos.engine.core.implem.abstractions.ProviderCollection;
 import eu.ha3.matmos.jsonformat.serializable.SerialRoot;
+import eu.ha3.matmos.tools.JasonExpansions_Engine1Deserializer2000;
 
 /*
 --filenotes-placeholder
@@ -122,6 +122,12 @@ public class EditorMaster implements Runnable, EditorModel
 	
 	private void modelize()
 	{
+		java.awt.EventQueue.invokeLater(new Runnable() {
+			@Override
+			public void run()
+			{
+			}
+		});
 	}
 	
 	private void loadFile() throws IOException
@@ -131,13 +137,26 @@ public class EditorMaster implements Runnable, EditorModel
 		System.out.println(jasonString);
 		this.root = new JasonExpansions_Engine1Deserializer2000().jsonToSerial(jasonString);
 		
-		this.window.refreshFileState();
-		this.window.updateSerial(this.root);
+		java.awt.EventQueue.invokeLater(new Runnable() {
+			@Override
+			public void run()
+			{
+				EditorMaster.this.window.refreshFileState();
+				EditorMaster.this.window.updateSerial(EditorMaster.this.root);
+			}
+		});
 	}
 	
-	private void showErrorPopup(String error)
+	private void showErrorPopup(final String error)
 	{
-		JOptionPane.showMessageDialog(this.window.asComponent(), error, "Error", JOptionPane.ERROR_MESSAGE);
+		java.awt.EventQueue.invokeLater(new Runnable() {
+			@Override
+			public void run()
+			{
+				JOptionPane.showMessageDialog(
+					EditorMaster.this.window.asComponent(), error, "Error", JOptionPane.ERROR_MESSAGE);
+			}
+		});
 	}
 	
 	@Override

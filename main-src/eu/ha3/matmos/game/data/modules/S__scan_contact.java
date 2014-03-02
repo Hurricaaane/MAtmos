@@ -1,6 +1,6 @@
 package eu.ha3.matmos.game.data.modules;
 
-import eu.ha3.matmos.engine0.core.interfaces.Data;
+import eu.ha3.matmos.engine.core.interfaces.Data;
 import eu.ha3.matmos.game.data.abstractions.module.AbstractStringCountModule;
 import eu.ha3.matmos.game.system.MAtmosUtility;
 

@@ -2,7 +2,7 @@ package eu.ha3.matmos.expansions;
 
 import java.io.File;
 
-import eu.ha3.matmos.engine0.core.implem.Knowledge;
+import eu.ha3.matmos.engine.core.implem.Knowledge;
 
 /*
 --filenotes-placeholder

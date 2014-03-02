@@ -7,10 +7,10 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import eu.ha3.matmos.engine0.core.implem.GenericSheet;
-import eu.ha3.matmos.engine0.core.implem.SelfGeneratingData;
-import eu.ha3.matmos.engine0.core.interfaces.Data;
-import eu.ha3.matmos.engine0.debug.DumpData;
+import eu.ha3.matmos.engine.core.implem.GenericSheet;
+import eu.ha3.matmos.engine.core.implem.SelfGeneratingData;
+import eu.ha3.matmos.engine.core.interfaces.Data;
+import eu.ha3.matmos.engine.debug.DumpData;
 import eu.ha3.matmos.expansions.MAtmosConvLogger;
 import eu.ha3.matmos.game.data.abstractions.Collector;
 import eu.ha3.matmos.game.data.abstractions.Processor;

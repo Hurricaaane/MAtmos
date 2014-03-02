@@ -5,9 +5,9 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import eu.ha3.matmos.editor.interfaces.EditorModel;
 import eu.ha3.matmos.editor.interfaces.IStateUpdatable;
 import eu.ha3.matmos.editor.interfaces.IUpdatable;
-import eu.ha3.matmos.engine0.core.implem.abstractions.Provider;
-import eu.ha3.matmos.engine0.core.implem.abstractions.ProviderCollection;
-import eu.ha3.matmos.engine0.core.interfaces.Stated;
+import eu.ha3.matmos.engine.core.implem.abstractions.Provider;
+import eu.ha3.matmos.engine.core.implem.abstractions.ProviderCollection;
+import eu.ha3.matmos.engine.core.interfaces.Stated;
 
 /*
 --filenotes-placeholder

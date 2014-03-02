@@ -207,6 +207,11 @@ public class EditorWindow extends JFrame implements IEditorWindow
 	public void display()
 	{
 		setVisible(true);
+		if (this.model.isMinecraftControlled())
+		{
+			toFront();
+			repaint();
+		}
 	}
 	
 	@Override

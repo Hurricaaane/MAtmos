@@ -1,7 +1,7 @@
 package eu.ha3.matmos.editor;
 
-import eu.ha3.matmos.engine0.core.implem.abstractions.ProviderCollection;
-import eu.ha3.matmos.engine0.core.interfaces.Data;
+import eu.ha3.matmos.engine.core.implem.abstractions.ProviderCollection;
+import eu.ha3.matmos.engine.core.interfaces.Data;
 
 /*
 --filenotes-placeholder

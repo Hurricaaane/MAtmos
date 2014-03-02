@@ -12,7 +12,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
-import eu.ha3.matmos.engine0.core.interfaces.Data;
+import eu.ha3.matmos.engine.core.interfaces.Data;
 import eu.ha3.matmos.game.data.abstractions.Collector;
 import eu.ha3.matmos.game.data.abstractions.Processor;
 import eu.ha3.matmos.game.data.abstractions.module.ModuleProcessor;

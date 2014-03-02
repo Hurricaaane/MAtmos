@@ -14,7 +14,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 
 import eu.ha3.matmos.editor.interfaces.ICSMTrio;
-import eu.ha3.matmos.engine0.core.interfaces.Stated;
+import eu.ha3.matmos.engine.core.interfaces.Stated;
 
 /*
 --filenotes-placeholder

@@ -13,12 +13,12 @@ import net.minecraft.client.gui.FontRenderer;
 
 import org.lwjgl.opengl.GL11;
 
-import eu.ha3.matmos.engine0.core.implem.Junction;
-import eu.ha3.matmos.engine0.core.implem.Machine;
-import eu.ha3.matmos.engine0.core.implem.abstractions.Provider;
-import eu.ha3.matmos.engine0.core.implem.abstractions.ProviderCollection;
-import eu.ha3.matmos.engine0.core.interfaces.Dependable;
-import eu.ha3.matmos.engine0.core.visualize.Visualized;
+import eu.ha3.matmos.engine.core.implem.Junction;
+import eu.ha3.matmos.engine.core.implem.Machine;
+import eu.ha3.matmos.engine.core.implem.abstractions.Provider;
+import eu.ha3.matmos.engine.core.implem.abstractions.ProviderCollection;
+import eu.ha3.matmos.engine.core.interfaces.Dependable;
+import eu.ha3.matmos.engine.core.visualize.Visualized;
 import eu.ha3.matmos.game.system.IDontKnowHowToCode;
 import eu.ha3.matmos.game.system.MAtMod;
 import eu.ha3.mc.haddon.supporting.SupportsFrameEvents;

@@ -2,7 +2,7 @@ package eu.ha3.matmos.editor.interfaces;
 
 import java.io.File;
 
-import eu.ha3.matmos.engine0.core.implem.abstractions.ProviderCollection;
+import eu.ha3.matmos.engine.core.implem.abstractions.ProviderCollection;
 
 /*
 --filenotes-placeholder
