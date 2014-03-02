@@ -1,5 +1,8 @@
 package eu.ha3.matmos.jsonformat.serializable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /*
 --filenotes-placeholder
 */
@@ -12,5 +15,5 @@ public class SerialEvent
 	public float pitch_max = 1f;
 	public int distance = 0;
 	
-	public String[] path = new String[0];
+	public List<String> path = new ArrayList<String>();
 }
