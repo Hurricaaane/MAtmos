@@ -10,19 +10,9 @@ import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-/**
- * A simplified file chooser. There is zero handling of actions performed when a
- * file has been chosen or not for simplicity's sake.
- * 
- * @author Hurry
- * 
- */
+@SuppressWarnings("serial")
 public class FileChooser extends JPanel
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -8411093771682526789L;
 	private JTextField textField;
 	
 	public FileChooser()
@@ -40,9 +30,9 @@ public class FileChooser extends JPanel
 		});
 		add(btnBrowse, BorderLayout.EAST);
 		
-		textField = new JTextField();
-		add(textField, BorderLayout.CENTER);
-		textField.setColumns(10);
+		this.textField = new JTextField();
+		add(this.textField, BorderLayout.CENTER);
+		this.textField.setColumns(10);
 	}
 	
 	/**
@@ -52,18 +42,18 @@ public class FileChooser extends JPanel
 	 */
 	public void setContents(String contents)
 	{
-		textField.setText(contents);
+		this.textField.setText(contents);
 		
 	}
 	
 	/**
 	 * Gets the contents of the text field.
 	 * 
-	 * @param contents
+	 * @return
 	 */
 	public String getContents()
 	{
-		return textField.getText();
+		return this.textField.getText();
 		
 	}
 	
@@ -86,7 +76,7 @@ public class FileChooser extends JPanel
 	
 	private void usingFile(File file)
 	{
-		textField.setText(file.getAbsolutePath());
+		this.textField.setText(file.getAbsolutePath());
 		
 	}
 	

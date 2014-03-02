@@ -11,12 +11,16 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JSeparator;
+import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
 import javax.swing.WindowConstants;
 
 import eu.ha3.matmos.editor.interfaces.EditorModel;
 import eu.ha3.matmos.editor.interfaces.IEditorWindow;
+import eu.ha3.matmos.editor.interfaces.ISerialUpdate;
+import eu.ha3.matmos.jsonformat.serializable.SerialRoot;
 
 /* 
 --filenotes-placeholder
@@ -36,6 +40,12 @@ public class EditorWindow extends JFrame implements IEditorWindow
 	private JMenuItem mntmStartLiveCapture;
 	private JMenuItem mntmStopLiveCapture;
 	private JMenuItem mntmReplaceCurrentFile;
+	private CSMPanelSimpler csm;
+	
+	private EditorModel getModel()
+	{
+		return this.model;
+	}
 	
 	public EditorWindow(EditorModel modelConstruct)
 	{
@@ -128,7 +138,7 @@ public class EditorWindow extends JFrame implements IEditorWindow
 			@Override
 			public void actionPerformed(ActionEvent event)
 			{
-				EditorWindow.this.model.minecraftReloadFromDisk();
+				getModel().minecraftReloadFromDisk();
 			}
 		});
 		this.mnMinecraft.add(mntmMCSaveAndPush);
@@ -153,8 +163,15 @@ public class EditorWindow extends JFrame implements IEditorWindow
 		JMenuItem mntmGenerateDataValues = new JMenuItem("Generate data values file");
 		this.mnMinecraft.add(mntmGenerateDataValues);
 		
-		CSMPanel panel = new CSMPanel();
-		getContentPane().add(panel, BorderLayout.CENTER);
+		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		getContentPane().add(tabbedPane, BorderLayout.CENTER);
+		
+		JPanel panel_1 = new JPanel();
+		tabbedPane.addTab("CSM", null, panel_1, null);
+		panel_1.setLayout(new BorderLayout(0, 0));
+		
+		this.csm = new CSMPanelSimpler();
+		panel_1.add(this.csm, BorderLayout.CENTER);
 		
 		init();
 	}
@@ -196,5 +213,31 @@ public class EditorWindow extends JFrame implements IEditorWindow
 	public Component asComponent()
 	{
 		return this;
+	}
+	
+	@Override
+	public ISerialUpdate getCondition()
+	{
+		return this.csm.getCondition();
+	}
+	
+	@Override
+	public ISerialUpdate getSet()
+	{
+		return this.csm.getSet();
+	}
+	
+	@Override
+	public ISerialUpdate getMachine()
+	{
+		return this.csm.getMachine();
+	}
+	
+	@Override
+	public void updateSerial(SerialRoot root)
+	{
+		this.csm.getCondition().updateSerial(root);
+		this.csm.getSet().updateSerial(root);
+		this.csm.getMachine().updateSerial(root);
 	}
 }

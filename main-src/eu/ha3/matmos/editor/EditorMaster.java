@@ -132,6 +132,7 @@ public class EditorMaster implements Runnable, EditorModel
 		this.root = new JasonExpansions_Engine1Deserializer2000().jsonToSerial(jasonString);
 		
 		this.window.refreshFileState();
+		this.window.updateSerial(this.root);
 	}
 	
 	private void showErrorPopup(String error)
