@@ -29,4 +29,8 @@ public interface EditorModel
 	public String generateJson(boolean pretty);
 	
 	public void minecraftPushCurrentState();
+	
+	public boolean quickSave();
+	
+	public boolean isPlugged();
 }

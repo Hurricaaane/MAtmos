@@ -2,6 +2,7 @@ package eu.ha3.matmos.editor;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -20,7 +21,7 @@ import eu.ha3.matmos.tools.JasonExpansions_Engine1Deserializer2000;
 --filenotes-placeholder
 */
 
-public class EditorMaster implements Runnable, EditorModel
+public class EditorMaster implements Runnable, EditorModel, UnpluggedListener
 {
 	private final IEditorWindow window;
 	
@@ -31,6 +32,8 @@ public class EditorMaster implements Runnable, EditorModel
 	
 	private boolean hasModifiedContents;
 	
+	private boolean isUnplugged;
+	
 	public EditorMaster()
 	{
 		this(null, null);
@@ -39,6 +42,7 @@ public class EditorMaster implements Runnable, EditorModel
 	public EditorMaster(PluggableIntoMinecraft minecraft, File aFileToEdit)
 	{
 		this.minecraft = minecraft;
+		minecraft.addUnpluggedListener(this);
 		try
 		{
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -171,7 +175,7 @@ public class EditorMaster implements Runnable, EditorModel
 	@Override
 	public void minecraftReloadFromDisk()
 	{
-		if (!isMinecraftControlled())
+		if (!isPlugged())
 			return;
 		
 		this.minecraft.reloadFromDisk();
@@ -219,9 +223,66 @@ public class EditorMaster implements Runnable, EditorModel
 	@Override
 	public void minecraftPushCurrentState()
 	{
-		if (!isMinecraftControlled())
+		if (!isPlugged())
 			return;
 		
 		this.minecraft.pushJason(Jason.toJson(this.root));
+	}
+	
+	@Override
+	public boolean quickSave()
+	{
+		if (!hasValidFile())
+			return false;
+		
+		File fileToWrite = this.file;
+		try
+		{
+			if (!fileToWrite.exists())
+			{
+				fileToWrite.createNewFile();
+			}
+			
+			FileWriter write = new FileWriter(fileToWrite);
+			write.append(Jason.toJsonPretty(fileToWrite));
+			write.close();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			
+			final String error = "Writing to disk resulted in an error: " + e.getLocalizedMessage();
+			java.awt.EventQueue.invokeLater(new Runnable() {
+				@Override
+				public void run()
+				{
+					EditorMaster.this.window.showErrorPopup(error);
+				}
+			});
+			return false;
+		}
+		
+		return true;
+	}
+	
+	@Override
+	public void onUnpluggedEvent(PluggableIntoMinecraft pluggable)
+	{
+		this.isUnplugged = true;
+		java.awt.EventQueue.invokeLater(new Runnable() {
+			@Override
+			public void run()
+			{
+				EditorMaster.this.window.disableMinecraftCapabilitites();
+				EditorMaster.this.window.showErrorPopup("Minecraft connection lost!\n"
+					+ "This may be due to Resource Packs being reloaded.\n" + "You should save!");
+			}
+		});
+	}
+	
+	@Override
+	public boolean isPlugged()
+	{
+		return isMinecraftControlled() && !this.isUnplugged;
 	}
 }

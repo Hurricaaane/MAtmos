@@ -15,4 +15,6 @@ public interface IEditorWindow extends ISerialUpdate
 	public void refreshFileState();
 	
 	public void showErrorPopup(String error);
+	
+	public void disableMinecraftCapabilitites();
 }

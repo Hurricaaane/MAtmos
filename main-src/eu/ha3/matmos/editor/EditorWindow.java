@@ -54,6 +54,9 @@ public class EditorWindow extends JFrame implements IEditorWindow
 	private CSMPanelSimpler csm;
 	private JPanel omniPanel;
 	private LDEPanelSimpler lde;
+	private JMenuItem mntmMCSaveAndPush;
+	
+	private JLabel specialWarningLabel;
 	
 	public EditorWindow(EditorModel modelConstruct)
 	{
@@ -71,13 +74,19 @@ public class EditorWindow extends JFrame implements IEditorWindow
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				System.out.println("save");
+				EditorWindow.this.model.quickSave();
 			}
 		});
 		this.mntmFSave.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK));
 		mnFile.add(this.mntmFSave);
 		
 		this.mntmFSaveAs = new JMenuItem("Save as...");
+		this.mntmFSaveAs.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+			}
+		});
 		mnFile.add(this.mntmFSaveAs);
 		
 		JMenuItem mntmFSaveACopy = new JMenuItem("Save a backup copy...");
@@ -163,15 +172,20 @@ public class EditorWindow extends JFrame implements IEditorWindow
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
+				if (!EditorWindow.this.model.isPlugged())
+				{
+					showErrorPopup("Minecraft is unavailable; cannot push.");
+					return;
+				}
 				EditorWindow.this.model.minecraftPushCurrentState();
 			}
 		});
 		mntmMCPushEditorState.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
 		this.mnMinecraft.add(mntmMCPushEditorState);
 		
-		JMenuItem mntmMCSaveAndPush = new JMenuItem("Save file and push to Minecraft");
-		mntmMCSaveAndPush.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, InputEvent.CTRL_MASK));
-		mntmMCSaveAndPush.addActionListener(new ActionListener() {
+		this.mntmMCSaveAndPush = new JMenuItem("Save file and push to Minecraft");
+		this.mntmMCSaveAndPush.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, InputEvent.CTRL_MASK));
+		this.mntmMCSaveAndPush.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event)
 			{
@@ -179,8 +193,13 @@ public class EditorWindow extends JFrame implements IEditorWindow
 				if (!EditorWindow.this.model.isMinecraftControlled())
 					return;
 				
-				if (attemptToSave())
+				if (attemptToQuickSave())
 				{
+					if (!EditorWindow.this.model.isPlugged())
+					{
+						showErrorPopup("Save was successful, but Minecraft is unavailable; cannot push.");
+						return;
+					}
 					EditorWindow.this.model.minecraftReloadFromDisk();
 				}
 				else
@@ -189,7 +208,7 @@ public class EditorWindow extends JFrame implements IEditorWindow
 				}
 			}
 		});
-		this.mnMinecraft.add(mntmMCSaveAndPush);
+		this.mnMinecraft.add(this.mntmMCSaveAndPush);
 		
 		JSeparator separator_3 = new JSeparator();
 		this.mnMinecraft.add(separator_3);
@@ -276,11 +295,11 @@ public class EditorWindow extends JFrame implements IEditorWindow
 			
 			setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 			
-			JLabel label =
+			this.specialWarningLabel =
 				new JLabel(
 					"Integrated with Minecraft. If Minecraft closes/crashes, this window will close. SAVE FREQUENTLY (CTRL-F5 / CTRL-S)");
-			this.omniPanel.add(label, BorderLayout.NORTH);
-			label.setForeground(Color.RED);
+			this.omniPanel.add(this.specialWarningLabel, BorderLayout.NORTH);
+			this.specialWarningLabel.setForeground(Color.RED);
 			
 			this.mntmOpenFile.setEnabled(false);
 			this.mntmFSaveAs.setEnabled(false);
@@ -322,6 +341,7 @@ public class EditorWindow extends JFrame implements IEditorWindow
 		
 		this.mntmFSave.setEnabled(hasValidFile);
 		this.mntmFDiscardChanges.setEnabled(hasValidFile);
+		this.mntmMCSaveAndPush.setEnabled(hasValidFile);
 		
 		if (hasValidFile)
 		{
@@ -375,9 +395,34 @@ public class EditorWindow extends JFrame implements IEditorWindow
 		JOptionPane.showMessageDialog(this, error, "Error", JOptionPane.ERROR_MESSAGE);
 	}
 	
-	private boolean attemptToSave()
+	/**
+	 * Returns true even if the file has no changes.
+	 * 
+	 * @return
+	 */
+	private boolean attemptToQuickSave()
 	{
+		if (!this.model.hasValidFile())
+		{
+			showErrorPopup("Cannot Quick Save: No file is open.");
+			return false;
+		}
+		
+		if (this.model.hasUnsavedChanges())
+			return this.model.quickSave();
+		
 		return true;
-		//return this.model.saveQuick();
+	}
+	
+	@Override
+	public void disableMinecraftCapabilitites()
+	{
+		if (this.specialWarningLabel != null)
+		{
+			this.specialWarningLabel
+				.setText("MINECRAFT CONNECTION LOST. If Minecraft closes/crashes, this window will close. YOU SHOULD SAVE (CTRL-S)");
+		}
+		
+		this.mnMinecraft.setEnabled(false);
 	}
 }

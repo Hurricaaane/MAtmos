@@ -22,4 +22,10 @@ public interface PluggableIntoMinecraft
 	public void liftOverrides();
 	
 	public void reloadFromDisk();
+	
+	public void unplugged();
+	
+	public void addUnpluggedListener(UnpluggedListener listener);
+	
+	public void removeUnpluggedListener(UnpluggedListener listener);
 }

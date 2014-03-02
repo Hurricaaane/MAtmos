@@ -90,7 +90,9 @@ public class MAtGuiExpansionDetails extends GuiScreen
 			final ExpansionDebugUnit k = this.expansion.obtainDebugUnit();
 			if (k != null)
 			{
-				new EditorMaster(new Pluggable(this.mod, this.expansion), k.getExpansionFile()).run();
+				Pluggable plug = new Pluggable(this.mod, this.expansion);
+				this.expansion.addPluggable(plug);
+				new EditorMaster(plug, k.getExpansionFile()).run();
 			}
 		}
 	}

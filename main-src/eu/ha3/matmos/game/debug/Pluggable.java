@@ -1,8 +1,11 @@
 package eu.ha3.matmos.game.debug;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import eu.ha3.matmos.editor.PluggableIntoMinecraft;
+import eu.ha3.matmos.editor.UnpluggedListener;
 import eu.ha3.matmos.engine.core.implem.abstractions.ProviderCollection;
 import eu.ha3.matmos.engine.core.interfaces.Data;
 import eu.ha3.matmos.expansions.Expansion;
@@ -18,6 +21,7 @@ public class Pluggable implements PluggableIntoMinecraft
 	private MAtMod mod;
 	private Expansion expansion;
 	private File file;
+	private List<UnpluggedListener> unpluggedListeners = new ArrayList<UnpluggedListener>();
 	
 	public Pluggable(MAtMod mod, Expansion expansion)
 	{
@@ -47,7 +51,8 @@ public class Pluggable implements PluggableIntoMinecraft
 			public void run()
 			{
 				Pluggable.this.mod.getChatter().printChat(
-					"Reloading from editor state: " + Pluggable.this.expansion.getName() + " " + getTimestamp());
+					ChatColorsSimple.COLOR_AQUA
+						+ "Reloading from editor state: " + Pluggable.this.expansion.getName() + " " + getTimestamp());
 				Pluggable.this.expansion.pushDebugJasonAndRefreshKnowledge(jasonString);
 			}
 		});
@@ -71,7 +76,8 @@ public class Pluggable implements PluggableIntoMinecraft
 			public void run()
 			{
 				Pluggable.this.mod.getChatter().printChat(
-					"Reloading from disk: " + Pluggable.this.expansion.getName() + " " + getTimestamp());
+					ChatColorsSimple.COLOR_BLUE
+						+ "Reloading from disk: " + Pluggable.this.expansion.getName() + " " + getTimestamp());
 				Pluggable.this.expansion.refreshKnowledge();
 			}
 		});
@@ -88,4 +94,24 @@ public class Pluggable implements PluggableIntoMinecraft
 		return this.file != null;
 	}
 	
+	@Override
+	public void unplugged()
+	{
+		for (UnpluggedListener listener : this.unpluggedListeners)
+		{
+			listener.onUnpluggedEvent(this);
+		}
+	}
+	
+	@Override
+	public void addUnpluggedListener(UnpluggedListener listener)
+	{
+		this.unpluggedListeners.add(listener);
+	}
+	
+	@Override
+	public void removeUnpluggedListener(UnpluggedListener listener)
+	{
+		this.unpluggedListeners.remove(listener);
+	}
 }

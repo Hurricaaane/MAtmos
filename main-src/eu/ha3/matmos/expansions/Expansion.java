@@ -12,6 +12,7 @@ import java.util.Set;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.FolderResourcePack;
 import eu.ha3.easy.TimeStatistic;
+import eu.ha3.matmos.editor.PluggableIntoMinecraft;
 import eu.ha3.matmos.engine.core.implem.Knowledge;
 import eu.ha3.matmos.engine.core.implem.SystemClock;
 import eu.ha3.matmos.engine.core.implem.abstractions.ProviderCollection;
@@ -52,7 +53,10 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 	
 	private Knowledge knowledge; // Knowledge is not final
 	private LoadingAgent agent;
+	
+	//
 	private LoadingAgent jasonDebugPush;
+	private List<PluggableIntoMinecraft> pluggables = new ArrayList<PluggableIntoMinecraft>();
 	
 	public Expansion(
 		ExpansionIdentity identity, Data data, Collector collector, SoundAccessor accessor,
@@ -291,6 +295,11 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 		this.capabilities.cleanUp();
 		newKnowledge();
 		setLoadingAgent(null);
+		
+		for (PluggableIntoMinecraft pluggable : this.pluggables)
+		{
+			pluggable.unplugged();
+		}
 	}
 	
 	@Override
@@ -364,5 +373,10 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	public void addPluggable(PluggableIntoMinecraft pluggable)
+	{
+		this.pluggables.add(pluggable);
 	}
 }
