@@ -1,7 +1,6 @@
 package eu.ha3.matmos.tools;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map.Entry;
@@ -206,10 +205,5 @@ public class JasonExpansions_Engine1Deserializer2000
 	private <T> List<T> asList(Collection<T> thing)
 	{
 		return new ArrayList<T>(thing);
-	}
-	
-	private <T> List<T> asList(T[] thing)
-	{
-		return new ArrayList<T>(Arrays.asList(thing));
 	}
 }

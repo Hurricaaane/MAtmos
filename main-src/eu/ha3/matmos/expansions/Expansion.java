@@ -21,6 +21,7 @@ import eu.ha3.matmos.engine.core.interfaces.EventInterface;
 import eu.ha3.matmos.engine.core.interfaces.ReferenceTime;
 import eu.ha3.matmos.engine.core.interfaces.Simulated;
 import eu.ha3.matmos.expansions.agents.LoadingAgent;
+import eu.ha3.matmos.expansions.agents.RawJasonLoadingAgent;
 import eu.ha3.matmos.expansions.volume.VolumeContainer;
 import eu.ha3.matmos.expansions.volume.VolumeUpdatable;
 import eu.ha3.matmos.game.data.ModularDataGatherer;
@@ -51,6 +52,7 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 	
 	private Knowledge knowledge; // Knowledge is not final
 	private LoadingAgent agent;
+	private LoadingAgent jasonDebugPush;
 	
 	public Expansion(
 		ExpansionIdentity identity, Data data, Collector collector, SoundAccessor accessor,
@@ -99,6 +101,12 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 		}
 	}
 	
+	public void pushDebugJasonAndRefreshKnowledge(String jasonString)
+	{
+		this.jasonDebugPush = new RawJasonLoadingAgent(jasonString);
+		refreshKnowledge();
+	}
+	
 	private void newKnowledge()
 	{
 		this.knowledge = new Knowledge(this.capabilities, TIME);
@@ -112,7 +120,16 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 		
 		newKnowledge();
 		
-		this.isSuccessfullyBuilt = this.agent.load(this.identity, this.knowledge);
+		if (this.jasonDebugPush == null)
+		{
+			this.isSuccessfullyBuilt = this.agent.load(this.identity, this.knowledge);
+		}
+		else
+		{
+			this.isSuccessfullyBuilt = this.jasonDebugPush.load(this.identity, this.knowledge);
+			this.jasonDebugPush = null;
+		}
+		
 		if (!this.isSuccessfullyBuilt)
 		{
 			newKnowledge();

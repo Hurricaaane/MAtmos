@@ -2,6 +2,8 @@ package eu.ha3.matmos.game.system;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -66,6 +68,10 @@ public class MAtMod extends HaddonImpl
 	
 	// Use once
 	private boolean hasFirstTickPassed;
+	
+	// Debug queue
+	private Object queueLock = new Object();
+	private List<Runnable> queue = new ArrayList<Runnable>();
 	
 	public MAtMod()
 	{
@@ -220,6 +226,17 @@ public class MAtMod extends HaddonImpl
 		this.userControl.onTick();
 		if (this.isActivated)
 		{
+			if (!this.queue.isEmpty())
+			{
+				synchronized (this.queueLock)
+				{
+					while (!this.queue.isEmpty())
+					{
+						this.queue.remove(0).run();
+					}
+				}
+			}
+			
 			this.dataGatherer.process();
 			this.expansionManager.onTick();
 		}
@@ -353,5 +370,13 @@ public class MAtMod extends HaddonImpl
 	public VisualDebugger getVisualDebugger()
 	{
 		return this.visualDebugger;
+	}
+	
+	public void queueForNextTick(Runnable runnable)
+	{
+		synchronized (this.queueLock)
+		{
+			this.queue.add(runnable);
+		}
 	}
 }

@@ -9,6 +9,8 @@ import eu.ha3.matmos.engine.core.interfaces.Data;
 
 public interface PluggableIntoMinecraft
 {
+	public boolean isReadOnly();
+	
 	public ProviderCollection getProviders();
 	
 	public Data getData();

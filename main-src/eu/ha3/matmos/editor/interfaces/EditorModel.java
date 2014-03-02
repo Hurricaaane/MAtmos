@@ -19,4 +19,14 @@ public interface EditorModel
 	public boolean isMinecraftControlled();
 	
 	public ProviderCollection getProviderCollection();
+	
+	public File getWorkingDirectory();
+	
+	public boolean hasUnsavedChanges();
+	
+	public File getFile();
+	
+	public String generateJson(boolean pretty);
+	
+	public void minecraftPushCurrentState();
 }

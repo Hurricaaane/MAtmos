@@ -5,13 +5,15 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Scanner;
 
-import javax.swing.JOptionPane;
 import javax.swing.UIManager;
+
+import com.google.gson.stream.MalformedJsonException;
 
 import eu.ha3.matmos.editor.interfaces.EditorModel;
 import eu.ha3.matmos.editor.interfaces.IEditorWindow;
 import eu.ha3.matmos.engine.core.implem.abstractions.ProviderCollection;
 import eu.ha3.matmos.jsonformat.serializable.SerialRoot;
+import eu.ha3.matmos.tools.Jason;
 import eu.ha3.matmos.tools.JasonExpansions_Engine1Deserializer2000;
 
 /*
@@ -25,7 +27,9 @@ public class EditorMaster implements Runnable, EditorModel
 	private final PluggableIntoMinecraft minecraft;
 	private File file;
 	
-	private SerialRoot root;
+	private SerialRoot root = new SerialRoot();
+	
+	private boolean hasModifiedContents;
 	
 	public EditorMaster()
 	{
@@ -79,7 +83,7 @@ public class EditorMaster implements Runnable, EditorModel
 	{
 		if (potentialFile == null)
 		{
-			this.file = null;
+			showErrorPopup("Missing file pointer.");
 			return;
 		}
 		
@@ -97,26 +101,28 @@ public class EditorMaster implements Runnable, EditorModel
 		
 		try
 		{
-			loadFile();
+			loadFile(potentialFile);
 			this.file = potentialFile;
 		}
-		catch (IOException e)
+		catch (Exception e)
 		{
 			this.file = null;
 			
 			showErrorPopup("File could not be loaded:\n" + e.getLocalizedMessage());
 			reset();
+			updateFileState();
 		}
 	}
 	
 	private void reset()
 	{
-		flush();
+		flushFileAndSerial();
 		modelize();
 	}
 	
-	private void flush()
+	private void flushFileAndSerial()
 	{
+		this.file = null;
 		this.root = new SerialRoot();
 	}
 	
@@ -130,13 +136,17 @@ public class EditorMaster implements Runnable, EditorModel
 		});
 	}
 	
-	private void loadFile() throws IOException
+	private void loadFile(File potentialFile) throws IOException, MalformedJsonException
 	{
-		flush();
-		String jasonString = new Scanner(new FileInputStream(this.file)).useDelimiter("\\Z").next();
+		flushFileAndSerial();
+		String jasonString = new Scanner(new FileInputStream(potentialFile)).useDelimiter("\\Z").next();
 		System.out.println(jasonString);
 		this.root = new JasonExpansions_Engine1Deserializer2000().jsonToSerial(jasonString);
-		
+		updateFileState();
+	}
+	
+	private void updateFileState()
+	{
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run()
@@ -153,8 +163,7 @@ public class EditorMaster implements Runnable, EditorModel
 			@Override
 			public void run()
 			{
-				JOptionPane.showMessageDialog(
-					EditorMaster.this.window.asComponent(), error, "Error", JOptionPane.ERROR_MESSAGE);
+				EditorMaster.this.window.showErrorPopup(error);
 			}
 		});
 	}
@@ -181,5 +190,38 @@ public class EditorMaster implements Runnable, EditorModel
 			return null;
 		
 		return this.minecraft.getProviders();
+	}
+	
+	@Override
+	public File getWorkingDirectory()
+	{
+		return new File(System.getProperty("user.dir"));
+	}
+	
+	@Override
+	public boolean hasUnsavedChanges()
+	{
+		return this.hasModifiedContents;
+	}
+	
+	@Override
+	public File getFile()
+	{
+		return this.file;
+	}
+	
+	@Override
+	public String generateJson(boolean pretty)
+	{
+		return pretty ? Jason.toJsonPretty(this.root) : Jason.toJson(this.root);
+	}
+	
+	@Override
+	public void minecraftPushCurrentState()
+	{
+		if (!isMinecraftControlled())
+			return;
+		
+		this.minecraft.pushJason(Jason.toJson(this.root));
 	}
 }

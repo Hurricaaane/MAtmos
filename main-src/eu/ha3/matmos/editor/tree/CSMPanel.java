@@ -1,4 +1,4 @@
-package eu.ha3.matmos.editor;
+package eu.ha3.matmos.editor.tree;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -13,7 +13,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 
-import eu.ha3.matmos.editor.interfaces.ICSMTrio;
 import eu.ha3.matmos.engine.core.interfaces.Stated;
 
 /*

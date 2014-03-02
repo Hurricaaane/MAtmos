@@ -4,12 +4,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import eu.ha3.matmos.editor.EditorMaster;
-import eu.ha3.matmos.editor.PluggableIntoMinecraft;
-import eu.ha3.matmos.engine.core.implem.abstractions.ProviderCollection;
-import eu.ha3.matmos.engine.core.interfaces.Data;
 import eu.ha3.matmos.expansions.Expansion;
 import eu.ha3.matmos.expansions.ExpansionDebugUnit;
 import eu.ha3.matmos.game.debug.ExpansionDebug;
+import eu.ha3.matmos.game.debug.Pluggable;
 import eu.ha3.matmos.game.system.MAtMod;
 
 /*
@@ -92,41 +90,7 @@ public class MAtGuiExpansionDetails extends GuiScreen
 			final ExpansionDebugUnit k = this.expansion.obtainDebugUnit();
 			if (k != null)
 			{
-				new EditorMaster(new PluggableIntoMinecraft() {
-					
-					@Override
-					public void reloadFromDisk()
-					{
-					}
-					
-					@Override
-					public void pushJason(String jason)
-					{
-					}
-					
-					@Override
-					public void overrideMachine(String machineName, boolean overrideOnStatus)
-					{
-					}
-					
-					@Override
-					public void liftOverrides()
-					{
-					}
-					
-					@Override
-					public ProviderCollection getProviders()
-					{
-						return k.obtainKnowledge().obtainProviders();
-					}
-					
-					@Override
-					public Data getData()
-					{
-						return null;
-					}
-				}, k.getExpansionFile()).run();
-				
+				new EditorMaster(new Pluggable(this.mod, this.expansion), k.getExpansionFile()).run();
 			}
 		}
 	}
