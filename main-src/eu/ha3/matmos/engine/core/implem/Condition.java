@@ -75,7 +75,10 @@ public class Condition extends DependableComponent implements Visualized
 			Long longValue = LongFloatSimplificator.longOf(value);
 			//Float floatValue = LongFloatSimplificator.floatOf(this.constant);
 			
-			if (this.operatorX == Operator.IN_LIST)
+			if (this.operatorX == Operator.ALWAYS_TRUE)
+				return true;
+			
+			else if (this.operatorX == Operator.IN_LIST)
 				return this.sheetCommander.listHas(this.constantX, value);
 			
 			else if (this.operatorX == Operator.NOT_IN_LIST)
