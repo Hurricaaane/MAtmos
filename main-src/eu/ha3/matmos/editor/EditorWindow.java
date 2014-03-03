@@ -51,7 +51,7 @@ public class EditorWindow extends JFrame implements IEditorWindow
 	private JMenuItem mntmStartLiveCapture;
 	private JMenuItem mntmStopLiveCapture;
 	private JMenuItem mntmReplaceCurrentFile;
-	private CSMPanelSimpler csm;
+	private CSMPanel csm;
 	private JPanel omniPanel;
 	private LDEPanelSimpler lde;
 	private JMenuItem mntmMCSaveAndPush;
@@ -85,11 +85,65 @@ public class EditorWindow extends JFrame implements IEditorWindow
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
+				JFileChooser fc = new OverwriteWarningJasonFileChooser(EditorWindow.this.model.getExpansionDirectory());
+				int returnValue = fc.showSaveDialog(EditorWindow.this);
+				if (returnValue != JFileChooser.APPROVE_OPTION)
+					return;
+				
+				File file = fc.getSelectedFile();
+				if (file == null || file.isDirectory())
+				{
+					if (file.isDirectory())
+					{
+						showErrorPopup("Unexpected error: The file is a directory.");
+					}
+					else
+					{
+						showErrorPopup("Unexpected error: No file pointer.");
+					}
+					return;
+				}
+				
+				boolean success = EditorWindow.this.model.longSave(file, true);
+				if (!success)
+				{
+					actionPerformed(e);
+				}
 			}
 		});
 		mnFile.add(this.mntmFSaveAs);
 		
 		JMenuItem mntmFSaveACopy = new JMenuItem("Save a backup copy...");
+		mntmFSaveACopy.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				JFileChooser fc = new OverwriteWarningJasonFileChooser(EditorWindow.this.model.getExpansionDirectory());
+				int returnValue = fc.showSaveDialog(EditorWindow.this);
+				if (returnValue != JFileChooser.APPROVE_OPTION)
+					return;
+				
+				File file = fc.getSelectedFile();
+				if (file == null || file.isDirectory())
+				{
+					if (file.isDirectory())
+					{
+						showErrorPopup("Unexpected error: The file is a directory.");
+					}
+					else
+					{
+						showErrorPopup("Unexpected error: No file pointer.");
+					}
+					return;
+				}
+				
+				boolean success = EditorWindow.this.model.longSave(file, false);
+				if (!success)
+				{
+					actionPerformed(e);
+				}
+			}
+		});
 		mntmFSaveACopy
 			.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK | InputEvent.ALT_MASK));
 		mnFile.add(mntmFSaveACopy);
@@ -105,7 +159,7 @@ public class EditorWindow extends JFrame implements IEditorWindow
 				if (!continueUnsavedChangesWarningIfNecessary())
 					return;
 				
-				JFileChooser fc = new JFileChooser(EditorWindow.this.model.getWorkingDirectory());
+				JFileChooser fc = new JasonFileChooser(EditorWindow.this.model.getExpansionDirectory());
 				int returnValue = fc.showOpenDialog(EditorWindow.this);
 				if (returnValue != JFileChooser.APPROVE_OPTION)
 					return;
@@ -195,16 +249,25 @@ public class EditorWindow extends JFrame implements IEditorWindow
 				
 				if (attemptToQuickSave())
 				{
-					if (!EditorWindow.this.model.isPlugged())
+					if (EditorWindow.this.model.isPlugged())
+					{
+						EditorWindow.this.model.minecraftReloadFromDisk();
+					}
+					else
 					{
 						showErrorPopup("Save was successful, but Minecraft is unavailable; cannot push.");
-						return;
 					}
-					EditorWindow.this.model.minecraftReloadFromDisk();
 				}
 				else
 				{
-					showErrorPopup("No save performed: Minecraft won't be reloaded.");
+					if (EditorWindow.this.model.isPlugged())
+					{
+						showErrorPopup("Saving was unsuccessful. Minecraft won't be reloaded.");
+					}
+					else
+					{
+						showErrorPopup("Saving was unsuccessful.");
+					}
 				}
 			}
 		});
@@ -247,7 +310,7 @@ public class EditorWindow extends JFrame implements IEditorWindow
 		tabbedPane.addTab("CSM", null, csmTab, null);
 		csmTab.setLayout(new BorderLayout(0, 0));
 		
-		this.csm = new CSMPanelSimpler();
+		this.csm = new CSMPanel();
 		csmTab.add(this.csm, BorderLayout.CENTER);
 		
 		JPanel ldeTab = new JPanel();
@@ -338,10 +401,11 @@ public class EditorWindow extends JFrame implements IEditorWindow
 	public void refreshFileState()
 	{
 		boolean hasValidFile = this.model.hasValidFile();
+		boolean hasUnsavedChanges = this.model.hasUnsavedChanges();
 		
-		this.mntmFSave.setEnabled(hasValidFile);
-		this.mntmFDiscardChanges.setEnabled(hasValidFile);
-		this.mntmMCSaveAndPush.setEnabled(hasValidFile);
+		this.mntmFSave.setEnabled(hasValidFile && hasUnsavedChanges);
+		this.mntmFDiscardChanges.setEnabled(hasValidFile && !hasUnsavedChanges);
+		this.mntmMCSaveAndPush.setEnabled(hasValidFile && hasUnsavedChanges);
 		
 		if (hasValidFile)
 		{
@@ -424,5 +488,8 @@ public class EditorWindow extends JFrame implements IEditorWindow
 		}
 		
 		this.mnMinecraft.setEnabled(false);
+		
+		showErrorPopup("Minecraft connection lost!\n"
+			+ "This may be due to Resource Packs being reloaded.\n" + "You should save!");
 	}
 }

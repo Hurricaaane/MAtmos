@@ -1,5 +1,7 @@
 package eu.ha3.matmos.editor;
 
+import java.io.File;
+
 import eu.ha3.matmos.engine.core.implem.abstractions.ProviderCollection;
 import eu.ha3.matmos.engine.core.interfaces.Data;
 
@@ -10,6 +12,10 @@ import eu.ha3.matmos.engine.core.interfaces.Data;
 public interface PluggableIntoMinecraft
 {
 	public boolean isReadOnly();
+	
+	public File getFileIfAvailable();
+	
+	public File getWorkingDirectoryIfAvailable();
 	
 	public ProviderCollection getProviders();
 	
@@ -28,4 +34,6 @@ public interface PluggableIntoMinecraft
 	public void addUnpluggedListener(UnpluggedListener listener);
 	
 	public void removeUnpluggedListener(UnpluggedListener listener);
+	
+	public void onEditorClosed();
 }

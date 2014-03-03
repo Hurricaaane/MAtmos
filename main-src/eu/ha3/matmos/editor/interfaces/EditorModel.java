@@ -18,7 +18,7 @@ public interface EditorModel
 	
 	public boolean isMinecraftControlled();
 	
-	public ProviderCollection getProviderCollection();
+	public ProviderCollection getProviderCollectionIfAvailable();
 	
 	public File getWorkingDirectory();
 	
@@ -32,5 +32,11 @@ public interface EditorModel
 	
 	public boolean quickSave();
 	
+	public boolean longSave(File location, boolean setAsNewPointer);
+	
 	public boolean isPlugged();
+	
+	public File getExpansionDirectory();
+	
+	public File getSoundDirectory();
 }

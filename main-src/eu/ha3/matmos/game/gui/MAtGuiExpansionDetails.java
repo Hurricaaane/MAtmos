@@ -6,9 +6,11 @@ import net.minecraft.client.gui.GuiScreen;
 import eu.ha3.matmos.editor.EditorMaster;
 import eu.ha3.matmos.expansions.Expansion;
 import eu.ha3.matmos.expansions.ExpansionDebugUnit;
-import eu.ha3.matmos.game.debug.ExpansionDebug;
-import eu.ha3.matmos.game.debug.Pluggable;
+import eu.ha3.matmos.expansions.ReadOnlyJasonStringEDU;
+import eu.ha3.matmos.game.debug.PluggableImpl;
+import eu.ha3.matmos.game.debug.VisualExpansionDebugging;
 import eu.ha3.matmos.game.system.MAtMod;
+import eu.ha3.mc.quick.chat.ChatColorsSimple;
 
 /*
 --filenotes-placeholder
@@ -19,14 +21,14 @@ public class MAtGuiExpansionDetails extends GuiScreen
 	private final MAtGuiMenu__Debug parentScreen;
 	private final MAtMod mod;
 	private final Expansion expansion;
-	private final ExpansionDebug debug;
+	private final VisualExpansionDebugging debug;
 	
 	public MAtGuiExpansionDetails(MAtGuiMenu__Debug menu, MAtMod mod, Expansion expansion)
 	{
 		this.parentScreen = menu;
 		this.mod = mod;
 		this.expansion = expansion;
-		this.debug = new ExpansionDebug(this.mod, expansion.getName());
+		this.debug = new VisualExpansionDebugging(this.mod, expansion.getName());
 	}
 	
 	@Override
@@ -87,12 +89,22 @@ public class MAtGuiExpansionDetails extends GuiScreen
 		}
 		else if (par1GuiButton.id == 203)
 		{
-			final ExpansionDebugUnit k = this.expansion.obtainDebugUnit();
-			if (k != null)
+			final ExpansionDebugUnit debugUnit = this.expansion.obtainDebugUnit();
+			if (debugUnit != null)
 			{
-				Pluggable plug = new Pluggable(this.mod, this.expansion);
+				PluggableImpl plug = new PluggableImpl(this.mod, this.expansion);
 				this.expansion.addPluggable(plug);
-				new EditorMaster(plug, k.getExpansionFile()).run();
+				
+				new EditorMaster(plug).run();
+				
+				if (debugUnit instanceof ReadOnlyJasonStringEDU)
+				{
+					// XXX Read only mode
+					this.mod.getChatter().printChat(
+						ChatColorsSimple.COLOR_RED + "Expansions inside ZIP files are not supported in this version.");
+					this.mod.getChatter().printChatShort(
+						ChatColorsSimple.COLOR_RED + "Please unzip the resource packs to be able to view them.");
+				}
 			}
 		}
 	}

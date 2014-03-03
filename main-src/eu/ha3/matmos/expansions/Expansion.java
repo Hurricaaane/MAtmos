@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Scanner;
 import java.util.Set;
 
 import net.minecraft.client.Minecraft;
@@ -344,35 +345,84 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 	{
 		try
 		{
-			File file = null;
 			if (this.identity.getPack() instanceof FolderResourcePack)
 			{
 				FolderResourcePack frp = (FolderResourcePack) this.identity.getPack();
 				String folderName = frp.getPackName();
+				// XXX: getPackName might not be specified to return the folder name?
 				
-				file = new File(Minecraft.getMinecraft().mcDataDir, "resourcepacks/" + folderName);
-				System.out.println(file.getAbsolutePath());
-				if (file.exists() && file.isDirectory())
+				final File folder = new File(Minecraft.getMinecraft().mcDataDir, "resourcepacks/" + folderName);
+				
+				if (folder.exists() && folder.isDirectory())
 				{
-					System.out.println("kkkkkkkkkkk");
 					System.out.println(this.identity.getLocation().getResourcePath());
-					file = new File(file, "assets/matmos/" + this.identity.getLocation().getResourcePath());
-					return new ExpansionDebugUnit(file) {
+					final File file =
+						new File(folder, "assets/matmos/" + this.identity.getLocation().getResourcePath());
+					
+					return new FolderResourcePackEditableEDU() {
 						@Override
 						public Knowledge obtainKnowledge()
 						{
 							return Expansion.this.knowledge;
 						}
+						
+						@Override
+						public Data obtainData()
+						{
+							return Expansion.this.data;
+						}
+						
+						@Override
+						public File obtainExpansionFile()
+						{
+							return file;
+						}
+						
+						@Override
+						public File obtainExpansionFolder()
+						{
+							return folder;
+						}
 					};
 				}
 			}
-			return null;
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			return null;
 		}
+		
+		return new ReadOnlyJasonStringEDU() {
+			
+			@Override
+			public Knowledge obtainKnowledge()
+			{
+				return Expansion.this.knowledge;
+			}
+			
+			@Override
+			public Data obtainData()
+			{
+				return Expansion.this.data;
+			}
+			
+			@Override
+			public String obtainJasonString()
+			{
+				try
+				{
+					// XXX does not handle XML 
+					return new Scanner(Expansion.this.identity.getPack().getInputStream(
+						Expansion.this.identity.getLocation())).useDelimiter("\\Z").next();
+				}
+				catch (IOException e)
+				{
+					e.printStackTrace();
+					System.err.println("Jason unavailable.");
+					return "{}";
+				}
+			}
+		};
 	}
 	
 	public void addPluggable(PluggableIntoMinecraft pluggable)

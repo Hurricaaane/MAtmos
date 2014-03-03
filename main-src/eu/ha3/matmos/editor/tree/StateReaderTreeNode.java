@@ -36,7 +36,7 @@ public abstract class StateReaderTreeNode extends DefaultMutableTreeNode impleme
 		if (!model.isMinecraftControlled())
 			return;
 		
-		this.isActive = getProvider(model.getProviderCollection()).exists(this.name);
+		this.isActive = getProvider(model.getProviderCollectionIfAvailable()).exists(this.name);
 	}
 	
 	abstract protected Provider<? extends Stated> getProvider(ProviderCollection collection);

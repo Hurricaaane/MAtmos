@@ -20,9 +20,9 @@ import eu.ha3.matmos.engine.core.interfaces.Stated;
 */
 
 @SuppressWarnings("serial")
-public class CSMPanel extends JPanel implements ICSMTrio
+public class CSMPanelTree extends JPanel implements ICSMTrio
 {
-	public CSMPanel()
+	public CSMPanelTree()
 	{
 		setLayout(new BorderLayout(0, 0));
 		

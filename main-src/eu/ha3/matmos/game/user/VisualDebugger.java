@@ -16,7 +16,7 @@ import eu.ha3.matmos.engine.core.interfaces.Sheet;
 import eu.ha3.matmos.game.data.ModularDataGatherer;
 import eu.ha3.matmos.game.data.abstractions.scanner.Progress;
 import eu.ha3.matmos.game.data.abstractions.scanner.ScannerModule;
-import eu.ha3.matmos.game.debug.ExpansionDebug;
+import eu.ha3.matmos.game.debug.VisualExpansionDebugging;
 import eu.ha3.matmos.game.system.MAtMod;
 import eu.ha3.mc.haddon.supporting.SupportsFrameEvents;
 import eu.ha3.mc.quick.chat.ChatColorsSimple;
@@ -31,7 +31,7 @@ public class VisualDebugger implements SupportsFrameEvents
 	private final ModularDataGatherer dataGatherer;
 	
 	private DebugMode mode = DebugMode.NONE;
-	private ExpansionDebug ed;
+	private VisualExpansionDebugging ed;
 	private String scanDebug;
 	
 	public VisualDebugger(MAtMod mod, ModularDataGatherer dataGatherer)
@@ -40,7 +40,7 @@ public class VisualDebugger implements SupportsFrameEvents
 		this.dataGatherer = dataGatherer;
 	}
 	
-	public void debugModeExpansion(ExpansionDebug ed)
+	public void debugModeExpansion(VisualExpansionDebugging ed)
 	{
 		this.ed = ed;
 		this.mode = DebugMode.EXPANSION;

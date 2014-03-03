@@ -26,23 +26,36 @@ public class EditorMaster implements Runnable, EditorModel, UnpluggedListener
 	private final IEditorWindow window;
 	
 	private final PluggableIntoMinecraft minecraft;
-	private File file;
-	
-	private SerialRoot root = new SerialRoot();
-	
-	private boolean hasModifiedContents;
-	
 	private boolean isUnplugged;
+	
+	private File file;
+	private File workingDirectory = new File(System.getProperty("user.dir"));
+	private SerialRoot root = new SerialRoot();
+	private boolean hasModifiedContents;
 	
 	public EditorMaster()
 	{
-		this(null, null);
+		this(null);
 	}
 	
-	public EditorMaster(PluggableIntoMinecraft minecraft, File aFileToEdit)
+	public EditorMaster(PluggableIntoMinecraft minecraft)
 	{
+		File potentialFile = this.file;
+		
 		this.minecraft = minecraft;
-		minecraft.addUnpluggedListener(this);
+		if (minecraft != null)
+		{
+			minecraft.addUnpluggedListener(this);
+			
+			File fileIF = minecraft.getFileIfAvailable();
+			File workingDirectoryIF = minecraft.getWorkingDirectoryIfAvailable();
+			if (fileIF != null && workingDirectoryIF != null)
+			{
+				potentialFile = fileIF;
+				this.workingDirectory = workingDirectoryIF;
+			}
+		}
+		
 		try
 		{
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -54,8 +67,9 @@ public class EditorMaster implements Runnable, EditorModel, UnpluggedListener
 		
 		this.window = new EditorWindow(this);
 		reset();
+		// Set file after reset
 		
-		this.file = aFileToEdit;
+		this.file = potentialFile;
 	}
 	
 	@Override
@@ -114,7 +128,7 @@ public class EditorMaster implements Runnable, EditorModel, UnpluggedListener
 			
 			showErrorPopup("File could not be loaded:\n" + e.getLocalizedMessage());
 			reset();
-			updateFileState();
+			updateFileAndContentsState();
 		}
 	}
 	
@@ -146,7 +160,19 @@ public class EditorMaster implements Runnable, EditorModel, UnpluggedListener
 		String jasonString = new Scanner(new FileInputStream(potentialFile)).useDelimiter("\\Z").next();
 		System.out.println(jasonString);
 		this.root = new JasonExpansions_Engine1Deserializer2000().jsonToSerial(jasonString);
-		updateFileState();
+		updateFileAndContentsState();
+	}
+	
+	private void updateFileAndContentsState()
+	{
+		java.awt.EventQueue.invokeLater(new Runnable() {
+			@Override
+			public void run()
+			{
+				EditorMaster.this.window.refreshFileState();
+				EditorMaster.this.window.updateSerial(EditorMaster.this.root);
+			}
+		});
 	}
 	
 	private void updateFileState()
@@ -156,7 +182,6 @@ public class EditorMaster implements Runnable, EditorModel, UnpluggedListener
 			public void run()
 			{
 				EditorMaster.this.window.refreshFileState();
-				EditorMaster.this.window.updateSerial(EditorMaster.this.root);
 			}
 		});
 	}
@@ -188,9 +213,9 @@ public class EditorMaster implements Runnable, EditorModel, UnpluggedListener
 	}
 	
 	@Override
-	public ProviderCollection getProviderCollection()
+	public ProviderCollection getProviderCollectionIfAvailable()
 	{
-		if (!isMinecraftControlled())
+		if (!isPlugged())
 			return null;
 		
 		return this.minecraft.getProviders();
@@ -199,7 +224,7 @@ public class EditorMaster implements Runnable, EditorModel, UnpluggedListener
 	@Override
 	public File getWorkingDirectory()
 	{
-		return new File(System.getProperty("user.dir"));
+		return this.workingDirectory;
 	}
 	
 	@Override
@@ -230,12 +255,36 @@ public class EditorMaster implements Runnable, EditorModel, UnpluggedListener
 	}
 	
 	@Override
+	public boolean longSave(File location, boolean setAsNewPointer)
+	{
+		boolean success = writeToFile(location);
+		
+		if (success && setAsNewPointer)
+		{
+			this.file = location;
+			this.hasModifiedContents = false;
+			updateFileState();
+		}
+		
+		return success;
+	}
+	
+	@Override
 	public boolean quickSave()
 	{
 		if (!hasValidFile())
 			return false;
 		
-		File fileToWrite = this.file;
+		boolean success = writeToFile(this.file);
+		if (success)
+		{
+			updateFileState();
+		}
+		return success;
+	}
+	
+	private boolean writeToFile(File fileToWrite)
+	{
 		try
 		{
 			if (!fileToWrite.exists())
@@ -244,7 +293,7 @@ public class EditorMaster implements Runnable, EditorModel, UnpluggedListener
 			}
 			
 			FileWriter write = new FileWriter(fileToWrite);
-			write.append(Jason.toJsonPretty(fileToWrite));
+			write.append(Jason.toJsonPretty(this.root));
 			write.close();
 		}
 		catch (Exception e)
@@ -274,8 +323,6 @@ public class EditorMaster implements Runnable, EditorModel, UnpluggedListener
 			public void run()
 			{
 				EditorMaster.this.window.disableMinecraftCapabilitites();
-				EditorMaster.this.window.showErrorPopup("Minecraft connection lost!\n"
-					+ "This may be due to Resource Packs being reloaded.\n" + "You should save!");
 			}
 		});
 	}
@@ -284,5 +331,19 @@ public class EditorMaster implements Runnable, EditorModel, UnpluggedListener
 	public boolean isPlugged()
 	{
 		return isMinecraftControlled() && !this.isUnplugged;
+	}
+	
+	@Override
+	public File getExpansionDirectory()
+	{
+		return new File(this.workingDirectory, "assets/matmos/expansions").exists() ? new File(
+			this.workingDirectory, "assets/matmos/expansions") : this.workingDirectory;
+	}
+	
+	@Override
+	public File getSoundDirectory()
+	{
+		return new File(this.workingDirectory, "assets/minecraft/sounds").exists() ? new File(
+			this.workingDirectory, "assets/minecraft/sounds") : this.workingDirectory;
 	}
 }

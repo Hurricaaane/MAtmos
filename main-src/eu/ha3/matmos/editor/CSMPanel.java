@@ -14,13 +14,13 @@ import eu.ha3.matmos.jsonformat.serializable.SerialRoot;
 */
 
 @SuppressWarnings("serial")
-public class CSMPanelSimpler extends JPanel implements ICSMTrioSerial
+public class CSMPanel extends JPanel implements ICSMTrioSerial
 {
 	private ListerPanel condition;
 	private ListerPanel set;
 	private ListerPanel machine;
 	
-	public CSMPanelSimpler()
+	public CSMPanel()
 	{
 		setLayout(new BorderLayout(0, 0));
 		

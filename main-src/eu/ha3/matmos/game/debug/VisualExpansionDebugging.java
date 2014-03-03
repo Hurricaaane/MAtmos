@@ -27,14 +27,14 @@ import eu.ha3.mc.haddon.supporting.SupportsFrameEvents;
 --filenotes-placeholder
 */
 
-public class ExpansionDebug implements SupportsFrameEvents
+public class VisualExpansionDebugging implements SupportsFrameEvents
 {
 	private final MAtMod mod;
 	private final String ex;
 	
 	private int GAP = 10;
 	
-	public ExpansionDebug(MAtMod mod, String ex)
+	public VisualExpansionDebugging(MAtMod mod, String ex)
 	{
 		this.mod = mod;
 		this.ex = ex;

@@ -9,6 +9,7 @@ import eu.ha3.matmos.editor.UnpluggedListener;
 import eu.ha3.matmos.engine.core.implem.abstractions.ProviderCollection;
 import eu.ha3.matmos.engine.core.interfaces.Data;
 import eu.ha3.matmos.expansions.Expansion;
+import eu.ha3.matmos.expansions.FolderResourcePackEditableEDU;
 import eu.ha3.matmos.game.system.MAtMod;
 import eu.ha3.mc.quick.chat.ChatColorsSimple;
 
@@ -16,44 +17,75 @@ import eu.ha3.mc.quick.chat.ChatColorsSimple;
 --filenotes-placeholder
 */
 
-public class Pluggable implements PluggableIntoMinecraft
+public class PluggableImpl implements PluggableIntoMinecraft
 {
 	private MAtMod mod;
 	private Expansion expansion;
-	private File file;
 	private List<UnpluggedListener> unpluggedListeners = new ArrayList<UnpluggedListener>();
 	
-	public Pluggable(MAtMod mod, Expansion expansion)
+	private boolean isReadOnly;
+	private boolean isUnplugged;
+	
+	private File file;
+	private File workingDirectory;
+	
+	public PluggableImpl(MAtMod mod, Expansion expansion)
 	{
 		this.mod = mod;
 		this.expansion = expansion;
-		this.file = expansion.obtainDebugUnit().getExpansionFile();
+		if (expansion.obtainDebugUnit() instanceof FolderResourcePackEditableEDU)
+		{
+			this.file = ((FolderResourcePackEditableEDU) expansion.obtainDebugUnit()).obtainExpansionFile();
+			this.workingDirectory =
+				((FolderResourcePackEditableEDU) expansion.obtainDebugUnit()).obtainExpansionFolder();
+			this.isReadOnly = false;
+		}
+		else
+		{
+			this.isReadOnly = true;
+		}
 	}
 	
 	@Override
 	public ProviderCollection getProviders()
 	{
+		if (this.isUnplugged)
+		{
+			System.err.println("Trying to get providers from an unplugged instance!");
+			Thread.dumpStack();
+		}
+		
 		return this.expansion.obtainDebugUnit().obtainKnowledge().obtainProviders();
 	}
 	
 	@Override
 	public Data getData()
 	{
-		return null;
+		if (this.isUnplugged)
+		{
+			System.err.println("Trying to get data from an unplugged instance!");
+			Thread.dumpStack();
+		}
+		
+		return this.expansion.obtainDebugUnit().obtainData();
 	}
 	
 	@Override
 	public void pushJason(String jason)
 	{
+		if (this.isUnplugged)
+			return;
+		
 		final String jasonString = jason;
 		this.mod.queueForNextTick(new Runnable() {
 			@Override
 			public void run()
 			{
-				Pluggable.this.mod.getChatter().printChat(
+				PluggableImpl.this.mod.getChatter().printChat(
 					ChatColorsSimple.COLOR_AQUA
-						+ "Reloading from editor state: " + Pluggable.this.expansion.getName() + " " + getTimestamp());
-				Pluggable.this.expansion.pushDebugJasonAndRefreshKnowledge(jasonString);
+						+ "Reloading from editor state: " + PluggableImpl.this.expansion.getName() + " "
+						+ getTimestamp());
+				PluggableImpl.this.expansion.pushDebugJasonAndRefreshKnowledge(jasonString);
 			}
 		});
 	}
@@ -61,24 +93,33 @@ public class Pluggable implements PluggableIntoMinecraft
 	@Override
 	public void overrideMachine(String machineName, boolean overrideOnStatus)
 	{
+		if (this.isUnplugged)
+			return;
+		
 	}
 	
 	@Override
 	public void liftOverrides()
 	{
+		if (this.isUnplugged)
+			return;
+		
 	}
 	
 	@Override
 	public void reloadFromDisk()
 	{
+		if (this.isUnplugged)
+			return;
+		
 		this.mod.queueForNextTick(new Runnable() {
 			@Override
 			public void run()
 			{
-				Pluggable.this.mod.getChatter().printChat(
+				PluggableImpl.this.mod.getChatter().printChat(
 					ChatColorsSimple.COLOR_BLUE
-						+ "Reloading from disk: " + Pluggable.this.expansion.getName() + " " + getTimestamp());
-				Pluggable.this.expansion.refreshKnowledge();
+						+ "Reloading from disk: " + PluggableImpl.this.expansion.getName() + " " + getTimestamp());
+				PluggableImpl.this.expansion.refreshKnowledge();
 			}
 		});
 	}
@@ -91,12 +132,16 @@ public class Pluggable implements PluggableIntoMinecraft
 	@Override
 	public boolean isReadOnly()
 	{
-		return this.file != null;
+		return this.isReadOnly;
 	}
 	
 	@Override
 	public void unplugged()
 	{
+		if (this.isUnplugged)
+			return;
+		
+		this.isUnplugged = true;
 		for (UnpluggedListener listener : this.unpluggedListeners)
 		{
 			listener.onUnpluggedEvent(this);
@@ -113,5 +158,22 @@ public class Pluggable implements PluggableIntoMinecraft
 	public void removeUnpluggedListener(UnpluggedListener listener)
 	{
 		this.unpluggedListeners.remove(listener);
+	}
+	
+	@Override
+	public File getWorkingDirectoryIfAvailable()
+	{
+		return this.workingDirectory;
+	}
+	
+	@Override
+	public File getFileIfAvailable()
+	{
+		return this.file;
+	}
+	
+	@Override
+	public void onEditorClosed()
+	{
 	}
 }

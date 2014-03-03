@@ -1,26 +1,15 @@
 package eu.ha3.matmos.expansions;
 
-import java.io.File;
-
 import eu.ha3.matmos.engine.core.implem.Knowledge;
+import eu.ha3.matmos.engine.core.interfaces.Data;
 
 /*
 --filenotes-placeholder
 */
 
-public abstract class ExpansionDebugUnit
+public interface ExpansionDebugUnit
 {
-	private final File file;
+	public Knowledge obtainKnowledge();
 	
-	public ExpansionDebugUnit(File file)
-	{
-		this.file = file;
-	}
-	
-	public File getExpansionFile()
-	{
-		return this.file;
-	}
-	
-	public abstract Knowledge obtainKnowledge();
+	public Data obtainData();
 }

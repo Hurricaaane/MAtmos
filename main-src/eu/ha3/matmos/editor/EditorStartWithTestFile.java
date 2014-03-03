@@ -10,8 +10,10 @@ public class EditorStartWithTestFile
 {
 	public static void main(String[] args)
 	{
-		new EditorMaster(null, new File(
-			"L:\\MCMod-C\\jars\\resourcepacks\\mat_matmos\\assets\\matmos\\expansions\\interactions_environments.json"))
-			.run();
+		EditorMaster master = new EditorMaster(null);
+		master.run();
+		master
+			.trySetAndLoadFile(new File(
+				"L:\\MCMod-C\\jars\\resourcepacks\\mat_matmos\\assets\\matmos\\expansions\\interactions_environments.json"));
 	}
 }
