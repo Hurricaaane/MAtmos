@@ -27,6 +27,7 @@ import javax.swing.border.EmptyBorder;
 import eu.ha3.matmos.editor.edit.EditPanel;
 import eu.ha3.matmos.editor.interfaces.EditorModel;
 import eu.ha3.matmos.editor.interfaces.IEditorWindow;
+import eu.ha3.matmos.editor.tree.ItemTreeViewPanel;
 import eu.ha3.matmos.jsonformat.serializable.SerialRoot;
 
 /* 
@@ -49,12 +50,11 @@ public class EditorWindow extends JFrame implements IEditorWindow
 	private JMenuItem mntmStartLiveCapture;
 	private JMenuItem mntmStopLiveCapture;
 	private JMenuItem mntmReplaceCurrentFile;
-	private CSMPanel csm;
 	private JPanel omniPanel;
-	private LDEPanelSimpler lde;
 	private JMenuItem mntmMCSaveAndPush;
 	
 	private JLabel specialWarningLabel;
+	private ItemTreeViewPanel panelTree;
 	
 	public EditorWindow(EditorModel modelConstruct)
 	{
@@ -298,25 +298,21 @@ public class EditorWindow extends JFrame implements IEditorWindow
 		
 		JSplitPane splitPane = new JSplitPane();
 		splitPane.setResizeWeight(0.5);
-		splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		this.omniPanel.add(splitPane, BorderLayout.CENTER);
+		
+		EditPanel editPanel = new EditPanel(this.model);
+		editPanel.setBorder(new EmptyBorder(4, 4, 4, 4));
+		splitPane.setRightComponent(editPanel);
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		splitPane.setLeftComponent(tabbedPane);
 		
-		JPanel csmTab = new JPanel();
-		tabbedPane.addTab("CSM", null, csmTab, null);
-		csmTab.setLayout(new BorderLayout(0, 0));
+		JPanel treeTab = new JPanel();
+		tabbedPane.addTab("Items", null, treeTab, null);
+		treeTab.setLayout(new BorderLayout(0, 0));
 		
-		this.csm = new CSMPanel();
-		csmTab.add(this.csm, BorderLayout.CENTER);
-		
-		JPanel ldeTab = new JPanel();
-		tabbedPane.addTab("LDE", null, ldeTab, null);
-		ldeTab.setLayout(new BorderLayout(0, 0));
-		
-		this.lde = new LDEPanelSimpler();
-		ldeTab.add(this.lde);
+		this.panelTree = new ItemTreeViewPanel(this.model);
+		treeTab.add(this.panelTree);
 		
 		JPanel sheetsTab = new JPanel();
 		tabbedPane.addTab("Sheets", null, sheetsTab, null);
@@ -327,9 +323,6 @@ public class EditorWindow extends JFrame implements IEditorWindow
 		
 		JsonPanel jsonPanel = new JsonPanel(this.model);
 		jsonTab.add(jsonPanel, BorderLayout.CENTER);
-		
-		EditPanel editPanel = new EditPanel(this.model);
-		splitPane.setRightComponent(editPanel);
 		
 		init();
 	}
@@ -431,12 +424,7 @@ public class EditorWindow extends JFrame implements IEditorWindow
 	@Override
 	public void updateSerial(SerialRoot root)
 	{
-		this.csm.getCondition().updateSerial(root);
-		this.csm.getSet().updateSerial(root);
-		this.csm.getMachine().updateSerial(root);
-		this.lde.getList().updateSerial(root);
-		this.lde.getDynamic().updateSerial(root);
-		this.lde.getEvent().updateSerial(root);
+		this.panelTree.updateSerial(root);
 	}
 	
 	@Override

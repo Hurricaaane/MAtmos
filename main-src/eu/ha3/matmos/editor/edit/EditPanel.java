@@ -141,7 +141,6 @@ public class EditPanel extends JPanel implements IEditNamedItem
 		}
 		
 		this.noPane = false;
-		
 		this.textField.setEditable(true);
 		this.textField.setText(this.nameOfItem);
 		this.btnDelete.setEnabled(true);

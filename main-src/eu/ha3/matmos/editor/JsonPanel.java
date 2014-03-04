@@ -43,9 +43,8 @@ public class JsonPanel extends JPanel
 		
 		JPanel panel = new JPanel();
 		add(panel, BorderLayout.SOUTH);
-		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
-		JButton btnGeneratePretty = new JButton("Generate Pretty");
+		JButton btnGeneratePretty = new JButton("Generate");
 		btnGeneratePretty.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0)
@@ -53,9 +52,10 @@ public class JsonPanel extends JPanel
 				JsonPanel.this.textArea.setText(JsonPanel.this.model.generateJson(true));
 			}
 		});
+		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		panel.add(btnGeneratePretty);
 		
-		JButton btnGenerateMinified = new JButton("Generate Minified");
+		JButton btnGenerateMinified = new JButton("Minify");
 		btnGenerateMinified.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0)
