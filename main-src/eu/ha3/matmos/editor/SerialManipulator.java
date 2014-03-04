@@ -1,8 +1,16 @@
 package eu.ha3.matmos.editor;
 
+import java.util.Iterator;
 import java.util.Map;
 
+import eu.ha3.matmos.engine.core.implem.Dynamic;
+import eu.ha3.matmos.engine.core.interfaces.Operator;
 import eu.ha3.matmos.jsonformat.serializable.SerialCondition;
+import eu.ha3.matmos.jsonformat.serializable.SerialDynamic;
+import eu.ha3.matmos.jsonformat.serializable.SerialEvent;
+import eu.ha3.matmos.jsonformat.serializable.SerialList;
+import eu.ha3.matmos.jsonformat.serializable.SerialMachine;
+import eu.ha3.matmos.jsonformat.serializable.SerialMachineEvent;
 import eu.ha3.matmos.jsonformat.serializable.SerialRoot;
 import eu.ha3.matmos.jsonformat.serializable.SerialSet;
 
@@ -33,29 +41,29 @@ public class SerialManipulator
 		{
 			renameCondition(root, oldName, newName);
 		}
-		/*else if (editFocus instanceof SerialSet)
+		else if (editFocus instanceof SerialSet)
 		{
-			renameSet(oldName, newName);
+			renameSet(root, oldName, newName);
 		}
 		else if (editFocus instanceof SerialMachine)
 		{
-			renameMachine(oldName, newName);
+			renameMachine(root, oldName, newName);
 		}
 		else if (editFocus instanceof SerialList)
 		{
-			renameList(oldName, newName);
+			renameList(root, oldName, newName);
 		}
 		else if (editFocus instanceof SerialDynamic)
 		{
-			renameDynamic(oldName, newName);
+			renameDynamic(root, oldName, newName);
 		}
 		else if (editFocus instanceof SerialEvent)
 		{
-			renameEvent(oldName, newName);
-		}*/
+			renameEvent(root, oldName, newName);
+		}
 	}
 	
-	private static boolean renameCondition(SerialRoot root, String oldName, String newName) throws ItemNamingException
+	private static void renameCondition(SerialRoot root, String oldName, String newName) throws ItemNamingException
 	{
 		boolean isRename = newName != null;
 		if (isRename)
@@ -87,8 +95,149 @@ public class SerialManipulator
 				}
 			}
 		}
+	}
+	
+	private static void renameSet(SerialRoot root, String oldName, String newName) throws ItemNamingException
+	{
+		boolean isRename = newName != null;
+		if (isRename)
+		{
+			replaceInMap(root.set, oldName, newName);
+		}
+		else
+		{
+			deleteInMap(root.set, oldName);
+		}
 		
-		return true;
+		for (SerialMachine machine : root.machine.values())
+		{
+			if (machine.allow.contains(oldName))
+			{
+				machine.allow.remove(oldName);
+				if (isRename)
+				{
+					machine.allow.add(newName);
+				}
+			}
+			
+			if (machine.restrict.contains(oldName))
+			{
+				machine.restrict.remove(oldName);
+				if (isRename)
+				{
+					machine.restrict.add(newName);
+				}
+			}
+		}
+	}
+	
+	private static void renameMachine(SerialRoot root, String oldName, String newName) throws ItemNamingException
+	{
+		boolean isRename = newName != null;
+		if (isRename)
+		{
+			replaceInMap(root.machine, oldName, newName);
+		}
+		else
+		{
+			deleteInMap(root.machine, oldName);
+		}
+	}
+	
+	private static void renameList(SerialRoot root, String oldName, String newName) throws ItemNamingException
+	{
+		boolean isRename = newName != null;
+		if (isRename)
+		{
+			replaceInMap(root.list, oldName, newName);
+		}
+		else
+		{
+			deleteInMap(root.list, oldName);
+		}
+		
+		for (SerialCondition condition : root.condition.values())
+		{
+			Operator op = Operator.fromSerializedForm(condition.symbol);
+			if (op == Operator.IN_LIST || op == Operator.NOT_IN_LIST)
+			{
+				if (condition.value.equals(oldName))
+				{
+					if (isRename)
+					{
+						condition.value = newName;
+					}
+					else
+					{
+						condition.value = "_REMOVED_LIST:" + oldName;
+					}
+				}
+			}
+		}
+		
+	}
+	
+	private static void renameDynamic(SerialRoot root, String oldName, String newName) throws ItemNamingException
+	{
+		boolean isRename = newName != null;
+		if (isRename)
+		{
+			replaceInMap(root.dynamic, oldName, newName);
+		}
+		else
+		{
+			deleteInMap(root.dynamic, oldName);
+		}
+		
+		for (SerialCondition condition : root.condition.values())
+		{
+			if (condition.sheet.equals(Dynamic.DEDICATED_SHEET))
+			{
+				if (condition.index.equals(oldName))
+				{
+					if (isRename)
+					{
+						condition.index = newName;
+					}
+					else
+					{
+						condition.index = "_REMOVED_DYNAMIC:" + oldName;
+					}
+				}
+			}
+		}
+	}
+	
+	private static void renameEvent(SerialRoot root, String oldName, String newName) throws ItemNamingException
+	{
+		boolean isRename = newName != null;
+		if (isRename)
+		{
+			replaceInMap(root.event, oldName, newName);
+		}
+		else
+		{
+			deleteInMap(root.event, oldName);
+		}
+		
+		for (SerialMachine machine : root.machine.values())
+		{
+			for (Iterator<SerialMachineEvent> iter = machine.event.iterator(); iter.hasNext();)
+			{
+				SerialMachineEvent machineEvent = iter.next();
+				if (machineEvent.event.equals(oldName))
+				{
+					if (isRename)
+					{
+						machineEvent.event = newName;
+					}
+					else
+					{
+						iter.remove();
+					}
+				}
+			}
+		}
 	}
 	
 	private static <T> void replaceInMap(Map<String, T> map, String oldName, String newName) throws ItemNamingException

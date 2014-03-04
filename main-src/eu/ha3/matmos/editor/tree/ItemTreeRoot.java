@@ -74,6 +74,14 @@ public class ItemTreeRoot extends DefaultMutableTreeNode implements ISerialUpdat
 		{
 			replaceSubSerial(keys, treeNode);
 		}
+		else
+		{
+			keysCopy.removeAll(names);
+			if (keysCopy.size() != names.size())
+			{
+				replaceSubSerial(keys, treeNode);
+			}
+		}
 	}
 	
 	private void replaceSubSerial(Collection<String> keys, ItemTreeNode treeNode)

@@ -7,16 +7,15 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import eu.ha3.matmos.editor.interfaces.EditorModel;
 import eu.ha3.matmos.editor.interfaces.IEditNamedItem;
@@ -62,9 +61,21 @@ public class EditPanel extends JPanel implements IEditNamedItem
 		panel.setLayout(gridBagLayout);
 		
 		this.textField = new JTextField();
-		this.textField.addKeyListener(new KeyAdapter() {
+		this.textField.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
-			public void keyTyped(KeyEvent arg0)
+			public void changedUpdate(DocumentEvent e)
+			{
+				evaluateRename();
+			}
+			
+			@Override
+			public void removeUpdate(DocumentEvent e)
+			{
+				evaluateRename();
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent e)
 			{
 				evaluateRename();
 			}
@@ -76,13 +87,6 @@ public class EditPanel extends JPanel implements IEditNamedItem
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		panel.add(this.textField, gbc);
-		this.textField.addPropertyChangeListener(new PropertyChangeListener() {
-			@Override
-			public void propertyChange(PropertyChangeEvent arg0)
-			{
-				evaluateRename();
-			}
-		});
 		this.textField.setColumns(10);
 		
 		this.btnRename = new JButton("Rename");
@@ -113,6 +117,18 @@ public class EditPanel extends JPanel implements IEditNamedItem
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
+				int saveOption =
+					JOptionPane.showConfirmDialog(
+						EditPanel.this, "Are you sure you want to delete the following item:\n"
+							+ EditPanel.this.nameOfItem + "\n("
+							+ EditPanel.this.editFocus.getClass().getSimpleName().replace("Serial", "") + ")",
+						"Deleting item", JOptionPane.CANCEL_OPTION);
+				
+				if (saveOption == JOptionPane.YES_OPTION)
+				{
+					EditPanel.this.model.deleteItem(EditPanel.this.nameOfItem, EditPanel.this.editFocus);
+				}
+				
 			}
 		});
 		

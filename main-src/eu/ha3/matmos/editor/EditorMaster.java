@@ -432,15 +432,35 @@ public class EditorMaster implements Runnable, EditorModel, UnpluggedListener
 				}
 			});
 		}
-		
 	}
 	
-	private void flagChange(boolean contents)
+	@Override
+	public void deleteItem(String nameOfItem, Object editFocus)
+	{
+		try
+		{
+			SerialManipulator.delete(this.root, editFocus, nameOfItem);
+			flagChange(true);
+			this.window.setEditFocus(null, null);
+		}
+		catch (final ItemNamingException e)
+		{
+			java.awt.EventQueue.invokeLater(new Runnable() {
+				@Override
+				public void run()
+				{
+					showErrorPopup(e.getMessage());
+				}
+			});
+		}
+	}
+	
+	private void flagChange(boolean treeWasDeeplyModified)
 	{
 		boolean previousStateIsFalse = !this.hasModifiedContents;
 		this.hasModifiedContents = true;
 		
-		if (contents)
+		if (treeWasDeeplyModified)
 		{
 			updateFileAndContentsState();
 		}

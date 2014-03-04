@@ -44,4 +44,6 @@ public interface EditorModel
 	public void switchEditItem(Selector selector, String itemName);
 	
 	public void renameItem(String nameOfItem, Object editFocus, String text);
+	
+	public void deleteItem(String nameOfItem, Object editFocus);
 }
