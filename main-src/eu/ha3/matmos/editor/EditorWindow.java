@@ -3,15 +3,12 @@ package eu.ha3.matmos.editor;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 
-import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -27,6 +24,7 @@ import javax.swing.KeyStroke;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
+import eu.ha3.matmos.editor.edit.EditPanel;
 import eu.ha3.matmos.editor.interfaces.EditorModel;
 import eu.ha3.matmos.editor.interfaces.IEditorWindow;
 import eu.ha3.matmos.jsonformat.serializable.SerialRoot;
@@ -330,20 +328,8 @@ public class EditorWindow extends JFrame implements IEditorWindow
 		JsonPanel jsonPanel = new JsonPanel(this.model);
 		jsonTab.add(jsonPanel, BorderLayout.CENTER);
 		
-		JPanel panel_2 = new JPanel();
-		splitPane.setRightComponent(panel_2);
-		GridBagLayout gbl_panel_2 = new GridBagLayout();
-		gbl_panel_2.columnWidths = new int[] { 0, 0 };
-		gbl_panel_2.rowHeights = new int[] { 0, 0 };
-		gbl_panel_2.columnWeights = new double[] { 0.0, Double.MIN_VALUE };
-		gbl_panel_2.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
-		panel_2.setLayout(gbl_panel_2);
-		
-		JButton btnNewButton = new JButton("New button");
-		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
-		gbc_btnNewButton.gridx = 0;
-		gbc_btnNewButton.gridy = 0;
-		panel_2.add(btnNewButton, gbc_btnNewButton);
+		EditPanel editPanel = new EditPanel(this.model);
+		splitPane.setRightComponent(editPanel);
 		
 		init();
 	}
