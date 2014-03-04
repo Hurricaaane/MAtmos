@@ -6,9 +6,17 @@ package eu.ha3.matmos.editor.tree;
 
 public class ItemTreeBranch extends ItemTreeNode
 {
-	public ItemTreeBranch(String name)
+	private final Selector rootSelector;
+	
+	public ItemTreeBranch(String name, Selector rootSelector)
 	{
 		super(name);
+		this.rootSelector = rootSelector;
+	}
+	
+	public Selector getSelector()
+	{
+		return this.rootSelector;
 	}
 	
 	@Override

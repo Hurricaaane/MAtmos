@@ -2,6 +2,7 @@ package eu.ha3.matmos.editor.interfaces;
 
 import java.io.File;
 
+import eu.ha3.matmos.editor.tree.Selector;
 import eu.ha3.matmos.engine.core.implem.abstractions.ProviderCollection;
 
 /*
@@ -39,4 +40,8 @@ public interface EditorModel
 	public File getExpansionDirectory();
 	
 	public File getSoundDirectory();
+	
+	public void switchEditItem(Selector selector, String itemName);
+	
+	public void renameItem(String nameOfItem, Object editFocus, String text);
 }

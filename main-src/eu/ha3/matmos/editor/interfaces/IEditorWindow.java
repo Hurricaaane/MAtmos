@@ -6,7 +6,7 @@ import java.awt.Component;
 --filenotes-placeholder
 */
 
-public interface IEditorWindow extends ISerialUpdate
+public interface IEditorWindow extends ISerialUpdate, IEditNamedItem
 {
 	public Component asComponent();
 	

@@ -55,6 +55,7 @@ public class EditorWindow extends JFrame implements IEditorWindow
 	
 	private JLabel specialWarningLabel;
 	private ItemTreeViewPanel panelTree;
+	private EditPanel editPanel;
 	
 	public EditorWindow(EditorModel modelConstruct)
 	{
@@ -75,6 +76,41 @@ public class EditorWindow extends JFrame implements IEditorWindow
 				EditorWindow.this.model.quickSave();
 			}
 		});
+		
+		this.mntmOpenFile = new JMenuItem("Open file...");
+		this.mntmOpenFile.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				if (!continueUnsavedChangesWarningIfNecessary())
+					return;
+				
+				JFileChooser fc = new JasonFileChooser(EditorWindow.this.model.getExpansionDirectory());
+				int returnValue = fc.showOpenDialog(EditorWindow.this);
+				if (returnValue != JFileChooser.APPROVE_OPTION)
+					return;
+				
+				File file = fc.getSelectedFile();
+				if (file == null || !file.exists() || file.isDirectory())
+				{
+					if (file.isDirectory())
+					{
+						showErrorPopup("Unexpected error: The file is a directory.");
+					}
+					else
+					{
+						showErrorPopup("Unexpected error: The file does not exist.");
+					}
+					return;
+				}
+				
+				EditorWindow.this.model.trySetAndLoadFile(file);
+			}
+		});
+		mnFile.add(this.mntmOpenFile);
+		
+		JSeparator separator_1 = new JSeparator();
+		mnFile.add(separator_1);
 		this.mntmFSave.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK));
 		mnFile.add(this.mntmFSave);
 		
@@ -146,46 +182,11 @@ public class EditorWindow extends JFrame implements IEditorWindow
 			.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK | InputEvent.ALT_MASK));
 		mnFile.add(mntmFSaveACopy);
 		
-		JSeparator separator_1 = new JSeparator();
-		mnFile.add(separator_1);
-		
-		this.mntmOpenFile = new JMenuItem("Open file...");
-		this.mntmOpenFile.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0)
-			{
-				if (!continueUnsavedChangesWarningIfNecessary())
-					return;
-				
-				JFileChooser fc = new JasonFileChooser(EditorWindow.this.model.getExpansionDirectory());
-				int returnValue = fc.showOpenDialog(EditorWindow.this);
-				if (returnValue != JFileChooser.APPROVE_OPTION)
-					return;
-				
-				File file = fc.getSelectedFile();
-				if (file == null || !file.exists() || file.isDirectory())
-				{
-					if (file.isDirectory())
-					{
-						showErrorPopup("Unexpected error: The file is a directory.");
-					}
-					else
-					{
-						showErrorPopup("Unexpected error: The file does not exist.");
-					}
-					return;
-				}
-				
-				EditorWindow.this.model.trySetAndLoadFile(file);
-			}
-		});
-		mnFile.add(this.mntmOpenFile);
+		JSeparator separator_2 = new JSeparator();
+		mnFile.add(separator_2);
 		
 		this.mntmReplaceCurrentFile = new JMenuItem("Replace current file with backup...");
 		mnFile.add(this.mntmReplaceCurrentFile);
-		
-		JSeparator separator_2 = new JSeparator();
-		mnFile.add(separator_2);
 		
 		this.mntmFDiscardChanges = new JMenuItem("Discard changes and reload");
 		mnFile.add(this.mntmFDiscardChanges);
@@ -296,23 +297,23 @@ public class EditorWindow extends JFrame implements IEditorWindow
 		getContentPane().add(this.omniPanel, BorderLayout.CENTER);
 		this.omniPanel.setLayout(new BorderLayout(0, 0));
 		
-		JSplitPane splitPane = new JSplitPane();
-		splitPane.setResizeWeight(0.5);
-		this.omniPanel.add(splitPane, BorderLayout.CENTER);
-		
-		EditPanel editPanel = new EditPanel(this.model);
-		editPanel.setBorder(new EmptyBorder(4, 4, 4, 4));
-		splitPane.setRightComponent(editPanel);
-		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		splitPane.setLeftComponent(tabbedPane);
+		this.omniPanel.add(tabbedPane, BorderLayout.CENTER);
 		
 		JPanel treeTab = new JPanel();
-		tabbedPane.addTab("Items", null, treeTab, null);
+		tabbedPane.addTab("Knowledge", null, treeTab, null);
 		treeTab.setLayout(new BorderLayout(0, 0));
 		
+		JSplitPane splitPane = new JSplitPane();
+		treeTab.add(splitPane, BorderLayout.CENTER);
+		splitPane.setResizeWeight(0.5);
+		
 		this.panelTree = new ItemTreeViewPanel(this.model);
-		treeTab.add(this.panelTree);
+		splitPane.setLeftComponent(this.panelTree);
+		
+		this.editPanel = new EditPanel(this.model);
+		splitPane.setRightComponent(this.editPanel);
+		this.editPanel.setBorder(new EmptyBorder(4, 4, 4, 4));
 		
 		JPanel sheetsTab = new JPanel();
 		tabbedPane.addTab("Sheets", null, sheetsTab, null);
@@ -465,5 +466,11 @@ public class EditorWindow extends JFrame implements IEditorWindow
 		
 		showErrorPopup("Minecraft connection lost!\n"
 			+ "This may be due to Resource Packs being reloaded.\n" + "You should save!");
+	}
+	
+	@Override
+	public void setEditFocus(String name, Object item)
+	{
+		this.editPanel.setEditFocus(name, item);
 	}
 }

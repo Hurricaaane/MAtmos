@@ -18,20 +18,20 @@ import eu.ha3.matmos.jsonformat.serializable.SerialRoot;
 @SuppressWarnings("serial")
 public class ItemTreeRoot extends DefaultMutableTreeNode implements ISerialUpdate
 {
-	private ItemTreeNode condition = new ItemTreeBranch("Conditions");
-	private ItemTreeNode set = new ItemTreeBranch("Sets");
-	private ItemTreeNode machine = new ItemTreeBranch("Machines");
+	private ItemTreeNode condition = new ItemTreeBranch("Conditions", Selector.CONDITION);
+	private ItemTreeNode set = new ItemTreeBranch("Sets", Selector.SET);
+	private ItemTreeNode machine = new ItemTreeBranch("Machines", Selector.MACHINE);
 	
-	private ItemTreeNode list = new ItemTreeBranch("Lists");
-	private ItemTreeNode dynamic = new ItemTreeBranch("Dynamics");
-	private ItemTreeNode event = new ItemTreeBranch("Events");
+	private ItemTreeNode list = new ItemTreeBranch("Lists", Selector.LIST);
+	private ItemTreeNode dynamic = new ItemTreeBranch("Dynamics", Selector.DYNAMIC);
+	private ItemTreeNode event = new ItemTreeBranch("Events", Selector.EVENT);
 	
 	public ItemTreeRoot()
 	{
 		super("JTree");
 		
-		ItemTreeNode logic = new ItemTreeNode("Logic");
-		ItemTreeNode support = new ItemTreeNode("Support");
+		ItemTreeNode logic = new ItemTreeBranch("Logic", Selector.LOGIC);
+		ItemTreeNode support = new ItemTreeBranch("Support", Selector.SUPPORT);
 		add(logic);
 		add(support);
 		

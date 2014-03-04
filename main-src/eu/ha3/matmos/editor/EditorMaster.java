@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Scanner;
 
 import javax.swing.UIManager;
@@ -12,6 +13,7 @@ import com.google.gson.stream.MalformedJsonException;
 
 import eu.ha3.matmos.editor.interfaces.EditorModel;
 import eu.ha3.matmos.editor.interfaces.IEditorWindow;
+import eu.ha3.matmos.editor.tree.Selector;
 import eu.ha3.matmos.engine.core.implem.abstractions.ProviderCollection;
 import eu.ha3.matmos.jsonformat.serializable.SerialRoot;
 import eu.ha3.matmos.tools.Jason;
@@ -278,6 +280,7 @@ public class EditorMaster implements Runnable, EditorModel, UnpluggedListener
 		boolean success = writeToFile(this.file);
 		if (success)
 		{
+			this.hasModifiedContents = false;
 			updateFileState();
 		}
 		return success;
@@ -345,5 +348,108 @@ public class EditorMaster implements Runnable, EditorModel, UnpluggedListener
 	{
 		return new File(this.workingDirectory, "assets/minecraft/sounds").exists() ? new File(
 			this.workingDirectory, "assets/minecraft/sounds") : this.workingDirectory;
+	}
+	
+	@Override
+	public void switchEditItem(Selector selector, String itemName)
+	{
+		Map<String, ? extends Object> map = null;
+		
+		switch (selector)
+		{
+		case CONDITION:
+			map = this.root.condition;
+			break;
+		case SET:
+			map = this.root.set;
+			break;
+		case MACHINE:
+			map = this.root.machine;
+			break;
+		case LIST:
+			map = this.root.list;
+			break;
+		case DYNAMIC:
+			map = this.root.dynamic;
+			break;
+		case EVENT:
+			map = this.root.event;
+			break;
+		case LOGIC:
+			break;
+		case SUPPORT:
+			break;
+		default:
+			break;
+		}
+		
+		if (map != null && map.containsKey(itemName))
+		{
+			final String itemNameFinal = itemName;
+			final Object item = map.get(itemName);
+			
+			java.awt.EventQueue.invokeLater(new Runnable() {
+				@Override
+				public void run()
+				{
+					EditorMaster.this.window.setEditFocus(itemNameFinal, item);
+				}
+			});
+		}
+	}
+	
+	@Override
+	public void renameItem(String oldName, Object editFocus, String newName)
+	{
+		if (oldName.equals(newName))
+			return;
+		
+		if (newName == null || newName.equals("") || newName.contains("\"") || newName.contains("\\"))
+		{
+			java.awt.EventQueue.invokeLater(new Runnable() {
+				@Override
+				public void run()
+				{
+					showErrorPopup("Name must not be empty or include the characters \" and \\");
+				}
+			});
+			return;
+		}
+		
+		try
+		{
+			SerialManipulator.rename(this.root, editFocus, oldName, newName);
+			flagChange(true);
+			this.window.setEditFocus(newName, editFocus);
+		}
+		catch (final ItemNamingException e)
+		{
+			java.awt.EventQueue.invokeLater(new Runnable() {
+				@Override
+				public void run()
+				{
+					showErrorPopup(e.getMessage());
+				}
+			});
+		}
+		
+	}
+	
+	private void flagChange(boolean contents)
+	{
+		boolean previousStateIsFalse = !this.hasModifiedContents;
+		this.hasModifiedContents = true;
+		
+		if (contents)
+		{
+			updateFileAndContentsState();
+		}
+		else
+		{
+			if (previousStateIsFalse)
+			{
+				updateFileState();
+			}
+		}
 	}
 }
