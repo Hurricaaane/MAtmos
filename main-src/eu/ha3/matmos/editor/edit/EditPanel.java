@@ -1,6 +1,7 @@
 package eu.ha3.matmos.editor.edit;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -14,11 +15,11 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
+import eu.ha3.matmos.editor.InstantTextField;
 import eu.ha3.matmos.editor.interfaces.EditorModel;
 import eu.ha3.matmos.editor.interfaces.IEditNamedItem;
+import eu.ha3.matmos.jsonformat.serializable.SerialCondition;
 
 /*
 --filenotes-placeholder
@@ -38,6 +39,7 @@ public class EditPanel extends JPanel implements IEditNamedItem
 	private JTextField textField;
 	private JButton btnRename;
 	private JButton btnDelete;
+	private JPanel editor;
 	
 	public EditPanel(EditorModel modelConstruct)
 	{
@@ -60,26 +62,13 @@ public class EditPanel extends JPanel implements IEditNamedItem
 		gridBagLayout.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
 		panel.setLayout(gridBagLayout);
 		
-		this.textField = new JTextField();
-		this.textField.getDocument().addDocumentListener(new DocumentListener() {
+		this.textField = new InstantTextField() {
 			@Override
-			public void changedUpdate(DocumentEvent e)
+			protected void editEvent()
 			{
 				evaluateRename();
 			}
-			
-			@Override
-			public void removeUpdate(DocumentEvent e)
-			{
-				evaluateRename();
-			}
-			
-			@Override
-			public void insertUpdate(DocumentEvent e)
-			{
-				evaluateRename();
-			}
-		});
+		};
 		this.textField.setFont(new Font("Tahoma", Font.BOLD, 12));
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.fill = GridBagConstraints.BOTH;
@@ -132,8 +121,9 @@ public class EditPanel extends JPanel implements IEditNamedItem
 			}
 		});
 		
-		JPanel editor = new JPanel();
-		add(editor, BorderLayout.CENTER);
+		this.editor = new JPanel();
+		add(this.editor, BorderLayout.CENTER);
+		this.editor.setLayout(new BorderLayout(0, 0));
 		
 		refreshPane();
 	}
@@ -165,6 +155,19 @@ public class EditPanel extends JPanel implements IEditNamedItem
 		this.textField.setText(this.nameOfItem);
 		this.btnRename.setEnabled(false);
 		this.btnDelete.setEnabled(true);
+		
+		BorderLayout lay = (BorderLayout) this.editor.getLayout();
+		Component c = lay.getLayoutComponent(BorderLayout.CENTER);
+		if (c != null)
+		{
+			this.editor.remove(lay.getLayoutComponent(BorderLayout.CENTER));
+		}
+		
+		if (this.editFocus instanceof SerialCondition)
+		{
+			this.editor.add(new EditCondition(this, (SerialCondition) this.editFocus), BorderLayout.CENTER);
+		}
+		this.editor.validate();
 	}
 	
 	private void noPane()

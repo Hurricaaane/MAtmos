@@ -38,14 +38,21 @@ public class ItemTreeViewPanel extends JPanel implements ISerialUpdate
 			@Override
 			public void valueChanged(TreeSelectionEvent event)
 			{
-				Object component = event.getPath().getLastPathComponent();
-				if (!(component instanceof ItemTreeNode))
-					return;
-				
-				ItemTreeNode item = (ItemTreeNode) component;
-				ItemTreeBranch parent = (ItemTreeBranch) item.getParent();
-				
-				ItemTreeViewPanel.this.model.switchEditItem(parent.getSelector(), item.getItemName());
+				try
+				{
+					Object component = event.getPath().getLastPathComponent();
+					if (!(component instanceof ItemTreeNode))
+						return;
+					
+					ItemTreeNode item = (ItemTreeNode) component;
+					ItemTreeBranch parent = (ItemTreeBranch) item.getParent();
+					
+					ItemTreeViewPanel.this.model.switchEditItem(parent.getSelector(), item.getItemName());
+				}
+				catch (ClassCastException e)
+				{
+					;
+				}
 			}
 		});
 		this.itemTree.setShowsRootHandles(true);
