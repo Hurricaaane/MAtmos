@@ -194,7 +194,6 @@ public class JasonExpansions_Engine1Deserializer2000
 		}
 		
 		this.knowledgeWorkstation.addKnowledge(this.elements);
-		this.knowledgeWorkstation.compile();
 	}
 	
 	private String dynamicSheetHash(String name)
