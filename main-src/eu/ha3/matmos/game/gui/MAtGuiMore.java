@@ -78,6 +78,9 @@ public class MAtGuiMore extends GuiScreen
 		biomeControl.updateDisplayString();
 		this.buttonList.add(biomeControl);
 		
+		this.buttonList.add(new GuiButton(215, _LEFT + _MIX, _MIX * (5 + 1), _WIDTH - _MIX * 2, _UNIT, this.mod
+			.getConfig().getInteger("debug.mode") == 1 ? "Dev/Editor mode: ON" : "Dev/Editor mode: OFF"));
+		
 		this.buttonList.add(new GuiButton(200, _LEFT + _MIX, _SEPARATOR + _MIX * (this.IDS_PER_PAGE + 4), _WIDTH
 			- _MIX * 2 - _GAP - _TURNOFFWIDTH, _UNIT, "Done"));
 	}
@@ -127,6 +130,15 @@ public class MAtGuiMore extends GuiScreen
 			par1GuiButton.displayString = "Use custom world height: " + this.mod.getConfig().getInteger("world.height");
 			this.mod.saveConfig();
 		}*/
+		else if (par1GuiButton.id == 215)
+		{
+			this.mod.getConfig().setProperty("debug.mode", this.mod.getConfig().getInteger("debug.mode") == 0 ? 1 : 0);
+			par1GuiButton.displayString =
+				this.mod.getConfig().getInteger("debug.mode") == 1 ? "Dev/Editor mode: ON" : "Dev/Editor mode: OFF";
+			this.mod.changedDebugMode();
+			this.mod.saveConfig();
+		}
+		
 	}
 	
 	private void aboutToClose()
@@ -169,6 +181,12 @@ public class MAtGuiMore extends GuiScreen
 		
 		super.drawScreen(par1, par2, par3);
 		
+	}
+	
+	@Override
+	public boolean doesGuiPauseGame()
+	{
+		return false;
 	}
 	
 }

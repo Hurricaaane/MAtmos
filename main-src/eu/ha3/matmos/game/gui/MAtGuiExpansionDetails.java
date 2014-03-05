@@ -61,7 +61,7 @@ public class MAtGuiExpansionDetails extends GuiScreen
 		this.buttonList.add(new GuiButton(200, _GAP, _GAP, 70, _UNIT, "Close"));
 		this.buttonList.add(new GuiButton(201, _GAP * 2 + 70, _GAP, 70, _UNIT, "Keep open"));
 		this.buttonList.add(new GuiButton(202, _GAP * 3 + 70 * 2, _GAP, 110, _UNIT, "Reload file"));
-		this.buttonList.add(new GuiButton(203, _GAP * 4 + 70 * 3, _GAP, 110, _UNIT, "Edit..."));
+		this.buttonList.add(new GuiButton(203, _GAP * 4 + 70 * 2 + 110, _GAP, 110, _UNIT, "Edit..."));
 	}
 	
 	@Override
@@ -95,7 +95,7 @@ public class MAtGuiExpansionDetails extends GuiScreen
 				PluggableImpl plug = new PluggableImpl(this.mod, this.expansion);
 				this.expansion.addPluggable(plug);
 				
-				new EditorMaster(plug).run();
+				new Thread(new EditorMaster(plug)).start();
 				
 				if (debugUnit instanceof ReadOnlyJasonStringEDU)
 				{

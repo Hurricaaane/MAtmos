@@ -32,6 +32,7 @@ import eu.ha3.mc.haddon.implem.HaddonIdentity;
 import eu.ha3.mc.haddon.implem.HaddonImpl;
 import eu.ha3.mc.haddon.supporting.SupportsFrameEvents;
 import eu.ha3.mc.haddon.supporting.SupportsTickEvents;
+import eu.ha3.mc.quick.chat.ChatColorsSimple;
 import eu.ha3.mc.quick.chat.Chatter;
 import eu.ha3.mc.quick.update.NotifiableHaddon;
 import eu.ha3.mc.quick.update.UpdateNotifier;
@@ -106,6 +107,7 @@ public class MAtMod extends HaddonImpl
 		this.config.setProperty("useroptions.altitudes.high", true);
 		this.config.setProperty("useroptions.altitudes.low", true);
 		this.config.setProperty("useroptions.biome.override", -1);
+		this.config.setProperty("debug.mode", 0);
 		this.config.commit();
 		
 		// Load configuration from source
@@ -378,5 +380,27 @@ public class MAtMod extends HaddonImpl
 		{
 			this.queue.add(runnable);
 		}
+	}
+	
+	public boolean isDebugMode()
+	{
+		return this.config.getInteger("debug.mode") > 0;
+	}
+	
+	public void changedDebugMode()
+	{
+		if (isDebugMode())
+		{
+			getChatter().printChat(
+				ChatColorsSimple.COLOR_GOLD
+					+ "Dev/Editor mode enabled. "
+					+ "Enabling this mode causes MAtmos to consume more resources in the process.");
+		}
+		else
+		{
+			getChatter().printChat(ChatColorsSimple.COLOR_GOLD + "Dev/Editor mode disabled.");
+		}
+		
+		this.dataGatherer.forceRecomputeModuleStack_debugModeChanged();
 	}
 }

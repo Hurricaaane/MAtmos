@@ -198,18 +198,30 @@ public class MAtGuiMenu__Debug extends GuiScreen
 			
 			this.buttonList.add(sliderControl);
 			
-			this.buttonList.add(new GuiButton(Make.make(new ActionPerformed() {
-				@Override
-				public void actionPerformed()
-				{
-					/*if (expansion.isActivated())
+			if (!this.mod.isDebugMode())
+			{
+				this.buttonList.add(new GuiButton(Make.make(new ActionPerformed() {
+					@Override
+					public void actionPerformed()
 					{
-						expansion.playSample();
-					}*/
-					MAtGuiMenu__Debug.this.mc.displayGuiScreen(new MAtGuiExpansionDetails(
-						MAtGuiMenu__Debug.this, MAtGuiMenu__Debug.this.mod, expansion));
-				}
-			}), _RIGHT - _UNIT, _MIX * (id + 1), _UNIT, _UNIT, "+"));
+						if (expansion.isActivated())
+						{
+							expansion.playSample();
+						}
+					}
+				}), _RIGHT - _UNIT, _MIX * (id + 1), _UNIT, _UNIT, "?"));
+			}
+			else
+			{
+				this.buttonList.add(new GuiButton(Make.make(new ActionPerformed() {
+					@Override
+					public void actionPerformed()
+					{
+						MAtGuiMenu__Debug.this.mc.displayGuiScreen(new MAtGuiExpansionDetails(
+							MAtGuiMenu__Debug.this, MAtGuiMenu__Debug.this.mod, expansion));
+					}
+				}), _RIGHT - _UNIT, _MIX * (id + 1), _UNIT, _UNIT, "+"));
+			}
 			
 			id++;
 			

@@ -10,7 +10,6 @@ import java.util.TreeSet;
 import eu.ha3.matmos.engine.core.implem.GenericSheet;
 import eu.ha3.matmos.engine.core.implem.SelfGeneratingData;
 import eu.ha3.matmos.engine.core.interfaces.Data;
-import eu.ha3.matmos.engine.debug.DumpData;
 import eu.ha3.matmos.expansions.MAtmosConvLogger;
 import eu.ha3.matmos.game.data.abstractions.Collector;
 import eu.ha3.matmos.game.data.abstractions.Processor;
@@ -67,6 +66,7 @@ public class ModularDataGatherer implements Collector, Processor
 	private final Map<String, Set<String>> passOnceModules;
 	private final Set<String> passOnceSubmodules;
 	private final Set<String> requiredModules;
+	private final Set<String> iteratedThroughModules;
 	private final Map<String, Set<String>> moduleStack;
 	
 	private ScannerModule largeScanner;
@@ -81,6 +81,7 @@ public class ModularDataGatherer implements Collector, Processor
 		this.passOnceModules = new TreeMap<String, Set<String>>();
 		this.passOnceSubmodules = new HashSet<String>();
 		this.requiredModules = new TreeSet<String>();
+		this.iteratedThroughModules = new TreeSet<String>();
 		this.moduleStack = new TreeMap<String, Set<String>>();
 	}
 	
@@ -164,10 +165,7 @@ public class ModularDataGatherer implements Collector, Processor
 	@Override
 	public void process()
 	{
-		@SuppressWarnings("unused")
-		Set<String> iterateOver = false ? this.requiredModules : this.modules.keySet();
-		
-		for (String requiredModule : iterateOver)
+		for (String requiredModule : this.iteratedThroughModules)
 		{
 			try
 			{
@@ -181,11 +179,6 @@ public class ModularDataGatherer implements Collector, Processor
 		}
 		
 		this.ticksPassed = this.ticksPassed + 1;
-		
-		if (false && this.mod.util().getClientTick() % 40 == 0)
-		{
-			System.out.println(DumpData.dumpData(this.data));
-		}
 	}
 	
 	@Override
@@ -239,21 +232,42 @@ public class ModularDataGatherer implements Collector, Processor
 		recomputeModuleStack();
 	}
 	
+	public void forceRecomputeModuleStack_debugModeChanged()
+	{
+		recomputeModuleStack();
+	}
+	
 	private void recomputeModuleStack()
 	{
+		if (this.mod.isDebugMode())
+		{
+			this.requiredModules.clear();
+			this.iteratedThroughModules.clear();
+			
+			this.requiredModules.addAll(this.modules.keySet());
+			this.requiredModules.removeAll(this.passOnceModules.keySet());
+			this.requiredModules.addAll(this.passOnceSubmodules);
+			
+			this.iteratedThroughModules.addAll(this.modules.keySet());
+			
+			return;
+		}
+		
 		this.requiredModules.clear();
+		this.iteratedThroughModules.clear();
 		for (Set<String> stack : this.moduleStack.values())
 		{
 			this.requiredModules.addAll(stack);
+			this.iteratedThroughModules.addAll(stack);
 		}
 		
 		for (Map.Entry<String, Set<String>> submodules : this.passOnceModules.entrySet())
 		{
 			// if the submodules have something in common with the required modules
-			if (!Collections.disjoint(submodules.getValue(), this.requiredModules))
+			if (!Collections.disjoint(submodules.getValue(), this.iteratedThroughModules))
 			{
-				this.requiredModules.removeAll(submodules.getValue());
-				this.requiredModules.add(submodules.getKey());
+				this.iteratedThroughModules.removeAll(submodules.getValue());
+				this.iteratedThroughModules.add(submodules.getKey());
 			}
 		}
 	}
