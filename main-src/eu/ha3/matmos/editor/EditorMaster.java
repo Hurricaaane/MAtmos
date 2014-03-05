@@ -25,7 +25,7 @@ import eu.ha3.matmos.tools.JasonExpansions_Engine1Deserializer2000;
 
 public class EditorMaster implements Runnable, EditorModel, UnpluggedListener
 {
-	private final IEditorWindow window;
+	private IEditorWindow window;
 	
 	private final PluggableIntoMinecraft minecraft;
 	private boolean isUnplugged;
@@ -67,10 +67,8 @@ public class EditorMaster implements Runnable, EditorModel, UnpluggedListener
 			e.printStackTrace();
 		}
 		
-		this.window = new EditorWindow(this);
-		reset();
-		// Set file after reset
-		
+		this.root = new SerialRoot();
+		this.hasModifiedContents = false;
 		this.file = potentialFile;
 	}
 	
@@ -78,7 +76,20 @@ public class EditorMaster implements Runnable, EditorModel, UnpluggedListener
 	public void run()
 	{
 		System.out.println("Loading designer...");
+		java.awt.EventQueue.invokeLater(new Runnable() {
+			@Override
+			public void run()
+			{
+				initializedWindow(new EditorWindow(EditorMaster.this));
+			}
+		});
+	}
+	
+	private void initializedWindow(EditorWindow editorWindow)
+	{
+		this.window = editorWindow;
 		this.window.display();
+		
 		System.out.println("Loaded.");
 		
 		if (this.file != null)
