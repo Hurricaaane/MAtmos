@@ -20,6 +20,11 @@ public class ItemTreeModel extends DefaultTreeModel implements ISerialUpdate
 	@Override
 	public void updateSerial(SerialRoot root)
 	{
-		((ItemTreeRoot) getRoot()).updateSerial(root);
+		getItemTreeRoot().updateSerial(root);
+	}
+	
+	public ItemTreeRoot getItemTreeRoot()
+	{
+		return (ItemTreeRoot) getRoot();
 	}
 }

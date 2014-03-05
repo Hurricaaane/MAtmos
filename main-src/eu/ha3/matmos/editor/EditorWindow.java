@@ -498,6 +498,7 @@ public class EditorWindow extends JFrame implements IEditorWindow
 	@Override
 	public void setEditFocus(String name, Object item)
 	{
+		this.panelTree.setEditFocus(name, item);
 		this.editPanel.setEditFocus(name, item);
 	}
 }

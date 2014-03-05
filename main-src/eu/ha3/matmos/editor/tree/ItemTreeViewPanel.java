@@ -1,14 +1,18 @@
 package eu.ha3.matmos.editor.tree;
 
 import java.awt.BorderLayout;
+import java.util.Enumeration;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.TreePath;
 
+import eu.ha3.matmos.editor.KnowledgeItemType;
 import eu.ha3.matmos.editor.interfaces.EditorModel;
+import eu.ha3.matmos.editor.interfaces.IEditNamedItem;
 import eu.ha3.matmos.editor.interfaces.ISerialUpdate;
 import eu.ha3.matmos.jsonformat.serializable.SerialRoot;
 
@@ -17,7 +21,7 @@ import eu.ha3.matmos.jsonformat.serializable.SerialRoot;
 */
 
 @SuppressWarnings("serial")
-public class ItemTreeViewPanel extends JPanel implements ISerialUpdate
+public class ItemTreeViewPanel extends JPanel implements ISerialUpdate, IEditNamedItem
 {
 	private final EditorModel model;
 	
@@ -66,5 +70,30 @@ public class ItemTreeViewPanel extends JPanel implements ISerialUpdate
 	{
 		this.itemTreeModel.updateSerial(root);
 		this.itemTree.updateUI();
+	}
+	
+	@Override
+	public void setEditFocus(String name, Object item)
+	{
+		if (item == null || name == null)
+			return;
+		
+		KnowledgeItemType k = KnowledgeItemType.fromSerialClass(item.getClass());
+		if (k == null)
+			return;
+		
+		@SuppressWarnings("unchecked")
+		Enumeration<? extends ItemTreeNode> nenum = this.itemTreeModel.getItemTreeRoot().getKnowledgeNode(k).children();
+		while (nenum.hasMoreElements())
+		{
+			ItemTreeNode next = nenum.nextElement();
+			String itemName = next.getItemName();
+			
+			if (itemName.equals(name))
+			{
+				this.itemTree.setSelectionPath(new TreePath(this.itemTreeModel.getPathToRoot(next)));
+				return;
+			}
+		}
 	}
 }

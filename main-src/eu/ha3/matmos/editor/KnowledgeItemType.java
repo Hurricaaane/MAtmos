@@ -1,5 +1,14 @@
 package eu.ha3.matmos.editor;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import eu.ha3.matmos.jsonformat.serializable.SerialCondition;
+import eu.ha3.matmos.jsonformat.serializable.SerialDynamic;
+import eu.ha3.matmos.jsonformat.serializable.SerialEvent;
+import eu.ha3.matmos.jsonformat.serializable.SerialList;
+import eu.ha3.matmos.jsonformat.serializable.SerialMachine;
+import eu.ha3.matmos.jsonformat.serializable.SerialSet;
 
 /*
 --filenotes-placeholder
@@ -7,13 +16,43 @@ package eu.ha3.matmos.editor;
 
 public enum KnowledgeItemType
 {
-	CONDITION("Condition"), SET("Set"), MACHINE("Machine"), LIST("List"), DYNAMIC("Dynamic"), EVENT("Event");
+		CONDITION("Condition", SerialCondition.class),
+		SET("Set", SerialSet.class),
+		MACHINE("Machine", SerialMachine.class),
+		LIST("List", SerialList.class),
+		DYNAMIC("Dynamic", SerialDynamic.class),
+		EVENT("Event", SerialEvent.class);
 	
 	private String name;
+	private Class<?> serialClass;
 	
-	private KnowledgeItemType(String name)
+	private static final Map<Class<?>, KnowledgeItemType> fromSerialClass = new HashMap<Class<?>, KnowledgeItemType>();
+	
+	static
+	{
+		for (KnowledgeItemType kit : KnowledgeItemType.values())
+		{
+			fromSerialClass.put(kit.getSerialClass(), kit);
+		}
+	}
+	
+	public static KnowledgeItemType fromSerialClass(Class<?> klass)
+	{
+		if (!fromSerialClass.containsKey(klass))
+			return null;
+		
+		return fromSerialClass.get(klass);
+	}
+	
+	private KnowledgeItemType(String name, Class<?> serialClass)
 	{
 		this.name = name;
+		this.serialClass = serialClass;
+	}
+	
+	public Class<?> getSerialClass()
+	{
+		return this.serialClass;
 	}
 	
 	@Override

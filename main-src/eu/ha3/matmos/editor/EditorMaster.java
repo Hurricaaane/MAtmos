@@ -25,7 +25,8 @@ import eu.ha3.matmos.tools.JasonExpansions_Engine1Deserializer2000;
 
 public class EditorMaster implements Runnable, EditorModel, UnpluggedListener
 {
-	private IEditorWindow window;
+	//private IEditorWindow __WINDOW;
+	private IEditorWindow window__EventQueue;
 	
 	private final PluggableIntoMinecraft minecraft;
 	private boolean isUnplugged;
@@ -42,7 +43,12 @@ public class EditorMaster implements Runnable, EditorModel, UnpluggedListener
 	
 	public EditorMaster(PluggableIntoMinecraft minecraft)
 	{
-		File potentialFile = this.file;
+		this(minecraft, null);
+	}
+	
+	public EditorMaster(PluggableIntoMinecraft minecraft, File fileIn)
+	{
+		File potentialFile = fileIn;
 		
 		this.minecraft = minecraft;
 		if (minecraft != null)
@@ -87,8 +93,9 @@ public class EditorMaster implements Runnable, EditorModel, UnpluggedListener
 	
 	private void initializedWindow(EditorWindow editorWindow)
 	{
-		this.window = editorWindow;
-		this.window.display();
+		//this.__WINDOW = editorWindow;
+		this.window__EventQueue = new WindowEventQueue(editorWindow);
+		this.window__EventQueue.display();
 		
 		System.out.println("Loaded.");
 		
@@ -156,13 +163,7 @@ public class EditorMaster implements Runnable, EditorModel, UnpluggedListener
 		this.file = null;
 		this.root = new SerialRoot();
 		this.hasModifiedContents = false;
-		java.awt.EventQueue.invokeLater(new Runnable() {
-			@Override
-			public void run()
-			{
-				EditorMaster.this.window.setEditFocus(null, null);
-			}
-		});
+		this.window__EventQueue.setEditFocus(null, null);
 	}
 	
 	private void modelize()
@@ -187,36 +188,18 @@ public class EditorMaster implements Runnable, EditorModel, UnpluggedListener
 	
 	private void updateFileAndContentsState()
 	{
-		java.awt.EventQueue.invokeLater(new Runnable() {
-			@Override
-			public void run()
-			{
-				EditorMaster.this.window.refreshFileState();
-				EditorMaster.this.window.updateSerial(EditorMaster.this.root);
-			}
-		});
+		this.window__EventQueue.refreshFileState();
+		this.window__EventQueue.updateSerial(EditorMaster.this.root);
 	}
 	
 	private void updateFileState()
 	{
-		java.awt.EventQueue.invokeLater(new Runnable() {
-			@Override
-			public void run()
-			{
-				EditorMaster.this.window.refreshFileState();
-			}
-		});
+		this.window__EventQueue.refreshFileState();
 	}
 	
-	private void showErrorPopup(final String error)
+	private void showErrorPopup(String error)
 	{
-		java.awt.EventQueue.invokeLater(new Runnable() {
-			@Override
-			public void run()
-			{
-				EditorMaster.this.window.showErrorPopup(error);
-			}
-		});
+		this.window__EventQueue.showErrorPopup(error);
 	}
 	
 	@Override
@@ -323,14 +306,7 @@ public class EditorMaster implements Runnable, EditorModel, UnpluggedListener
 		{
 			e.printStackTrace();
 			
-			final String error = "Writing to disk resulted in an error: " + e.getLocalizedMessage();
-			java.awt.EventQueue.invokeLater(new Runnable() {
-				@Override
-				public void run()
-				{
-					EditorMaster.this.window.showErrorPopup(error);
-				}
-			});
+			this.window__EventQueue.showErrorPopup("Writing to disk resulted in an error: " + e.getLocalizedMessage());
 			return false;
 		}
 		
@@ -341,13 +317,7 @@ public class EditorMaster implements Runnable, EditorModel, UnpluggedListener
 	public void onUnpluggedEvent(PluggableIntoMinecraft pluggable)
 	{
 		this.isUnplugged = true;
-		java.awt.EventQueue.invokeLater(new Runnable() {
-			@Override
-			public void run()
-			{
-				EditorMaster.this.window.disableMinecraftCapabilitites();
-			}
-		});
+		this.window__EventQueue.disableMinecraftCapabilitites();
 	}
 	
 	@Override
@@ -405,16 +375,7 @@ public class EditorMaster implements Runnable, EditorModel, UnpluggedListener
 		
 		if (map != null && map.containsKey(itemName))
 		{
-			final String itemNameFinal = itemName;
-			final Object item = map.get(itemName);
-			
-			java.awt.EventQueue.invokeLater(new Runnable() {
-				@Override
-				public void run()
-				{
-					EditorMaster.this.window.setEditFocus(itemNameFinal, item);
-				}
-			});
+			this.window__EventQueue.setEditFocus(itemName, map.get(itemName));
 		}
 	}
 	
@@ -426,13 +387,7 @@ public class EditorMaster implements Runnable, EditorModel, UnpluggedListener
 		
 		if (newName == null || newName.equals("") || newName.contains("\"") || newName.contains("\\"))
 		{
-			java.awt.EventQueue.invokeLater(new Runnable() {
-				@Override
-				public void run()
-				{
-					showErrorPopup("Name must not be empty or include the characters \" and \\");
-				}
-			});
+			showErrorPopup("Name must not be empty or include the characters \" and \\");
 			return;
 		}
 		
@@ -440,17 +395,11 @@ public class EditorMaster implements Runnable, EditorModel, UnpluggedListener
 		{
 			SerialManipulator.rename(this.root, editFocus, oldName, newName);
 			flagChange(true);
-			this.window.setEditFocus(newName, editFocus);
+			this.window__EventQueue.setEditFocus(newName, editFocus);
 		}
-		catch (final ItemNamingException e)
+		catch (ItemNamingException e)
 		{
-			java.awt.EventQueue.invokeLater(new Runnable() {
-				@Override
-				public void run()
-				{
-					showErrorPopup(e.getMessage());
-				}
-			});
+			showErrorPopup(e.getMessage());
 		}
 	}
 	
@@ -461,17 +410,11 @@ public class EditorMaster implements Runnable, EditorModel, UnpluggedListener
 		{
 			SerialManipulator.delete(this.root, editFocus, nameOfItem);
 			flagChange(true);
-			this.window.setEditFocus(null, null);
+			this.window__EventQueue.setEditFocus(null, null);
 		}
-		catch (final ItemNamingException e)
+		catch (ItemNamingException e)
 		{
-			java.awt.EventQueue.invokeLater(new Runnable() {
-				@Override
-				public void run()
-				{
-					showErrorPopup(e.getMessage());
-				}
-			});
+			showErrorPopup(e.getMessage());
 		}
 	}
 	
@@ -500,18 +443,12 @@ public class EditorMaster implements Runnable, EditorModel, UnpluggedListener
 		{
 			Object o = SerialManipulator.createNew(this.root, choice, name);
 			flagChange(true);
-			this.window.setEditFocus(name, o);
+			this.window__EventQueue.setEditFocus(name, o);
 			return true;
 		}
-		catch (final ItemNamingException e)
+		catch (ItemNamingException e)
 		{
-			java.awt.EventQueue.invokeLater(new Runnable() {
-				@Override
-				public void run()
-				{
-					showErrorPopup(e.getMessage());
-				}
-			});
+			showErrorPopup(e.getMessage());
 		}
 		
 		return false;

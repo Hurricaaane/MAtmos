@@ -8,6 +8,7 @@ import java.util.TreeSet;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
+import eu.ha3.matmos.editor.KnowledgeItemType;
 import eu.ha3.matmos.editor.interfaces.ISerialUpdate;
 import eu.ha3.matmos.jsonformat.serializable.SerialRoot;
 
@@ -53,6 +54,28 @@ public class ItemTreeRoot extends DefaultMutableTreeNode implements ISerialUpdat
 		updateSubSerial(root.list.keySet(), this.list);
 		updateSubSerial(root.dynamic.keySet(), this.dynamic);
 		updateSubSerial(root.event.keySet(), this.event);
+	}
+	
+	public ItemTreeNode getKnowledgeNode(KnowledgeItemType item)
+	{
+		switch (item)
+		{
+		case CONDITION:
+			return this.condition;
+		case DYNAMIC:
+			return this.dynamic;
+		case EVENT:
+			return this.event;
+		case LIST:
+			return this.list;
+		case MACHINE:
+			return this.machine;
+		case SET:
+			return this.set;
+		default:
+			return null;
+			
+		}
 	}
 	
 	private void updateSubSerial(Collection<String> keys, ItemTreeNode treeNode)
