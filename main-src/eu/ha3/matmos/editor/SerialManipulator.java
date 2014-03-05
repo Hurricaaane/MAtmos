@@ -258,4 +258,53 @@ public class SerialManipulator
 		
 		map.remove(oldName);
 	}
+	
+	public static Object createNew(SerialRoot root, KnowledgeItemType choice, String name) throws ItemNamingException
+	{
+		Object o = null;
+		switch (choice)
+		{
+		case CONDITION:
+			o = instanciate(root.condition, SerialCondition.class, name);
+			break;
+		case DYNAMIC:
+			o = instanciate(root.dynamic, SerialDynamic.class, name);
+			break;
+		case EVENT:
+			o = instanciate(root.event, SerialEvent.class, name);
+			break;
+		case LIST:
+			o = instanciate(root.list, SerialList.class, name);
+			break;
+		case MACHINE:
+			o = instanciate(root.machine, SerialMachine.class, name);
+			break;
+		case SET:
+			o = instanciate(root.set, SerialSet.class, name);
+			break;
+		default:
+			break;
+		}
+		return o;
+		
+	}
+	
+	private static <T> Object instanciate(Map<String, T> map, Class<T> klass, String name) throws ItemNamingException
+	{
+		if (map.containsKey(name))
+			throw new ItemNamingException("This name is already in use.");
+		
+		try
+		{
+			map.put(name, klass.newInstance());
+			return map.get(name);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			
+			// XXX Dirty use of exception
+			throw new ItemNamingException("Severe exception! " + e.getMessage());
+		}
+	}
 }

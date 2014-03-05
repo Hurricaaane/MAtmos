@@ -197,6 +197,33 @@ public class EditorWindow extends JFrame implements IEditorWindow
 		JMenuItem mntmClose = new JMenuItem("Close");
 		mnFile.add(mntmClose);
 		
+		JMenu mnCreate = new JMenu("Create");
+		menuBar.add(mnCreate);
+		
+		JMenuItem mntmAdd = new JMenuItem("Create new item...");
+		mntmAdd.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				new PopupHelper();
+				KnowledgeItemType choice = PopupHelper.askForType(EditorWindow.this, "Create new item...");
+				
+				String name = "New item";
+				while (true)
+				{
+					new PopupHelper();
+					name = PopupHelper.askForName(EditorWindow.this, "Create new item...", name);
+					
+					if (name == null || EditorWindow.this.model.handleCreateRequest(choice, name))
+						return;
+				}
+			}
+		});
+		mnCreate.add(mntmAdd);
+		
+		JMenuItem mntmNewMenuItem = new JMenuItem("Duplicate item...");
+		mnCreate.add(mntmNewMenuItem);
+		
 		JMenu mnOptions = new JMenu("Options");
 		mnOptions.setMnemonic('o');
 		menuBar.add(mnOptions);

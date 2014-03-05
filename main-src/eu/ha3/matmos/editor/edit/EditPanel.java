@@ -41,6 +41,10 @@ public class EditPanel extends JPanel implements IEditNamedItem
 	private JButton btnDelete;
 	private JPanel editor;
 	
+	//
+	
+	private JPanel currentEdit = null;
+	
 	public EditPanel(EditorModel modelConstruct)
 	{
 		this.model = modelConstruct;
@@ -160,14 +164,34 @@ public class EditPanel extends JPanel implements IEditNamedItem
 		Component c = lay.getLayoutComponent(BorderLayout.CENTER);
 		if (c != null)
 		{
-			this.editor.remove(lay.getLayoutComponent(BorderLayout.CENTER));
+			this.editor.remove(c);
 		}
 		
 		if (this.editFocus instanceof SerialCondition)
 		{
-			this.editor.add(new EditCondition(this, (SerialCondition) this.editFocus), BorderLayout.CENTER);
+			showEdit(new EditCondition(this, (SerialCondition) this.editFocus));
 		}
-		this.editor.validate();
+		else
+		{
+			showEdit(null);
+		}
+	}
+	
+	private void showEdit(JPanel panel)
+	{
+		if (this.currentEdit != null)
+		{
+			this.editor.remove(this.currentEdit);
+		}
+		
+		this.currentEdit = panel;
+		
+		if (this.currentEdit != null)
+		{
+			this.editor.add(this.currentEdit, BorderLayout.CENTER);
+		}
+		revalidate();
+		repaint();
 	}
 	
 	private void noPane()
@@ -177,6 +201,8 @@ public class EditPanel extends JPanel implements IEditNamedItem
 		this.textField.setEditable(false);
 		this.btnRename.setEnabled(false);
 		this.btnDelete.setEnabled(false);
+		
+		showEdit(null);
 	}
 	
 	private void evaluateRename()
@@ -195,5 +221,10 @@ public class EditPanel extends JPanel implements IEditNamedItem
 		{
 			this.btnRename.setEnabled(true);
 		}
+	}
+	
+	public void flagChange()
+	{
+		this.model.informInnerChange();
 	}
 }

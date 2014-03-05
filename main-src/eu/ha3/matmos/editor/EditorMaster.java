@@ -144,6 +144,14 @@ public class EditorMaster implements Runnable, EditorModel, UnpluggedListener
 	{
 		this.file = null;
 		this.root = new SerialRoot();
+		this.hasModifiedContents = false;
+		java.awt.EventQueue.invokeLater(new Runnable() {
+			@Override
+			public void run()
+			{
+				EditorMaster.this.window.setEditFocus(null, null);
+			}
+		});
 	}
 	
 	private void modelize()
@@ -162,6 +170,7 @@ public class EditorMaster implements Runnable, EditorModel, UnpluggedListener
 		String jasonString = new Scanner(new FileInputStream(potentialFile)).useDelimiter("\\Z").next();
 		System.out.println(jasonString);
 		this.root = new JasonExpansions_Engine1Deserializer2000().jsonToSerial(jasonString);
+		this.hasModifiedContents = false;
 		updateFileAndContentsState();
 	}
 	
@@ -471,5 +480,35 @@ public class EditorMaster implements Runnable, EditorModel, UnpluggedListener
 				updateFileState();
 			}
 		}
+	}
+	
+	@Override
+	public boolean handleCreateRequest(KnowledgeItemType choice, String name)
+	{
+		try
+		{
+			Object o = SerialManipulator.createNew(this.root, choice, name);
+			flagChange(true);
+			this.window.setEditFocus(name, o);
+			return true;
+		}
+		catch (final ItemNamingException e)
+		{
+			java.awt.EventQueue.invokeLater(new Runnable() {
+				@Override
+				public void run()
+				{
+					showErrorPopup(e.getMessage());
+				}
+			});
+		}
+		
+		return false;
+	}
+	
+	@Override
+	public void informInnerChange()
+	{
+		flagChange(false);
 	}
 }
