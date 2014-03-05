@@ -459,4 +459,10 @@ public class EditorMaster implements Runnable, EditorModel, UnpluggedListener
 	{
 		flagChange(false);
 	}
+	
+	@Override
+	public SerialRoot getRoot()
+	{
+		return this.root;
+	}
 }

@@ -48,6 +48,9 @@ public class ItemTreeViewPanel extends JPanel implements ISerialUpdate, IEditNam
 					if (!(component instanceof ItemTreeNode))
 						return;
 					
+					if (component instanceof ItemTreeBranch)
+						return;
+					
 					ItemTreeNode item = (ItemTreeNode) component;
 					ItemTreeBranch parent = (ItemTreeBranch) item.getParent();
 					
@@ -80,6 +83,10 @@ public class ItemTreeViewPanel extends JPanel implements ISerialUpdate, IEditNam
 		
 		KnowledgeItemType k = KnowledgeItemType.fromSerialClass(item.getClass());
 		if (k == null)
+			return;
+		
+		if (this.itemTree.getSelectionPath().getLastPathComponent() instanceof ItemTreeNode
+			&& ((ItemTreeNode) this.itemTree.getSelectionPath().getLastPathComponent()).getItemName().equals(name))
 			return;
 		
 		@SuppressWarnings("unchecked")

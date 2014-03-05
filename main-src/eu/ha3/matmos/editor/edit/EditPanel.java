@@ -20,13 +20,15 @@ import eu.ha3.matmos.editor.InstantTextField;
 import eu.ha3.matmos.editor.interfaces.EditorModel;
 import eu.ha3.matmos.editor.interfaces.IEditNamedItem;
 import eu.ha3.matmos.jsonformat.serializable.SerialCondition;
+import eu.ha3.matmos.jsonformat.serializable.SerialRoot;
+import eu.ha3.matmos.jsonformat.serializable.SerialSet;
 
 /*
 --filenotes-placeholder
 */
 
 @SuppressWarnings("serial")
-public class EditPanel extends JPanel implements IEditNamedItem
+public class EditPanel extends JPanel implements IEditNamedItem, IFlaggable
 {
 	private final EditorModel model;
 	
@@ -171,6 +173,10 @@ public class EditPanel extends JPanel implements IEditNamedItem
 		{
 			showEdit(new EditCondition(this, (SerialCondition) this.editFocus));
 		}
+		else if (this.editFocus instanceof SerialSet)
+		{
+			showEdit(new EditSet(this, (SerialSet) this.editFocus));
+		}
 		else
 		{
 			showEdit(null);
@@ -223,8 +229,14 @@ public class EditPanel extends JPanel implements IEditNamedItem
 		}
 	}
 	
+	@Override
 	public void flagChange()
 	{
 		this.model.informInnerChange();
+	}
+	
+	public SerialRoot getSerialRoot()
+	{
+		return this.model.getRoot();
 	}
 }

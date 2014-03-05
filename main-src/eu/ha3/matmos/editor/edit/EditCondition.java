@@ -1,6 +1,7 @@
 package eu.ha3.matmos.editor.edit;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -8,9 +9,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 
 import eu.ha3.matmos.editor.InstantTextField;
@@ -34,6 +37,10 @@ public class EditCondition extends JPanel
 	private InstantTextField value;
 	private JComboBox comboBox;
 	private JPanel panel;
+	private JPanel panel_1;
+	private JButton btnSheet;
+	private JButton btnDynamic;
+	private JButton btnSelectList;
 	
 	public EditCondition(EditPanel parentConstruct, SerialCondition conditionConstruct)
 	{
@@ -152,6 +159,21 @@ public class EditCondition extends JPanel
 		gbc_value.gridx = 1;
 		gbc_value.gridy = 3;
 		this.panel.add(this.value, gbc_value);
+		
+		this.panel_1 = new JPanel();
+		this.panel_1.setBorder(new TitledBorder(
+			UIManager.getBorder("TitledBorder.border"), "Options", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		add(this.panel_1, BorderLayout.SOUTH);
+		this.panel_1.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		
+		this.btnSheet = new JButton("Sheet");
+		this.panel_1.add(this.btnSheet);
+		
+		this.btnDynamic = new JButton("Dynamic");
+		this.panel_1.add(this.btnDynamic);
+		
+		this.btnSelectList = new JButton("List");
+		this.panel_1.add(this.btnSelectList);
 		
 		updateValues();
 	}
