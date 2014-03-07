@@ -1,4 +1,4 @@
-package eu.ha3.matmos.editor.edit;
+package eu.ha3.matmos.editor.interfaces;
 
 /*
 --filenotes-placeholder

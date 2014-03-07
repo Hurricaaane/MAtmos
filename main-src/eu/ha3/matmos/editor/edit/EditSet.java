@@ -19,6 +19,7 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
+import eu.ha3.matmos.editor.interfaces.IFlaggable;
 import eu.ha3.matmos.jsonformat.serializable.SerialSet;
 
 /*
@@ -59,13 +60,13 @@ public class EditSet extends JPanel implements IFlaggable
 		JLabel lblMustBeActive = new JLabel("Must be active:");
 		this.panel.add(lblMustBeActive, "1, 1, left, center");
 		
-		this.activeSet = new SetRemoverPanel(this.edit, this.set.yes);
+		this.activeSet = new SetRemoverPanel(this, this.set.yes);
 		this.panel.add(this.activeSet, "1, 2, fill, top");
 		
 		JLabel lblMustBeInactive = new JLabel("Must be inactive:");
 		this.panel.add(lblMustBeInactive, "1, 4, left, center");
 		
-		this.inactiveSet = new SetRemoverPanel(this.edit, this.set.no);
+		this.inactiveSet = new SetRemoverPanel(this, this.set.no);
 		this.panel.add(this.inactiveSet, "1, 6, fill, top");
 		
 		this.panel_1 = new JPanel();
@@ -171,6 +172,7 @@ public class EditSet extends JPanel implements IFlaggable
 	
 	private void updateValues()
 	{
+		
 		fillWithValues();
 		this.activeSet.fillWithValues();
 		this.inactiveSet.fillWithValues();

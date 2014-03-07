@@ -6,5 +6,5 @@ package eu.ha3.matmos.editor.interfaces;
 
 public interface IEditNamedItem
 {
-	public void setEditFocus(String name, Object item);
+	public void setEditFocus(String name, Object item, boolean forceSelect);
 }

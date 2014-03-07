@@ -31,13 +31,13 @@ public class WindowEventQueue implements IEditorWindow
 	}
 	
 	@Override
-	public void setEditFocus(final String name, final Object item)
+	public void setEditFocus(final String name, final Object item, boolean forceSelect)
 	{
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run()
 			{
-				WindowEventQueue.this.window.setEditFocus(name, item);
+				WindowEventQueue.this.window.setEditFocus(name, item, false);
 			}
 		});
 	}

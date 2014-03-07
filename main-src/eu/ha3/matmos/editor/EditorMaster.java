@@ -163,7 +163,7 @@ public class EditorMaster implements Runnable, EditorModel, UnpluggedListener
 		this.file = null;
 		this.root = new SerialRoot();
 		this.hasModifiedContents = false;
-		this.window__EventQueue.setEditFocus(null, null);
+		this.window__EventQueue.setEditFocus(null, null, false);
 	}
 	
 	private void modelize()
@@ -375,7 +375,7 @@ public class EditorMaster implements Runnable, EditorModel, UnpluggedListener
 		
 		if (map != null && map.containsKey(itemName))
 		{
-			this.window__EventQueue.setEditFocus(itemName, map.get(itemName));
+			this.window__EventQueue.setEditFocus(itemName, map.get(itemName), false);
 		}
 	}
 	
@@ -395,7 +395,7 @@ public class EditorMaster implements Runnable, EditorModel, UnpluggedListener
 		{
 			SerialManipulator.rename(this.root, editFocus, oldName, newName);
 			flagChange(true);
-			this.window__EventQueue.setEditFocus(newName, editFocus);
+			this.window__EventQueue.setEditFocus(newName, editFocus, true);
 		}
 		catch (ItemNamingException e)
 		{
@@ -410,7 +410,7 @@ public class EditorMaster implements Runnable, EditorModel, UnpluggedListener
 		{
 			SerialManipulator.delete(this.root, editFocus, nameOfItem);
 			flagChange(true);
-			this.window__EventQueue.setEditFocus(null, null);
+			this.window__EventQueue.setEditFocus(null, null, false);
 		}
 		catch (ItemNamingException e)
 		{
@@ -437,13 +437,13 @@ public class EditorMaster implements Runnable, EditorModel, UnpluggedListener
 	}
 	
 	@Override
-	public boolean handleCreateRequest(KnowledgeItemType choice, String name)
+	public boolean createItem(KnowledgeItemType choice, String name)
 	{
 		try
 		{
 			Object o = SerialManipulator.createNew(this.root, choice, name);
 			flagChange(true);
-			this.window__EventQueue.setEditFocus(name, o);
+			this.window__EventQueue.setEditFocus(name, o, true);
 			return true;
 		}
 		catch (ItemNamingException e)
@@ -461,7 +461,7 @@ public class EditorMaster implements Runnable, EditorModel, UnpluggedListener
 	}
 	
 	@Override
-	public SerialRoot getRoot()
+	public SerialRoot getRootForCopyPurposes()
 	{
 		return this.root;
 	}

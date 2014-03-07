@@ -214,7 +214,7 @@ public class EditorWindow extends JFrame implements IEditorWindow
 					new PopupHelper();
 					name = PopupHelper.askForName(EditorWindow.this, "Create new item...", name);
 					
-					if (name == null || EditorWindow.this.model.handleCreateRequest(choice, name))
+					if (name == null || EditorWindow.this.model.createItem(choice, name))
 						return;
 				}
 			}
@@ -496,9 +496,9 @@ public class EditorWindow extends JFrame implements IEditorWindow
 	}
 	
 	@Override
-	public void setEditFocus(String name, Object item)
+	public void setEditFocus(String name, Object item, boolean forceSelect)
 	{
-		this.panelTree.setEditFocus(name, item);
-		this.editPanel.setEditFocus(name, item);
+		this.panelTree.setEditFocus(name, item, forceSelect);
+		this.editPanel.setEditFocus(name, item, forceSelect);
 	}
 }

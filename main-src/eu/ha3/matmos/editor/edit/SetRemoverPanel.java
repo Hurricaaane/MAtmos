@@ -11,6 +11,8 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import eu.ha3.matmos.editor.interfaces.IFlaggable;
+
 /*
 --filenotes-placeholder
 */
@@ -22,7 +24,7 @@ public class SetRemoverPanel extends JPanel
 	private final Set<String> set;
 	private JList list;
 	
-	public SetRemoverPanel(EditPanel parent, Set<String> original)
+	public SetRemoverPanel(IFlaggable parent, Set<String> original)
 	{
 		this.parent = parent;
 		this.set = original;
@@ -82,5 +84,10 @@ public class SetRemoverPanel extends JPanel
 	{
 		this.list.removeAll();
 		this.list.setListData(new TreeSet<String>(this.set).toArray(new String[this.set.size()]));
+	}
+	
+	public JList getList()
+	{
+		return this.list;
 	}
 }

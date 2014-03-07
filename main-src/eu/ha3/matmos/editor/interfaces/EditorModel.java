@@ -13,17 +13,23 @@ import eu.ha3.matmos.jsonformat.serializable.SerialRoot;
 
 public interface EditorModel
 {
-	public void trySetAndLoadFile(File file);
+	public File getExpansionDirectory();
+	
+	public File getSoundDirectory();
+	
+	public File getWorkingDirectory();
 	
 	public void minecraftReloadFromDisk();
 	
-	public boolean hasValidFile();
-	
-	public boolean isMinecraftControlled();
+	public void minecraftPushCurrentState();
 	
 	public ProviderCollection getProviderCollectionIfAvailable();
 	
-	public File getWorkingDirectory();
+	public boolean isMinecraftControlled();
+	
+	public boolean isPlugged();
+	
+	public boolean hasValidFile();
 	
 	public boolean hasUnsavedChanges();
 	
@@ -31,17 +37,11 @@ public interface EditorModel
 	
 	public String generateJson(boolean pretty);
 	
-	public void minecraftPushCurrentState();
+	public void trySetAndLoadFile(File file);
 	
 	public boolean quickSave();
 	
 	public boolean longSave(File location, boolean setAsNewPointer);
-	
-	public boolean isPlugged();
-	
-	public File getExpansionDirectory();
-	
-	public File getSoundDirectory();
 	
 	public void switchEditItem(Selector selector, String itemName);
 	
@@ -49,9 +49,9 @@ public interface EditorModel
 	
 	public void deleteItem(String nameOfItem, Object editFocus);
 	
-	public boolean handleCreateRequest(KnowledgeItemType choice, String name);
+	public boolean createItem(KnowledgeItemType choice, String name);
 	
 	public void informInnerChange();
 	
-	public SerialRoot getRoot();
+	public SerialRoot getRootForCopyPurposes();
 }

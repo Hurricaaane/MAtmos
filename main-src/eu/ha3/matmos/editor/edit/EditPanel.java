@@ -19,7 +19,10 @@ import javax.swing.border.TitledBorder;
 import eu.ha3.matmos.editor.InstantTextField;
 import eu.ha3.matmos.editor.interfaces.EditorModel;
 import eu.ha3.matmos.editor.interfaces.IEditNamedItem;
+import eu.ha3.matmos.editor.interfaces.IFlaggable;
 import eu.ha3.matmos.jsonformat.serializable.SerialCondition;
+import eu.ha3.matmos.jsonformat.serializable.SerialEvent;
+import eu.ha3.matmos.jsonformat.serializable.SerialList;
 import eu.ha3.matmos.jsonformat.serializable.SerialRoot;
 import eu.ha3.matmos.jsonformat.serializable.SerialSet;
 
@@ -140,7 +143,7 @@ public class EditPanel extends JPanel implements IEditNamedItem, IFlaggable
 	}
 	
 	@Override
-	public void setEditFocus(String name, Object item)
+	public void setEditFocus(String name, Object item, boolean forceSelect)
 	{
 		this.nameOfItem = name;
 		this.editFocus = item;
@@ -176,6 +179,14 @@ public class EditPanel extends JPanel implements IEditNamedItem, IFlaggable
 		else if (this.editFocus instanceof SerialSet)
 		{
 			showEdit(new EditSet(this, (SerialSet) this.editFocus));
+		}
+		else if (this.editFocus instanceof SerialList)
+		{
+			showEdit(new EditList(this, (SerialList) this.editFocus));
+		}
+		else if (this.editFocus instanceof SerialEvent)
+		{
+			showEdit(new EditEvent(this, (SerialEvent) this.editFocus));
 		}
 		else
 		{
@@ -237,6 +248,6 @@ public class EditPanel extends JPanel implements IEditNamedItem, IFlaggable
 	
 	public SerialRoot getSerialRoot()
 	{
-		return this.model.getRoot();
+		return this.model.getRootForCopyPurposes();
 	}
 }

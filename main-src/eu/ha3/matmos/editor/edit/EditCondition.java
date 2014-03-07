@@ -166,13 +166,13 @@ public class EditCondition extends JPanel
 		add(this.panel_1, BorderLayout.SOUTH);
 		this.panel_1.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
-		this.btnSheet = new JButton("Sheet");
+		this.btnSheet = new JButton("Sheet...");
 		this.panel_1.add(this.btnSheet);
 		
-		this.btnDynamic = new JButton("Dynamic");
+		this.btnDynamic = new JButton("Dynamic...");
 		this.panel_1.add(this.btnDynamic);
 		
-		this.btnSelectList = new JButton("List");
+		this.btnSelectList = new JButton("List...");
 		this.panel_1.add(this.btnSelectList);
 		
 		updateValues();

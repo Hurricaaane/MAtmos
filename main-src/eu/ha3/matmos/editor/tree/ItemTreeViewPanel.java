@@ -76,9 +76,12 @@ public class ItemTreeViewPanel extends JPanel implements ISerialUpdate, IEditNam
 	}
 	
 	@Override
-	public void setEditFocus(String name, Object item)
+	public void setEditFocus(String name, Object item, boolean forceSelect)
 	{
 		if (item == null || name == null)
+			return;
+		
+		if (!forceSelect)
 			return;
 		
 		KnowledgeItemType k = KnowledgeItemType.fromSerialClass(item.getClass());
