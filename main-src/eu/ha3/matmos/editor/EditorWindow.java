@@ -25,10 +25,12 @@ import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
 import eu.ha3.matmos.editor.edit.EditPanel;
+import eu.ha3.matmos.editor.filechooser.JasonFileChooser;
+import eu.ha3.matmos.editor.filechooser.OverwriteWarningJasonFileChooser;
 import eu.ha3.matmos.editor.interfaces.EditorModel;
 import eu.ha3.matmos.editor.interfaces.IEditorWindow;
 import eu.ha3.matmos.editor.tree.ItemTreeViewPanel;
-import eu.ha3.matmos.jsonformat.serializable.SerialRoot;
+import eu.ha3.matmos.jsonformat.serializable.expansion.SerialRoot;
 
 /* 
 --filenotes-placeholder

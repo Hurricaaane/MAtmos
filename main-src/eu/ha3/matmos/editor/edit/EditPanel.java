@@ -20,11 +20,11 @@ import eu.ha3.matmos.editor.InstantTextField;
 import eu.ha3.matmos.editor.interfaces.EditorModel;
 import eu.ha3.matmos.editor.interfaces.IEditNamedItem;
 import eu.ha3.matmos.editor.interfaces.IFlaggable;
-import eu.ha3.matmos.jsonformat.serializable.SerialCondition;
-import eu.ha3.matmos.jsonformat.serializable.SerialEvent;
-import eu.ha3.matmos.jsonformat.serializable.SerialList;
-import eu.ha3.matmos.jsonformat.serializable.SerialRoot;
-import eu.ha3.matmos.jsonformat.serializable.SerialSet;
+import eu.ha3.matmos.jsonformat.serializable.expansion.SerialCondition;
+import eu.ha3.matmos.jsonformat.serializable.expansion.SerialEvent;
+import eu.ha3.matmos.jsonformat.serializable.expansion.SerialList;
+import eu.ha3.matmos.jsonformat.serializable.expansion.SerialRoot;
+import eu.ha3.matmos.jsonformat.serializable.expansion.SerialSet;
 
 /*
 --filenotes-placeholder

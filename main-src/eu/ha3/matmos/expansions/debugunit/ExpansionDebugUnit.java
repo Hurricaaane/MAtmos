@@ -1,4 +1,4 @@
-package eu.ha3.matmos.expansions;
+package eu.ha3.matmos.expansions.debugunit;
 
 import eu.ha3.matmos.engine.core.implem.Knowledge;
 import eu.ha3.matmos.engine.core.interfaces.Data;

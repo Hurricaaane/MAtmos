@@ -1,4 +1,4 @@
-package eu.ha3.matmos.expansions;
+package eu.ha3.matmos.expansions.debugunit;
 
 /*
 --filenotes-placeholder

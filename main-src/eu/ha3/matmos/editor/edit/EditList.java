@@ -16,7 +16,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import eu.ha3.matmos.editor.interfaces.IFlaggable;
-import eu.ha3.matmos.jsonformat.serializable.SerialList;
+import eu.ha3.matmos.jsonformat.serializable.expansion.SerialList;
 
 /*
 --filenotes-placeholder

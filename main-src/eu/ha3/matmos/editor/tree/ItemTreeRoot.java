@@ -10,7 +10,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import eu.ha3.matmos.editor.KnowledgeItemType;
 import eu.ha3.matmos.editor.interfaces.ISerialUpdate;
-import eu.ha3.matmos.jsonformat.serializable.SerialRoot;
+import eu.ha3.matmos.jsonformat.serializable.expansion.SerialRoot;
 
 /*
 --filenotes-placeholder

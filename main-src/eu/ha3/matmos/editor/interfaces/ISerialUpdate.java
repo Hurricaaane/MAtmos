@@ -1,6 +1,6 @@
 package eu.ha3.matmos.editor.interfaces;
 
-import eu.ha3.matmos.jsonformat.serializable.SerialRoot;
+import eu.ha3.matmos.jsonformat.serializable.expansion.SerialRoot;
 
 /*
 --filenotes-placeholder

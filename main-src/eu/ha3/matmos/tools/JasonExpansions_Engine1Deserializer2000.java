@@ -24,15 +24,15 @@ import eu.ha3.matmos.engine.core.interfaces.Named;
 import eu.ha3.matmos.engine.core.interfaces.Operator;
 import eu.ha3.matmos.engine.core.interfaces.SheetIndex;
 import eu.ha3.matmos.expansions.ExpansionIdentity;
-import eu.ha3.matmos.jsonformat.serializable.SerialCondition;
-import eu.ha3.matmos.jsonformat.serializable.SerialDynamic;
-import eu.ha3.matmos.jsonformat.serializable.SerialDynamicSheetIndex;
-import eu.ha3.matmos.jsonformat.serializable.SerialEvent;
-import eu.ha3.matmos.jsonformat.serializable.SerialList;
-import eu.ha3.matmos.jsonformat.serializable.SerialMachine;
-import eu.ha3.matmos.jsonformat.serializable.SerialMachineEvent;
-import eu.ha3.matmos.jsonformat.serializable.SerialRoot;
-import eu.ha3.matmos.jsonformat.serializable.SerialSet;
+import eu.ha3.matmos.jsonformat.serializable.expansion.SerialCondition;
+import eu.ha3.matmos.jsonformat.serializable.expansion.SerialDynamic;
+import eu.ha3.matmos.jsonformat.serializable.expansion.SerialDynamicSheetIndex;
+import eu.ha3.matmos.jsonformat.serializable.expansion.SerialEvent;
+import eu.ha3.matmos.jsonformat.serializable.expansion.SerialList;
+import eu.ha3.matmos.jsonformat.serializable.expansion.SerialMachine;
+import eu.ha3.matmos.jsonformat.serializable.expansion.SerialMachineEvent;
+import eu.ha3.matmos.jsonformat.serializable.expansion.SerialRoot;
+import eu.ha3.matmos.jsonformat.serializable.expansion.SerialSet;
 
 /*
 --filenotes-placeholder

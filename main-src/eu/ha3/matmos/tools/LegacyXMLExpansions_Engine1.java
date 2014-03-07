@@ -75,7 +75,7 @@ import eu.ha3.matmos.engine.core.interfaces.Named;
 import eu.ha3.matmos.engine.core.interfaces.Operator;
 import eu.ha3.matmos.engine.core.interfaces.SheetIndex;
 import eu.ha3.matmos.game.system.MAtmosUtility;
-import eu.ha3.matmos.jsonformat.serializable.SerialRoot;
+import eu.ha3.matmos.jsonformat.serializable.expansion.SerialRoot;
 import eu.ha3.matmos.tools.Jason.Blob;
 import eu.ha3.matmos.tools.Jason.Plot;
 import eu.ha3.matmos.tools.Jason.Uniq;

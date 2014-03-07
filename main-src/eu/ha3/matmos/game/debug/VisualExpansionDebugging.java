@@ -76,6 +76,7 @@ public class VisualExpansionDebugging implements SupportsFrameEvents
 		
 	}
 	
+	@SuppressWarnings("unused")
 	private void link(Distances reliables, int xR, int yR, Distances dependables, int xD, int yD)
 	{
 		for (String name : dependables.keySet())
@@ -97,6 +98,7 @@ public class VisualExpansionDebugging implements SupportsFrameEvents
 		}
 	}
 	
+	@SuppressWarnings("unused")
 	private void link(
 		Distances reliables, int xR, int yR, Collection<String> dependencies, int xD, int yDapplied, boolean right)
 	{

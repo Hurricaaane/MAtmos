@@ -1,4 +1,4 @@
-package eu.ha3.matmos.editor.serializabledatavalues;
+package eu.ha3.matmos.jsonformat.serializable.datavalues;
 
 import java.util.Map;
 import java.util.TreeMap;

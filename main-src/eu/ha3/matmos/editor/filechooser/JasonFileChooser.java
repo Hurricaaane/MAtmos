@@ -1,4 +1,4 @@
-package eu.ha3.matmos.editor;
+package eu.ha3.matmos.editor.filechooser;
 
 import java.io.File;
 

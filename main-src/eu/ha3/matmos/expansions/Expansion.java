@@ -13,7 +13,6 @@ import java.util.Set;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.FolderResourcePack;
 import eu.ha3.easy.TimeStatistic;
-import eu.ha3.matmos.editor.PluggableIntoMinecraft;
 import eu.ha3.matmos.engine.core.implem.Knowledge;
 import eu.ha3.matmos.engine.core.implem.SystemClock;
 import eu.ha3.matmos.engine.core.implem.abstractions.ProviderCollection;
@@ -24,12 +23,16 @@ import eu.ha3.matmos.engine.core.interfaces.ReferenceTime;
 import eu.ha3.matmos.engine.core.interfaces.Simulated;
 import eu.ha3.matmos.expansions.agents.LoadingAgent;
 import eu.ha3.matmos.expansions.agents.RawJasonLoadingAgent;
+import eu.ha3.matmos.expansions.debugunit.ExpansionDebugUnit;
+import eu.ha3.matmos.expansions.debugunit.FolderResourcePackEditableEDU;
+import eu.ha3.matmos.expansions.debugunit.ReadOnlyJasonStringEDU;
 import eu.ha3.matmos.expansions.volume.VolumeContainer;
 import eu.ha3.matmos.expansions.volume.VolumeUpdatable;
 import eu.ha3.matmos.game.data.ModularDataGatherer;
 import eu.ha3.matmos.game.data.abstractions.Collector;
 import eu.ha3.matmos.game.system.SoundAccessor;
 import eu.ha3.matmos.game.system.SoundHelperRelay;
+import eu.ha3.matmos.pluggable.PluggableIntoMinecraft;
 import eu.ha3.util.property.simple.ConfigProperty;
 
 /* x-placeholder */

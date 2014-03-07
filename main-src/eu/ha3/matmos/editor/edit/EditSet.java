@@ -20,7 +20,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
 import eu.ha3.matmos.editor.interfaces.IFlaggable;
-import eu.ha3.matmos.jsonformat.serializable.SerialSet;
+import eu.ha3.matmos.jsonformat.serializable.expansion.SerialSet;
 
 /*
 --filenotes-placeholder

@@ -17,7 +17,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import eu.ha3.matmos.jsonformat.serializable.SerialEvent;
+import eu.ha3.matmos.jsonformat.serializable.expansion.SerialEvent;
 
 /*
 --filenotes-placeholder

@@ -14,7 +14,7 @@ import eu.ha3.matmos.editor.KnowledgeItemType;
 import eu.ha3.matmos.editor.interfaces.EditorModel;
 import eu.ha3.matmos.editor.interfaces.IEditNamedItem;
 import eu.ha3.matmos.editor.interfaces.ISerialUpdate;
-import eu.ha3.matmos.jsonformat.serializable.SerialRoot;
+import eu.ha3.matmos.jsonformat.serializable.expansion.SerialRoot;
 
 /*
 --filenotes-placeholder

@@ -15,7 +15,9 @@ import eu.ha3.matmos.editor.interfaces.EditorModel;
 import eu.ha3.matmos.editor.interfaces.IEditorWindow;
 import eu.ha3.matmos.editor.tree.Selector;
 import eu.ha3.matmos.engine.core.implem.abstractions.ProviderCollection;
-import eu.ha3.matmos.jsonformat.serializable.SerialRoot;
+import eu.ha3.matmos.jsonformat.serializable.expansion.SerialRoot;
+import eu.ha3.matmos.pluggable.PluggableIntoMinecraft;
+import eu.ha3.matmos.pluggable.UnpluggedListener;
 import eu.ha3.matmos.tools.Jason;
 import eu.ha3.matmos.tools.JasonExpansions_Engine1Deserializer2000;
 

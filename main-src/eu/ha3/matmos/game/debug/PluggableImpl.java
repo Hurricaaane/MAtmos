@@ -4,13 +4,13 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import eu.ha3.matmos.editor.PluggableIntoMinecraft;
-import eu.ha3.matmos.editor.UnpluggedListener;
 import eu.ha3.matmos.engine.core.implem.abstractions.ProviderCollection;
 import eu.ha3.matmos.engine.core.interfaces.Data;
 import eu.ha3.matmos.expansions.Expansion;
-import eu.ha3.matmos.expansions.FolderResourcePackEditableEDU;
+import eu.ha3.matmos.expansions.debugunit.FolderResourcePackEditableEDU;
 import eu.ha3.matmos.game.system.MAtMod;
+import eu.ha3.matmos.pluggable.PluggableIntoMinecraft;
+import eu.ha3.matmos.pluggable.UnpluggedListener;
 import eu.ha3.mc.quick.chat.ChatColorsSimple;
 
 /*

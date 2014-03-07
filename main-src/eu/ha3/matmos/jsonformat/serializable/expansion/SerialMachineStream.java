@@ -1,4 +1,4 @@
-package eu.ha3.matmos.jsonformat.serializable;
+package eu.ha3.matmos.jsonformat.serializable.expansion;
 
 /*
 --filenotes-placeholder
