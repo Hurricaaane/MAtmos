@@ -1,0 +1,9 @@
+{
+	"expansions" : [
+		{
+			"uniquename" : "eu.ha3.breeze.nature",
+			"friendlyname" : "Breeze 2014: Nature",
+			"pointer" : "expansions/nature.json"
+		}
+	]
+}

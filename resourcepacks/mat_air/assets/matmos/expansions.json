@@ -2,24 +2,26 @@
 	"expansions" : [
 		{
 			"uniquename" : "eu.ha3.earthlies_database",
-			"friendlyname" : "MAtmos: Earth and Nether",
+			"friendlyname" : "Air 2012: Earth and Nether",
 			"pointer" : "expansions/earthlies_database.json"
 		},
 		{
 			"uniquename" : "eu.ha3.interactions_environments",
-			"friendlyname" : "MAtmos: Environmental Interactions",
+			"friendlyname" : "Air 2012: Environmental Interactions",
 			"pointer" : "expansions/interactions_environments.json"
 		},
 		{
 			"uniquename" : "eu.ha3.interactions_weapons",
-			"friendlyname" : "MAtmos: Weapons and Items",
+			"friendlyname" : "Air 2012: Weapons and Items",
 			"pointer" : "expansions/interactions_weapons.json"
 		},
 		{
 			"uniquename" : "eu.ha3.interactions_itemswitches",
-			"friendlyname" : "MAtmos: Item Switches",
+			"friendlyname" : "Air 2012: Item Switches",
 			"pointer" : "expansions/interactions_itemswitches.json"
-		},
+		}
+	],
+	"legacy" : [
 		{
 			"uniquename" : "legacy__earthlies_database",
 			"friendlyname" : "XML: Earth and Nether",
