@@ -27,12 +27,7 @@ public class EditList extends JPanel implements IFlaggable
 {
 	private final EditPanel edit;
 	private final SerialList serialList;
-	
-	//
-	
-	private JPanel panel;
 	private SetRemoverPanel listRemover;
-	private JPanel panel_1;
 	private JTextField textField;
 	
 	public EditList(EditPanel parentConstruct, SerialList serialListConstruct)
@@ -41,15 +36,15 @@ public class EditList extends JPanel implements IFlaggable
 		this.serialList = serialListConstruct;
 		setLayout(new BorderLayout(0, 0));
 		
-		this.panel = new JPanel();
-		this.panel.setBorder(new TitledBorder(null, "Internal", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		add(this.panel, BorderLayout.CENTER);
+		JPanel panel = new JPanel();
+		panel.setBorder(new TitledBorder(null, "Internal", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		add(panel, BorderLayout.CENTER);
 		GridBagLayout gbl_panel = new GridBagLayout();
 		gbl_panel.columnWidths = new int[] { 100, 0 };
 		gbl_panel.rowHeights = new int[] { 14, 130, 0 };
 		gbl_panel.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
 		gbl_panel.rowWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
-		this.panel.setLayout(gbl_panel);
+		panel.setLayout(gbl_panel);
 		
 		JLabel lblMustBeActive = new JLabel("List contents:");
 		GridBagConstraints gbc_lblMustBeActive = new GridBagConstraints();
@@ -57,19 +52,19 @@ public class EditList extends JPanel implements IFlaggable
 		gbc_lblMustBeActive.insets = new Insets(0, 0, 5, 0);
 		gbc_lblMustBeActive.gridx = 0;
 		gbc_lblMustBeActive.gridy = 0;
-		this.panel.add(lblMustBeActive, gbc_lblMustBeActive);
+		panel.add(lblMustBeActive, gbc_lblMustBeActive);
 		
 		this.listRemover = new SetRemoverPanel(this, this.serialList.entries);
 		GridBagConstraints gbc_listRemover = new GridBagConstraints();
 		gbc_listRemover.fill = GridBagConstraints.BOTH;
 		gbc_listRemover.gridx = 0;
 		gbc_listRemover.gridy = 1;
-		this.panel.add(this.listRemover, gbc_listRemover);
+		panel.add(this.listRemover, gbc_listRemover);
 		
-		this.panel_1 = new JPanel();
-		this.panel_1.setBorder(new TitledBorder(null, "Add", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		add(this.panel_1, BorderLayout.SOUTH);
-		this.panel_1.setLayout(new BorderLayout(0, 0));
+		JPanel panel_1 = new JPanel();
+		panel_1.setBorder(new TitledBorder(null, "Add", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		add(panel_1, BorderLayout.SOUTH);
+		panel_1.setLayout(new BorderLayout(0, 0));
 		
 		this.textField = new JTextField();
 		this.textField.addActionListener(new ActionListener() {
@@ -79,7 +74,7 @@ public class EditList extends JPanel implements IFlaggable
 				addLine();
 			}
 		});
-		this.panel_1.add(this.textField, BorderLayout.CENTER);
+		panel_1.add(this.textField, BorderLayout.CENTER);
 		this.textField.setColumns(10);
 		
 		JButton btnAddenter = new JButton("Add (ENTER)");
@@ -90,7 +85,7 @@ public class EditList extends JPanel implements IFlaggable
 				addLine();
 			}
 		});
-		this.panel_1.add(btnAddenter, BorderLayout.EAST);
+		panel_1.add(btnAddenter, BorderLayout.EAST);
 		
 		this.listRemover.getList().addListSelectionListener(new ListSelectionListener() {
 			

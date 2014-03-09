@@ -12,6 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 
 import com.jgoodies.forms.factories.FormFactory;
@@ -31,18 +32,9 @@ public class EditSet extends JPanel implements IFlaggable
 {
 	private final EditPanel edit;
 	private final SerialSet set;
-	
-	//
-	
-	private JPanel panel;
 	private SetRemoverPanel activeSet;
 	private SetRemoverPanel inactiveSet;
-	private JPanel panel_1;
-	private JScrollPane scrollPane;
 	private JList list;
-	private JPanel panel_2;
-	private JButton btnActive;
-	private JButton btnInactive;
 	
 	public EditSet(EditPanel parentConstruct, SerialSet setConstruct)
 	{
@@ -50,59 +42,62 @@ public class EditSet extends JPanel implements IFlaggable
 		this.set = setConstruct;
 		setLayout(new BorderLayout(0, 0));
 		
-		this.panel = new JPanel();
-		this.panel.setBorder(new TitledBorder(null, "Internal", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		add(this.panel, BorderLayout.NORTH);
-		this.panel.setLayout(new FormLayout(new ColumnSpec[] { ColumnSpec.decode("333px:grow"), }, new RowSpec[] {
+		JPanel activationPanel = new JPanel();
+		activationPanel.setBorder(new TitledBorder(
+			UIManager.getBorder("TitledBorder.border"), "Activation", TitledBorder.LEADING, TitledBorder.TOP, null,
+			null));
+		add(activationPanel, BorderLayout.CENTER);
+		activationPanel.setLayout(new FormLayout(new ColumnSpec[] { ColumnSpec.decode("333px:grow"), }, new RowSpec[] {
 			RowSpec.decode("21px"), RowSpec.decode("60px"), FormFactory.RELATED_GAP_ROWSPEC,
-			FormFactory.DEFAULT_ROWSPEC, FormFactory.LINE_GAP_ROWSPEC, RowSpec.decode("60px"), }));
+			FormFactory.DEFAULT_ROWSPEC, FormFactory.LINE_GAP_ROWSPEC, RowSpec.decode("60px"),
+			FormFactory.RELATED_GAP_ROWSPEC, RowSpec.decode("default:grow"), }));
 		
 		JLabel lblMustBeActive = new JLabel("Must be active:");
-		this.panel.add(lblMustBeActive, "1, 1, left, center");
+		activationPanel.add(lblMustBeActive, "1, 1, left, center");
 		
 		this.activeSet = new SetRemoverPanel(this, this.set.yes);
-		this.panel.add(this.activeSet, "1, 2, fill, top");
+		activationPanel.add(this.activeSet, "1, 2, fill, top");
 		
 		JLabel lblMustBeInactive = new JLabel("Must be inactive:");
-		this.panel.add(lblMustBeInactive, "1, 4, left, center");
+		activationPanel.add(lblMustBeInactive, "1, 4, left, center");
 		
 		this.inactiveSet = new SetRemoverPanel(this, this.set.no);
-		this.panel.add(this.inactiveSet, "1, 6, fill, top");
+		activationPanel.add(this.inactiveSet, "1, 6, fill, top");
 		
-		this.panel_1 = new JPanel();
-		this.panel_1.setBorder(new TitledBorder(null, "Add", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		add(this.panel_1, BorderLayout.CENTER);
-		this.panel_1.setLayout(new BorderLayout(0, 0));
+		JPanel panel = new JPanel();
+		activationPanel.add(panel, "1, 8");
+		panel.setBorder(new TitledBorder(null, "Add", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel.setLayout(new BorderLayout(0, 0));
 		
-		this.scrollPane = new JScrollPane();
-		this.panel_1.add(this.scrollPane, BorderLayout.CENTER);
+		JScrollPane scrollPane = new JScrollPane();
+		panel.add(scrollPane, BorderLayout.CENTER);
 		
 		this.list = new JList();
-		this.scrollPane.setViewportView(this.list);
+		scrollPane.setViewportView(this.list);
 		
-		this.panel_2 = new JPanel();
-		this.panel_1.add(this.panel_2, BorderLayout.EAST);
-		this.panel_2.setLayout(new GridLayout(0, 1, 0, 0));
+		JPanel panel_1 = new JPanel();
+		panel.add(panel_1, BorderLayout.EAST);
+		panel_1.setLayout(new GridLayout(0, 1, 0, 0));
 		
-		this.btnActive = new JButton("Active");
-		this.btnActive.addActionListener(new ActionListener() {
+		JButton btnActive = new JButton("Active");
+		btnActive.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
 				addToActive();
 			}
 		});
-		this.panel_2.add(this.btnActive);
+		panel_1.add(btnActive);
 		
-		this.btnInactive = new JButton("Inactive");
-		this.btnInactive.addActionListener(new ActionListener() {
+		JButton btnInactive = new JButton("Inactive");
+		btnInactive.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
 				addToInactive();
 			}
 		});
-		this.panel_2.add(this.btnInactive);
+		panel_1.add(btnInactive);
 		
 		updateValues();
 	}
@@ -155,7 +150,7 @@ public class EditSet extends JPanel implements IFlaggable
 	
 	private void fillWithValues()
 	{
-		Set<String> unused = new TreeSet<String>(this.edit.getSerialRoot().set.keySet());
+		Set<String> unused = new TreeSet<String>(this.edit.getSerialRoot().condition.keySet());
 		unused.removeAll(this.set.yes);
 		unused.removeAll(this.set.no);
 		

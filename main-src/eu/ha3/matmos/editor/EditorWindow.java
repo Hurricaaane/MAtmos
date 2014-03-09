@@ -17,6 +17,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
@@ -340,8 +341,11 @@ public class EditorWindow extends JFrame implements IEditorWindow
 		this.panelTree = new ItemTreeViewPanel(this.model);
 		splitPane.setLeftComponent(this.panelTree);
 		
+		JScrollPane scrollPane = new JScrollPane();
+		splitPane.setRightComponent(scrollPane);
+		
 		this.editPanel = new EditPanel(this.model);
-		splitPane.setRightComponent(this.editPanel);
+		scrollPane.setViewportView(this.editPanel);
 		this.editPanel.setBorder(new EmptyBorder(4, 4, 4, 4));
 		
 		JPanel sheetsTab = new JPanel();

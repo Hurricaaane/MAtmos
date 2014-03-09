@@ -8,6 +8,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -23,6 +24,7 @@ import eu.ha3.matmos.editor.interfaces.IFlaggable;
 import eu.ha3.matmos.jsonformat.serializable.expansion.SerialCondition;
 import eu.ha3.matmos.jsonformat.serializable.expansion.SerialEvent;
 import eu.ha3.matmos.jsonformat.serializable.expansion.SerialList;
+import eu.ha3.matmos.jsonformat.serializable.expansion.SerialMachine;
 import eu.ha3.matmos.jsonformat.serializable.expansion.SerialRoot;
 import eu.ha3.matmos.jsonformat.serializable.expansion.SerialSet;
 
@@ -188,6 +190,10 @@ public class EditPanel extends JPanel implements IEditNamedItem, IFlaggable
 		{
 			showEdit(new EditEvent(this, (SerialEvent) this.editFocus));
 		}
+		else if (this.editFocus instanceof SerialMachine)
+		{
+			showEdit(new EditMachine(this, (SerialMachine) this.editFocus));
+		}
 		else
 		{
 			showEdit(null);
@@ -249,5 +255,15 @@ public class EditPanel extends JPanel implements IEditNamedItem, IFlaggable
 	public SerialRoot getSerialRoot()
 	{
 		return this.model.getRootForCopyPurposes();
+	}
+	
+	public File getSoundDirectory()
+	{
+		return this.model.getSoundDirectory();
+	}
+	
+	public EditorModel getModel()
+	{
+		return this.model;
 	}
 }

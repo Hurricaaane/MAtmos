@@ -36,11 +36,6 @@ public class EditCondition extends JPanel
 	private InstantTextField index;
 	private InstantTextField value;
 	private JComboBox comboBox;
-	private JPanel panel;
-	private JPanel panel_1;
-	private JButton btnSheet;
-	private JButton btnDynamic;
-	private JButton btnSelectList;
 	
 	public EditCondition(EditPanel parentConstruct, SerialCondition conditionConstruct)
 	{
@@ -48,15 +43,17 @@ public class EditCondition extends JPanel
 		this.condition = conditionConstruct;
 		setLayout(new BorderLayout(0, 0));
 		
-		this.panel = new JPanel();
-		this.panel.setBorder(new TitledBorder(null, "Internal", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		add(this.panel);
-		GridBagLayout gbl_panel = new GridBagLayout();
-		gbl_panel.columnWidths = new int[] { 50, 0, 0 };
-		gbl_panel.rowHeights = new int[] { 0, 0, 0, 0, 0 };
-		gbl_panel.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
-		gbl_panel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
-		this.panel.setLayout(gbl_panel);
+		JPanel activation = new JPanel();
+		activation.setBorder(new TitledBorder(
+			UIManager.getBorder("TitledBorder.border"), "Activation", TitledBorder.LEADING, TitledBorder.TOP, null,
+			null));
+		add(activation);
+		GridBagLayout gbl_activation = new GridBagLayout();
+		gbl_activation.columnWidths = new int[] { 50, 0, 0 };
+		gbl_activation.rowHeights = new int[] { 0, 0, 0, 0, 0 };
+		gbl_activation.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
+		gbl_activation.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		activation.setLayout(gbl_activation);
 		
 		JLabel lblSheet = new JLabel("Sheet");
 		GridBagConstraints gbc_lblSheet = new GridBagConstraints();
@@ -64,7 +61,7 @@ public class EditCondition extends JPanel
 		gbc_lblSheet.insets = new Insets(0, 0, 5, 5);
 		gbc_lblSheet.gridx = 0;
 		gbc_lblSheet.gridy = 0;
-		this.panel.add(lblSheet, gbc_lblSheet);
+		activation.add(lblSheet, gbc_lblSheet);
 		
 		this.sheet = new InstantTextField() {
 			@Override
@@ -83,7 +80,7 @@ public class EditCondition extends JPanel
 		gbc_sheet.insets = new Insets(0, 0, 5, 0);
 		gbc_sheet.gridx = 1;
 		gbc_sheet.gridy = 0;
-		this.panel.add(this.sheet, gbc_sheet);
+		activation.add(this.sheet, gbc_sheet);
 		
 		JLabel lblIndex = new JLabel("Index");
 		GridBagConstraints gbc_lblIndex = new GridBagConstraints();
@@ -91,7 +88,7 @@ public class EditCondition extends JPanel
 		gbc_lblIndex.insets = new Insets(0, 0, 5, 5);
 		gbc_lblIndex.gridx = 0;
 		gbc_lblIndex.gridy = 1;
-		this.panel.add(lblIndex, gbc_lblIndex);
+		activation.add(lblIndex, gbc_lblIndex);
 		
 		this.index = new InstantTextField() {
 			@Override
@@ -110,7 +107,7 @@ public class EditCondition extends JPanel
 		gbc_index.insets = new Insets(0, 0, 5, 0);
 		gbc_index.gridx = 1;
 		gbc_index.gridy = 1;
-		this.panel.add(this.index, gbc_index);
+		activation.add(this.index, gbc_index);
 		
 		this.comboBox = new JComboBox();
 		this.comboBox.addActionListener(new ActionListener() {
@@ -131,7 +128,7 @@ public class EditCondition extends JPanel
 		gbc_comboBox.insets = new Insets(0, 0, 5, 0);
 		gbc_comboBox.gridx = 1;
 		gbc_comboBox.gridy = 2;
-		this.panel.add(this.comboBox, gbc_comboBox);
+		activation.add(this.comboBox, gbc_comboBox);
 		this.comboBox.setModel(new DefaultComboBoxModel(Operator.values()));
 		
 		JLabel lblValue = new JLabel("Value");
@@ -140,7 +137,7 @@ public class EditCondition extends JPanel
 		gbc_lblValue.insets = new Insets(0, 0, 0, 5);
 		gbc_lblValue.gridx = 0;
 		gbc_lblValue.gridy = 3;
-		this.panel.add(lblValue, gbc_lblValue);
+		activation.add(lblValue, gbc_lblValue);
 		
 		this.value = new InstantTextField() {
 			@Override
@@ -158,22 +155,22 @@ public class EditCondition extends JPanel
 		gbc_value.fill = GridBagConstraints.HORIZONTAL;
 		gbc_value.gridx = 1;
 		gbc_value.gridy = 3;
-		this.panel.add(this.value, gbc_value);
+		activation.add(this.value, gbc_value);
 		
-		this.panel_1 = new JPanel();
-		this.panel_1.setBorder(new TitledBorder(
+		JPanel options = new JPanel();
+		options.setBorder(new TitledBorder(
 			UIManager.getBorder("TitledBorder.border"), "Options", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		add(this.panel_1, BorderLayout.SOUTH);
-		this.panel_1.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		add(options, BorderLayout.SOUTH);
+		options.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
-		this.btnSheet = new JButton("Sheet...");
-		this.panel_1.add(this.btnSheet);
+		JButton btnSheet = new JButton("Sheet...");
+		options.add(btnSheet);
 		
-		this.btnDynamic = new JButton("Dynamic...");
-		this.panel_1.add(this.btnDynamic);
+		JButton btnDynamic = new JButton("Dynamic...");
+		options.add(btnDynamic);
 		
-		this.btnSelectList = new JButton("List...");
-		this.panel_1.add(this.btnSelectList);
+		JButton btnSelectList = new JButton("List...");
+		options.add(btnSelectList);
 		
 		updateValues();
 	}
