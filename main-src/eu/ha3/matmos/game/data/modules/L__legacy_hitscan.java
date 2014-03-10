@@ -35,6 +35,16 @@ public class L__legacy_hitscan extends ModuleProcessor implements Module
 	{
 		Minecraft mc = Minecraft.getMinecraft();
 		
+		if (mc.objectMouseOver == null || mc.objectMouseOver.typeOfHit == null)
+		{
+			setValue("mouse_over_something", false);
+			setValue("mouse_over_what_remapped", -1);
+			setValue("block_as_number", MAT_HARD_LIMITS.LEGACY_NO_BLOCK_IN_THIS_CONTEXT);
+			setValue("meta_as_number", MAT_HARD_LIMITS.LEGACY_NO_BLOCK_IN_THIS_CONTEXT);
+			
+			return;
+		}
+		
 		setValue("mouse_over_something", mc.objectMouseOver.typeOfHit != MovingObjectType.MISS);
 		setValue("mouse_over_what_remapped", this.equiv.get(mc.objectMouseOver.typeOfHit));
 		setValue(
