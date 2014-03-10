@@ -1,9 +1,13 @@
 package eu.ha3.matmos.game.gui;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.SoundCategory;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import eu.ha3.matmos.game.system.MAtMod;
+import eu.ha3.mc.gui.HDisplayStringProvider;
 import eu.ha3.mc.gui.HGuiSliderControl;
+import eu.ha3.mc.gui.HSliderListener;
 
 /* x-placeholder */
 
@@ -78,7 +82,44 @@ public class MAtGuiMore extends GuiScreen
 		biomeControl.updateDisplayString();
 		this.buttonList.add(biomeControl);
 		
-		this.buttonList.add(new GuiButton(215, _LEFT + _MIX, _MIX * (5 + 1), _WIDTH - _MIX * 2, _UNIT, this.mod
+		HGuiSliderControl ambienceVolume =
+			new HGuiSliderControl(216, _LEFT, _MIX * (4 + 1), _WIDTH, _UNIT, "", this.mod.getConfig().getFloat(
+				"minecraftsound.ambient.volume"));
+		ambienceVolume.setListener(new HSliderListener() {
+			
+			@Override
+			public void sliderValueChanged(HGuiSliderControl slider, float value)
+			{
+				Minecraft.getMinecraft().gameSettings.func_151439_a(SoundCategory.AMBIENT, value);
+				MAtGuiMore.this.mod.getConfig().setProperty("minecraftsound.ambient.volume", value);
+				slider.updateDisplayString();
+			}
+			
+			@Override
+			public void sliderReleased(HGuiSliderControl hGuiSliderControl)
+			{
+				MAtGuiMore.this.mod.saveConfig();
+				Minecraft.getMinecraft().gameSettings.saveOptions();
+			}
+			
+			@Override
+			public void sliderPressed(HGuiSliderControl hGuiSliderControl)
+			{
+			}
+		});
+		ambienceVolume.setDisplayStringProvider(new HDisplayStringProvider() {
+			@Override
+			public String provideDisplayString()
+			{
+				return "Minecraft base Ambient/Environment volume: "
+					+ (int) Math.floor(MAtGuiMore.this.mod.getConfig().getFloat("minecraftsound.ambient.volume") * 100)
+					+ "%";
+			}
+		});
+		ambienceVolume.updateDisplayString();
+		this.buttonList.add(ambienceVolume);
+		
+		this.buttonList.add(new GuiButton(215, _LEFT + _MIX, _MIX * (6 + 1), _WIDTH - _MIX * 2, _UNIT, this.mod
 			.getConfig().getInteger("debug.mode") == 1 ? "Dev/Editor mode: ON" : "Dev/Editor mode: OFF"));
 		
 		this.buttonList.add(new GuiButton(200, _LEFT + _MIX, _SEPARATOR + _MIX * (this.IDS_PER_PAGE + 4), _WIDTH

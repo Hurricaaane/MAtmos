@@ -8,6 +8,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.SoundCategory;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.audio.SoundManager;
 import net.minecraft.client.resources.IReloadableResourceManager;
@@ -74,6 +75,8 @@ public class MAtMod extends HaddonImpl
 	private Object queueLock = new Object();
 	private List<Runnable> queue = new ArrayList<Runnable>();
 	
+	private boolean isUnderwaterMode;
+	
 	public MAtMod()
 	{
 		MAtmosConvLogger.setRefinedness(MAtmosConvLogger.FINE);
@@ -108,6 +111,7 @@ public class MAtMod extends HaddonImpl
 		this.config.setProperty("useroptions.altitudes.low", true);
 		this.config.setProperty("useroptions.biome.override", -1);
 		this.config.setProperty("debug.mode", 0);
+		this.config.setProperty("minecraftsound.ambient.volume", 1f);
 		this.config.commit();
 		
 		// Load configuration from source
@@ -123,6 +127,7 @@ public class MAtMod extends HaddonImpl
 		}
 		
 		this.expansionManager.setVolumeAndUpdate(this.config.getFloat("globalvolume.scale"));
+		resetAmbientVolume();
 		
 		this.updateNotifier.loadConfig(this.config);
 		
@@ -135,6 +140,17 @@ public class MAtMod extends HaddonImpl
 		{
 			initializeAndEnable();
 		}
+	}
+	
+	private void resetAmbientVolume()
+	{
+		Minecraft.getMinecraft().gameSettings.func_151439_a(
+			SoundCategory.AMBIENT, this.config.getFloat("minecraftsound.ambient.volume"));
+	}
+	
+	private void overrideAmbientVolume()
+	{
+		Minecraft.getMinecraft().gameSettings.func_151439_a(SoundCategory.AMBIENT, 0.01f);
 	}
 	
 	public void initializeAndEnable()
@@ -241,6 +257,31 @@ public class MAtMod extends HaddonImpl
 			
 			this.dataGatherer.process();
 			this.expansionManager.onTick();
+			
+			if (MAtmosUtility.isUnderwaterAnyGamemode())
+			{
+				if (!this.isUnderwaterMode)
+				{
+					this.isUnderwaterMode = true;
+					overrideAmbientVolume();
+				}
+			}
+			else
+			{
+				if (this.isUnderwaterMode)
+				{
+					this.isUnderwaterMode = false;
+					resetAmbientVolume();
+				}
+			}
+		}
+		else
+		{
+			if (this.isUnderwaterMode)
+			{
+				this.isUnderwaterMode = false;
+				resetAmbientVolume();
+			}
 		}
 		
 		if (!this.hasFirstTickPassed)
