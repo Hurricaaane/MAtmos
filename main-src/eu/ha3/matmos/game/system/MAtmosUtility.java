@@ -1,6 +1,7 @@
 package eu.ha3.matmos.game.system;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -23,6 +24,11 @@ public class MAtmosUtility
 	public static int getPlayerZ()
 	{
 		return (int) Math.floor(Minecraft.getMinecraft().thePlayer.posZ);
+	}
+	
+	public static boolean isUnderwaterAnyGamemode()
+	{
+		return Minecraft.getMinecraft().thePlayer.isInsideOfMaterial(Material.field_151586_h);
 	}
 	
 	/**

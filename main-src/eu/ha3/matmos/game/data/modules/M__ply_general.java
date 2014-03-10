@@ -5,6 +5,7 @@ import net.minecraft.client.entity.EntityClientPlayerMP;
 import eu.ha3.matmos.engine.core.interfaces.Data;
 import eu.ha3.matmos.game.data.abstractions.module.Module;
 import eu.ha3.matmos.game.data.abstractions.module.ModuleProcessor;
+import eu.ha3.matmos.game.system.MAtmosUtility;
 import eu.ha3.mc.haddon.PrivateAccessException;
 import eu.ha3.mc.haddon.Utility;
 
@@ -54,5 +55,7 @@ public class M__ply_general extends ModuleProcessor implements Module
 		setValue("riding", player.isRiding());
 		setValue("creative", Minecraft.getMinecraft().playerController != null
 			&& Minecraft.getMinecraft().playerController.isInCreativeMode());
+		
+		setValue("under_water", MAtmosUtility.isUnderwaterAnyGamemode());
 	}
 }
