@@ -1,0 +1,385 @@
+{
+  "condition": {
+    "Underwater": {
+      "sheet": "cb_column",
+      "index": "y0",
+      "symbol": "EQUAL",
+      "value": "minecraft:water"
+    },
+    "%DEBUG_CURRENT_FEET": {
+      "sheet": "cb_column",
+      "index": "y-1",
+      "symbol": "ALWAYS_TRUE",
+      "value": ""
+    },
+    "LeafCount>2000": {
+      "sheet": "scan_large",
+      "index": "minecraft:leaves",
+      "symbol": "GREATER",
+      "value": "2000"
+    },
+    "LeafCount>3000": {
+      "sheet": "scan_large",
+      "index": "minecraft:leaves",
+      "symbol": "GREATER",
+      "value": "3000"
+    },
+    "Skylight<=4 (Underground)": {
+      "sheet": "cb_light",
+      "index": "sky",
+      "symbol": "LESSER_OR_EQUAL",
+      "value": "4"
+    },
+    "Air>70% (At some peak)": {
+      "sheet": "scan_large_p1k",
+      "index": "minecraft:air",
+      "symbol": "GREATER",
+      "value": "800"
+    },
+    "Air>40% (Unobstructed landscape)": {
+      "sheet": "scan_large_p1k",
+      "index": "minecraft:air",
+      "symbol": "GREATER",
+      "value": "400"
+    },
+    "JungleLeaves>1000 (Jungle)": {
+      "sheet": "scan_large",
+      "index": "minecraft:leaves^3",
+      "symbol": "GREATER",
+      "value": "1000"
+    },
+    "LeafCount>1000 (Forest)": {
+      "sheet": "scan_large",
+      "index": "minecraft:leaves",
+      "symbol": "GREATER",
+      "value": "1000"
+    },
+    "SnowCount>1000 (Snowy)": {
+      "sheet": "scan_large",
+      "index": "minecraft:snow_layer",
+      "symbol": "GREATER",
+      "value": "1000"
+    },
+    "Grass>1000": {
+      "sheet": "scan_large",
+      "index": "minecraft:grass",
+      "symbol": "GREATER",
+      "value": "1000"
+    },
+    "Sand>7500 (Desert)": {
+      "sheet": "scan_large",
+      "index": "minecraft:sand",
+      "symbol": "GREATER",
+      "value": "7500"
+    },
+    "sWater>60 (Water bed)": {
+      "sheet": "scan_small",
+      "index": "minecraft:water",
+      "symbol": "GREATER",
+      "value": "60"
+    },
+    "Water>3000 (Riverside)": {
+      "sheet": "scan_large",
+      "index": "minecraft:water",
+      "symbol": "GREATER",
+      "value": "3000"
+    },
+    "Water>10000 (Seaside)": {
+      "sheet": "scan_large",
+      "index": "minecraft:water",
+      "symbol": "GREATER",
+      "value": "10000"
+    },
+    "SnowBlockCount>1000 (Glacier)": {
+      "sheet": "scan_large",
+      "index": "minecraft:snow",
+      "symbol": "GREATER",
+      "value": "1000"
+    },
+    "%DEBUG_CURRENT_BIOME": {
+      "sheet": "w_biome",
+      "index": "_name_debugonly",
+      "symbol": "ALWAYS_TRUE",
+      "value": ""
+    },
+    "Vine>400 (Swamp or Jungle)": {
+      "sheet": "scan_large",
+      "index": "minecraft:vine",
+      "symbol": "GREATER",
+      "value": "400"
+    }
+  },
+  "set": {
+    "Underwater": {
+      "yes": [
+        "Underwater"
+      ],
+      "no": []
+    },
+    "Forest: 2 (Moderate)": {
+      "yes": [
+        "LeafCount>2000"
+      ],
+      "no": [
+        "Skylight<=4 (Underground)"
+      ]
+    },
+    "Forest: 3 (Dense)": {
+      "yes": [
+        "LeafCount>3000"
+      ],
+      "no": [
+        "Skylight<=4 (Underground)"
+      ]
+    },
+    "Forest: 1 (Proximity)": {
+      "yes": [
+        "LeafCount>1000 (Forest)"
+      ],
+      "no": [
+        "Skylight<=4 (Underground)"
+      ]
+    },
+    "Forest (Snow): 1": {
+      "yes": [
+        "LeafCount>1000 (Forest)",
+        "SnowCount>1000 (Snowy)"
+      ],
+      "no": [
+        "Skylight<=4 (Underground)"
+      ]
+    },
+    "Forest (Jungle): 1": {
+      "yes": [
+        "JungleLeaves>1000 (Jungle)"
+      ],
+      "no": [
+        "Skylight<=4 (Underground)"
+      ]
+    },
+    "Desert: 1": {
+      "yes": [
+        "Sand>7500 (Desert)"
+      ],
+      "no": [
+        "Skylight<=4 (Underground)",
+        "Water>10000 (Seaside)"
+      ]
+    },
+    "Beach: 1": {
+      "yes": [
+        "Sand>7500 (Desert)",
+        "Water>10000 (Seaside)"
+      ],
+      "no": [
+        "Skylight<=4 (Underground)"
+      ]
+    },
+    "Coast": {
+      "yes": [
+        "Water>10000 (Seaside)"
+      ],
+      "no": [
+        "Skylight<=4 (Underground)"
+      ]
+    },
+    "Plains (Temperate): 1": {
+      "yes": [
+        "Air>40% (Unobstructed landscape)",
+        "Grass>1000"
+      ],
+      "no": [
+        "Skylight<=4 (Underground)"
+      ]
+    },
+    "Plains (Snowy): 1": {
+      "yes": [
+        "Air>40% (Unobstructed landscape)",
+        "SnowCount>1000 (Snowy)"
+      ],
+      "no": [
+        "Skylight<=4 (Underground)"
+      ]
+    },
+    "Glacier": {
+      "yes": [
+        "SnowBlockCount>1000 (Glacier)"
+      ],
+      "no": [
+        "Skylight<=4 (Underground)"
+      ]
+    },
+    "Wasteland": {
+      "yes": [
+        "Air>40% (Unobstructed landscape)"
+      ],
+      "no": [
+        "Grass>1000",
+        "LeafCount>1000 (Forest)",
+        "Sand>7500 (Desert)",
+        "Skylight<=4 (Underground)",
+        "SnowBlockCount>1000 (Glacier)",
+        "SnowCount>1000 (Snowy)"
+      ]
+    },
+    "Swamp Lake": {
+      "yes": [
+        "Vine>400 (Swamp or Jungle)",
+        "Water>3000 (Riverside)"
+      ],
+      "no": [
+        "Skylight<=4 (Underground)"
+      ]
+    }
+  },
+  "machine": {
+    "Inside Forest (Temperate)": {
+      "allow": [
+        "Forest: 1 (Proximity)"
+      ],
+      "restrict": [
+        "Forest (Snow): 1",
+        "Underwater"
+      ],
+      "fadein": 0.0,
+      "fadeout": 0.0,
+      "delay_fadein": 0.0,
+      "delay_fadeout": 0.0,
+      "event": []
+    },
+    "Inside Forest (Jungle)": {
+      "allow": [
+        "Forest (Jungle): 1"
+      ],
+      "restrict": [
+        "Underwater"
+      ],
+      "fadein": 0.0,
+      "fadeout": 0.0,
+      "delay_fadein": 0.0,
+      "delay_fadeout": 0.0,
+      "event": []
+    },
+    "Inside Forest (Snowy)": {
+      "allow": [
+        "Forest (Snow): 1"
+      ],
+      "restrict": [
+        "Underwater"
+      ],
+      "fadein": 0.0,
+      "fadeout": 0.0,
+      "delay_fadein": 0.0,
+      "delay_fadeout": 0.0,
+      "event": []
+    },
+    "Inside Plains with grass (Temperate)": {
+      "allow": [
+        "Plains (Temperate): 1"
+      ],
+      "restrict": [
+        "Plains (Snowy): 1",
+        "Underwater"
+      ],
+      "fadein": 0.0,
+      "fadeout": 0.0,
+      "delay_fadein": 0.0,
+      "delay_fadeout": 0.0,
+      "event": []
+    },
+    "Underwater": {
+      "allow": [
+        "Underwater"
+      ],
+      "restrict": [],
+      "fadein": 0.0,
+      "fadeout": 0.0,
+      "delay_fadein": 0.0,
+      "delay_fadeout": 0.0,
+      "event": []
+    },
+    "Inside Plains with snow (Snowy)": {
+      "allow": [
+        "Plains (Snowy): 1"
+      ],
+      "restrict": [
+        "Underwater",
+        "Glacier"
+      ],
+      "fadein": 0.0,
+      "fadeout": 0.0,
+      "delay_fadein": 0.0,
+      "delay_fadeout": 0.0,
+      "event": []
+    },
+    "Inside Beach": {
+      "allow": [
+        "Beach: 1"
+      ],
+      "restrict": [
+        "Underwater"
+      ],
+      "fadein": 0.0,
+      "fadeout": 0.0,
+      "delay_fadein": 0.0,
+      "delay_fadeout": 0.0,
+      "event": []
+    },
+    "Inside Desert": {
+      "allow": [
+        "Desert: 1"
+      ],
+      "restrict": [
+        "Underwater"
+      ],
+      "fadein": 0.0,
+      "fadeout": 0.0,
+      "delay_fadein": 0.0,
+      "delay_fadeout": 0.0,
+      "event": []
+    },
+    "Inside Coast": {
+      "allow": [
+        "Coast"
+      ],
+      "restrict": [
+        "Beach: 1",
+        "Underwater"
+      ],
+      "fadein": 0.0,
+      "fadeout": 0.0,
+      "delay_fadein": 0.0,
+      "delay_fadeout": 0.0,
+      "event": []
+    },
+    "Inside Glacier": {
+      "allow": [
+        "Glacier"
+      ],
+      "restrict": [
+        "Underwater"
+      ],
+      "fadein": 0.0,
+      "fadeout": 0.0,
+      "delay_fadein": 0.0,
+      "delay_fadeout": 0.0,
+      "event": []
+    },
+    "Inside Swamp": {
+      "allow": [
+        "Swamp Lake"
+      ],
+      "restrict": [
+        "Underwater"
+      ],
+      "fadein": 0.0,
+      "fadeout": 0.0,
+      "delay_fadein": 0.0,
+      "delay_fadeout": 0.0,
+      "event": []
+    }
+  },
+  "event": {},
+  "list": {},
+  "dynamic": {}
+}
