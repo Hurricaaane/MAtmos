@@ -144,12 +144,17 @@ public class MAtMod extends HaddonImpl
 	
 	private void resetAmbientVolume()
 	{
+		// For some reason it has to be set twice to validate it (???!)
+		Minecraft.getMinecraft().gameSettings.func_151439_a(
+			SoundCategory.AMBIENT, this.config.getFloat("minecraftsound.ambient.volume"));
 		Minecraft.getMinecraft().gameSettings.func_151439_a(
 			SoundCategory.AMBIENT, this.config.getFloat("minecraftsound.ambient.volume"));
 	}
 	
 	private void overrideAmbientVolume()
 	{
+		// For some reason it has to be set twice to validate it (???!)
+		Minecraft.getMinecraft().gameSettings.func_151439_a(SoundCategory.AMBIENT, 0.01f);
 		Minecraft.getMinecraft().gameSettings.func_151439_a(SoundCategory.AMBIENT, 0.01f);
 	}
 	
