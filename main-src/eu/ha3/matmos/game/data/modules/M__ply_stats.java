@@ -22,6 +22,8 @@ public class M__ply_stats extends ModuleProcessor implements Module
 	{
 		EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
 		
+		setValue("health1k", (int) (player.getHealth() * 1000));
+		setValue("oxygen", player.getAir());
 		setValue("armor", player.getTotalArmorValue());
 		setValue("food", player.getFoodStats().getFoodLevel());
 		setValue("saturation1k", (int) (player.getFoodStats().getSaturationLevel() * 1000));

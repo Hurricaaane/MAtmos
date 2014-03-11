@@ -51,7 +51,6 @@ public class LegacySheetIndex_Engine0to1 implements SheetIndex
 		add(6, "ply_general", "in_water");
 		add(19, "ply_general", "wet");
 		add(22, "ply_general", "on_ground");
-		add(23, "ply_general", "oxygen");
 		add(39, "ply_general", "burning");
 		add(49, "ply_general", "burning"); // 39 and 49 are the same
 		add(42, "ply_general", "jumping");
@@ -70,6 +69,7 @@ public class LegacySheetIndex_Engine0to1 implements SheetIndex
 		add(43, "ply_action", "fall_distance1k");
 		add(58, "ply_action", "item_use_duration");
 		
+		add(23, "ply_stats", "oxygen");
 		add(50, "ply_stats", "armor");
 		add(51, "ply_stats", "food");
 		add(52, "ply_stats", "saturation1k");

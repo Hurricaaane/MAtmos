@@ -31,7 +31,6 @@ public class M__ply_general extends ModuleProcessor implements Module
 		setValue("in_water", player.isInWater());
 		setValue("wet", player.isWet());
 		setValue("on_ground", player.onGround);
-		setValue("oxygen", player.getAir());
 		setValue("burning", player.isBurning());
 		//setValue("jumping", UnresolvedPrivateAccessors__entity.getInstance().isJumping(player));
 		//setValue("in_web", UnresolvedPrivateAccessors__entity.getInstance().isInWeb(player));
