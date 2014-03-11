@@ -3,6 +3,7 @@ package eu.ha3.matmos.game.system;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.SoundCategory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -172,16 +173,14 @@ public class MAtmosUtility
 		return Item.field_150901_e.func_148750_c(item);
 	}
 	
-	/**
-	 * Returns the Minecraft sound volume as a scalar value.
-	 * 
-	 * @return
-	 */
-	@Deprecated
-	public static float getSoundVolume()
+	public static boolean isSoundMasterEnabled()
 	{
-		// XXX NOT IMPLEMENTED
-		return 1f;
+		return Minecraft.getMinecraft().gameSettings.func_151438_a(SoundCategory.MASTER) > 0f;
+	}
+	
+	public static boolean isSoundAmbientEnabled()
+	{
+		return Minecraft.getMinecraft().gameSettings.func_151438_a(SoundCategory.AMBIENT) > 0f;
 	}
 	
 	/**

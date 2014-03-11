@@ -98,11 +98,17 @@ public class MAtUserControl implements Ha3HoldActions, SupportsTickEvents, Suppo
 		}
 		else
 		{
-			if (MAtmosUtility.getSoundVolume() <= 0f)
+			if (!MAtmosUtility.isSoundMasterEnabled())
 			{
 				this.mod.getChatter().printChat(
 					ChatColorsSimple.COLOR_RED, "Warning: ", ChatColorsSimple.COLOR_WHITE,
 					"Sounds are turned off in your game settings!");
+			}
+			if (!MAtmosUtility.isSoundAmbientEnabled())
+			{
+				this.mod.getChatter().printChat(
+					ChatColorsSimple.COLOR_RED, "Warning: ", ChatColorsSimple.COLOR_WHITE,
+					"Ambient sounds are at 0% volume in the advanced MAtmos options menu!");
 			}
 		}
 	}
