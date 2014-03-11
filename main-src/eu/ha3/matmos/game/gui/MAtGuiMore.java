@@ -8,6 +8,7 @@ import eu.ha3.matmos.game.system.MAtMod;
 import eu.ha3.mc.gui.HDisplayStringProvider;
 import eu.ha3.mc.gui.HGuiSliderControl;
 import eu.ha3.mc.gui.HSliderListener;
+import eu.ha3.mc.quick.chat.ChatColorsSimple;
 
 /* x-placeholder */
 
@@ -215,10 +216,17 @@ public class MAtGuiMore extends GuiScreen
 	@Override
 	public void drawScreen(int par1, int par2, float par3)
 	{
-		//drawDefaultBackground();
-		drawGradientRect(0, 0, this.width, this.height, 0xC0000000, 0x60000000);
-		
-		drawCenteredString(this.fontRenderer, this.screenTitle, this.width / 2, 8, 0xffffff);
+		if (!this.mod.isDebugMode())
+		{
+			drawGradientRect(0, 0, this.width, this.height, 0xC0000000, 0x60000000);
+			drawCenteredString(this.fontRenderer, "MAtmos Advanced options", this.width / 2, 8, 0xffffff);
+		}
+		else
+		{
+			drawGradientRect(0, 0, this.width, this.height, 0xC0C06000, 0x60C06000);
+			drawCenteredString(this.fontRenderer, "MAtmos Advanced options "
+				+ ChatColorsSimple.COLOR_GOLD + "(Dev mode)", this.width / 2, 8, 0xffffff);
+		}
 		
 		super.drawScreen(par1, par2, par3);
 		

@@ -52,7 +52,6 @@ public class MAtGuiMenu__Debug extends GuiScreen
 	
 	public MAtGuiMenu__Debug(GuiScreen par1GuiScreen, MAtMod matmos, int pageFromZero)
 	{
-		this.screenTitle = "MAtmos Expansions";
 		this.buttonId = -1;
 		this.parentScreen = par1GuiScreen;
 		this.mod = matmos;
@@ -220,15 +219,24 @@ public class MAtGuiMenu__Debug extends GuiScreen
 						MAtGuiMenu__Debug.this.mc.displayGuiScreen(new MAtGuiExpansionDetails(
 							MAtGuiMenu__Debug.this, MAtGuiMenu__Debug.this.mod, expansion));
 					}
-				}), _RIGHT - _UNIT, _MIX * (id + 1), _UNIT, _UNIT, "+"));
+				}), _RIGHT - _UNIT, _MIX * (id + 1), _UNIT, _UNIT, ChatColorsSimple.COLOR_GOLD + "+"));
 			}
 			
 			id++;
 			
 		}
 		
-		this.buttonList.add(new GuiButton(
-			220, _RIGHT - _UNIT, _MIX * (this.IDS_PER_PAGE + 2), _UNIT, _UNIT, isAutopreviewEnabled() ? "^o^" : "^_^"));
+		if (!this.mod.isDebugMode())
+		{
+			this.buttonList.add(new GuiButton(
+				220, _RIGHT - _UNIT, _MIX * (this.IDS_PER_PAGE + 2), _UNIT, _UNIT, isAutopreviewEnabled()
+					? "^o^" : "^_^"));
+		}
+		else
+		{
+			this.buttonList.add(new GuiButton(
+				230, _RIGHT - _UNIT, _MIX * (this.IDS_PER_PAGE + 2), 40, _UNIT, ChatColorsSimple.COLOR_GOLD + "OSD"));
+		}
 		
 		if (this.pageFromZero != 0)
 		{
@@ -306,6 +314,10 @@ public class MAtGuiMenu__Debug extends GuiScreen
 			par1GuiButton.displayString = isAutopreviewEnabled() ? "^o^" : "^_^";
 			this.mod.saveConfig();
 		}
+		else if (par1GuiButton.id == 230)
+		{
+			mc.displayGuiScreen(new MAtGuiScans(this, this.mod));
+		}
 		else
 		{
 			Make.perform(par1GuiButton.id);
@@ -362,10 +374,18 @@ public class MAtGuiMenu__Debug extends GuiScreen
 	@Override
 	public void drawScreen(int par1, int par2, float par3)
 	{
-		//drawDefaultBackground();
-		drawGradientRect(0, 0, this.width, this.height, 0xC0000000, 0x60000000);
-		
-		drawCenteredString(this.fontRenderer, this.screenTitle, this.width / 2, 8, 0xffffff);
+		if (!this.mod.isDebugMode())
+		{
+			drawGradientRect(0, 0, this.width, this.height, 0xC0000000, 0x60000000);
+			drawCenteredString(this.fontRenderer, "MAtmos Expansions", this.width / 2, 8, 0xffffff);
+		}
+		else
+		{
+			drawGradientRect(0, 0, this.width, this.height, 0xC0C06000, 0x60C06000);
+			drawCenteredString(
+				this.fontRenderer, "MAtmos Expansions " + ChatColorsSimple.COLOR_GOLD + "(Dev mode)", this.width / 2,
+				8, 0xffffff);
+		}
 		
 		super.drawScreen(par1, par2, par3);
 		

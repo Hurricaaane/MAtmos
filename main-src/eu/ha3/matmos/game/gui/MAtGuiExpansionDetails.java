@@ -3,6 +3,7 @@ package eu.ha3.matmos.game.gui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.ScaledResolution;
 import eu.ha3.matmos.expansions.Expansion;
 import eu.ha3.matmos.expansions.debugunit.ExpansionDebugUnit;
 import eu.ha3.matmos.expansions.debugunit.ReadOnlyJasonStringEDU;
@@ -33,11 +34,10 @@ public class MAtGuiExpansionDetails extends GuiScreen
 	@Override
 	public void drawScreen(int par1, int par2, float par3)
 	{
-		drawGradientRect(0, 0, this.width, this.height, 0xF0000000, 0xC0000000);
+		drawGradientRect(0, 0, this.width, this.height, 0xC0C06000, 0x60C06000);
 		
-		drawCenteredString(
-			this.fontRenderer, this.expansion.getFriendlyName() + "(" + this.expansion.getName() + ")", this.width / 2,
-			8, 0xffffff);
+		//drawCenteredString(this.fontRenderer, ChatColorsSimple.COLOR_RED
+		//	+ this.expansion.getFriendlyName() + "(" + this.expansion.getName() + ")", this.width / 2, 8, 0xffffff);
 		
 		this.debug.onFrame(0f);
 		
@@ -57,16 +57,20 @@ public class MAtGuiExpansionDetails extends GuiScreen
 		final int _GAP = 2;
 		final int _UNIT = 20;
 		
-		this.buttonList.add(new GuiButton(200, _GAP, _GAP, 70, _UNIT, "Close"));
-		this.buttonList.add(new GuiButton(201, _GAP * 2 + 70, _GAP, 70, _UNIT, "Keep open"));
-		this.buttonList.add(new GuiButton(202, _GAP * 3 + 70 * 2, _GAP, 110, _UNIT, "Reload file"));
+		int h =
+			new ScaledResolution(this.mc.gameSettings, this.mc.displayWidth, this.mc.displayHeight).getScaledHeight();
+		h = h - _UNIT - _GAP;
+		
+		this.buttonList.add(new GuiButton(200, _GAP, h, 70, _UNIT, "Close"));
+		this.buttonList.add(new GuiButton(201, _GAP * 2 + 70, h, 70, _UNIT, "Keep open"));
+		this.buttonList.add(new GuiButton(202, _GAP * 3 + 70 * 2, h, 110, _UNIT, "Reload file"));
 		if (this.mod.isEditorAvailable())
 		{
-			this.buttonList.add(new GuiButton(203, _GAP * 4 + 70 * 2 + 110, _GAP, 110, _UNIT, "Edit..."));
+			this.buttonList.add(new GuiButton(203, _GAP * 4 + 70 * 2 + 110, h, 110, _UNIT, "Edit..."));
 		}
 		else
 		{
-			this.buttonList.add(new GuiButton(203, _GAP * 4 + 70 * 2 + 110, _GAP, 220, _UNIT, "Editor Unavailable"));
+			this.buttonList.add(new GuiButton(203, _GAP * 4 + 70 * 2 + 110, h, 220, _UNIT, "Editor Unavailable"));
 		}
 	}
 	
@@ -77,8 +81,6 @@ public class MAtGuiExpansionDetails extends GuiScreen
 		
 		if (par1GuiButton.id == 200)
 		{
-			this.mod.getVisualDebugger().debugModeScan("scan_large");
-			
 			// This triggers onGuiClosed
 			mc.displayGuiScreen(this.parentScreen);
 		}

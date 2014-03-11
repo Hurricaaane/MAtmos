@@ -10,6 +10,7 @@ import java.util.TreeMap;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.ScaledResolution;
 
 import org.lwjgl.opengl.GL11;
 
@@ -43,9 +44,13 @@ public class VisualExpansionDebugging implements SupportsFrameEvents
 	@Override
 	public void onFrame(float semi)
 	{
-		float scale = 1f;
+		Minecraft mc = Minecraft.getMinecraft();
+		int fac = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight).getScaleFactor();
+		
+		float scale = 1f / fac;
 		GL11.glPushMatrix();
 		GL11.glScalef(scale, scale, 1.0F);
+		
 		if (!this.mod.getExpansionList().containsKey(this.ex))
 		{
 			IDontKnowHowToCode.warnOnce("Problem getting expansion " + this.ex + " to debug");
@@ -72,8 +77,8 @@ public class VisualExpansionDebugging implements SupportsFrameEvents
 		{
 			IDontKnowHowToCode.whoops__printExceptionToChat(this.mod.getChatter(), e, this);
 		}
-		GL11.glPopMatrix();
 		
+		GL11.glPopMatrix();
 	}
 	
 	@SuppressWarnings("unused")
