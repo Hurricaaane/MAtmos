@@ -2,6 +2,7 @@ package eu.ha3.matmos.game.system;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -26,6 +27,7 @@ import eu.ha3.matmos.expansions.volume.VolumeUpdatable;
 import eu.ha3.matmos.game.data.ModularDataGatherer;
 import eu.ha3.matmos.game.user.MAtUserControl;
 import eu.ha3.matmos.game.user.VisualDebugger;
+import eu.ha3.matmos.pluggable.PluggableIntoMinecraft;
 import eu.ha3.mc.haddon.Identity;
 import eu.ha3.mc.haddon.OperatorCaster;
 import eu.ha3.mc.haddon.PrivateAccessException;
@@ -61,6 +63,7 @@ public class MAtMod extends HaddonImpl
 	// State
 	private boolean isInitialized;
 	private boolean isActivated;
+	private boolean isUnderwaterMode;
 	
 	// Components
 	private ExpansionManager expansionManager;
@@ -75,11 +78,9 @@ public class MAtMod extends HaddonImpl
 	private Object queueLock = new Object();
 	private List<Runnable> queue = new ArrayList<Runnable>();
 	
-	private boolean isUnderwaterMode;
-	
 	public MAtMod()
 	{
-		MAtmosConvLogger.setRefinedness(MAtmosConvLogger.FINE);
+		MAtmosConvLogger.setRefinedness(MAtmosConvLogger.INFO);
 	}
 	
 	@Override
@@ -451,5 +452,35 @@ public class MAtMod extends HaddonImpl
 		}
 		
 		this.dataGatherer.forceRecomputeModuleStack_debugModeChanged();
+	}
+	
+	public boolean isEditorAvailable()
+	{
+		try
+		{
+			return Class.forName("eu.ha3.matmos.editor.EditorMaster", false, this.getClass().getClassLoader()) != null;
+		}
+		catch (Exception e)
+		{
+			return false;
+		}
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public Runnable instantiateRunnableEditor(PluggableIntoMinecraft pluggable)
+	{
+		try
+		{
+			Class editorClass =
+				Class.forName("eu.ha3.matmos.editor.EditorMaster", false, this.getClass().getClassLoader());
+			Constructor ctor = editorClass.getDeclaredConstructor(PluggableIntoMinecraft.class);
+			ctor.setAccessible(true);
+			
+			return (Runnable) ctor.newInstance(pluggable);
+		}
+		catch (Exception e)
+		{
+			return null;
+		}
 	}
 }

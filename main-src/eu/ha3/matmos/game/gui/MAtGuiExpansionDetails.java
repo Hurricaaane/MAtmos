@@ -3,7 +3,6 @@ package eu.ha3.matmos.game.gui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import eu.ha3.matmos.editor.EditorMaster;
 import eu.ha3.matmos.expansions.Expansion;
 import eu.ha3.matmos.expansions.debugunit.ExpansionDebugUnit;
 import eu.ha3.matmos.expansions.debugunit.ReadOnlyJasonStringEDU;
@@ -61,7 +60,14 @@ public class MAtGuiExpansionDetails extends GuiScreen
 		this.buttonList.add(new GuiButton(200, _GAP, _GAP, 70, _UNIT, "Close"));
 		this.buttonList.add(new GuiButton(201, _GAP * 2 + 70, _GAP, 70, _UNIT, "Keep open"));
 		this.buttonList.add(new GuiButton(202, _GAP * 3 + 70 * 2, _GAP, 110, _UNIT, "Reload file"));
-		this.buttonList.add(new GuiButton(203, _GAP * 4 + 70 * 2 + 110, _GAP, 110, _UNIT, "Edit..."));
+		if (this.mod.isEditorAvailable())
+		{
+			this.buttonList.add(new GuiButton(203, _GAP * 4 + 70 * 2 + 110, _GAP, 110, _UNIT, "Edit..."));
+		}
+		else
+		{
+			this.buttonList.add(new GuiButton(203, _GAP * 4 + 70 * 2 + 110, _GAP, 220, _UNIT, "Editor Unavailable"));
+		}
 	}
 	
 	@Override
@@ -87,7 +93,7 @@ public class MAtGuiExpansionDetails extends GuiScreen
 		{
 			this.expansion.refreshKnowledge();
 		}
-		else if (par1GuiButton.id == 203)
+		else if (par1GuiButton.id == 203 && this.mod.isEditorAvailable())
 		{
 			final ExpansionDebugUnit debugUnit = this.expansion.obtainDebugUnit();
 			if (debugUnit != null)
@@ -95,15 +101,25 @@ public class MAtGuiExpansionDetails extends GuiScreen
 				PluggableImpl plug = new PluggableImpl(this.mod, this.expansion);
 				this.expansion.addPluggable(plug);
 				
-				new Thread(new EditorMaster(plug)).start();
-				
-				if (debugUnit instanceof ReadOnlyJasonStringEDU)
+				Runnable editor = this.mod.instantiateRunnableEditor(plug);
+				if (editor != null)
 				{
-					// XXX Read only mode
+					new Thread(editor).start();
+					
+					if (debugUnit instanceof ReadOnlyJasonStringEDU)
+					{
+						// XXX Read only mode
+						this.mod.getChatter().printChat(
+							ChatColorsSimple.COLOR_RED
+								+ "Expansions inside ZIP files are not supported in this version.");
+						this.mod.getChatter().printChatShort(
+							ChatColorsSimple.COLOR_RED + "Please unzip the resource packs to be able to view them.");
+					}
+				}
+				else
+				{
 					this.mod.getChatter().printChat(
-						ChatColorsSimple.COLOR_RED + "Expansions inside ZIP files are not supported in this version.");
-					this.mod.getChatter().printChatShort(
-						ChatColorsSimple.COLOR_RED + "Please unzip the resource packs to be able to view them.");
+						ChatColorsSimple.COLOR_RED + "Could not start editor for an unknown reason.");
 				}
 			}
 		}
