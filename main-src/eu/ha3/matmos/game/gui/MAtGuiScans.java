@@ -115,8 +115,7 @@ public class MAtGuiScans extends GuiScreen
 	{
 		drawGradientRect(0, 0, this.width, this.height, 0xC0C06000, 0x60C06000);
 		drawCenteredString(
-			this.fontRenderer, ChatColorsSimple.COLOR_GOLD + "MAtmos Dev mode: On-screen Display", this.width / 2, 1,
-			0xffffff);
+			this.fontRenderer, ChatColorsSimple.COLOR_GOLD + "Dev mode: On-screen Display", this.width / 2, 1, 0xffffff);
 		
 		this.mod.getVisualDebugger().onFrame(-1f);
 		

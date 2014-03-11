@@ -441,10 +441,8 @@ public class MAtMod extends HaddonImpl
 	{
 		if (isDebugMode())
 		{
-			getChatter().printChat(
-				ChatColorsSimple.COLOR_GOLD
-					+ "Dev/Editor mode enabled. "
-					+ "Enabling this mode causes MAtmos to consume more resources in the process.");
+			getChatter().printChat(ChatColorsSimple.COLOR_GOLD + "Dev/Editor mode enabled.");
+			getChatter().printChatShort("Enabling this mode may cause Minecraft to run slower.");
 		}
 		else
 		{

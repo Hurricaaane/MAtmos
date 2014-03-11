@@ -253,10 +253,9 @@ public class MAtGuiMenu__Debug extends GuiScreen
 			210, _LEFT, _SEPARATOR + _MIX * (this.IDS_PER_PAGE + 3), _AWID, _UNIT, this.mod.getConfig().getBoolean(
 				"start.enabled") ? "Start Enabled: ON" : "Start Enabled: OFF"));
 		
-		this.buttonList
-			.add(new GuiButton(
-				211, _LEFT + _AWID + _GAP, _SEPARATOR + _MIX * (this.IDS_PER_PAGE + 3), _AWID, _UNIT,
-				"Advanced options..."));
+		this.buttonList.add(new GuiButton(
+			211, _LEFT + _AWID + _GAP, _SEPARATOR + _MIX * (this.IDS_PER_PAGE + 3), _AWID, _UNIT, (this.mod
+				.isDebugMode() ? ChatColorsSimple.COLOR_GOLD : "") + "Advanced options..."));
 		
 		final int _TURNOFFWIDTH = _ELEMENT_WIDTH / 5;
 		
@@ -385,6 +384,14 @@ public class MAtGuiMenu__Debug extends GuiScreen
 			drawCenteredString(
 				this.fontRenderer, "MAtmos Expansions " + ChatColorsSimple.COLOR_GOLD + "(Dev mode)", this.width / 2,
 				8, 0xffffff);
+			
+			final int _GAP = 2;
+			final int _UNIT = 20;
+			final int _MIX = _GAP + _UNIT;
+			final int _SEPARATOR = 10;
+			drawCenteredString(this.fontRenderer, ChatColorsSimple.COLOR_YELLOW
+				+ "Dev mode is enabled. This may cause Minecraft to run slower.", this.width / 2, _SEPARATOR
+				+ _MIX * (this.IDS_PER_PAGE + 3) - 9, 0xffffff);
 		}
 		
 		super.drawScreen(par1, par2, par3);

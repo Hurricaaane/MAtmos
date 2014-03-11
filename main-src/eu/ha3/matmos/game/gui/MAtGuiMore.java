@@ -121,7 +121,8 @@ public class MAtGuiMore extends GuiScreen
 		this.buttonList.add(ambienceVolume);
 		
 		this.buttonList.add(new GuiButton(215, _LEFT + _MIX, _MIX * (6 + 1), _WIDTH - _MIX * 2, _UNIT, this.mod
-			.getConfig().getInteger("debug.mode") == 1 ? "Dev/Editor mode: ON" : "Dev/Editor mode: OFF"));
+			.getConfig().getInteger("debug.mode") == 1
+			? ChatColorsSimple.COLOR_GOLD + "Dev/Editor mode: ON" : "Dev/Editor mode: OFF"));
 		
 		this.buttonList.add(new GuiButton(200, _LEFT + _MIX, _SEPARATOR + _MIX * (this.IDS_PER_PAGE + 4), _WIDTH
 			- _MIX * 2 - _GAP - _TURNOFFWIDTH, _UNIT, "Done"));
@@ -176,7 +177,8 @@ public class MAtGuiMore extends GuiScreen
 		{
 			this.mod.getConfig().setProperty("debug.mode", this.mod.getConfig().getInteger("debug.mode") == 0 ? 1 : 0);
 			par1GuiButton.displayString =
-				this.mod.getConfig().getInteger("debug.mode") == 1 ? "Dev/Editor mode: ON" : "Dev/Editor mode: OFF";
+				this.mod.getConfig().getInteger("debug.mode") == 1 ? ChatColorsSimple.COLOR_GOLD
+					+ "Dev/Editor mode: ON" : "Dev/Editor mode: OFF";
 			this.mod.changedDebugMode();
 			this.mod.saveConfig();
 		}
@@ -223,9 +225,18 @@ public class MAtGuiMore extends GuiScreen
 		}
 		else
 		{
+			
 			drawGradientRect(0, 0, this.width, this.height, 0xC0C06000, 0x60C06000);
 			drawCenteredString(this.fontRenderer, "MAtmos Advanced options "
 				+ ChatColorsSimple.COLOR_GOLD + "(Dev mode)", this.width / 2, 8, 0xffffff);
+			
+			final int _GAP = 2;
+			final int _UNIT = 20;
+			final int _MIX = _GAP + _UNIT;
+			final int _SEPARATOR = 10;
+			drawCenteredString(this.fontRenderer, ChatColorsSimple.COLOR_YELLOW
+				+ "Dev mode is enabled. This may cause Minecraft to run slower.", this.width / 2, _SEPARATOR
+				+ _MIX * (this.IDS_PER_PAGE + 3) - 9, 0xffffff);
 		}
 		
 		super.drawScreen(par1, par2, par3);

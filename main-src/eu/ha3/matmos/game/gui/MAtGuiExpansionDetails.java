@@ -36,8 +36,11 @@ public class MAtGuiExpansionDetails extends GuiScreen
 	{
 		drawGradientRect(0, 0, this.width, this.height, 0xC0C06000, 0x60C06000);
 		
-		//drawCenteredString(this.fontRenderer, ChatColorsSimple.COLOR_RED
-		//	+ this.expansion.getFriendlyName() + "(" + this.expansion.getName() + ")", this.width / 2, 8, 0xffffff);
+		drawCenteredString(
+			this.fontRenderer,
+			ChatColorsSimple.COLOR_GOLD
+				+ "Dev mode: Viewing " + ChatColorsSimple.COLOR_YELLOW + ChatColorsSimple.THEN_ITALIC
+				+ this.expansion.getFriendlyName() + " (" + this.expansion.getName() + ")", this.width / 2, 4, 0xffffff);
 		
 		this.debug.onFrame(0f);
 		
@@ -62,11 +65,12 @@ public class MAtGuiExpansionDetails extends GuiScreen
 		h = h - _UNIT - _GAP;
 		
 		this.buttonList.add(new GuiButton(200, _GAP, h, 70, _UNIT, "Close"));
-		this.buttonList.add(new GuiButton(201, _GAP * 2 + 70, h, 70, _UNIT, "Keep open"));
+		this.buttonList
+			.add(new GuiButton(201, _GAP * 2 + 70, h, 70, _UNIT, ChatColorsSimple.COLOR_GOLD + "Use in OSD"));
 		this.buttonList.add(new GuiButton(202, _GAP * 3 + 70 * 2, h, 110, _UNIT, "Reload file"));
 		if (this.mod.isEditorAvailable())
 		{
-			this.buttonList.add(new GuiButton(203, _GAP * 4 + 70 * 2 + 110, h, 110, _UNIT, "Edit..."));
+			this.buttonList.add(new GuiButton(203, _GAP * 4 + 70 * 2 + 110, h, 110, _UNIT, "Open in Editor..."));
 		}
 		else
 		{
@@ -89,7 +93,7 @@ public class MAtGuiExpansionDetails extends GuiScreen
 			this.mod.getVisualDebugger().debugModeExpansion(this.debug);
 			
 			// This triggers onGuiClosed
-			mc.displayGuiScreen(this.parentScreen);
+			mc.displayGuiScreen(null);
 		}
 		else if (par1GuiButton.id == 202)
 		{
