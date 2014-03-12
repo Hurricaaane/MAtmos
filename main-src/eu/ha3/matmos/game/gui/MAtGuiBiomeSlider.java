@@ -1,5 +1,8 @@
 package eu.ha3.matmos.game.gui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.world.biome.BiomeGenBase;
 import eu.ha3.matmos.game.system.MAtMod;
 import eu.ha3.mc.gui.HDisplayStringProvider;
@@ -15,17 +18,36 @@ public class MAtGuiBiomeSlider implements HDisplayStringProvider, HSliderListene
 	final protected int maxBiomes = calculateMaxBiomes();
 	protected int definedBiomeID;
 	
+	private List<Integer> validBiomes = new ArrayList<Integer>();
+	
 	public MAtGuiBiomeSlider(MAtMod mod, int define)
 	{
 		this.mod = mod;
-		this.definedBiomeID = define;
+		this.definedBiomeID =
+			this.validBiomes.indexOf(define) != -1 ? this.validBiomes.indexOf(define) : this.validBiomes.size();
+		
+		computeBiomes();
+	}
+	
+	private void computeBiomes()
+	{
+		BiomeGenBase[] biomes = BiomeGenBase.func_150565_n();
+		
+		for (int i = 0; i < biomes.length; i++)
+		{
+			if (biomes[i] != null)
+			{
+				this.validBiomes.add(i);
+			}
+		}
 	}
 	
 	@Override
 	public void sliderValueChanged(HGuiSliderControl slider, float value)
 	{
-		int biomeID = (int) (Math.floor(value * this.maxBiomes) - 1);
-		this.definedBiomeID = biomeID;
+		int biomeID = (int) (Math.floor(value * this.validBiomes.size()) - 1);
+		this.definedBiomeID =
+			biomeID >= 0 && biomeID < this.validBiomes.size() ? this.validBiomes.get(biomeID) : biomeID;
 		
 		slider.updateDisplayString();
 	}
