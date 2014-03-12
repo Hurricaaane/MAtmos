@@ -23,8 +23,7 @@ public class MAtGuiBiomeSlider implements HDisplayStringProvider, HSliderListene
 	public MAtGuiBiomeSlider(MAtMod mod, int define)
 	{
 		this.mod = mod;
-		this.definedBiomeID =
-			this.validBiomes.indexOf(define) != -1 ? this.validBiomes.indexOf(define) : this.validBiomes.size();
+		this.definedBiomeID = define;
 		
 		computeBiomes();
 	}
@@ -87,7 +86,12 @@ public class MAtGuiBiomeSlider implements HDisplayStringProvider, HSliderListene
 	
 	public float calculateSliderLocation(int biomeID)
 	{
-		return (biomeID + 1f) / this.maxBiomes;
+		if (this.validBiomes.contains(biomeID))
+			return (this.validBiomes.indexOf(biomeID) + 1f) / this.validBiomes.size();
+		else if (biomeID == -1)
+			return 0;
+		else
+			return 1f;
 	}
 	
 	private int calculateMaxBiomes()
