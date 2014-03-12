@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -50,8 +51,9 @@ public class MAtMod extends HaddonImpl
 	// Identity
 	protected final String NAME = "MAtmos";
 	protected final int VERSION = 26;
-	protected final String FOR = "1.6.2";
+	protected final String FOR = "1.7.2";
 	protected final String ADDRESS = "http://matmos.ha3.eu";
+	protected final Date DATE = new Date(1394610076);
 	protected final Identity identity = new HaddonIdentity(this.NAME, this.VERSION, this.FOR, this.ADDRESS);
 	
 	// NotifiableHaddon and UpdateNotifier
