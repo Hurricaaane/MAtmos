@@ -15,6 +15,7 @@ import eu.ha3.matmos.editor.interfaces.Editor;
 import eu.ha3.matmos.editor.interfaces.Window;
 import eu.ha3.matmos.editor.tree.Selector;
 import eu.ha3.matmos.engine.core.implem.abstractions.ProviderCollection;
+import eu.ha3.matmos.expansions.debugunit.ReadOnlyJasonStringEDU;
 import eu.ha3.matmos.jsonformat.serializable.expansion.SerialRoot;
 import eu.ha3.matmos.pluggable.PluggableIntoMinecraft;
 import eu.ha3.matmos.pluggable.UnpluggedListener;
@@ -104,6 +105,15 @@ public class EditorMaster implements Runnable, Editor, UnpluggedListener
 		if (this.file != null)
 		{
 			trySetAndLoadFile(this.file);
+		}
+		
+		if (this.minecraft instanceof ReadOnlyJasonStringEDU)
+		{
+			flushFileAndSerial();
+			this.root =
+				new JasonExpansions_Engine1Deserializer2000().jsonToSerial(((ReadOnlyJasonStringEDU) this.minecraft)
+					.obtainJasonString());
+			updateFileAndContentsState();
 		}
 	}
 	
