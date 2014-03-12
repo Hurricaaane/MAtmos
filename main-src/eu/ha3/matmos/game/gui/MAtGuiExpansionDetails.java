@@ -1,13 +1,18 @@
 package eu.ha3.matmos.game.gui;
 
+import java.io.File;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import eu.ha3.matmos.expansions.Expansion;
 import eu.ha3.matmos.expansions.debugunit.ExpansionDebugUnit;
+import eu.ha3.matmos.expansions.debugunit.FolderResourcePackEditableEDU;
 import eu.ha3.matmos.expansions.debugunit.ReadOnlyJasonStringEDU;
 import eu.ha3.matmos.game.debug.PluggableIntoMAtmos;
+import eu.ha3.matmos.game.debug.SoundsJsonGenerator;
+import eu.ha3.matmos.game.system.IDontKnowHowToCode;
 import eu.ha3.matmos.game.system.MAtMod;
 import eu.ha3.matmos.game.user.VisualExpansionDebugging;
 import eu.ha3.mc.quick.chat.ChatColorsSimple;
@@ -67,15 +72,16 @@ public class MAtGuiExpansionDetails extends GuiScreen
 		this.buttonList.add(new GuiButton(200, _GAP, h, 70, _UNIT, "Close"));
 		this.buttonList
 			.add(new GuiButton(201, _GAP * 2 + 70, h, 70, _UNIT, ChatColorsSimple.COLOR_GOLD + "Use in OSD"));
-		this.buttonList.add(new GuiButton(202, _GAP * 3 + 70 * 2, h, 110, _UNIT, "Reload file"));
+		this.buttonList.add(new GuiButton(202, _GAP * 3 + 70 * 2, h, 70, _UNIT, "Reload file"));
 		if (this.mod.isEditorAvailable())
 		{
-			this.buttonList.add(new GuiButton(203, _GAP * 4 + 70 * 2 + 110, h, 110, _UNIT, "Open in Editor..."));
+			this.buttonList.add(new GuiButton(203, _GAP * 4 + 70 * 3, h, 110, _UNIT, "Open in Editor..."));
 		}
 		else
 		{
-			this.buttonList.add(new GuiButton(203, _GAP * 4 + 70 * 2 + 110, h, 220, _UNIT, "Editor Unavailable"));
+			this.buttonList.add(new GuiButton(203, _GAP * 4 + 70 * 3 + 110, h, 220, _UNIT, "Editor Unavailable"));
 		}
+		this.buttonList.add(new GuiButton(204, _GAP * 5 + 70 * 3 + 110, h, 96, _UNIT, "Make sounds.json"));
 	}
 	
 	@Override
@@ -126,6 +132,44 @@ public class MAtGuiExpansionDetails extends GuiScreen
 				{
 					this.mod.getChatter().printChat(
 						ChatColorsSimple.COLOR_RED + "Could not start editor for an unknown reason.");
+				}
+			}
+		}
+		else if (par1GuiButton.id == 204)
+		{
+			final ExpansionDebugUnit debugUnit = this.expansion.obtainDebugUnit();
+			if (debugUnit instanceof FolderResourcePackEditableEDU)
+			{
+				File expFolder = ((FolderResourcePackEditableEDU) debugUnit).obtainExpansionFolder();
+				File minecraftFolder = new File(expFolder, "assets/minecraft/");
+				if (minecraftFolder.exists())
+				{
+					File soundsFolder = new File(minecraftFolder, "sounds/");
+					File jsonFile = new File(minecraftFolder, "sounds.json");
+					if (soundsFolder.exists())
+					{
+						try
+						{
+							new SoundsJsonGenerator(soundsFolder, jsonFile).run();
+							this.mod.getChatter().printChat("File generated in " + jsonFile.getAbsolutePath());
+							this.mod.getChatter().printChatShort(
+								"Changes will be applied next time Resource Packs are reloaded.");
+						}
+						catch (Exception e)
+						{
+							e.printStackTrace();
+							IDontKnowHowToCode.whoops__printExceptionToChat(this.mod.getChatter(), e, this);
+						}
+					}
+					else
+					{
+						this.mod
+							.getChatter().printChat(ChatColorsSimple.COLOR_RED + "Create the sounds/ folder first.");
+					}
+				}
+				else
+				{
+					this.mod.getChatter().printChat(ChatColorsSimple.COLOR_RED + "Create the minecraft/ folder first.");
 				}
 			}
 		}
