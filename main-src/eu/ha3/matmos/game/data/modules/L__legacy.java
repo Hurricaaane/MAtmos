@@ -9,7 +9,7 @@ import net.minecraft.entity.item.EntityMinecartEmpty;
 import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.item.ItemStack;
 import eu.ha3.matmos.engine.core.interfaces.Data;
-import eu.ha3.matmos.game.data.MAT_HARD_LIMITS;
+import eu.ha3.matmos.game.data.MODULE_CONSTANTS;
 import eu.ha3.matmos.game.data.abstractions.module.Module;
 import eu.ha3.matmos.game.data.abstractions.module.ModuleProcessor;
 import eu.ha3.matmos.game.system.MAtmosUtility;
@@ -51,6 +51,6 @@ public class L__legacy extends ModuleProcessor implements Module
 	
 	private int number(ItemStack item)
 	{
-		return item != null ? MAtmosUtility.legacyOf(item) : MAT_HARD_LIMITS.LEGACY_NO_ITEM;
+		return item != null ? MAtmosUtility.legacyOf(item) : MODULE_CONSTANTS.LEGACY_NO_ITEM;
 	}
 }

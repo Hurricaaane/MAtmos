@@ -1,7 +1,6 @@
 package eu.ha3.matmos.game.data.abstractions.module;
 
 import eu.ha3.matmos.engine.core.interfaces.Data;
-import eu.ha3.matmos.game.data.abstractions.processor.ProcessorModel;
 
 /*
 --filenotes-placeholder

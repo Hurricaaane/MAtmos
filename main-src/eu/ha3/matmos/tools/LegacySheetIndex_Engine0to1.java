@@ -159,7 +159,6 @@ public class LegacySheetIndex_Engine0to1 implements SheetIndex
 		add(93, "w_biome", "id");
 		
 		// Tags
-		// XXX 2014-02-17
 		tagAsBlock(86, "hitscan", "block");
 		tagAsItem(32, "ply_inventory", "current_item");
 		tagAsItem(89, "ply_inventory", "armor_0");
@@ -168,7 +167,6 @@ public class LegacySheetIndex_Engine0to1 implements SheetIndex
 		tagAsItem(92, "ply_inventory", "armor_3");
 		
 		// Relaxed
-		// XXX 2014-02-14
 		//
 		
 		setWork("Options");

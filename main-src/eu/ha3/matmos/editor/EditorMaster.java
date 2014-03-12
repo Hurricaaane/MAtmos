@@ -11,8 +11,8 @@ import javax.swing.UIManager;
 
 import com.google.gson.stream.MalformedJsonException;
 
-import eu.ha3.matmos.editor.interfaces.EditorModel;
-import eu.ha3.matmos.editor.interfaces.IEditorWindow;
+import eu.ha3.matmos.editor.interfaces.Editor;
+import eu.ha3.matmos.editor.interfaces.Window;
 import eu.ha3.matmos.editor.tree.Selector;
 import eu.ha3.matmos.engine.core.implem.abstractions.ProviderCollection;
 import eu.ha3.matmos.jsonformat.serializable.expansion.SerialRoot;
@@ -25,10 +25,10 @@ import eu.ha3.matmos.tools.JasonExpansions_Engine1Deserializer2000;
 --filenotes-placeholder
 */
 
-public class EditorMaster implements Runnable, EditorModel, UnpluggedListener
+public class EditorMaster implements Runnable, Editor, UnpluggedListener
 {
 	//private IEditorWindow __WINDOW;
-	private IEditorWindow window__EventQueue;
+	private Window window__EventQueue;
 	
 	private final PluggableIntoMinecraft minecraft;
 	private boolean isUnplugged;

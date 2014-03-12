@@ -1,4 +1,4 @@
-package eu.ha3.matmos.game.data.abstractions.processor;
+package eu.ha3.matmos.game.data.abstractions.module;
 
 import eu.ha3.matmos.engine.core.implem.DeltaSheet;
 import eu.ha3.matmos.engine.core.interfaces.Data;
@@ -80,29 +80,22 @@ public abstract class ProcessorModel implements Processor
 		this.callsRemaining = 0;
 	}
 	
-	@Deprecated
-	public void conversionComplete(int index, long newValue)
+	public void setValueIntIndex(int index, boolean value)
 	{
-		setValue(Integer.toString(index), Long.toString(newValue));
+		setValue(Integer.toString(index), value);
 	}
 	
-	@Deprecated
-	public void conversionComplete(int index, String newValue)
+	public void setValueIntIndex(int index, long value)
 	{
-		setValue(Integer.toString(index), newValue);
+		setValue(Integer.toString(index), value);
 	}
 	
-	public void setValueLegacyIntIndexes(int index, long newValue)
+	public void setValueIntIndex(int index, String value)
 	{
-		setValue(Integer.toString(index), Long.toString(newValue));
+		setValue(Integer.toString(index), value);
 	}
 	
-	public void setValueLegacyIntIndexes(int index, String newValue)
-	{
-		setValue(Integer.toString(index), newValue);
-	}
-	
-	// -- -- -- -- //
+	// // // //
 	
 	public void setValue(String index, boolean newValue)
 	{

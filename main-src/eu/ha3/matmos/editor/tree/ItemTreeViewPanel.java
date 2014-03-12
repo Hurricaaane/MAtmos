@@ -11,8 +11,8 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreePath;
 
 import eu.ha3.matmos.editor.KnowledgeItemType;
-import eu.ha3.matmos.editor.interfaces.EditorModel;
-import eu.ha3.matmos.editor.interfaces.IEditNamedItem;
+import eu.ha3.matmos.editor.interfaces.Editor;
+import eu.ha3.matmos.editor.interfaces.NamedSerialEditor;
 import eu.ha3.matmos.editor.interfaces.ISerialUpdate;
 import eu.ha3.matmos.jsonformat.serializable.expansion.SerialRoot;
 
@@ -21,14 +21,14 @@ import eu.ha3.matmos.jsonformat.serializable.expansion.SerialRoot;
 */
 
 @SuppressWarnings("serial")
-public class ItemTreeViewPanel extends JPanel implements ISerialUpdate, IEditNamedItem
+public class ItemTreeViewPanel extends JPanel implements ISerialUpdate, NamedSerialEditor
 {
-	private final EditorModel model;
+	private final Editor model;
 	
 	private ItemTreeModel itemTreeModel = new ItemTreeModel();
 	private JTree itemTree;
 	
-	public ItemTreeViewPanel(EditorModel modelConstruct)
+	public ItemTreeViewPanel(Editor modelConstruct)
 	{
 		this.model = modelConstruct;
 		

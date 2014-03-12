@@ -2,18 +2,18 @@ package eu.ha3.matmos.editor;
 
 import java.awt.Component;
 
-import eu.ha3.matmos.editor.interfaces.IEditorWindow;
+import eu.ha3.matmos.editor.interfaces.Window;
 import eu.ha3.matmos.jsonformat.serializable.expansion.SerialRoot;
 
 /*
 --filenotes-placeholder
 */
 
-public class WindowEventQueue implements IEditorWindow
+public class WindowEventQueue implements Window
 {
-	private IEditorWindow window;
+	private Window window;
 	
-	public WindowEventQueue(IEditorWindow window)
+	public WindowEventQueue(Window window)
 	{
 		this.window = window;
 	}

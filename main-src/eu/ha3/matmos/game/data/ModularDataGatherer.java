@@ -16,7 +16,7 @@ import eu.ha3.matmos.game.data.abstractions.Processor;
 import eu.ha3.matmos.game.data.abstractions.module.Module;
 import eu.ha3.matmos.game.data.abstractions.module.ModuleProcessor;
 import eu.ha3.matmos.game.data.abstractions.module.PassOnceModule;
-import eu.ha3.matmos.game.data.abstractions.processor.ProcessorModel;
+import eu.ha3.matmos.game.data.abstractions.module.ProcessorModel;
 import eu.ha3.matmos.game.data.abstractions.scanner.Progress;
 import eu.ha3.matmos.game.data.abstractions.scanner.ScannerModule;
 import eu.ha3.matmos.game.data.modules.L__legacy;

@@ -26,7 +26,7 @@ import eu.ha3.matmos.expansions.MAtmosConvLogger;
 import eu.ha3.matmos.expansions.Stable;
 import eu.ha3.matmos.expansions.volume.VolumeUpdatable;
 import eu.ha3.matmos.game.data.ModularDataGatherer;
-import eu.ha3.matmos.game.user.MAtUserControl;
+import eu.ha3.matmos.game.user.UserControl;
 import eu.ha3.matmos.game.user.VisualDebugger;
 import eu.ha3.matmos.pluggable.PluggableIntoMinecraft;
 import eu.ha3.mc.haddon.Identity;
@@ -69,7 +69,7 @@ public class MAtMod extends HaddonImpl
 	
 	// Components
 	private ExpansionManager expansionManager;
-	private MAtUserControl userControl;
+	private UserControl userControl;
 	private ModularDataGatherer dataGatherer;
 	private VisualDebugger visualDebugger;
 	
@@ -97,7 +97,7 @@ public class MAtMod extends HaddonImpl
 		((OperatorCaster) op()).setTickEnabled(true);
 		
 		TimeStatistic timeMeasure = new TimeStatistic(Locale.ENGLISH);
-		this.userControl = new MAtUserControl(this);
+		this.userControl = new UserControl(this);
 		this.expansionManager =
 			new ExpansionManager(new File(util().getModsFolder(), "matmos/expansions_r27_userconfig/"), this);
 		

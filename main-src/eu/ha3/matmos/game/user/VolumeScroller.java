@@ -10,7 +10,7 @@ import eu.ha3.mc.convenience.Ha3Scroller;
 
 /* x-placeholder */
 
-public class MAtScroller extends Ha3Scroller
+public class VolumeScroller extends Ha3Scroller
 {
 	final private String MESSAGE_TITLE = "MAtmos Volume";
 	final private String MESSAGE_HINT = "<Look up/down>";
@@ -23,7 +23,7 @@ public class MAtScroller extends Ha3Scroller
 	private boolean knowsHowToUse;
 	private float doneValue;
 	
-	public MAtScroller(MAtMod mod)
+	public VolumeScroller(MAtMod mod)
 	{
 		super(Minecraft.getMinecraft());
 		this.mod = mod;

@@ -11,7 +11,7 @@ import eu.ha3.matmos.jsonformat.serializable.expansion.SerialRoot;
 --filenotes-placeholder
 */
 
-public interface EditorModel
+public interface Editor
 {
 	public File getExpansionDirectory();
 	

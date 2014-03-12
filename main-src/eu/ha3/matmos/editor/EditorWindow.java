@@ -28,8 +28,8 @@ import javax.swing.border.EmptyBorder;
 import eu.ha3.matmos.editor.edit.EditPanel;
 import eu.ha3.matmos.editor.filechooser.JasonFileChooser;
 import eu.ha3.matmos.editor.filechooser.OverwriteWarningJasonFileChooser;
-import eu.ha3.matmos.editor.interfaces.EditorModel;
-import eu.ha3.matmos.editor.interfaces.IEditorWindow;
+import eu.ha3.matmos.editor.interfaces.Editor;
+import eu.ha3.matmos.editor.interfaces.Window;
 import eu.ha3.matmos.editor.tree.ItemTreeViewPanel;
 import eu.ha3.matmos.jsonformat.serializable.expansion.SerialRoot;
 
@@ -38,9 +38,9 @@ import eu.ha3.matmos.jsonformat.serializable.expansion.SerialRoot;
 */
 
 @SuppressWarnings("serial")
-public class EditorWindow extends JFrame implements IEditorWindow
+public class EditorWindow extends JFrame implements Window
 {
-	private final EditorModel model;
+	private final Editor model;
 	
 	private static final String WINDOW_TITLE = "MAtmos Editor";
 	
@@ -60,7 +60,7 @@ public class EditorWindow extends JFrame implements IEditorWindow
 	private ItemTreeViewPanel panelTree;
 	private EditPanel editPanel;
 	
-	public EditorWindow(EditorModel modelConstruct)
+	public EditorWindow(Editor modelConstruct)
 	{
 		this.model = modelConstruct;
 		

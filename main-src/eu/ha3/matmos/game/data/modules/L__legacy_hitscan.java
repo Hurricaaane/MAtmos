@@ -7,7 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import eu.ha3.matmos.engine.core.interfaces.Data;
-import eu.ha3.matmos.game.data.MAT_HARD_LIMITS;
+import eu.ha3.matmos.game.data.MODULE_CONSTANTS;
 import eu.ha3.matmos.game.data.abstractions.module.Module;
 import eu.ha3.matmos.game.data.abstractions.module.ModuleProcessor;
 import eu.ha3.matmos.game.system.MAtmosUtility;
@@ -39,8 +39,8 @@ public class L__legacy_hitscan extends ModuleProcessor implements Module
 		{
 			setValue("mouse_over_something", false);
 			setValue("mouse_over_what_remapped", -1);
-			setValue("block_as_number", MAT_HARD_LIMITS.LEGACY_NO_BLOCK_IN_THIS_CONTEXT);
-			setValue("meta_as_number", MAT_HARD_LIMITS.LEGACY_NO_BLOCK_IN_THIS_CONTEXT);
+			setValue("block_as_number", MODULE_CONSTANTS.LEGACY_NO_BLOCK_IN_THIS_CONTEXT);
+			setValue("meta_as_number", MODULE_CONSTANTS.LEGACY_NO_BLOCK_IN_THIS_CONTEXT);
 			
 			return;
 		}
@@ -52,11 +52,11 @@ public class L__legacy_hitscan extends ModuleProcessor implements Module
 			mc.objectMouseOver.typeOfHit == MovingObjectType.BLOCK
 				? MAtmosUtility.legacyOf(MAtmosUtility.getBlockAt(
 					mc.objectMouseOver.blockX, mc.objectMouseOver.blockY, mc.objectMouseOver.blockZ))
-				: MAT_HARD_LIMITS.LEGACY_NO_BLOCK_IN_THIS_CONTEXT);
+				: MODULE_CONSTANTS.LEGACY_NO_BLOCK_IN_THIS_CONTEXT);
 		setValue(
 			"meta_as_number",
 			mc.objectMouseOver.typeOfHit == MovingObjectType.BLOCK ? MAtmosUtility.getMetaAt(
 				mc.objectMouseOver.blockX, mc.objectMouseOver.blockY, mc.objectMouseOver.blockZ,
-				MAT_HARD_LIMITS.LEGACY_NO_BLOCK_OUT_OF_BOUNDS) : MAT_HARD_LIMITS.LEGACY_NO_BLOCK_IN_THIS_CONTEXT);
+				MODULE_CONSTANTS.LEGACY_NO_BLOCK_OUT_OF_BOUNDS) : MODULE_CONSTANTS.LEGACY_NO_BLOCK_IN_THIS_CONTEXT);
 	}
 }

@@ -3,7 +3,7 @@ package eu.ha3.matmos.game.data.modules;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import eu.ha3.matmos.engine.core.interfaces.Data;
-import eu.ha3.matmos.game.data.MAT_HARD_LIMITS;
+import eu.ha3.matmos.game.data.MODULE_CONSTANTS;
 import eu.ha3.matmos.game.data.abstractions.module.Module;
 import eu.ha3.matmos.game.data.abstractions.module.ModuleProcessor;
 import eu.ha3.matmos.game.system.MAtmosUtility;
@@ -28,10 +28,10 @@ public class M__ply_inventory extends ModuleProcessor implements Module
 		setValue(
 			"current_item",
 			player.inventory.getCurrentItem() != null
-				? MAtmosUtility.nameOf(player.inventory.getCurrentItem()) : MAT_HARD_LIMITS.NO_ITEM); // NEW
+				? MAtmosUtility.nameOf(player.inventory.getCurrentItem()) : MODULE_CONSTANTS.NO_ITEM); // NEW
 		setValue(
 			"current_damage",
 			player.inventory.getCurrentItem() != null ? Integer.toString(player.inventory
-				.getCurrentItem().getItemDamage()) : MAT_HARD_LIMITS.NO_ITEM); // NEW
+				.getCurrentItem().getItemDamage()) : MODULE_CONSTANTS.NO_ITEM); // NEW
 	}
 }

@@ -41,7 +41,6 @@ public class S__detect implements Processor, PassOnceModule
 	
 	private boolean isRequired;
 	
-	// TODO 2014-02 
 	@SuppressWarnings("unchecked")
 	public S__detect(
 		Data dataIn, Collector collector, String minDistModule, String radiModulePrefix, int max, int... radiis)
@@ -190,11 +189,11 @@ public class S__detect implements Processor, PassOnceModule
 				{
 					if (this.entityCount[i].containsKey(entityID))
 					{
-						this.radiusSheets[i].setValueLegacyIntIndexes(entityID, this.entityCount[i].get(entityID));
+						this.radiusSheets[i].setValueIntIndex(entityID, this.entityCount[i].get(entityID));
 					}
 					else
 					{
-						this.radiusSheets[i].setValueLegacyIntIndexes(entityID, 0);
+						this.radiusSheets[i].setValueIntIndex(entityID, 0);
 					}
 				}
 			}
@@ -205,12 +204,12 @@ public class S__detect implements Processor, PassOnceModule
 			{
 				if (this.minimumDistanceReports.containsKey(entityID))
 				{
-					this.mindistModel.setValueLegacyIntIndexes(
+					this.mindistModel.setValueIntIndex(
 						entityID, (int) Math.floor(this.minimumDistanceReports.get(entityID) * 1000));
 				}
 				else
 				{
-					this.mindistModel.setValueLegacyIntIndexes(entityID, Integer.MAX_VALUE);
+					this.mindistModel.setValueIntIndex(entityID, Integer.MAX_VALUE);
 				}
 			}
 		}

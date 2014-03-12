@@ -21,20 +21,12 @@ import eu.ha3.mc.quick.chat.ChatColorsSimple;
 --filenotes-placeholder
 */
 
-public class MAtGuiMenu__Debug extends GuiScreen
+public class MAtGuiMenu extends GuiScreen
 {
-	/**
-	 * A reference to the screen object that created this. Used for navigating
-	 * between screens.
-	 */
 	private GuiScreen parentScreen;
-	
-	/** The title string that is displayed in the top-center of the screen. */
-	protected String screenTitle;
 	
 	private MAtMod mod;
 	
-	/** The ID of the button that has been pressed. */
 	private int buttonId;
 	
 	private int pageFromZero;
@@ -45,12 +37,12 @@ public class MAtGuiMenu__Debug extends GuiScreen
 	// Keep the active page in memory. Globally... (herpderp)
 	private static int in_memory_page = 0;
 	
-	public MAtGuiMenu__Debug(GuiScreen par1GuiScreen, MAtMod matmos)
+	public MAtGuiMenu(GuiScreen par1GuiScreen, MAtMod matmos)
 	{
 		this(par1GuiScreen, matmos, in_memory_page);
 	}
 	
-	public MAtGuiMenu__Debug(GuiScreen par1GuiScreen, MAtMod matmos, int pageFromZero)
+	public MAtGuiMenu(GuiScreen par1GuiScreen, MAtMod matmos, int pageFromZero)
 	{
 		this.buttonId = -1;
 		this.parentScreen = par1GuiScreen;
@@ -62,9 +54,6 @@ public class MAtGuiMenu__Debug extends GuiScreen
 		in_memory_page = this.pageFromZero;
 	}
 	
-	/**
-	 * Adds the buttons (and other controls) to the screen in question.
-	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui()
@@ -99,8 +88,7 @@ public class MAtGuiMenu__Debug extends GuiScreen
 				{
 					globalVolumeControl.setVolumeAndUpdate(value * 2);
 					slider.updateDisplayString();
-					MAtGuiMenu__Debug.this.mod.getConfig().setProperty(
-						"globalvolume.scale", globalVolumeControl.getVolume());
+					MAtGuiMenu.this.mod.getConfig().setProperty("globalvolume.scale", globalVolumeControl.getVolume());
 				}
 				
 				@Override
@@ -162,7 +150,7 @@ public class MAtGuiMenu__Debug extends GuiScreen
 				@Override
 				public void sliderReleased(HGuiSliderControl hGuiSliderControl)
 				{
-					if (MAtGuiMenu__Debug.this.isAutopreviewEnabled())
+					if (MAtGuiMenu.this.isAutopreviewEnabled())
 					{
 						expansion.playSample();
 					}
@@ -216,8 +204,8 @@ public class MAtGuiMenu__Debug extends GuiScreen
 					@Override
 					public void actionPerformed()
 					{
-						MAtGuiMenu__Debug.this.mc.displayGuiScreen(new MAtGuiExpansionDetails(
-							MAtGuiMenu__Debug.this, MAtGuiMenu__Debug.this.mod, expansion));
+						MAtGuiMenu.this.mc.displayGuiScreen(new MAtGuiExpansionDetails(
+							MAtGuiMenu.this, MAtGuiMenu.this.mod, expansion));
 					}
 				}), _RIGHT - _UNIT, _MIX * (id + 1), _UNIT, _UNIT, ChatColorsSimple.COLOR_GOLD + "+"));
 			}
@@ -269,10 +257,6 @@ public class MAtGuiMenu__Debug extends GuiScreen
 		//this.screenTitle = stringtranslate.translateKey("controls.title");
 	}
 	
-	/**
-	 * Fired when a control is clicked. This is the equivalent of
-	 * ActionListener.actionPerformed(ActionEvent e).
-	 */
 	@Override
 	protected void actionPerformed(GuiButton par1GuiButton)
 	{
@@ -285,11 +269,11 @@ public class MAtGuiMenu__Debug extends GuiScreen
 		}
 		else if (par1GuiButton.id == 201)
 		{
-			mc.displayGuiScreen(new MAtGuiMenu__Debug(this.parentScreen, this.mod, this.pageFromZero - 1));
+			mc.displayGuiScreen(new MAtGuiMenu(this.parentScreen, this.mod, this.pageFromZero - 1));
 		}
 		else if (par1GuiButton.id == 202)
 		{
-			mc.displayGuiScreen(new MAtGuiMenu__Debug(this.parentScreen, this.mod, this.pageFromZero + 1));
+			mc.displayGuiScreen(new MAtGuiMenu(this.parentScreen, this.mod, this.pageFromZero + 1));
 		}
 		else if (par1GuiButton.id == 210)
 		{
@@ -315,7 +299,7 @@ public class MAtGuiMenu__Debug extends GuiScreen
 		}
 		else if (par1GuiButton.id == 230)
 		{
-			mc.displayGuiScreen(new MAtGuiScans(this, this.mod));
+			mc.displayGuiScreen(new MAtGuiModules(this, this.mod));
 		}
 		else
 		{
@@ -352,9 +336,6 @@ public class MAtGuiMenu__Debug extends GuiScreen
 		aboutToClose();
 	}
 	
-	/**
-	 * Called when the mouse is clicked.
-	 */
 	@Override
 	protected void mouseClicked(int par1, int par2, int par3)
 	{
@@ -367,9 +348,6 @@ public class MAtGuiMenu__Debug extends GuiScreen
 		}
 	}
 	
-	/**
-	 * Draws the screen and all the components in it.
-	 */
 	@Override
 	public void drawScreen(int par1, int par2, float par3)
 	{
@@ -432,5 +410,4 @@ public class MAtGuiMenu__Debug extends GuiScreen
 	{
 		public void actionPerformed();
 	}
-	
 }

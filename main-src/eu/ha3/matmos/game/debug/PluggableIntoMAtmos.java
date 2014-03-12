@@ -17,7 +17,7 @@ import eu.ha3.mc.quick.chat.ChatColorsSimple;
 --filenotes-placeholder
 */
 
-public class PluggableImpl implements PluggableIntoMinecraft
+public class PluggableIntoMAtmos implements PluggableIntoMinecraft
 {
 	private MAtMod mod;
 	private Expansion expansion;
@@ -29,7 +29,7 @@ public class PluggableImpl implements PluggableIntoMinecraft
 	private File file;
 	private File workingDirectory;
 	
-	public PluggableImpl(MAtMod mod, Expansion expansion)
+	public PluggableIntoMAtmos(MAtMod mod, Expansion expansion)
 	{
 		this.mod = mod;
 		this.expansion = expansion;
@@ -81,11 +81,11 @@ public class PluggableImpl implements PluggableIntoMinecraft
 			@Override
 			public void run()
 			{
-				PluggableImpl.this.mod.getChatter().printChat(
+				PluggableIntoMAtmos.this.mod.getChatter().printChat(
 					ChatColorsSimple.COLOR_AQUA
-						+ "Reloading from editor state: " + PluggableImpl.this.expansion.getName() + " "
+						+ "Reloading from editor state: " + PluggableIntoMAtmos.this.expansion.getName() + " "
 						+ getTimestamp());
-				PluggableImpl.this.expansion.pushDebugJasonAndRefreshKnowledge(jasonString);
+				PluggableIntoMAtmos.this.expansion.pushDebugJasonAndRefreshKnowledge(jasonString);
 			}
 		});
 	}
@@ -116,10 +116,10 @@ public class PluggableImpl implements PluggableIntoMinecraft
 			@Override
 			public void run()
 			{
-				PluggableImpl.this.mod.getChatter().printChat(
+				PluggableIntoMAtmos.this.mod.getChatter().printChat(
 					ChatColorsSimple.COLOR_BLUE
-						+ "Reloading from disk: " + PluggableImpl.this.expansion.getName() + " " + getTimestamp());
-				PluggableImpl.this.expansion.refreshKnowledge();
+						+ "Reloading from disk: " + PluggableIntoMAtmos.this.expansion.getName() + " " + getTimestamp());
+				PluggableIntoMAtmos.this.expansion.refreshKnowledge();
 			}
 		});
 	}

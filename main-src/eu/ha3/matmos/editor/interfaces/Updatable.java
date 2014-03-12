@@ -4,7 +4,7 @@ package eu.ha3.matmos.editor.interfaces;
 --filenotes-placeholder
 */
 
-public interface IUpdatable
+public interface Updatable
 {
-	public void update(EditorModel model);
+	public void update(Editor model);
 }

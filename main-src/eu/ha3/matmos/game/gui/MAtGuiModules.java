@@ -13,7 +13,7 @@ import eu.ha3.mc.quick.chat.ChatColorsSimple;
 --filenotes-placeholder
 */
 
-public class MAtGuiScans extends GuiScreen
+public class MAtGuiModules extends GuiScreen
 {
 	private final MAtMod mod;
 	private GuiScreen parentScreen;
@@ -21,7 +21,7 @@ public class MAtGuiScans extends GuiScreen
 	private int buttonId;
 	private List<String> val;
 	
-	public MAtGuiScans(GuiScreen par1GuiScreen, MAtMod mod)
+	public MAtGuiModules(GuiScreen par1GuiScreen, MAtMod mod)
 	{
 		this.mod = mod;
 		this.buttonId = -1;

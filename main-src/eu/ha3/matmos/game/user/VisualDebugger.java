@@ -19,7 +19,6 @@ import eu.ha3.matmos.engine.core.interfaces.Sheet;
 import eu.ha3.matmos.game.data.ModularDataGatherer;
 import eu.ha3.matmos.game.data.abstractions.scanner.Progress;
 import eu.ha3.matmos.game.data.abstractions.scanner.ScannerModule;
-import eu.ha3.matmos.game.debug.VisualExpansionDebugging;
 import eu.ha3.matmos.game.system.MAtMod;
 import eu.ha3.mc.haddon.supporting.SupportsFrameEvents;
 import eu.ha3.mc.quick.chat.ChatColorsSimple;

@@ -7,9 +7,9 @@ import net.minecraft.client.gui.ScaledResolution;
 import eu.ha3.matmos.expansions.Expansion;
 import eu.ha3.matmos.expansions.debugunit.ExpansionDebugUnit;
 import eu.ha3.matmos.expansions.debugunit.ReadOnlyJasonStringEDU;
-import eu.ha3.matmos.game.debug.PluggableImpl;
-import eu.ha3.matmos.game.debug.VisualExpansionDebugging;
+import eu.ha3.matmos.game.debug.PluggableIntoMAtmos;
 import eu.ha3.matmos.game.system.MAtMod;
+import eu.ha3.matmos.game.user.VisualExpansionDebugging;
 import eu.ha3.mc.quick.chat.ChatColorsSimple;
 
 /*
@@ -18,12 +18,12 @@ import eu.ha3.mc.quick.chat.ChatColorsSimple;
 
 public class MAtGuiExpansionDetails extends GuiScreen
 {
-	private final MAtGuiMenu__Debug parentScreen;
+	private final MAtGuiMenu parentScreen;
 	private final MAtMod mod;
 	private final Expansion expansion;
 	private final VisualExpansionDebugging debug;
 	
-	public MAtGuiExpansionDetails(MAtGuiMenu__Debug menu, MAtMod mod, Expansion expansion)
+	public MAtGuiExpansionDetails(MAtGuiMenu menu, MAtMod mod, Expansion expansion)
 	{
 		this.parentScreen = menu;
 		this.mod = mod;
@@ -104,7 +104,7 @@ public class MAtGuiExpansionDetails extends GuiScreen
 			final ExpansionDebugUnit debugUnit = this.expansion.obtainDebugUnit();
 			if (debugUnit != null)
 			{
-				PluggableImpl plug = new PluggableImpl(this.mod, this.expansion);
+				PluggableIntoMAtmos plug = new PluggableIntoMAtmos(this.mod, this.expansion);
 				this.expansion.addPluggable(plug);
 				
 				Runnable editor = this.mod.instantiateRunnableEditor(plug);

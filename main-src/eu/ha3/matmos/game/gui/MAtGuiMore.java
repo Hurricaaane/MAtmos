@@ -16,18 +16,12 @@ public class MAtGuiMore extends GuiScreen
 {
 	private final int IDS_PER_PAGE = 5;
 	
-	/**
-	 * A reference to the screen object that created this. Used for navigating
-	 * between screens.
-	 */
 	private GuiScreen parentScreen;
 	
-	/** The title string that is displayed in the top-center of the screen. */
 	protected String screenTitle;
 	
 	private MAtMod mod;
 	
-	/** The ID of the button that has been pressed. */
 	private int buttonId;
 	
 	public MAtGuiMore(GuiScreen par1GuiScreen, MAtMod matmos)
@@ -38,9 +32,6 @@ public class MAtGuiMore extends GuiScreen
 		this.mod = matmos;
 	}
 	
-	/**
-	 * Adds the buttons (and other controls) to the screen in question.
-	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui()
@@ -128,10 +119,6 @@ public class MAtGuiMore extends GuiScreen
 			- _MIX * 2 - _GAP - _TURNOFFWIDTH, _UNIT, "Done"));
 	}
 	
-	/**
-	 * Fired when a control is clicked. This is the equivalent of
-	 * ActionListener.actionPerformed(ActionEvent e).
-	 */
 	@Override
 	protected void actionPerformed(GuiButton par1GuiButton)
 	{
@@ -197,9 +184,6 @@ public class MAtGuiMore extends GuiScreen
 		
 	}
 	
-	/**
-	 * Called when the mouse is clicked.
-	 */
 	@Override
 	protected void mouseClicked(int par1, int par2, int par3)
 	{
@@ -212,9 +196,6 @@ public class MAtGuiMore extends GuiScreen
 		}
 	}
 	
-	/**
-	 * Draws the screen and all the components in it.
-	 */
 	@Override
 	public void drawScreen(int par1, int par2, float par3)
 	{

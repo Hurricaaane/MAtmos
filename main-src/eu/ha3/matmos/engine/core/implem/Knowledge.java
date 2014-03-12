@@ -51,8 +51,6 @@ public class Knowledge implements Evaluated, Simulated
 		@Override
 		public boolean listHas(String constantX, String value)
 		{
-			// XXX 2014-01-16
-			//System.out.println("does list " + constantX + " have " + value + "?");
 			return Knowledge.this.possibilityMapped.containsKey(constantX) ? Knowledge.this.possibilityMapped.get(
 				constantX).listHas(value) : false;
 		}

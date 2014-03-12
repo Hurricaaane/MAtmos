@@ -1,7 +1,6 @@
 package eu.ha3.matmos.game.data;
 
-// TODO 2013-12 : Remove all hard limits
-public class MAT_HARD_LIMITS
+public class MODULE_CONSTANTS
 {
 	public static final int LEGACY_NO_ITEM = -1;
 	public static final int LEGACY_NO_BLOCK_IN_THIS_CONTEXT = 0;

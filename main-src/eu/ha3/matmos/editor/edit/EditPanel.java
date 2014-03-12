@@ -18,8 +18,8 @@ import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 
 import eu.ha3.matmos.editor.InstantTextField;
-import eu.ha3.matmos.editor.interfaces.EditorModel;
-import eu.ha3.matmos.editor.interfaces.IEditNamedItem;
+import eu.ha3.matmos.editor.interfaces.Editor;
+import eu.ha3.matmos.editor.interfaces.NamedSerialEditor;
 import eu.ha3.matmos.editor.interfaces.IFlaggable;
 import eu.ha3.matmos.jsonformat.serializable.expansion.SerialCondition;
 import eu.ha3.matmos.jsonformat.serializable.expansion.SerialEvent;
@@ -33,9 +33,9 @@ import eu.ha3.matmos.jsonformat.serializable.expansion.SerialSet;
 */
 
 @SuppressWarnings("serial")
-public class EditPanel extends JPanel implements IEditNamedItem, IFlaggable
+public class EditPanel extends JPanel implements NamedSerialEditor, IFlaggable
 {
-	private final EditorModel model;
+	private final Editor model;
 	
 	private boolean noPane = true;
 	private String nameOfItem = "";
@@ -52,7 +52,7 @@ public class EditPanel extends JPanel implements IEditNamedItem, IFlaggable
 	
 	private JPanel currentEdit = null;
 	
-	public EditPanel(EditorModel modelConstruct)
+	public EditPanel(Editor modelConstruct)
 	{
 		this.model = modelConstruct;
 		setLayout(new BorderLayout(0, 0));
@@ -262,7 +262,7 @@ public class EditPanel extends JPanel implements IEditNamedItem, IFlaggable
 		return this.model.getSoundDirectory();
 	}
 	
-	public EditorModel getModel()
+	public Editor getModel()
 	{
 		return this.model;
 	}

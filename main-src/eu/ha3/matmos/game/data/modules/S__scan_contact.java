@@ -30,31 +30,10 @@ public class S__scan_contact extends AbstractStringCountModule
 		int y = MAtmosUtility.getPlayerY() - 1; // FIXME: Altitude
 		int z = MAtmosUtility.getPlayerZ();
 		
-		//int worldHeight = mc.theWorld.getHeight();
-		
 		for (BlockTriplet triplet : this.blocks)
 		{
 			increment(triplet.getBlockRelative(x, y, z, ""));
 			increment(triplet.getBMetaRelative(x, y, z, ""));
 		}
-		
-		// TODO 2014-02-12 clean this up with hard coded triplets
-		/*int nx;
-		int ny;
-		int nz;
-		
-		for (int k = 0; k < 12; k++)
-		{
-			ny = y + (k > 7 ? k - 9 : k % 2);
-			if (ny >= 0 && ny < worldHeight)
-			{
-				nx = x + (k < 4 ? k < 2 ? -1 : 1 : 0);
-				nz = z + (k > 3 && k < 8 ? k < 6 ? -1 : 1 : 0);
-				
-				String blockName = getBlockRelative(nx, ny, nz, "");
-				increment(blockName);
-			}
-		}*/
-		
 	}
 }

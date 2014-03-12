@@ -14,7 +14,7 @@ import eu.ha3.matmos.game.system.MAtmosUtility;
 --filenotes-placeholder
 */
 
-public class ScannerModule implements PassOnceModule, MAtScanCoordsOps, Progress
+public class ScannerModule implements PassOnceModule, ScanOperations, Progress
 {
 	public static final String THOUSAND_SUFFIX = "_p1k";
 	
@@ -47,7 +47,7 @@ public class ScannerModule implements PassOnceModule, MAtScanCoordsOps, Progress
 	
 	//
 	
-	private final MAtScanVolumetricModel scanner = new MAtScanVolumetricModel();
+	private final ScanVolumetric scanner = new ScanVolumetric();
 	
 	/**
 	 * Movement: Requires the player to move to another block to trigger a new

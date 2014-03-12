@@ -8,7 +8,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.input.Keyboard;
 
 import eu.ha3.easy.TimeStatistic;
-import eu.ha3.matmos.game.gui.MAtGuiMenu__Debug;
+import eu.ha3.matmos.game.gui.MAtGuiMenu;
 import eu.ha3.matmos.game.system.MAtMod;
 import eu.ha3.matmos.game.system.MAtmosUtility;
 import eu.ha3.mc.convenience.Ha3HoldActions;
@@ -22,18 +22,18 @@ import eu.ha3.mc.quick.keys.KeyWatcher;
 
 /* x-placeholder */
 
-public class MAtUserControl implements Ha3HoldActions, SupportsTickEvents, SupportsFrameEvents, SupportsKeyEvents
+public class UserControl implements Ha3HoldActions, SupportsTickEvents, SupportsFrameEvents, SupportsKeyEvents
 {
 	private final MAtMod mod;
 	private final KeyWatcher watcher = new KeyWatcher(this);
 	private final Ha3KeyManager keyManager = new Ha3KeyManager();
 	
 	private KeyBinding keyBindingMain;
-	private MAtScroller scroller;
+	private VolumeScroller scroller;
 	
 	private int loadingCount;
 	
-	public MAtUserControl(MAtMod mod)
+	public UserControl(MAtMod mod)
 	{
 		this.mod = mod;
 	}
@@ -48,7 +48,7 @@ public class MAtUserControl implements Ha3HoldActions, SupportsTickEvents, Suppo
 		this.keyBindingMain.setKeyCode(this.mod.getConfig().getInteger("key.code"));
 		KeyBinding.resetKeyBindingArrayAndHash();
 		
-		this.scroller = new MAtScroller(this.mod);
+		this.scroller = new VolumeScroller(this.mod);
 		this.keyManager.addKeyBinding(this.keyBindingMain, new Ha3KeyHolding(this, 7));
 	}
 	
@@ -231,7 +231,7 @@ public class MAtUserControl implements Ha3HoldActions, SupportsTickEvents, Suppo
 		{
 			// OBF displayGuiScreen
 			Minecraft.getMinecraft().displayGuiScreen(
-				new MAtGuiMenu__Debug((GuiScreen) this.mod.util().getCurrentScreen(), this.mod));
+				new MAtGuiMenu((GuiScreen) this.mod.util().getCurrentScreen(), this.mod));
 		}
 	}
 	

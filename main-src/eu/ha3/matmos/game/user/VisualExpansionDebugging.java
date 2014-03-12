@@ -1,4 +1,4 @@
-package eu.ha3.matmos.game.debug;
+package eu.ha3.matmos.game.user;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -4,9 +4,9 @@ import net.minecraft.client.Minecraft;
 
 /* x-placeholder */
 
-public class MAtScanVolumetricModel implements Progress
+public class ScanVolumetric implements Progress
 {
-	private MAtScanCoordsOps pipeline;
+	private ScanOperations pipeline;
 	
 	private int xstart;
 	private int ystart;
@@ -20,7 +20,7 @@ public class MAtScanVolumetricModel implements Progress
 	
 	private boolean isScanning;
 	
-	private int finality = 1;
+	private int finalProgress = 1;
 	private int progress = 1; // We don't want progress to be zero, to avoid divide by zero
 	
 	//
@@ -29,13 +29,13 @@ public class MAtScanVolumetricModel implements Progress
 	private int yy;
 	private int zz;
 	
-	public MAtScanVolumetricModel()
+	public ScanVolumetric()
 	{
 		this.pipeline = null;
 		this.isScanning = false;
 	}
 	
-	public void setPipeline(MAtScanCoordsOps pipelineIn)
+	public void setPipeline(ScanOperations pipelineIn)
 	{
 		this.pipeline = pipelineIn;
 	}
@@ -79,7 +79,7 @@ public class MAtScanVolumetricModel implements Progress
 		this.opspercall = opspercallIn;
 		
 		this.progress = 0;
-		this.finality = this.xsize * this.ysize * this.zsize;
+		this.finalProgress = this.xsize * this.ysize * this.zsize;
 		
 		this.xx = 0;
 		this.yy = 0;
@@ -95,14 +95,8 @@ public class MAtScanVolumetricModel implements Progress
 			return false;
 		
 		long ops = 0;
-		while (ops < this.opspercall && this.progress < this.finality)
+		while (ops < this.opspercall && this.progress < this.finalProgress)
 		{
-			// TODO Optimize this
-			//x = this.xstart + this.progress % this.xsize;
-			//z = this.zstart + this.progress / this.xsize % this.zsize;
-			//y = this.ystart + this.progress / this.xsize / this.zsize;
-			
-			//this.pipeline.input(this.xx, this.yy, this.zz);
 			this.pipeline.input(this.xstart + this.xx, this.ystart + this.yy, this.zstart + this.zz);
 			
 			this.xx = (this.xx + 1) % this.xsize;
@@ -112,7 +106,7 @@ public class MAtScanVolumetricModel implements Progress
 				if (this.zz == 0)
 				{
 					this.yy = this.yy + 1;
-					if (this.yy >= this.ysize && this.progress != this.finality - 1)
+					if (this.yy >= this.ysize && this.progress != this.finalProgress - 1)
 					{
 						System.err.println("LOGIC ERROR");
 					}
@@ -124,7 +118,7 @@ public class MAtScanVolumetricModel implements Progress
 			
 		}
 		
-		if (this.progress >= this.finality)
+		if (this.progress >= this.finalProgress)
 		{
 			scanDoneEvent();
 		}
@@ -155,7 +149,7 @@ public class MAtScanVolumetricModel implements Progress
 	@Override
 	public int getProgress_Total()
 	{
-		return this.finality;
+		return this.finalProgress;
 	}
 	
 }

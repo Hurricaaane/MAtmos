@@ -22,7 +22,7 @@ public class R__meta_option extends ModuleProcessor implements Module
 	@Override
 	protected void doProcess()
 	{
-		setValue("altitudes_high", this.mod.getConfig().getBoolean("useroptions.altitudes.high") ? 1 : 0);
-		setValue("altitudes_low", this.mod.getConfig().getBoolean("useroptions.altitudes.low") ? 1 : 0);
+		setValue("altitudes_high", this.mod.getConfig().getBoolean("useroptions.altitudes.high"));
+		setValue("altitudes_low", this.mod.getConfig().getBoolean("useroptions.altitudes.low"));
 	}
 }

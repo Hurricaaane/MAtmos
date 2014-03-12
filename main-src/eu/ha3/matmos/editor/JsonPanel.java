@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import eu.ha3.matmos.editor.interfaces.EditorModel;
+import eu.ha3.matmos.editor.interfaces.Editor;
 
 /*
 --filenotes-placeholder
@@ -22,11 +22,11 @@ import eu.ha3.matmos.editor.interfaces.EditorModel;
 @SuppressWarnings("serial")
 public class JsonPanel extends JPanel
 {
-	private EditorModel model;
+	private Editor model;
 	
 	private JTextArea textArea;
 	
-	public JsonPanel(EditorModel modelConstruct)
+	public JsonPanel(Editor modelConstruct)
 	{
 		this.model = modelConstruct;
 		
