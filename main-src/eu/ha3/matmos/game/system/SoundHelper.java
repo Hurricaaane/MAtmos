@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.ResourceLocation;
 
 /*
 --filenotes-placeholder
@@ -40,7 +41,15 @@ public class SoundHelper implements SoundCapabilities
 		if (this.isInterrupt)
 			return;
 		
-		Minecraft.getMinecraft().thePlayer.playSound(event, volume * this.volumeModulator, pitch);
+		playSoundDirty(0, 0, 0, event, volume * this.volumeModulator, pitch);
+	}
+	
+	private void playSoundDirty(double xx, double yy, double zz, String loc, float a, float b)
+	{
+		NoAttenuationSound var13 =
+			new NoAttenuationSound(new ResourceLocation(loc), a, b, (float) xx, (float) yy, (float) zz);
+		
+		Minecraft.getMinecraft().getSoundHandler().func_147682_a(var13);
 	}
 	
 	@Override

@@ -185,7 +185,6 @@ public class EditEvent extends JPanel
 		panel.add(this.pitchMax, gbc_pitchMax);
 		
 		JLabel lblDistance = new JLabel("Distance");
-		this.pitchMax.setModel(new SpinnerNumberModel(new Integer(0), null, null, new Integer(1)));
 		GridBagConstraints gbc_lblDistance = new GridBagConstraints();
 		gbc_lblDistance.anchor = GridBagConstraints.EAST;
 		gbc_lblDistance.insets = new Insets(0, 0, 0, 5);
@@ -206,6 +205,7 @@ public class EditEvent extends JPanel
 				EditEvent.this.edit.flagChange();
 			}
 		});
+		this.distance.setModel(new SpinnerNumberModel(new Integer(0), null, null, new Integer(1)));
 		GridBagConstraints gbc_distance = new GridBagConstraints();
 		gbc_distance.fill = GridBagConstraints.HORIZONTAL;
 		gbc_distance.insets = new Insets(0, 0, 0, 5);

@@ -192,7 +192,6 @@ public class EditMachine extends JPanel implements IFlaggable
 		gbc_fadeOut.gridx = 2;
 		gbc_fadeOut.gridy = 1;
 		internalOptions.add(this.fadeOut, gbc_fadeOut);
-		this.fadeOut.setModel(new SpinnerNumberModel(new Integer(0), null, null, new Integer(1)));
 		
 		JPanel otherGroup = new JPanel();
 		internal.add(otherGroup, BorderLayout.CENTER);

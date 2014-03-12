@@ -55,6 +55,11 @@ public class TimedEventInformation extends MultistateComponent implements Simula
 	private void signalStoppable()
 	{
 		this.stopTime = this.time.getMilliseconds() + (long) (this.delayBeforeFadeOut * 1000);
+		
+		/*if (this.stopTime < (long) (this.startTime + this.fadeInTime * 1000))
+		{
+			this.stopTime = (long) (this.startTime + this.fadeInTime * 1000);
+		}*/
 	}
 	
 	@Override
@@ -101,7 +106,7 @@ public class TimedEventInformation extends MultistateComponent implements Simula
 			}
 		}
 		
-		if (this.isPlaying || this.time.getMilliseconds() < this.stopTime + this.fadeOutTime)
+		if (this.isPlaying || this.time.getMilliseconds() < (long) (this.stopTime + this.fadeOutTime * 1000))
 		{
 			play();
 		}
@@ -123,30 +128,45 @@ public class TimedEventInformation extends MultistateComponent implements Simula
 		
 		if (this.isPlaying)
 		{
-			float fac = (ms - this.startTime) / (this.fadeInTime * 1f);
-			if (fac > 1f)
+			if (this.fadeInTime == 0f)
 			{
-				fac = 1f;
+				ret = 1f;
 			}
-			else if (fac < 0f)
+			else
 			{
-				fac = 0f;
+				float fac = (ms - this.startTime) / (this.fadeInTime * 1000f);
+				if (fac > 1f)
+				{
+					fac = 1f;
+				}
+				else if (fac < 0f)
+				{
+					fac = 0f;
+				}
+				ret = fac;
 			}
-			ret = fac;
 		}
 		else
 		{
-			float fac = (ms - this.stopTime) / (this.fadeOutTime * 1f);
-			if (fac > 1f)
+			if (this.fadeOutTime == 0f)
 			{
-				fac = 1f;
+				ret = 0f;
 			}
-			else if (fac < 0f)
+			else
 			{
-				fac = 0f;
+				float fac = (ms - this.stopTime) / (this.fadeOutTime * 1000f);
+				if (fac > 1f)
+				{
+					fac = 1f;
+				}
+				else if (fac < 0f)
+				{
+					fac = 0f;
+				}
+				ret = 1 - fac;
 			}
-			ret = 1 - fac;
 		}
+		
 		return ret;
 	}
 }
