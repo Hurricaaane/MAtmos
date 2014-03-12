@@ -12,6 +12,7 @@ import java.util.Set;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.FolderResourcePack;
+import net.minecraft.util.ResourceLocation;
 import eu.ha3.easy.TimeStatistic;
 import eu.ha3.matmos.engine.core.implem.Knowledge;
 import eu.ha3.matmos.engine.core.implem.SystemClock;
@@ -426,6 +427,25 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 				}
 			}
 		};
+	}
+	
+	public boolean hasMoreInfo()
+	{
+		return this.identity.getPack().resourceExists(new ResourceLocation("matmos", "info.txt"));
+	}
+	
+	public String getInfo()
+	{
+		try
+		{
+			return new Scanner(this.identity.getPack().getInputStream(new ResourceLocation("matmos", "info.txt")))
+				.useDelimiter("\\Z").next();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			return "Error while fetching info.txt";
+		}
 	}
 	
 	public void addPluggable(PluggableIntoMinecraft pluggable)

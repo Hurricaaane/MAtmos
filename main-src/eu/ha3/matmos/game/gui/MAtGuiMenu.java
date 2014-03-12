@@ -197,6 +197,18 @@ public class MAtGuiMenu extends GuiScreen
 						}
 					}
 				}), _RIGHT - _UNIT, _MIX * (id + 1), _UNIT, _UNIT, "?"));
+				
+				if (expansion.hasMoreInfo())
+				{
+					this.buttonList.add(new GuiButton(Make.make(new ActionPerformed() {
+						@Override
+						public void actionPerformed()
+						{
+							MAtGuiMenu.this.mc.displayGuiScreen(new MAtGuiExpansionInfo(
+								MAtGuiMenu.this, MAtGuiMenu.this.mod, expansion));
+						}
+					}), _RIGHT + _GAP, _MIX * (id + 1), _UNIT, _UNIT, "..."));
+				}
 			}
 			else
 			{
