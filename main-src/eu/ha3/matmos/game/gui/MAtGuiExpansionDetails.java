@@ -34,7 +34,7 @@ public class MAtGuiExpansionDetails extends GuiScreen
 	@Override
 	public void drawScreen(int par1, int par2, float par3)
 	{
-		drawGradientRect(0, 0, this.width, this.height, 0xC0C06000, 0x60C06000);
+		drawGradientRect(0, 0, this.width, this.height, 0xF0000000, 0x90000000);
 		
 		drawCenteredString(
 			this.fontRenderer,
