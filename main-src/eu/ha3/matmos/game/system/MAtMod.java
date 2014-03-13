@@ -299,6 +299,17 @@ public class MAtMod extends HaddonImpl
 		{
 			this.hasFirstTickPassed = true;
 			this.updateNotifier.attempt();
+			getChatter().printChatShort("http://matmos.ha3.eu/");
+			getChatter().printChat(
+				ChatColorsSimple.COLOR_RED
+					+ "You are using a " + ChatColorsSimple.COLOR_YELLOW + "test" + ChatColorsSimple.COLOR_RED
+					+ " version of MAtmos.");
+			getChatter().printChatShort(
+				"By using this version, you understand that this mod isn't intended for"
+					+ " actual game sessions, MAtmos may not work, might crash, the sound"
+					+ " ambience is incomplete, etc.");
+			getChatter().printChatShort(
+				"Use at your own risk. " + "Please check regularly for updates and resource pack updates.");
 		}
 	}
 	
