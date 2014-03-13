@@ -39,6 +39,7 @@ public class SetRemoverPanel extends JPanel
 		panel.add(scrollPane, BorderLayout.CENTER);
 		
 		this.list = new JList();
+		this.list.setVisibleRowCount(4);
 		scrollPane.setViewportView(this.list);
 		
 		JPanel panel_1 = new JPanel();

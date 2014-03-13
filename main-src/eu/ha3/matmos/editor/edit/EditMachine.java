@@ -30,11 +30,6 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import com.jgoodies.forms.factories.FormFactory;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.RowSpec;
-
 import eu.ha3.matmos.editor.InstantTextField;
 import eu.ha3.matmos.editor.interfaces.IFlaggable;
 import eu.ha3.matmos.jsonformat.serializable.expansion.SerialMachine;
@@ -430,11 +425,21 @@ public class EditMachine extends JPanel implements IFlaggable
 		JPanel stream = new JPanel();
 		stream.setBorder(new TitledBorder(null, "Streaming Sound", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		otherGroup.add(stream, BorderLayout.SOUTH);
-		stream.setLayout(new FormLayout(new ColumnSpec[] { ColumnSpec.decode("181px:grow"), }, new RowSpec[] {
-			RowSpec.decode("20px"), FormFactory.RELATED_GAP_ROWSPEC, RowSpec.decode("default:grow"), }));
+		GridBagLayout gbl_stream = new GridBagLayout();
+		gbl_stream.columnWidths = new int[] { 426, 0 };
+		gbl_stream.rowHeights = new int[] { 20, 73, 0 };
+		gbl_stream.columnWeights = new double[] { 0.0, Double.MIN_VALUE };
+		gbl_stream.rowWeights = new double[] { 0.0, 0.0, Double.MIN_VALUE };
+		stream.setLayout(gbl_stream);
 		
 		JPanel filePanel = new JPanel();
-		stream.add(filePanel, "1, 1, fill, top");
+		GridBagConstraints gbc_filePanel = new GridBagConstraints();
+		gbc_filePanel.anchor = GridBagConstraints.NORTH;
+		gbc_filePanel.fill = GridBagConstraints.HORIZONTAL;
+		gbc_filePanel.insets = new Insets(0, 0, 5, 0);
+		gbc_filePanel.gridx = 0;
+		gbc_filePanel.gridy = 0;
+		stream.add(filePanel, gbc_filePanel);
 		filePanel.setLayout(new BorderLayout(0, 0));
 		
 		this.fileField = new JTextField();
@@ -448,7 +453,11 @@ public class EditMachine extends JPanel implements IFlaggable
 		filePanel.add(btnOpen, BorderLayout.EAST);
 		
 		JPanel otherPanel = new JPanel();
-		stream.add(otherPanel, "1, 3, fill, fill");
+		GridBagConstraints gbc_otherPanel = new GridBagConstraints();
+		gbc_otherPanel.fill = GridBagConstraints.BOTH;
+		gbc_otherPanel.gridx = 0;
+		gbc_otherPanel.gridy = 1;
+		stream.add(otherPanel, gbc_otherPanel);
 		GridBagLayout gbl_otherPanel = new GridBagLayout();
 		gbl_otherPanel.columnWidths = new int[] { 50, 100, 0 };
 		gbl_otherPanel.rowHeights = new int[] { 0, 0, 0, 0 };
@@ -505,25 +514,52 @@ public class EditMachine extends JPanel implements IFlaggable
 			UIManager.getBorder("TitledBorder.border"), "Activation", TitledBorder.LEADING, TitledBorder.TOP, null,
 			null));
 		add(activationPanel, BorderLayout.NORTH);
-		activationPanel.setLayout(new FormLayout(new ColumnSpec[] { ColumnSpec.decode("333px:grow"), }, new RowSpec[] {
-			RowSpec.decode("21px"), RowSpec.decode("60px"), FormFactory.RELATED_GAP_ROWSPEC,
-			FormFactory.DEFAULT_ROWSPEC, RowSpec.decode("60px"), FormFactory.RELATED_GAP_ROWSPEC,
-			RowSpec.decode("default:grow"), }));
+		GridBagLayout gbl_activationPanel = new GridBagLayout();
+		gbl_activationPanel.columnWidths = new int[] { 438, 0 };
+		gbl_activationPanel.rowHeights = new int[] { 14, 10, 14, 10, 89, 0 };
+		gbl_activationPanel.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
+		gbl_activationPanel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		activationPanel.setLayout(gbl_activationPanel);
 		
 		JLabel lblMustBeActive = new JLabel("Any can be active (Power sources):");
-		activationPanel.add(lblMustBeActive, "1, 1, left, center");
+		GridBagConstraints gbc_lblMustBeActive = new GridBagConstraints();
+		gbc_lblMustBeActive.anchor = GridBagConstraints.WEST;
+		gbc_lblMustBeActive.insets = new Insets(0, 0, 5, 0);
+		gbc_lblMustBeActive.gridx = 0;
+		gbc_lblMustBeActive.gridy = 0;
+		activationPanel.add(lblMustBeActive, gbc_lblMustBeActive);
 		
 		this.activeSet = new SetRemoverPanel(this, this.machine.allow);
-		activationPanel.add(this.activeSet, "1, 2, fill, top");
+		GridBagConstraints gbc_activeSet = new GridBagConstraints();
+		gbc_activeSet.fill = GridBagConstraints.HORIZONTAL;
+		gbc_activeSet.insets = new Insets(0, 0, 5, 0);
+		gbc_activeSet.gridx = 0;
+		gbc_activeSet.gridy = 1;
+		activationPanel.add(this.activeSet, gbc_activeSet);
 		
 		JLabel lblMustBeInactive = new JLabel("None must be active (Jammers):");
-		activationPanel.add(lblMustBeInactive, "1, 4, left, center");
+		GridBagConstraints gbc_lblMustBeInactive = new GridBagConstraints();
+		gbc_lblMustBeInactive.anchor = GridBagConstraints.WEST;
+		gbc_lblMustBeInactive.insets = new Insets(0, 0, 5, 0);
+		gbc_lblMustBeInactive.gridx = 0;
+		gbc_lblMustBeInactive.gridy = 2;
+		activationPanel.add(lblMustBeInactive, gbc_lblMustBeInactive);
 		
 		this.inactiveSet = new SetRemoverPanel(this, this.machine.restrict);
-		activationPanel.add(this.inactiveSet, "1, 5, fill, top");
+		GridBagConstraints gbc_inactiveSet = new GridBagConstraints();
+		gbc_inactiveSet.fill = GridBagConstraints.HORIZONTAL;
+		gbc_inactiveSet.insets = new Insets(0, 0, 5, 0);
+		gbc_inactiveSet.gridx = 0;
+		gbc_inactiveSet.gridy = 3;
+		activationPanel.add(this.inactiveSet, gbc_inactiveSet);
 		
 		JPanel panel = new JPanel();
-		activationPanel.add(panel, "1, 7");
+		GridBagConstraints gbc_panel = new GridBagConstraints();
+		gbc_panel.anchor = GridBagConstraints.NORTH;
+		gbc_panel.fill = GridBagConstraints.HORIZONTAL;
+		gbc_panel.gridx = 0;
+		gbc_panel.gridy = 4;
+		activationPanel.add(panel, gbc_panel);
 		panel.setBorder(new TitledBorder(null, "Add", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel.setLayout(new BorderLayout(0, 0));
 		

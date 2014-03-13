@@ -1,7 +1,10 @@
 package eu.ha3.matmos.editor.edit;
 
 import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Set;
@@ -14,11 +17,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
-
-import com.jgoodies.forms.factories.FormFactory;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.RowSpec;
 
 import eu.ha3.matmos.editor.interfaces.IFlaggable;
 import eu.ha3.matmos.jsonformat.serializable.expansion.SerialSet;
@@ -47,25 +45,51 @@ public class EditSet extends JPanel implements IFlaggable
 			UIManager.getBorder("TitledBorder.border"), "Activation", TitledBorder.LEADING, TitledBorder.TOP, null,
 			null));
 		add(activationPanel, BorderLayout.CENTER);
-		activationPanel.setLayout(new FormLayout(new ColumnSpec[] { ColumnSpec.decode("333px:grow"), }, new RowSpec[] {
-			RowSpec.decode("21px"), RowSpec.decode("60px"), FormFactory.RELATED_GAP_ROWSPEC,
-			FormFactory.DEFAULT_ROWSPEC, FormFactory.LINE_GAP_ROWSPEC, RowSpec.decode("60px"),
-			FormFactory.RELATED_GAP_ROWSPEC, RowSpec.decode("default:grow"), }));
+		GridBagLayout gbl_activationPanel = new GridBagLayout();
+		gbl_activationPanel.columnWidths = new int[] { 438, 0 };
+		gbl_activationPanel.rowHeights = new int[] { 14, 60, 14, 60, 105, 0 };
+		gbl_activationPanel.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
+		gbl_activationPanel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		activationPanel.setLayout(gbl_activationPanel);
 		
 		JLabel lblMustBeActive = new JLabel("Must be active:");
-		activationPanel.add(lblMustBeActive, "1, 1, left, center");
+		GridBagConstraints gbc_lblMustBeActive = new GridBagConstraints();
+		gbc_lblMustBeActive.anchor = GridBagConstraints.WEST;
+		gbc_lblMustBeActive.insets = new Insets(0, 0, 5, 0);
+		gbc_lblMustBeActive.gridx = 0;
+		gbc_lblMustBeActive.gridy = 0;
+		activationPanel.add(lblMustBeActive, gbc_lblMustBeActive);
 		
 		this.activeSet = new SetRemoverPanel(this, this.set.yes);
-		activationPanel.add(this.activeSet, "1, 2, fill, top");
+		GridBagConstraints gbc_activeSet = new GridBagConstraints();
+		gbc_activeSet.fill = GridBagConstraints.BOTH;
+		gbc_activeSet.insets = new Insets(0, 0, 5, 0);
+		gbc_activeSet.gridx = 0;
+		gbc_activeSet.gridy = 1;
+		activationPanel.add(this.activeSet, gbc_activeSet);
 		
 		JLabel lblMustBeInactive = new JLabel("Must be inactive:");
-		activationPanel.add(lblMustBeInactive, "1, 4, left, center");
+		GridBagConstraints gbc_lblMustBeInactive = new GridBagConstraints();
+		gbc_lblMustBeInactive.anchor = GridBagConstraints.WEST;
+		gbc_lblMustBeInactive.insets = new Insets(0, 0, 5, 0);
+		gbc_lblMustBeInactive.gridx = 0;
+		gbc_lblMustBeInactive.gridy = 2;
+		activationPanel.add(lblMustBeInactive, gbc_lblMustBeInactive);
 		
 		this.inactiveSet = new SetRemoverPanel(this, this.set.no);
-		activationPanel.add(this.inactiveSet, "1, 6, fill, top");
+		GridBagConstraints gbc_inactiveSet = new GridBagConstraints();
+		gbc_inactiveSet.fill = GridBagConstraints.BOTH;
+		gbc_inactiveSet.insets = new Insets(0, 0, 5, 0);
+		gbc_inactiveSet.gridx = 0;
+		gbc_inactiveSet.gridy = 3;
+		activationPanel.add(this.inactiveSet, gbc_inactiveSet);
 		
 		JPanel panel = new JPanel();
-		activationPanel.add(panel, "1, 8");
+		GridBagConstraints gbc_panel = new GridBagConstraints();
+		gbc_panel.fill = GridBagConstraints.BOTH;
+		gbc_panel.gridx = 0;
+		gbc_panel.gridy = 4;
+		activationPanel.add(panel, gbc_panel);
 		panel.setBorder(new TitledBorder(null, "Add", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel.setLayout(new BorderLayout(0, 0));
 		
