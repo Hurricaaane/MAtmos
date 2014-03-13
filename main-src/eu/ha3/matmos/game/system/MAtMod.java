@@ -88,11 +88,11 @@ public class MAtMod extends HaddonImpl
 	@Override
 	public void onLoad()
 	{
-		util().registerPrivateGetter("getSoundManager", SoundHandler.class, 5, "field_147694_f");
-		util().registerPrivateGetter("getSoundSystem", SoundManager.class, 4, "field_148620_e");
+		util().registerPrivateGetter("getSoundManager", SoundHandler.class, 5, "field_147694_f", "f");
+		util().registerPrivateGetter("getSoundSystem", SoundManager.class, 4, "field_148620_e", "e");
 		
-		util().registerPrivateGetter("isJumping", EntityLivingBase.class, -1, "isJumping", "field_70703_bu");
-		util().registerPrivateGetter("isInWeb", Entity.class, -1, "isInWeb", "field_70134_J");
+		util().registerPrivateGetter("isJumping", EntityLivingBase.class, -1, "isJumping", "field_70703_bu", "bd");
+		util().registerPrivateGetter("isInWeb", Entity.class, -1, "isInWeb", "field_70134_J", "J");
 		
 		((OperatorCaster) op()).setTickEnabled(true);
 		
