@@ -49,7 +49,7 @@ public class SoundHelper implements SoundCapabilities
 		NoAttenuationSound var13 =
 			new NoAttenuationSound(new ResourceLocation(loc), a, b, (float) xx, (float) yy, (float) zz);
 		
-		Minecraft.getMinecraft().getSoundHandler().func_147682_a(var13);
+		Minecraft.getMinecraft().getSoundHandler().playSound(var13);
 	}
 	
 	@Override

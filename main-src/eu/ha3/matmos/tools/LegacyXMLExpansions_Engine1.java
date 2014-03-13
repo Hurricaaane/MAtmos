@@ -170,7 +170,7 @@ public class LegacyXMLExpansions_Engine1
 	
 	private String asBlock(int il)
 	{
-		Block block = Block.func_149729_e(il);
+		Block block = Block.getBlockById(il);
 		if (block == null)
 			return null;
 		
@@ -191,7 +191,7 @@ public class LegacyXMLExpansions_Engine1
 	
 	private String asItem(int il)
 	{
-		Item item = Item.func_150899_d(il);
+		Item item = Item.getItemById(il);
 		if (item == null)
 			return null;
 		
@@ -645,7 +645,7 @@ public class LegacyXMLExpansions_Engine1
 		Long l = LongFloatSimplificator.longOf(index);
 		if (l != null && l < 256)
 		{
-			Object o = Block.field_149771_c.func_148754_a((int) (long) l);
+			Object o = Block.blockRegistry.getObjectForID((int) (long) l);
 			if (o != null && o instanceof Block)
 			{
 				//String ocst = index;

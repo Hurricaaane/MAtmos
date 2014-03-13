@@ -47,12 +47,9 @@ public abstract class AbstractEnchantmentModule extends ModuleProcessor implemen
 			NBTTagList enchantments = item.getEnchantmentTagList();
 			for (int i = 0; i < total; i++)
 			{
-				// tagAt
-				//int id = ((NBTTagCompound) enchantments.func_150305_b(i)).getShort("id");
-				int id = enchantments.func_150305_b(i).getShort("id");
+				int id = enchantments.getCompoundTagAt(i).getShort("id");
 				
-				//short lvl = ((NBTTagCompound) enchantments.func_150305_b(i)).getShort("lvl");
-				short lvl = enchantments.func_150305_b(i).getShort("lvl");
+				short lvl = enchantments.getCompoundTagAt(i).getShort("lvl");
 				setValue(Integer.toString(id), Short.toString(lvl));
 				this.oldThings.add(Integer.toString(id));
 			}

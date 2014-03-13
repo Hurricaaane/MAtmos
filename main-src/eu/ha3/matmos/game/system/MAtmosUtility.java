@@ -29,7 +29,7 @@ public class MAtmosUtility
 	
 	public static boolean isUnderwaterAnyGamemode()
 	{
-		return Minecraft.getMinecraft().thePlayer.isInsideOfMaterial(Material.field_151586_h);
+		return Minecraft.getMinecraft().thePlayer.isInsideOfMaterial(Material.water);
 	}
 	
 	/**
@@ -115,7 +115,7 @@ public class MAtmosUtility
 	 */
 	private static Block getBlockAt(World world, int x, int y, int z)
 	{
-		Block block = world.func_147439_a(x, y, z);
+		Block block = world.getBlock(x, y, z);
 		return block;
 	}
 	
@@ -146,7 +146,7 @@ public class MAtmosUtility
 	public static String nameOf(Block block)
 	{
 		// RegistryNamespaced
-		return Block.field_149771_c.func_148750_c(block);
+		return Block.blockRegistry.getNameForObject(block);
 	}
 	
 	/**
@@ -158,7 +158,7 @@ public class MAtmosUtility
 	public static String nameOf(ItemStack itemStack)
 	{
 		// RegistryNamespaced
-		return Item.field_150901_e.func_148750_c(itemStack.getItem());
+		return nameOf(itemStack.getItem());
 	}
 	
 	/**
@@ -170,17 +170,17 @@ public class MAtmosUtility
 	public static String nameOf(Item item)
 	{
 		// RegistryNamespaced
-		return Item.field_150901_e.func_148750_c(item);
+		return Item.itemRegistry.getNameForObject(item);
 	}
 	
 	public static boolean isSoundMasterEnabled()
 	{
-		return Minecraft.getMinecraft().gameSettings.func_151438_a(SoundCategory.MASTER) > 0f;
+		return Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.MASTER) > 0f;
 	}
 	
 	public static boolean isSoundAmbientEnabled()
 	{
-		return Minecraft.getMinecraft().gameSettings.func_151438_a(SoundCategory.AMBIENT) > 0f;
+		return Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.AMBIENT) > 0f;
 	}
 	
 	/**
@@ -303,7 +303,7 @@ public class MAtmosUtility
 	public static int legacyOf(ItemStack itemStack)
 	{
 		// RegistryNamespaced
-		return Item.field_150901_e.func_148757_b(itemStack.getItem());
+		return Item.itemRegistry.getIDForObject(itemStack.getItem());
 	}
 	
 	/**
@@ -315,7 +315,7 @@ public class MAtmosUtility
 	public static int legacyOf(Block block)
 	{
 		// RegistryNamespaced
-		return Block.field_149771_c.func_148757_b(block);
+		return Block.blockRegistry.getIDForObject(block);
 	}
 	
 	public static String sanitizeUniqueName(String name)

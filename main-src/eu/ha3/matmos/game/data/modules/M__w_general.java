@@ -31,7 +31,7 @@ public class M__w_general extends ModuleProcessor implements Module
 		setValue("thunder", info.isThundering());
 		setValue("dimension", player.dimension);
 		setValue("light_subtracted", w.skylightSubtracted);
-		setValue("remote", w.isRemote);
+		setValue("remote", !w.isClient);
 		setValue("moon_phase", w.getMoonPhase());
 		
 	}

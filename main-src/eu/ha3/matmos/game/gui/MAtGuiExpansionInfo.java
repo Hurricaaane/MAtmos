@@ -37,14 +37,14 @@ public class MAtGuiExpansionInfo extends GuiScreen
 	{
 		drawGradientRect(0, 0, this.width, this.height, 0xF0000000, 0x90000000);
 		
-		drawCenteredString(this.fontRenderer, "About "
+		drawCenteredString(this.fontRendererObj, "About "
 			+ ChatColorsSimple.COLOR_YELLOW + ChatColorsSimple.THEN_ITALIC + this.expansion.getFriendlyName()
 			+ ChatColorsSimple.THEN_RESET + "...", this.width / 2, 4, 0xffffff);
 		
 		int lc = 0;
 		for (String line : this.info)
 		{
-			this.fontRenderer.drawString(line, this.width / 2 - 200, 16 + 8 * lc, 0xFFFFFF);
+			this.fontRendererObj.drawString(line, this.width / 2 - 200, 16 + 8 * lc, 0xFFFFFF);
 			lc++;
 		}
 		
