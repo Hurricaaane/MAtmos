@@ -11,10 +11,8 @@ public class EditorStartWithTestFile
 	public static void main(String[] args)
 	{
 		EditorMaster master =
-			new EditorMaster(
-				null,
-				new File(
-					"L:\\MCMod-C\\jars\\resourcepacks\\mat_matmos\\assets\\matmos\\expansions\\interactions_environments.json"));
+			new EditorMaster(null, new File(
+				"L:\\MCMod-C\\jars\\resourcepacks\\mat_breeze\\assets\\matmos\\expansions\\nature.json"));
 		master.run();
 	}
 }

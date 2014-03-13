@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 
 import javax.swing.JFileChooser;
@@ -62,6 +64,26 @@ public class EditorWindow extends JFrame implements Window
 	
 	public EditorWindow(Editor modelConstruct)
 	{
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent arg0)
+			{
+				if (EditorWindow.this.model.hasUnsavedChanges())
+				{
+					if (!continueUnsavedChangesWarningIfNecessary())
+						return;
+				}
+				
+				if (EditorWindow.this.model.isMinecraftControlled())
+				{
+					setVisible(false);
+				}
+				else
+				{
+					dispose();
+				}
+			}
+		});
 		this.model = modelConstruct;
 		
 		JMenuBar menuBar = new JMenuBar();
@@ -365,11 +387,14 @@ public class EditorWindow extends JFrame implements Window
 	{
 		this.setSize(600, 400);
 		setLocationRelativeTo(this);
+		
+		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		
 		if (this.model.isMinecraftControlled())
 		{
 			this.windowTitle = WINDOW_TITLE + " - Minecraft integration (WILL CLOSE IF MINECRAFT CLOSES)";
 			
-			setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+			//setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 			
 			this.specialWarningLabel =
 				new JLabel(
@@ -384,7 +409,7 @@ public class EditorWindow extends JFrame implements Window
 		{
 			this.windowTitle = WINDOW_TITLE;
 			
-			setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+			//setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 			
 			this.mnMinecraft.setEnabled(false);
 			this.mntmReplaceCurrentFile.setEnabled(false);
