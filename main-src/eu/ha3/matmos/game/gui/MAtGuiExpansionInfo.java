@@ -15,6 +15,7 @@ import eu.ha3.mc.quick.chat.ChatColorsSimple;
 public class MAtGuiExpansionInfo extends GuiScreen
 {
 	private final MAtGuiMenu parentScreen;
+	@SuppressWarnings("unused")
 	private final MAtMod mod;
 	private final Expansion expansion;
 	
