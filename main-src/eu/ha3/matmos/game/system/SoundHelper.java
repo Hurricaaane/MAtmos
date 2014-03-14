@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 
 /*
@@ -32,7 +33,7 @@ public class SoundHelper implements SoundCapabilities
 			return;
 		
 		// XXX 2014-01-10 what is the last boolean?
-		Minecraft.getMinecraft().theWorld.playSound(xx, yy, zz, event, volume * this.volumeModulator, pitch, false);
+		playUnattenuatedSound(xx, yy, zz, event, volume * this.volumeModulator, pitch);
 	}
 	
 	@Override
@@ -41,15 +42,17 @@ public class SoundHelper implements SoundCapabilities
 		if (this.isInterrupt)
 			return;
 		
-		playSoundDirty(0, 0, 0, event, volume * this.volumeModulator, pitch);
+		// Play the sound 2048 blocks above the player to keep support of mono sounds
+		Entity e = Minecraft.getMinecraft().thePlayer;
+		playUnattenuatedSound(e.posX, e.posY + 2048, e.posZ, event, volume * this.volumeModulator, pitch);
 	}
 	
-	private void playSoundDirty(double xx, double yy, double zz, String loc, float a, float b)
+	private void playUnattenuatedSound(double xx, double yy, double zz, String loc, float a, float b)
 	{
-		NoAttenuationSound var13 =
+		NoAttenuationSound nas =
 			new NoAttenuationSound(new ResourceLocation(loc), a, b, (float) xx, (float) yy, (float) zz);
 		
-		Minecraft.getMinecraft().getSoundHandler().playSound(var13);
+		Minecraft.getMinecraft().getSoundHandler().playSound(nas);
 	}
 	
 	@Override
