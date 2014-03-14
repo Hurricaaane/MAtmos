@@ -1,50 +1,6 @@
 package eu.ha3.matmos.tools;
 
-import static eu.ha3.matmos.jsonformat.JaF.CONDITION_SYMBOL;
-import static eu.ha3.matmos.jsonformat.JaF.CONDITION_VALUE;
-import static eu.ha3.matmos.jsonformat.JaF.EVENT_DISTANCE;
-import static eu.ha3.matmos.jsonformat.JaF.EVENT_PATH;
-import static eu.ha3.matmos.jsonformat.JaF.EVENT_PITCH_MAX;
-import static eu.ha3.matmos.jsonformat.JaF.EVENT_PITCH_MIN;
-import static eu.ha3.matmos.jsonformat.JaF.EVENT_VOL_MAX;
-import static eu.ha3.matmos.jsonformat.JaF.EVENT_VOL_MIN;
-import static eu.ha3.matmos.jsonformat.JaF.GENERIC_DELAY_FADEIN;
-import static eu.ha3.matmos.jsonformat.JaF.GENERIC_DELAY_FADEOUT;
-import static eu.ha3.matmos.jsonformat.JaF.GENERIC_ENTRIES;
-import static eu.ha3.matmos.jsonformat.JaF.GENERIC_FADEIN;
-import static eu.ha3.matmos.jsonformat.JaF.GENERIC_FADEOUT;
-import static eu.ha3.matmos.jsonformat.JaF.GENERIC_INDEX;
-import static eu.ha3.matmos.jsonformat.JaF.GENERIC_SHEET;
-import static eu.ha3.matmos.jsonformat.JaF.MACHINE_ALLOW;
-import static eu.ha3.matmos.jsonformat.JaF.MACHINE_EVENT;
-import static eu.ha3.matmos.jsonformat.JaF.MACHINE_RESTRICT;
-import static eu.ha3.matmos.jsonformat.JaF.MACHINE_STREAM;
-import static eu.ha3.matmos.jsonformat.JaF.ROOT_CONDITION;
-import static eu.ha3.matmos.jsonformat.JaF.ROOT_DYNAMIC;
-import static eu.ha3.matmos.jsonformat.JaF.ROOT_EVENT;
-import static eu.ha3.matmos.jsonformat.JaF.ROOT_LIST;
-import static eu.ha3.matmos.jsonformat.JaF.ROOT_MACHINE;
-import static eu.ha3.matmos.jsonformat.JaF.ROOT_SET;
-import static eu.ha3.matmos.jsonformat.JaF.SET_NO;
-import static eu.ha3.matmos.jsonformat.JaF.SET_YES;
-import static eu.ha3.matmos.jsonformat.JaF.STREAM_LOOPING;
-import static eu.ha3.matmos.jsonformat.JaF.STREAM_PATH;
-import static eu.ha3.matmos.jsonformat.JaF.STREAM_PAUSE;
-import static eu.ha3.matmos.jsonformat.JaF.STREAM_PITCH;
-import static eu.ha3.matmos.jsonformat.JaF.STREAM_VOL;
-import static eu.ha3.matmos.jsonformat.JaF.TIMED_DELAY_MAX;
-import static eu.ha3.matmos.jsonformat.JaF.TIMED_DELAY_MIN;
-import static eu.ha3.matmos.jsonformat.JaF.TIMED_DELAY_START;
-import static eu.ha3.matmos.jsonformat.JaF.TIMED_EVENT;
-import static eu.ha3.matmos.jsonformat.JaF.TIMED_PITCH_MOD;
-import static eu.ha3.matmos.jsonformat.JaF.TIMED_VOL_MOD;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.xml.xpath.XPathExpressionException;
@@ -58,27 +14,22 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import eu.ha3.matmos.engine.core.implem.Condition;
 import eu.ha3.matmos.engine.core.implem.Dynamic;
-import eu.ha3.matmos.engine.core.implem.Event;
-import eu.ha3.matmos.engine.core.implem.Junction;
-import eu.ha3.matmos.engine.core.implem.Knowledge;
 import eu.ha3.matmos.engine.core.implem.LongFloatSimplificator;
-import eu.ha3.matmos.engine.core.implem.Machine;
-import eu.ha3.matmos.engine.core.implem.Possibilities;
 import eu.ha3.matmos.engine.core.implem.SheetEntry;
-import eu.ha3.matmos.engine.core.implem.StreamInformation;
-import eu.ha3.matmos.engine.core.implem.TimedEvent;
-import eu.ha3.matmos.engine.core.implem.TimedEventInformation;
-import eu.ha3.matmos.engine.core.implem.abstractions.ProviderCollection;
-import eu.ha3.matmos.engine.core.interfaces.Named;
 import eu.ha3.matmos.engine.core.interfaces.Operator;
 import eu.ha3.matmos.engine.core.interfaces.SheetIndex;
 import eu.ha3.matmos.game.system.MAtmosUtility;
+import eu.ha3.matmos.jsonformat.serializable.expansion.SerialCondition;
+import eu.ha3.matmos.jsonformat.serializable.expansion.SerialDynamic;
+import eu.ha3.matmos.jsonformat.serializable.expansion.SerialDynamicSheetIndex;
+import eu.ha3.matmos.jsonformat.serializable.expansion.SerialEvent;
+import eu.ha3.matmos.jsonformat.serializable.expansion.SerialList;
+import eu.ha3.matmos.jsonformat.serializable.expansion.SerialMachine;
+import eu.ha3.matmos.jsonformat.serializable.expansion.SerialMachineEvent;
+import eu.ha3.matmos.jsonformat.serializable.expansion.SerialMachineStream;
 import eu.ha3.matmos.jsonformat.serializable.expansion.SerialRoot;
-import eu.ha3.matmos.tools.Jason.Blob;
-import eu.ha3.matmos.tools.Jason.Plot;
-import eu.ha3.matmos.tools.Jason.Uniq;
+import eu.ha3.matmos.jsonformat.serializable.expansion.SerialSet;
 
 /* x-placeholder */
 
@@ -136,12 +87,7 @@ public class LegacyXMLExpansions_Engine1
 	
 	private Map<String, String> scanDicts;
 	
-	private String UID;
-	private Knowledge knowledgeWorkstation;
-	private List<Named> elements;
-	private ProviderCollection providers;
-	
-	private Blob o_json;
+	private SerialRoot root;
 	
 	public LegacyXMLExpansions_Engine1()
 	{
@@ -153,18 +99,19 @@ public class LegacyXMLExpansions_Engine1
 		this.scanDicts.put("ContactScan", "scan_contact");
 	}
 	
-	public boolean loadKnowledge_andConvertToJason(
-		String UID, Knowledge original, Document doc, File whereToPutTheJsonFile)
+	public SerialRoot loadXMLtoSerial(Document doc)
 	{
+		this.root = new SerialRoot();
+		
 		try
 		{
-			parseXML(UID, original, doc, whereToPutTheJsonFile);
-			return true;
+			parseXMLtoSerial(doc);
+			return this.root;
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			return false;
+			return new SerialRoot();
 		}
 	}
 	
@@ -210,18 +157,15 @@ public class LegacyXMLExpansions_Engine1
 		return asItem((int) (long) l);
 	}
 	
-	private String dynamicSheetHash(String name)
-	{
-		return this.UID.hashCode() % 1000 + "_" + name;
-	}
-	
 	private String eltString(String tagName, Element ele)
 	{
 		return textOf(DomUtil.getChild(ele, tagName));
 	}
 	
-	private TimedEvent inscriptXMLeventTimed(Element specs, Blob eventBlob)
+	private SerialMachineEvent inscriptXMLeventTimed(Element specs)
 	{
+		SerialMachineEvent sme = new SerialMachineEvent();
+		
 		String eventname = eltString(EVENTNAME, specs);
 		String volmod = eltString(VOLMOD, specs);
 		String pitchmod = eltString(PITCHMOD, specs);
@@ -229,22 +173,20 @@ public class LegacyXMLExpansions_Engine1
 		String delaymax = eltString(DELAYMAX, specs);
 		String delaystart = eltString(DELAYSTART, specs);
 		
-		float vol_mod = volmod != null ? Float.parseFloat(volmod) : 1f;
-		float pitch_mod = pitchmod != null ? Float.parseFloat(pitchmod) : 1f;
-		float delay_min = delaymin != null ? Float.parseFloat(delaymin) : 1f; // 1f is dummy
-		float delay_max = delaymax != null ? Float.parseFloat(delaymax) : 1f; // 1f is dummy
-		float delay_start = delaystart != null ? Float.parseFloat(delaystart) : 1f; // 1f is dummy
+		sme.event = eventname;
+		sme.vol_mod = volmod != null ? Float.parseFloat(volmod) : 1f;
+		sme.pitch_mod = pitchmod != null ? Float.parseFloat(pitchmod) : 1f;
+		sme.delay_min = delaymin != null ? Float.parseFloat(delaymin) : 1f; // 1f is dummy
+		sme.delay_max = delaymax != null ? Float.parseFloat(delaymax) : 1f; // 1f is dummy
+		sme.delay_start = delaystart != null ? Float.parseFloat(delaystart) : 1f; // 1f is dummy
 		
-		eventBlob.blob(
-			TIMED_EVENT, eventname, TIMED_VOL_MOD, vol_mod, TIMED_PITCH_MOD, pitch_mod, TIMED_DELAY_MIN, delay_min,
-			TIMED_DELAY_MAX, delay_max, TIMED_DELAY_START, delay_start);
-		
-		return new TimedEvent(
-			eventname, this.providers.getEvent(), vol_mod, pitch_mod, delay_min, delay_max, delay_start);
+		return sme;
 	}
 	
-	private StreamInformation inscriptXMLstream(Element specs, String machineName, Blob streamBlob)
+	private SerialMachineStream inscriptXMLstream(Element specs, SerialMachine machine)
 	{
+		SerialMachineStream sms = new SerialMachineStream();
+		
 		String _PATH = eltString(PATH, specs);
 		String _VOLUME = eltString(VOLUME, specs);
 		String _PITCH = eltString(PITCH, specs);
@@ -255,42 +197,17 @@ public class LegacyXMLExpansions_Engine1
 		String _ISLOOPING = eltString(ISLOOPING, specs);
 		String _ISUSINGPAUSE = eltString(ISUSINGPAUSE, specs);
 		
-		String path = _PATH;
-		float vol = _VOLUME != null ? Float.parseFloat(_VOLUME) : 1f;
-		float pitch = _PITCH != null ? Float.parseFloat(_PITCH) : 1f;
-		float fadein = _FADEINTIME != null ? Float.parseFloat(_FADEINTIME) : 1f; // 1f is dummy
-		float fadeout = _FADEOUTTIME != null ? Float.parseFloat(_FADEOUTTIME) : 1f; // 1f is dummy
-		float delay_fadein = _DELAYBEFOREFADEIN != null ? Float.parseFloat(_DELAYBEFOREFADEIN) : 1f; // 1f is dummy
-		float delay_fadeout = _DELAYBEFOREFADEOUT != null ? Float.parseFloat(_DELAYBEFOREFADEOUT) : 1f; // 1f is dummy
-		boolean looping = toInt(_ISLOOPING) == 1;
-		boolean pause = toInt(_ISUSINGPAUSE) == 1;
+		sms.path = _PATH;
+		sms.vol = _VOLUME != null ? Float.parseFloat(_VOLUME) : 1f;
+		sms.pitch = _PITCH != null ? Float.parseFloat(_PITCH) : 1f;
+		machine.fadein = _FADEINTIME != null ? Float.parseFloat(_FADEINTIME) : 1f; // 1f is dummy
+		machine.fadeout = _FADEOUTTIME != null ? Float.parseFloat(_FADEOUTTIME) : 1f; // 1f is dummy
+		machine.delay_fadein = _DELAYBEFOREFADEIN != null ? Float.parseFloat(_DELAYBEFOREFADEIN) : 1f; // 1f is dummy
+		machine.delay_fadeout = _DELAYBEFOREFADEOUT != null ? Float.parseFloat(_DELAYBEFOREFADEOUT) : 1f; // 1f is dummy
+		sms.looping = toInt(_ISLOOPING) == 1;
+		sms.pause = toInt(_ISUSINGPAUSE) == 1;
 		
-		streamBlob.blob(
-			STREAM_PATH, path, STREAM_VOL, vol, STREAM_PITCH, pitch, GENERIC_FADEIN, fadein, GENERIC_FADEOUT, fadeout,
-			GENERIC_DELAY_FADEIN, delay_fadein, GENERIC_DELAY_FADEOUT, delay_fadeout, STREAM_LOOPING, looping,
-			STREAM_PAUSE, pause);
-		
-		return new StreamInformation(
-			machineName, this.providers.getMachine(), this.providers.getReferenceTime(),
-			this.providers.getSoundRelay(), path, vol, pitch, delay_fadein, delay_fadeout, fadein, fadeout, looping,
-			pause);
-	}
-	
-	/**
-	 * Returns the named blob from the root blob, creating it if it didn't
-	 * exist.
-	 * 
-	 * @param klass
-	 * @return
-	 */
-	private Blob joson(String klass)
-	{
-		if (!this.o_json.containsKey(klass))
-		{
-			this.o_json.put(klass, Jason.blob());
-		}
-		
-		return (Blob) this.o_json.get(klass);
+		return sms;
 	}
 	
 	private String nameOf(Element element)
@@ -305,18 +222,10 @@ public class LegacyXMLExpansions_Engine1
 		return nameNode.getNodeValue();
 	}
 	
-	private void parseXML(String UID, Knowledge original, Document doc, File whereToPutTheJsonFile)
-		throws XPathExpressionException, DOMException
+	private void parseXMLtoSerial(Document doc) throws XPathExpressionException, DOMException
 	{
 		Element elt = doc.getDocumentElement();
 		DomUtil.removeEmptyTextRecursive(elt);
-		
-		this.UID = UID;
-		this.knowledgeWorkstation = original;
-		this.elements = new ArrayList<Named>();
-		this.providers = this.knowledgeWorkstation.obtainProviders();
-		
-		this.o_json = Jason.blob();
 		
 		for (Element capsule : DomUtil.getChildren(elt, DYNAMIC))
 		{
@@ -360,42 +269,16 @@ public class LegacyXMLExpansions_Engine1
 				parseXML_6_machine(capsule, nameOf(capsule));
 			}
 		}
-		
-		// Uncleaned field order
-		System.out.println(Jason.toJson(this.o_json));
-		
-		SerialRoot cleanedFieldOrder =
-			new JasonExpansions_Engine1Deserializer2000().jsonToSerial(Jason.toJson(this.o_json));
-		if (whereToPutTheJsonFile != null)
-		{
-			try
-			{
-				if (!whereToPutTheJsonFile.exists())
-				{
-					whereToPutTheJsonFile.createNewFile();
-				}
-				
-				FileWriter write = new FileWriter(whereToPutTheJsonFile);
-				write.append(Jason.toJsonPretty(cleanedFieldOrder));
-				write.close();
-			}
-			catch (IOException e)
-			{
-				e.printStackTrace();
-			}
-		}
-		
-		this.knowledgeWorkstation.addKnowledge(this.elements);
-		this.knowledgeWorkstation.compile();
 	}
 	
 	private void parseXML_1_dynamic(Element capsule, String name)
 	{
-		List<SheetIndex> sheetIndexes = new ArrayList<SheetIndex>();
+		SerialDynamic dynamic = new SerialDynamic();
 		
-		Plot entries = Jason.plot();
 		for (Element eelt : DomUtil.getChildren(capsule, ENTRY))
 		{
+			SerialDynamicSheetIndex sdsi = new SerialDynamicSheetIndex();
+			
 			String sheet = eelt.getAttributes().getNamedItem(SHEET).getNodeValue();
 			String index = textOf(eelt);
 			
@@ -407,24 +290,23 @@ public class LegacyXMLExpansions_Engine1
 			
 			SheetIndex si = new LegacySheetIndex_Engine0to1(sheet, index);
 			
-			entries.add(Jason.blob(GENERIC_SHEET, si.getSheet(), GENERIC_INDEX, si.getIndex()));
-			sheetIndexes.add(si);
+			sdsi.sheet = si.getSheet();
+			sdsi.index = si.getIndex();
+			dynamic.entries.add(sdsi);
 		}
-		joson(ROOT_DYNAMIC).put(name, Jason.blob(GENERIC_ENTRIES, entries));
 		
-		Named element = new Dynamic(dynamicSheetHash(name), this.providers.getSheetCommander(), sheetIndexes);
-		this.elements.add(element);
+		this.root.dynamic.put(name, dynamic);
 	}
 	
 	private void parseXML_2_list(Element capsule, String name)
 	{
-		List<String> list = new ArrayList<String>();
+		SerialList list = new SerialList();
+		SerialList asItem = new SerialList();
+		SerialList asBlock = new SerialList();
 		
-		Uniq asItem = Jason.uniq();
-		Uniq asBlock = Jason.uniq();
 		for (Element eelt : DomUtil.getChildren(capsule, CONSTANT))
 		{
-			list.add(textOf(eelt));
+			list.entries.add(textOf(eelt));
 			
 			Long l = LongFloatSimplificator.longOf(textOf(eelt));
 			if (l != null)
@@ -432,20 +314,17 @@ public class LegacyXMLExpansions_Engine1
 				int il = (int) (long) l;
 				if (asBlock(il) != null)
 				{
-					asBlock.add(asBlock(il));
+					asBlock.entries.add(asBlock(il));
 				}
 				if (asItem(il) != null)
 				{
-					asItem.add(asItem(il));
+					asItem.entries.add(asItem(il));
 				}
 			}
 		}
-		joson(ROOT_LIST).put(name, Jason.blob(GENERIC_ENTRIES, list));
-		joson(ROOT_LIST).put(name + AS_BLOCK, Jason.blob(GENERIC_ENTRIES, asBlock));
-		joson(ROOT_LIST).put(name + AS_ITEM, Jason.blob(GENERIC_ENTRIES, asItem));
-		
-		Named element = new Possibilities(name, list);
-		this.elements.add(element);
+		this.root.list.put(name, list);
+		this.root.list.put(name + AS_BLOCK, asBlock);
+		this.root.list.put(name + AS_ITEM, asItem);
 	}
 	
 	private void parseXML_3_condition(Element capsule, String name)
@@ -478,69 +357,66 @@ public class LegacyXMLExpansions_Engine1
 		
 		SheetIndex si =
 			!dynamic ? new LegacySheetIndex_Engine0to1(sheetNotComputed, indexNotComputed) : new SheetEntry(
-				sheetNotComputed, dynamicSheetHash(indexNotComputed));
+				sheetNotComputed, indexNotComputed);
 		
-		// Get the sheet and index directly from the SheetIndex, because
-		// the LegacySheetIndex computed the new values for us.
-		
-		String jasonIndexExcludeDynamic = dynamic ? indexNotComputed : si.getIndex();
 		{
-			joson(ROOT_CONDITION).put(
-				name,
-				Jason.blob(
-					GENERIC_SHEET, si.getSheet(), GENERIC_INDEX, jasonIndexExcludeDynamic, CONDITION_SYMBOL, Operator
-						.fromSymbol(symbol).getSerializedForm(), CONDITION_VALUE, value));
+			SerialCondition condition = new SerialCondition();
+			
+			condition.sheet = si.getSheet();
+			condition.index = si.getIndex();
+			condition.symbol = Operator.fromSymbol(symbol).getSerializedForm();
+			condition.value = value;
+			
+			this.root.condition.put(name, condition);
 		}
 		if (si instanceof LegacySheetIndex_Engine0to1)
 		{
 			if (((LegacySheetIndex_Engine0to1) si).isBlock() && asBlock(value) != null)
 			{
-				joson(ROOT_CONDITION).put(
-					name + AS_BLOCK,
-					Jason.blob(
-						GENERIC_SHEET, si.getSheet(), GENERIC_INDEX, jasonIndexExcludeDynamic, CONDITION_SYMBOL,
-						Operator.fromSymbol(symbol).getSerializedForm(), CONDITION_VALUE, asBlock(value)));
+				SerialCondition condition = new SerialCondition();
+				
+				condition.sheet = si.getSheet();
+				condition.index = si.getIndex();
+				condition.symbol = Operator.fromSymbol(symbol).getSerializedForm();
+				condition.value = asBlock(value);
+				
+				this.root.condition.put(name + AS_BLOCK, condition);
 			}
 			
 			if (((LegacySheetIndex_Engine0to1) si).isItem() && asItem(value) != null)
 			{
-				joson(ROOT_CONDITION).put(
-					name + AS_ITEM,
-					Jason.blob(
-						GENERIC_SHEET, si.getSheet(), GENERIC_INDEX, jasonIndexExcludeDynamic, CONDITION_SYMBOL,
-						Operator.fromSymbol(symbol).getSerializedForm(), CONDITION_VALUE, asItem(value)));
+				SerialCondition condition = new SerialCondition();
+				
+				condition.sheet = si.getSheet();
+				condition.index = si.getIndex();
+				condition.symbol = Operator.fromSymbol(symbol).getSerializedForm();
+				condition.value = asItem(value);
+				
+				this.root.condition.put(name + AS_ITEM, condition);
 			}
 		}
-		
-		Named element = new Condition(name, this.providers.getSheetCommander(), si, Operator.fromSymbol(symbol), value);
-		this.elements.add(element);
 	}
 	
 	private void parseXML_4_set(Element capsule, String name)
 	{
-		List<String> yes = new ArrayList<String>();
-		List<String> no = new ArrayList<String>();
+		SerialSet set = new SerialSet();
 		
 		for (Element eelt : DomUtil.getChildren(capsule, TRUEPART))
 		{
-			String truepart = textOf(eelt);
-			yes.add(truepart);
+			set.yes.add(textOf(eelt));
 		}
 		
 		for (Element eelt : DomUtil.getChildren(capsule, FALSEPART))
 		{
-			String falsepart = textOf(eelt);
-			no.add(falsepart);
+			set.no.add(textOf(eelt));
 		}
-		joson(ROOT_SET).put(name, Jason.blob(SET_YES, yes, SET_NO, no));
 		
-		Named element = new Junction(name, this.providers.getCondition(), yes, no);
-		this.elements.add(element);
+		this.root.set.put(name, set);
 	}
 	
 	private void parseXML_5_event(Element capsule, String name)
 	{
-		List<String> paths = new ArrayList<String>();
+		SerialEvent event = new SerialEvent();
 		
 		String volmin = eltString(VOLMIN, capsule);
 		String volmax = eltString(VOLMAX, capsule);
@@ -548,96 +424,57 @@ public class LegacyXMLExpansions_Engine1
 		String pitchmax = eltString(PITCHMAX, capsule);
 		String metasound = eltString(METASOUND, capsule);
 		
-		float vol_min = volmin != null ? Float.parseFloat(volmin) : 1f;
-		float vol_max = volmax != null ? Float.parseFloat(volmax) : 1f;
-		float pitch_min = pitchmin != null ? Float.parseFloat(pitchmin) : 1f;
-		float pitch_max = pitchmax != null ? Float.parseFloat(pitchmax) : 1f;
-		int distance = metasound != null ? toInt(metasound) : 0;
+		event.vol_min = volmin != null ? Float.parseFloat(volmin) : 1f;
+		event.vol_max = volmax != null ? Float.parseFloat(volmax) : 1f;
+		event.pitch_min = pitchmin != null ? Float.parseFloat(pitchmin) : 1f;
+		event.pitch_max = pitchmax != null ? Float.parseFloat(pitchmax) : 1f;
+		event.distance = metasound != null ? toInt(metasound) : 0;
 		
 		for (Element eelt : DomUtil.getChildren(capsule, PATH))
 		{
-			String path = textOf(eelt);
-			paths.add(path);
+			event.path.add(textOf(eelt));
 		}
-		joson(ROOT_EVENT).put(
-			name,
-			Jason.blob(
-				EVENT_VOL_MIN, vol_min, EVENT_VOL_MAX, vol_max, EVENT_PITCH_MIN, pitch_min, EVENT_PITCH_MAX, pitch_max,
-				EVENT_DISTANCE, distance, EVENT_PATH, paths));
 		
-		Named element =
-			new Event(name, this.providers.getSoundRelay(), paths, vol_min, vol_max, pitch_min, pitch_max, distance);
-		this.elements.add(element);
+		this.root.event.put(name, event);
 	}
 	
 	private void parseXML_6_machine(Element capsule, String name)
 	{
-		Blob blob = Jason.blob();
+		SerialMachine machine = new SerialMachine();
 		
-		StreamInformation stream = null;
-		Blob streamBlob = Jason.blob();
+		SerialMachineStream stream = null;
 		for (Element eelt : DomUtil.getChildren(capsule, STREAM))
 		{
-			stream = inscriptXMLstream(eelt, name, streamBlob);
+			stream = inscriptXMLstream(eelt, machine);
 		}
 		if (stream != null)
 		{
-			// Remove these information from the stream to put these on the machine
-			
-			blob.put(GENERIC_DELAY_FADEIN, streamBlob.remove(GENERIC_DELAY_FADEIN));
-			blob.put(GENERIC_DELAY_FADEOUT, streamBlob.remove(GENERIC_DELAY_FADEOUT));
-			blob.put(GENERIC_FADEIN, streamBlob.remove(GENERIC_FADEIN));
-			blob.put(GENERIC_FADEOUT, streamBlob.remove(GENERIC_FADEOUT));
-			
-			blob.put(MACHINE_STREAM, streamBlob);
+			machine.stream = stream;
 		}
 		else
 		{
-			blob.put(GENERIC_DELAY_FADEIN, 0f);
-			blob.put(GENERIC_DELAY_FADEOUT, 0f);
-			blob.put(GENERIC_FADEIN, 0f);
-			blob.put(GENERIC_FADEOUT, 0f);
+			machine.delay_fadein = 0f;
+			machine.delay_fadeout = 0f;
+			machine.fadein = 0f;
+			machine.fadeout = 0f;
 		}
 		
-		List<TimedEvent> events = new ArrayList<TimedEvent>();
-		Plot eventPlot = Jason.plot();
 		for (Element eelt : DomUtil.getChildren(capsule, EVENTTIMED))
 		{
-			Blob eventBlob = Jason.blob();
-			events.add(inscriptXMLeventTimed(eelt, eventBlob));
-			eventPlot.add(eventBlob);
-		}
-		if (events.size() > 0)
-		{
-			blob.put(MACHINE_EVENT, eventPlot);
+			machine.event.add(inscriptXMLeventTimed(eelt));
 		}
 		
-		List<String> allow = new ArrayList<String>();
 		for (Element eelt : DomUtil.getChildren(capsule, ALLOW))
 		{
-			allow.add(textOf(eelt));
+			machine.allow.add(textOf(eelt));
 		}
 		
-		List<String> restrict = new ArrayList<String>();
 		for (Element eelt : DomUtil.getChildren(capsule, RESTRICT))
 		{
-			restrict.add(textOf(eelt));
+			machine.restrict.add(textOf(eelt));
 		}
 		
-		TimedEventInformation tie = null;
-		if (events.size() > 0)
-		{
-			// Ignore fade/delay values for XML expansions
-			tie =
-				new TimedEventInformation(
-					name, this.providers.getMachine(), this.providers.getReferenceTime(), events, 0f, 0f, 0f, 0f);
-		}
-		
-		blob.blob(MACHINE_ALLOW, allow, MACHINE_RESTRICT, restrict);
-		joson(ROOT_MACHINE).put(name, blob);
-		
-		Named element = new Machine(name, this.providers.getJunction(), allow, restrict, tie, stream);
-		this.elements.add(element);
+		this.root.machine.put(name, machine);
 	}
 	
 	private String recomputeBlockName(String index)
@@ -648,9 +485,7 @@ public class LegacyXMLExpansions_Engine1
 			Object o = Block.blockRegistry.getObjectForID((int) (long) l);
 			if (o != null && o instanceof Block)
 			{
-				//String ocst = index;
 				index = MAtmosUtility.nameOf((Block) o);
-				//System.out.println("Converted index from " + ocst + " to " + index);
 			}
 			else
 			{

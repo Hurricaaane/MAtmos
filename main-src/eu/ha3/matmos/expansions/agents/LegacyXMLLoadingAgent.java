@@ -1,6 +1,8 @@
 package eu.ha3.matmos.expansions.agents;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -9,6 +11,9 @@ import org.w3c.dom.Document;
 
 import eu.ha3.matmos.engine.core.implem.Knowledge;
 import eu.ha3.matmos.expansions.ExpansionIdentity;
+import eu.ha3.matmos.jsonformat.serializable.expansion.SerialRoot;
+import eu.ha3.matmos.tools.Jason;
+import eu.ha3.matmos.tools.JasonExpansions_Engine1Deserializer2000;
 import eu.ha3.matmos.tools.LegacyXMLExpansions_Engine1;
 
 /*
@@ -39,8 +44,25 @@ public class LegacyXMLLoadingAgent implements LoadingAgent
 			
 			Document document = documentBuilder.parse(identity.getPack().getInputStream(identity.getLocation()));
 			
-			return new LegacyXMLExpansions_Engine1().loadKnowledge_andConvertToJason(
-				identity.getUniqueName(), knowledge, document, this.jsonOutput);
+			SerialRoot root = new LegacyXMLExpansions_Engine1().loadXMLtoSerial(document);
+			try
+			{
+				if (!this.jsonOutput.exists())
+				{
+					this.jsonOutput.createNewFile();
+				}
+				
+				FileWriter write = new FileWriter(this.jsonOutput);
+				write.append(Jason.toJsonPretty(root));
+				write.close();
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+			new JasonExpansions_Engine1Deserializer2000().loadSerial(root, identity, knowledge);
+			
+			return true;
 		}
 		catch (Exception e)
 		{
