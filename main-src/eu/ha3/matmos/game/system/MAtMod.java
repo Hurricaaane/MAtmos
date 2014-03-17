@@ -22,12 +22,12 @@ import paulscode.sound.SoundSystem;
 import eu.ha3.easy.TimeStatistic;
 import eu.ha3.matmos.expansions.Expansion;
 import eu.ha3.matmos.expansions.ExpansionManager;
-import eu.ha3.matmos.expansions.MAtmosConvLogger;
 import eu.ha3.matmos.expansions.Stable;
 import eu.ha3.matmos.expansions.volume.VolumeUpdatable;
 import eu.ha3.matmos.game.data.ModularDataGatherer;
 import eu.ha3.matmos.game.user.UserControl;
 import eu.ha3.matmos.game.user.VisualDebugger;
+import eu.ha3.matmos.log.MAtLog;
 import eu.ha3.matmos.pluggable.PluggableIntoMinecraft;
 import eu.ha3.mc.haddon.Identity;
 import eu.ha3.mc.haddon.OperatorCaster;
@@ -82,7 +82,7 @@ public class MAtMod extends HaddonImpl
 	
 	public MAtMod()
 	{
-		MAtmosConvLogger.setRefinedness(MAtmosConvLogger.INFO);
+		MAtLog.setRefinedness(MAtLog.INFO);
 	}
 	
 	@Override
@@ -137,7 +137,7 @@ public class MAtMod extends HaddonImpl
 		// This registers stuff to Minecraft (key bindings...)
 		this.userControl.load();
 		
-		MAtmosConvLogger.info("Took " + timeMeasure.getSecondsAsString(3) + " seconds to setup MAtmos base.");
+		MAtLog.info("Took " + timeMeasure.getSecondsAsString(3) + " seconds to setup MAtmos base.");
 		
 		if (this.config.getBoolean("start.enabled"))
 		{
@@ -200,7 +200,7 @@ public class MAtMod extends HaddonImpl
 		this.expansionManager.setCollector(this.dataGatherer);
 		this.expansionManager.loadExpansions();
 		
-		MAtmosConvLogger.info("Expansions loaded (" + stat.getSecondsAsString(1) + "s).");
+		MAtLog.info("Expansions loaded (" + stat.getSecondsAsString(1) + "s).");
 	}
 	
 	@Override
@@ -214,9 +214,9 @@ public class MAtMod extends HaddonImpl
 		
 		this.isActivated = true;
 		
-		MAtmosConvLogger.fine("Loading...");
+		MAtLog.fine("Loading...");
 		this.expansionManager.activate();
-		MAtmosConvLogger.fine("Loaded.");
+		MAtLog.fine("Loaded.");
 	}
 	
 	@Override
@@ -230,9 +230,9 @@ public class MAtMod extends HaddonImpl
 		
 		this.isActivated = false;
 		
-		MAtmosConvLogger.fine("Stopping...");
+		MAtLog.fine("Stopping...");
 		this.expansionManager.deactivate();
-		MAtmosConvLogger.fine("Stopped.");
+		MAtLog.fine("Stopped.");
 	}
 	
 	// Events
@@ -327,7 +327,7 @@ public class MAtMod extends HaddonImpl
 	@Override
 	public void onResourceManagerReload(IResourceManager var1)
 	{
-		MAtmosConvLogger.warning("ResourceManager has changed. Unintended side-effects may happen.");
+		MAtLog.warning("ResourceManager has changed. Unintended side-effects may happen.");
 		
 		interrupt();
 		
@@ -384,7 +384,7 @@ public class MAtMod extends HaddonImpl
 		// If there were changes...
 		if (this.config.commit())
 		{
-			MAtmosConvLogger.info("Saving configuration...");
+			MAtLog.info("Saving configuration...");
 			
 			// Write changes on disk.
 			this.config.save();

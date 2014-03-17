@@ -3,7 +3,7 @@ package eu.ha3.matmos.game.system;
 import java.util.HashSet;
 import java.util.Set;
 
-import eu.ha3.matmos.expansions.MAtmosConvLogger;
+import eu.ha3.matmos.log.MAtLog;
 import eu.ha3.mc.quick.chat.ChatColorsSimple;
 import eu.ha3.mc.quick.chat.Chatter;
 
@@ -22,7 +22,7 @@ public class IDontKnowHowToCode
 			return;
 		warning.add(message.hashCode());
 		
-		MAtmosConvLogger.warning(message);
+		MAtLog.warning(message);
 	}
 	
 	public static void whoops__printExceptionToChat(Chatter chatter, Exception e, Object caller)

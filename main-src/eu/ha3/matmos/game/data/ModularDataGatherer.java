@@ -10,7 +10,6 @@ import java.util.TreeSet;
 import eu.ha3.matmos.engine.core.implem.GenericSheet;
 import eu.ha3.matmos.engine.core.implem.SelfGeneratingData;
 import eu.ha3.matmos.engine.core.interfaces.Data;
-import eu.ha3.matmos.expansions.MAtmosConvLogger;
 import eu.ha3.matmos.game.data.abstractions.Collector;
 import eu.ha3.matmos.game.data.abstractions.Processor;
 import eu.ha3.matmos.game.data.abstractions.module.Module;
@@ -46,6 +45,7 @@ import eu.ha3.matmos.game.data.modules.S__potion_power;
 import eu.ha3.matmos.game.data.modules.S__scan_contact;
 import eu.ha3.matmos.game.system.IDontKnowHowToCode;
 import eu.ha3.matmos.game.system.MAtMod;
+import eu.ha3.matmos.log.MAtLog;
 
 /*
 --filenotes-placeholder
@@ -154,7 +154,7 @@ public class ModularDataGatherer implements Collector, Processor
 		addModule(new ScannerModule(
 			this.data, "_POM__scan_small", "scan_small", true, -1, 2 /*64*/, 16, 8, 16, 16 * 8 * 16));
 		
-		MAtmosConvLogger.info("Modules initialized.");
+		MAtLog.info("Modules initialized.");
 	}
 	
 	public Data getData()
@@ -210,7 +210,7 @@ public class ModularDataGatherer implements Collector, Processor
 		{
 			if (!this.modules.containsKey(module) && !this.passOnceSubmodules.contains(module))
 			{
-				MAtmosConvLogger.severe("Stack " + name + " requires missing module " + module);
+				MAtLog.severe("Stack " + name + " requires missing module " + module);
 				missingModules.add(module);
 			}
 		}

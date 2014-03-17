@@ -1,7 +1,6 @@
 package eu.ha3.matmos.engine.core.implem;
 
 import eu.ha3.matmos.engine.core.implem.abstractions.Provider;
-import eu.ha3.matmos.engine.core.implem.abstractions.ProviderCollection;
 import eu.ha3.matmos.engine.core.interfaces.ReferenceTime;
 import eu.ha3.matmos.engine.core.interfaces.SheetCommander;
 import eu.ha3.matmos.engine.core.interfaces.SoundRelay;

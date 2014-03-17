@@ -1,10 +1,6 @@
-package eu.ha3.matmos.engine.core.implem.abstractions;
+package eu.ha3.matmos.engine.core.implem;
 
-import eu.ha3.matmos.engine.core.implem.Condition;
-import eu.ha3.matmos.engine.core.implem.Dynamic;
-import eu.ha3.matmos.engine.core.implem.Event;
-import eu.ha3.matmos.engine.core.implem.Junction;
-import eu.ha3.matmos.engine.core.implem.Machine;
+import eu.ha3.matmos.engine.core.implem.abstractions.Provider;
 import eu.ha3.matmos.engine.core.interfaces.ReferenceTime;
 import eu.ha3.matmos.engine.core.interfaces.SheetCommander;
 import eu.ha3.matmos.engine.core.interfaces.SoundRelay;

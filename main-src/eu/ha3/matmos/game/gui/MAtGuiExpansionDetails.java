@@ -116,7 +116,7 @@ public class MAtGuiExpansionDetails extends GuiScreen
 				Runnable editor = this.mod.instantiateRunnableEditor(plug);
 				if (editor != null)
 				{
-					new Thread(editor).start();
+					new Thread(editor, "EditorWindow_for_" + this.expansion.getName()).start();
 					
 					if (debugUnit instanceof ReadOnlyJasonStringEDU)
 					{

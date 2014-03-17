@@ -9,7 +9,7 @@ import java.util.TreeSet;
 import eu.ha3.matmos.engine.core.implem.abstractions.DependableComponent;
 import eu.ha3.matmos.engine.core.implem.abstractions.Provider;
 import eu.ha3.matmos.engine.core.visualize.VisualizedSpecialDependencies;
-import eu.ha3.matmos.expansions.MAtmosConvLogger;
+import eu.ha3.matmos.log.MAtLog;
 
 /* x-placeholder */
 
@@ -43,7 +43,7 @@ public class Junction extends DependableComponent implements VisualizedSpecialDe
 		
 		if (pre != this.isActive)
 		{
-			MAtmosConvLogger.fine("S: " + getName() + " -> " + this.isActive);
+			MAtLog.fine("S: " + getName() + " -> " + this.isActive);
 			
 			incrementVersion();
 		}

@@ -13,9 +13,9 @@ import javax.naming.directory.InitialDirContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ServerData;
 import eu.ha3.matmos.engine.core.interfaces.Data;
-import eu.ha3.matmos.expansions.MAtmosConvLogger;
 import eu.ha3.matmos.game.data.abstractions.module.Module;
 import eu.ha3.matmos.game.data.abstractions.module.ModuleProcessor;
+import eu.ha3.matmos.log.MAtLog;
 
 /*
 --filenotes-placeholder
@@ -82,7 +82,7 @@ public class R__server_info extends ModuleProcessor implements Module
 		
 		String[] splitIp = playerDefinedAddress.split(":");
 		
-		if (playerDefinedAddress.startsWith("["))
+		if (playerDefinedAddress.charAt(0) == '[')
 		{
 			int vDelimiter = playerDefinedAddress.indexOf("]");
 			
@@ -91,7 +91,7 @@ public class R__server_info extends ModuleProcessor implements Module
 				String ipPart = playerDefinedAddress.substring(1, vDelimiter);
 				String portPart = playerDefinedAddress.substring(vDelimiter + 1).trim();
 				
-				if (portPart.startsWith(":") && portPart.length() > 0)
+				if (portPart.charAt(0) == ':' && portPart.length() > 0)
 				{
 					portPart = portPart.substring(1);
 					splitIp = new String[] { ipPart, portPart };
@@ -130,12 +130,20 @@ public class R__server_info extends ModuleProcessor implements Module
 		}
 		catch (UnknownHostException e)
 		{
+			e.printStackTrace();
+			
+			this.serverAddresses.put(playerDefinedAddress, 0);
+			this.serverPorts.put(playerDefinedAddress, conPort);
+			
+			MAtLog.info("Error while hashing server addess: Defaulted to 0");
+			
+			return;
 		}
 		
 		this.serverAddresses.put(playerDefinedAddress, wellHashCode);
 		this.serverPorts.put(playerDefinedAddress, conPort);
 		
-		MAtmosConvLogger.info("Computed server IP and hashed as (" + wellHashCode + ") : " + conPort);
+		MAtLog.info("Computed server IP and hashed as (" + wellHashCode + ") : " + conPort);
 		
 	}
 	

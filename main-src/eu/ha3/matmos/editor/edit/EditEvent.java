@@ -324,7 +324,7 @@ public class EditEvent extends JPanel
 		for (String path : this.event.path)
 		{
 			paths.append(path);
-			paths.append("\n");
+			paths.append('\n');
 		}
 		this.files.setText(paths.toString());
 	}

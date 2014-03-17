@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import eu.ha3.matmos.engine.core.implem.abstractions.ProviderCollection;
+import eu.ha3.matmos.engine.core.implem.ProviderCollection;
 import eu.ha3.matmos.engine.core.interfaces.Data;
 import eu.ha3.matmos.expansions.Expansion;
 import eu.ha3.matmos.expansions.debugunit.FolderResourcePackEditableEDU;

@@ -429,10 +429,7 @@ public class EditorWindow extends JFrame implements Window
 				this, "You have unsaved changes. Are you sure you want to continue?", "Unsaved changes",
 				JOptionPane.CANCEL_OPTION);
 		
-		if (saveOption == JOptionPane.YES_OPTION)
-			return true;
-		else
-			return false;
+		return saveOption == JOptionPane.YES_OPTION;
 	}
 	
 	@Override

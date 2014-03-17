@@ -1,8 +1,8 @@
-package eu.ha3.matmos.expansions;
+package eu.ha3.matmos.log;
 
 /* x-placeholder */
 
-public class MAtmosConvLogger
+public class MAtLog
 {
 	final private static String modName = "MAtmos";
 	

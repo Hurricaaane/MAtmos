@@ -8,7 +8,7 @@ import eu.ha3.matmos.engine.core.interfaces.Operator;
 import eu.ha3.matmos.engine.core.interfaces.SheetCommander;
 import eu.ha3.matmos.engine.core.interfaces.SheetIndex;
 import eu.ha3.matmos.engine.core.visualize.Visualized;
-import eu.ha3.matmos.expansions.MAtmosConvLogger;
+import eu.ha3.matmos.log.MAtLog;
 
 /* x-placeholder */
 
@@ -63,7 +63,7 @@ public class Condition extends DependableComponent implements Visualized
 		{
 			incrementVersion();
 			
-			MAtmosConvLogger.fine("C: " + getName() + " -> " + this.isActive);
+			MAtLog.fine("C: " + getName() + " -> " + this.isActive);
 		}
 	}
 	

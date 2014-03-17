@@ -11,7 +11,7 @@ import eu.ha3.matmos.engine.core.implem.abstractions.Provider;
 import eu.ha3.matmos.engine.core.interfaces.Overrided;
 import eu.ha3.matmos.engine.core.interfaces.Simulated;
 import eu.ha3.matmos.engine.core.visualize.VisualizedSpecialDependencies;
-import eu.ha3.matmos.expansions.MAtmosConvLogger;
+import eu.ha3.matmos.log.MAtLog;
 
 /* x-placeholder */
 
@@ -77,7 +77,7 @@ public class Machine extends DependableComponent implements Simulated, Overrided
 				this.stream.evaluate();
 			}
 			
-			MAtmosConvLogger.fine("M: " + getName() + " -> " + this.isActive);
+			MAtLog.fine("M: " + getName() + " -> " + this.isActive);
 		}
 	}
 	

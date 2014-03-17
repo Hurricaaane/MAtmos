@@ -104,7 +104,7 @@ public class VolumeScroller extends Ha3Scroller
 	{
 		final int caps = 10;
 		if (this.mod.getConfig().getBoolean("sound.autopreview")
-			&& Math.floor((this.prevPitch + 90F) / caps) != Math.floor((getPitch() + 90F) / caps))
+			&& (int) Math.floor((this.prevPitch + 90F) / caps) != (int) Math.floor((getPitch() + 90F) / caps))
 		{
 			// Calculate volume from 0f to 2f
 			float hgn = (-getPitch() + 90F) / 90F;

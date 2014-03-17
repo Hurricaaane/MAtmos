@@ -12,8 +12,8 @@ import javax.swing.tree.TreePath;
 
 import eu.ha3.matmos.editor.KnowledgeItemType;
 import eu.ha3.matmos.editor.interfaces.Editor;
-import eu.ha3.matmos.editor.interfaces.NamedSerialEditor;
 import eu.ha3.matmos.editor.interfaces.ISerialUpdate;
+import eu.ha3.matmos.editor.interfaces.NamedSerialEditor;
 import eu.ha3.matmos.jsonformat.serializable.expansion.SerialRoot;
 
 /*
@@ -58,7 +58,6 @@ public class ItemTreeViewPanel extends JPanel implements ISerialUpdate, NamedSer
 				}
 				catch (ClassCastException e)
 				{
-					;
 				}
 			}
 		});

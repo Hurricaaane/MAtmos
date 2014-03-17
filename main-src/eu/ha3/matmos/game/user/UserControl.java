@@ -52,7 +52,7 @@ public class UserControl implements Ha3HoldActions, SupportsTickEvents, Supports
 		this.keyManager.addKeyBinding(this.keyBindingMain, new Ha3KeyHolding(this, 7));
 	}
 	
-	public String getKeyBindingMainFriendlyName()
+	private String getKeyBindingMainFriendlyName()
 	{
 		if (this.keyBindingMain == null)
 			return "undefined";
@@ -63,7 +63,7 @@ public class UserControl implements Ha3HoldActions, SupportsTickEvents, Supports
 	@Override
 	public void onKey(KeyBinding event)
 	{
-		communicateKeyBindingEvent(event);
+		this.keyManager.handleKeyDown(event);
 	}
 	
 	@Override
@@ -85,12 +85,7 @@ public class UserControl implements Ha3HoldActions, SupportsTickEvents, Supports
 		this.scroller.draw(fspan);
 	}
 	
-	public void communicateKeyBindingEvent(KeyBinding event)
-	{
-		this.keyManager.handleKeyDown(event);
-	}
-	
-	public void printUnusualMessages()
+	private void printUnusualMessages()
 	{
 		if (!this.mod.isInitialized())
 		{

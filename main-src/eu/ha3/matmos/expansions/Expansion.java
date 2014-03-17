@@ -15,8 +15,8 @@ import net.minecraft.client.resources.FolderResourcePack;
 import net.minecraft.util.ResourceLocation;
 import eu.ha3.easy.TimeStatistic;
 import eu.ha3.matmos.engine.core.implem.Knowledge;
+import eu.ha3.matmos.engine.core.implem.ProviderCollection;
 import eu.ha3.matmos.engine.core.implem.SystemClock;
-import eu.ha3.matmos.engine.core.implem.abstractions.ProviderCollection;
 import eu.ha3.matmos.engine.core.interfaces.Data;
 import eu.ha3.matmos.engine.core.interfaces.Evaluated;
 import eu.ha3.matmos.engine.core.interfaces.EventInterface;
@@ -33,6 +33,7 @@ import eu.ha3.matmos.game.data.ModularDataGatherer;
 import eu.ha3.matmos.game.data.abstractions.Collector;
 import eu.ha3.matmos.game.system.SoundAccessor;
 import eu.ha3.matmos.game.system.SoundHelperRelay;
+import eu.ha3.matmos.log.MAtLog;
 import eu.ha3.matmos.pluggable.PluggableIntoMinecraft;
 import eu.ha3.util.property.simple.ConfigProperty;
 
@@ -234,16 +235,16 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 		
 		if (!this.isSuccessfullyBuilt && this.agent != null)
 		{
-			MAtmosConvLogger.info("Building expansion " + getName() + "...");
+			MAtLog.info("Building expansion " + getName() + "...");
 			TimeStatistic stat = new TimeStatistic(Locale.ENGLISH);
 			buildKnowledge();
 			if (this.isSuccessfullyBuilt)
 			{
-				MAtmosConvLogger.info("Expansion " + getName() + " built (" + stat.getSecondsAsString(3) + "s).");
+				MAtLog.info("Expansion " + getName() + " built (" + stat.getSecondsAsString(3) + "s).");
 			}
 			else
 			{
-				MAtmosConvLogger.warning("Expansion "
+				MAtLog.warning("Expansion "
 					+ getName() + " failed to build!!! (" + stat.getSecondsAsString(3) + "s).");
 			}
 		}
@@ -253,7 +254,7 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 			Set<String> requiredModules = this.knowledge.calculateRequiredModules();
 			this.collector.addModuleStack(this.identity.getUniqueName(), requiredModules);
 			
-			MAtmosConvLogger.info("Expansion "
+			MAtLog.info("Expansion "
 				+ this.identity.getUniqueName() + " requires " + requiredModules.size() + " found modules: "
 				+ Arrays.toString(requiredModules.toArray()));
 			
@@ -268,7 +269,7 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 			if (legacyModules.size() > 0)
 			{
 				Collections.sort(legacyModules);
-				MAtmosConvLogger.warning("Expansion "
+				MAtLog.warning("Expansion "
 					+ this.identity.getUniqueName() + " uses LEGACY modules: "
 					+ Arrays.toString(legacyModules.toArray()));
 				this.reliesOnLegacyModules = true;

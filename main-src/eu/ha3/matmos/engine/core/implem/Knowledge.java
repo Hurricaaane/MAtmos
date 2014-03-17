@@ -8,7 +8,6 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import eu.ha3.matmos.engine.core.implem.abstractions.Provider;
-import eu.ha3.matmos.engine.core.implem.abstractions.ProviderCollection;
 import eu.ha3.matmos.engine.core.interfaces.Data;
 import eu.ha3.matmos.engine.core.interfaces.Dependable;
 import eu.ha3.matmos.engine.core.interfaces.Evaluated;
@@ -21,7 +20,7 @@ import eu.ha3.matmos.engine.core.interfaces.SheetCommander;
 import eu.ha3.matmos.engine.core.interfaces.SheetIndex;
 import eu.ha3.matmos.engine.core.interfaces.Simulated;
 import eu.ha3.matmos.engine.core.interfaces.SoundRelay;
-import eu.ha3.matmos.expansions.MAtmosConvLogger;
+import eu.ha3.matmos.log.MAtLog;
 
 /* x-placeholder */
 
@@ -188,12 +187,12 @@ public class Knowledge implements Evaluated, Simulated
 		
 		if (missing.size() > 0)
 		{
-			MAtmosConvLogger.warning("Missing " + inferiorName + ": " + Arrays.toString(missing.toArray()));
+			MAtLog.warning("Missing " + inferiorName + ": " + Arrays.toString(missing.toArray()));
 		}
 		
 		if (unused.size() > 0)
 		{
-			MAtmosConvLogger.warning("Unused " + inferiorName + ": " + Arrays.toString(unused.toArray()));
+			MAtLog.warning("Unused " + inferiorName + ": " + Arrays.toString(unused.toArray()));
 			for (String junk : unused)
 			{
 				inferior.remove(junk);

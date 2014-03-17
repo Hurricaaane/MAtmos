@@ -4,7 +4,7 @@ import java.io.File;
 
 import eu.ha3.matmos.editor.KnowledgeItemType;
 import eu.ha3.matmos.editor.tree.Selector;
-import eu.ha3.matmos.engine.core.implem.abstractions.ProviderCollection;
+import eu.ha3.matmos.engine.core.implem.ProviderCollection;
 import eu.ha3.matmos.jsonformat.serializable.expansion.SerialRoot;
 
 /*

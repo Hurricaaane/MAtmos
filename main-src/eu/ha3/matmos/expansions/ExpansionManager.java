@@ -25,6 +25,7 @@ import eu.ha3.matmos.game.data.abstractions.Collector;
 import eu.ha3.matmos.game.system.MAtResourcePackDealer;
 import eu.ha3.matmos.game.system.MAtmosUtility;
 import eu.ha3.matmos.game.system.SoundAccessor;
+import eu.ha3.matmos.log.MAtLog;
 import eu.ha3.mc.haddon.supporting.SupportsFrameEvents;
 import eu.ha3.mc.haddon.supporting.SupportsTickEvents;
 
@@ -96,13 +97,13 @@ public class ExpansionManager implements VolumeUpdatable, Stable, SupportsTickEv
 					}
 					else
 					{
-						MAtmosConvLogger.warning("An expansion pointer doesn't exist: " + pointer);
+						MAtLog.warning("An expansion pointer doesn't exist: " + pointer);
 					}
 				}
 			}
 			catch (Exception e)
 			{
-				MAtmosConvLogger.warning(pack.getResourcePackName()
+				MAtLog.warning(pack.getResourcePackName()
 					+ " " + "has failed with an error: " + e.getMessage());
 			}
 		}

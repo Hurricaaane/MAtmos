@@ -9,8 +9,6 @@ import eu.ha3.matmos.game.data.abstractions.module.ModuleProcessor;
 import eu.ha3.matmos.game.system.IDontKnowHowToCode;
 import eu.ha3.matmos.game.system.MAtMod;
 import eu.ha3.util.property.simple.ConfigProperty;
-import eu.ha3.util.property.simple.PropertyMissingException;
-import eu.ha3.util.property.simple.PropertyTypeException;
 
 /*
 --filenotes-placeholder
@@ -59,13 +57,7 @@ public class R__legacy_configvars extends ModuleProcessor implements Module
 			{
 				setValue(key, this.config.getInteger(key));
 			}
-			catch (NumberFormatException e)
-			{
-			}
-			catch (PropertyTypeException e)
-			{
-			}
-			catch (PropertyMissingException e)
+			catch (Exception e)
 			{
 				IDontKnowHowToCode.whoops__printExceptionToChat(this.mod.getChatter(), e, this);
 			}

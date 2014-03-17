@@ -14,7 +14,7 @@ import com.google.gson.stream.MalformedJsonException;
 import eu.ha3.matmos.editor.interfaces.Editor;
 import eu.ha3.matmos.editor.interfaces.Window;
 import eu.ha3.matmos.editor.tree.Selector;
-import eu.ha3.matmos.engine.core.implem.abstractions.ProviderCollection;
+import eu.ha3.matmos.engine.core.implem.ProviderCollection;
 import eu.ha3.matmos.expansions.debugunit.ReadOnlyJasonStringEDU;
 import eu.ha3.matmos.jsonformat.serializable.expansion.SerialRoot;
 import eu.ha3.matmos.pluggable.PluggableIntoMinecraft;
