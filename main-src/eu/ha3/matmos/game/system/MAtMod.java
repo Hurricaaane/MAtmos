@@ -485,10 +485,10 @@ public class MAtMod extends HaddonImpl
 			this.updateNotifier.attempt();
 		}
 	}
-	
+
 	// ResourceManagerReloadListener
 	@Override
-	public void onReload(ResourceManager var1)
+	public void onResourceManagerReload(ResourceManager var1)
 	{
 		MAtmosConvLogger.warning("ResourceManager has changed. Unintended side-effects results may happen.");
 		
