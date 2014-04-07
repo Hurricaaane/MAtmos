@@ -1,5 +1,12 @@
-package net.minecraft.src;
+package eu.ha3.matmos.game.data;
 
+import net.minecraft.src.EntityPlayerSP;
+import net.minecraft.src.FoodStats;
+import net.minecraft.src.Minecraft;
+import net.minecraft.src.SoundManager;
+import net.minecraft.src.SoundPool;
+import net.minecraft.src.World;
+import net.minecraft.src.WorldInfo;
 import eu.ha3.mc.haddon.PrivateAccessException;
 import eu.ha3.mc.haddon.Utility;
 
@@ -23,7 +30,7 @@ public class MAtAccessors
 {
 	public static FoodStats getFoodStatsOf(EntityPlayerSP player)
 	{
-		return player.foodStats;
+		return player.getFoodStats();
 	}
 	
 	public static boolean getIsJumpingOf(EntityPlayerSP player)
@@ -38,7 +45,7 @@ public class MAtAccessors
 	
 	public static WorldInfo getWorldInfoOf(World world)
 	{
-		return world.worldInfo;
+		return world.getWorldInfo();
 	}
 	
 	public static SoundPool getSoundPoolSounds(Utility util)

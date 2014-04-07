@@ -1,6 +1,7 @@
-package net.minecraft.src;
+package eu.ha3.matmos.game.mod;
 
 import eu.ha3.matmos.game.system.MAtMod;
+import eu.ha3.mc.haddon.litemod.HaddonBridgeModLoader;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 

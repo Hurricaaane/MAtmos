@@ -11,9 +11,9 @@ import java.util.Locale;
 import java.util.Map;
 
 import net.minecraft.src.FolderResourcePack;
-import net.minecraft.src.Ha3SoundCommunicator;
-import net.minecraft.src.Ha3Utility;
-import net.minecraft.src.HaddonImpl;
+import eu.ha3.mc.haddon.implem.Ha3SoundCommunicator;
+import eu.ha3.mc.haddon.implem.Ha3Utility;
+import eu.ha3.mc.haddon.implem.HaddonImpl;
 import net.minecraft.src.KeyBinding;
 import net.minecraft.src.Minecraft;
 import net.minecraft.src.ReloadableResourceManager;

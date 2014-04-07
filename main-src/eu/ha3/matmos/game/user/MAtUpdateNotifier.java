@@ -12,7 +12,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import net.minecraft.src.Ha3Utility;
+import eu.ha3.mc.haddon.implem.Ha3Utility;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;

@@ -8,7 +8,6 @@ import net.minecraft.src.EnumMovingObjectType;
 import net.minecraft.src.EnumSkyBlock;
 import net.minecraft.src.GuiContainer;
 import net.minecraft.src.ItemStack;
-import net.minecraft.src.MAtAccessors;
 import net.minecraft.src.Minecraft;
 import net.minecraft.src.World;
 import net.minecraft.src.WorldInfo;

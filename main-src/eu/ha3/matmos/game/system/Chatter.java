@@ -1,6 +1,6 @@
 package eu.ha3.matmos.game.system;
 
-import net.minecraft.src.Ha3Utility;
+import eu.ha3.mc.haddon.implem.Ha3Utility;
 import eu.ha3.mc.haddon.Haddon;
 
 /*

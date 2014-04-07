@@ -4,13 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import net.minecraft.src.MAtAccessors;
 import net.minecraft.src.Minecraft;
 import net.minecraft.src.SoundPoolEntry;
 import paulscode.sound.SoundSystem;
 import paulscode.sound.SoundSystemConfig;
 import eu.ha3.matmos.conv.CustomVolume;
 import eu.ha3.matmos.conv.ReplicableSoundRelay;
+import eu.ha3.matmos.game.data.MAtAccessors;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
