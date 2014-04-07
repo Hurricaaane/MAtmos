@@ -1,11 +1,11 @@
 package eu.ha3.matmos.game.mod;
 
 import eu.ha3.matmos.game.system.MAtMod;
-import eu.ha3.mc.haddon.litemod.HaddonBridgeModLoader;
+import eu.ha3.mc.haddon.litemod.LiteBase;
 
 /* x-placeholder */
 
-public class mod_MAtmos extends HaddonBridgeModLoader
+public class mod_MAtmos extends LiteBase
 {
 	public mod_MAtmos()
 	{
