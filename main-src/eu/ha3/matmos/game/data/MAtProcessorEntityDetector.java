@@ -32,7 +32,7 @@ import eu.ha3.matmos.game.system.MAtMod;
 
 public class MAtProcessorEntityDetector implements Processor
 {
-	private MAtMod mod;
+	private MAtMod mod; 
 	
 	private AxisAlignedBB bbox;
 	

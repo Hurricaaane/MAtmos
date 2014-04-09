@@ -126,13 +126,13 @@ public class MAtDataGatherer
 		this.configVarsProcessor = new MAtProcessorCVARS(this.mod, this.data, CONFIGVARS, null);
 		this.optionsProcessor = new MAtProcessorOptions(this.mod, this.data, OPTIONS, null);
 		
-		if (Ha3StaticUtilities.classExists("WeatherPony.Seasons.api.Season", this)
+/*		if (Ha3StaticUtilities.classExists("WeatherPony.Seasons.api.Season", this)
 			&& Ha3StaticUtilities.classExists("WeatherPony.Seasons.api.BiomeHelper", this))
 		{
 			MAtmosConvLogger.info("WeatherPony.Seasons.api seems to be installed. Installing processor for Seasons.");
 			this.weatherpony_seasons_api_Processor =
 				new MAtProcessorSeasonsModAPI(this.mod, this.data, "weatherpony_seasons_api", null);
-		}
+		}*/
 		
 		this.frequent.add(new MAtProcessorFrequent(this.mod, this.data, INSTANTS, DELTAS));
 		this.frequent.add(new MAtProcessorContact(this.mod, this.data, CONTACTSCAN, null));

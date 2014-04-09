@@ -1,10 +1,15 @@
 package eu.ha3.matmos.game.user;
 
 import net.minecraft.src.GuiScreen;
+import eu.ha3.mc.haddon.SupportsFrameEvents;
+import eu.ha3.mc.haddon.SupportsKeyEvents;
+import eu.ha3.mc.haddon.SupportsTickEvents;
 import eu.ha3.mc.haddon.implem.Ha3Utility;
+import eu.ha3.mc.quick.keys.KeyWatcher;
 import net.minecraft.src.KeyBinding;
 import net.minecraft.src.Minecraft;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.input.Keyboard;
 
 import eu.ha3.easy.TimeStatistic;
@@ -31,12 +36,13 @@ import eu.ha3.mc.convenience.Ha3KeyManager;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class MAtUserControl implements Ha3HoldActions
+public class MAtUserControl implements Ha3HoldActions, SupportsTickEvents, SupportsFrameEvents, SupportsKeyEvents
 {
 	private MAtMod mod;
 	
 	private KeyBinding keyBindingMain;
-	private Ha3KeyManager keyManager;
+	private final KeyWatcher watcher = new KeyWatcher(this);
+	private final Ha3KeyManager keyManager = new Ha3KeyManager();
 	private MAtScroller scroller;
 	
 	private int loadingCount;
@@ -49,11 +55,14 @@ public class MAtUserControl implements Ha3HoldActions
 	public void load()
 	{
 		this.keyBindingMain = new KeyBinding("key.matmos", 65);
-		this.keyManager = new Ha3KeyManager();
-		
+		Minecraft.getMinecraft().gameSettings.keyBindings =
+				ArrayUtils.addAll(Minecraft.getMinecraft().gameSettings.keyBindings, this.keyBindingMain);
+			this.watcher.add(this.keyBindingMain);
+			this.keyBindingMain.keyCode = this.mod.getConfig().getInteger("key.code");
+			KeyBinding.resetKeyBindingArrayAndHash();
+			
 		this.scroller = new MAtScroller(this.mod);
 		
-		this.mod.manager().addKeyBinding(this.keyBindingMain, "MAtmos");
 		this.keyManager.addKeyBinding(this.keyBindingMain, new Ha3KeyHolding(this, 7));
 	}
 	
@@ -64,9 +73,16 @@ public class MAtUserControl implements Ha3HoldActions
 		
 		return Keyboard.getKeyName(this.keyBindingMain.keyCode);
 	}
-	
-	public void tickRoutine()
+	@Override
+	public void onKey(KeyBinding event)
 	{
+		this.keyManager.handleKeyDown(event);
+	}
+	
+	@Override
+	public void onTick()
+	{
+		this.watcher.onTick();
 		this.keyManager.handleRuntime();
 		
 		this.scroller.routine();
@@ -76,11 +92,12 @@ public class MAtUserControl implements Ha3HoldActions
 		}
 	}
 	
-	public void frameRoutine(float fspan)
+	@Override
+	public void onFrame(float fspan)
 	{
 		this.scroller.draw(fspan);
 	}
-	
+		
 	public void communicateKeyBindingEvent(KeyBinding event)
 	{
 		this.keyManager.handleKeyDown(event);

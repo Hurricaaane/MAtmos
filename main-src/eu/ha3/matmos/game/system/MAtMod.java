@@ -14,12 +14,17 @@ import net.minecraft.src.FolderResourcePack;
 import eu.ha3.mc.haddon.implem.Ha3SoundCommunicator;
 import eu.ha3.mc.haddon.implem.Ha3Utility;
 import eu.ha3.mc.haddon.implem.HaddonImpl;
+import eu.ha3.mc.haddon.implem.HaddonIdentity;
+import net.minecraft.src.Entity;
+import net.minecraft.src.EntityLivingBase;
+import net.minecraft.src.EntityPlayerSP;
 import net.minecraft.src.KeyBinding;
 import net.minecraft.src.Minecraft;
 import net.minecraft.src.ReloadableResourceManager;
 import net.minecraft.src.ResourceManager;
 import net.minecraft.src.ResourceManagerReloadListener;
 import net.minecraft.src.ResourcePack;
+import net.minecraft.src.SoundManager;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -34,10 +39,12 @@ import eu.ha3.matmos.game.data.MAtCatchAllRequirements;
 import eu.ha3.matmos.game.data.MAtDataGatherer;
 import eu.ha3.matmos.game.user.MAtUpdateNotifier;
 import eu.ha3.matmos.game.user.MAtUserControl;
+import eu.ha3.mc.haddon.Identity;
 import eu.ha3.mc.haddon.PrivateAccessException;
 import eu.ha3.mc.haddon.SupportsFrameEvents;
 import eu.ha3.mc.haddon.SupportsKeyEvents;
 import eu.ha3.mc.haddon.SupportsTickEvents;
+import eu.ha3.mc.haddon.OperatorCaster;
 import eu.ha3.util.property.simple.ConfigProperty;
 
 /*
@@ -60,9 +67,11 @@ public class MAtMod extends HaddonImpl
 	implements SupportsFrameEvents, SupportsTickEvents, SupportsKeyEvents, ResourceManagerReloadListener
 {
 	final static public int VERSION = 26; // Remember to change the thing on mod_Matmos
-	final static public String FOR = "1.6.2";
+	final static public String FOR = "1.6.4";
 	final static public String MOD_RAW_NAME = "MAtmos";
 	final static public String MOD_VERSIONNED_NAME = MOD_RAW_NAME + " r" + VERSION + " for " + FOR;
+	protected final String ADDRESS = "http://matmos.ha3.eu";
+    protected final Identity identity = new HaddonIdentity(this.MOD_RAW_NAME, this.VERSION, this.FOR, this.ADDRESS);
 	
 	final static public MAtmosConvLogger LOGGER = new MAtmosConvLogger();
 	
@@ -109,10 +118,17 @@ public class MAtMod extends HaddonImpl
 	@Override
 	public void onLoad()
 	{
-		this.matmosFolder = new File(util().getModsFolder(), "matmos/");
+//        util().registerPrivateGetter("getSoundManager", SoundManager.class, 5, "field_147694_f", "f");
+//        util().registerPrivateGetter("getSoundSystem", SoundaManager.class, 4, "field_148620_e", "e");
+        
+        util().registerPrivateGetter("isJumping", EntityPlayerSP.class, -1, "field_70703_bu", "bu");
+        util().registerPrivateGetter("isInWeb", Entity.class, -1, "field_70134_J", "J");
+
+        this.matmosFolder = new File(util().getModsFolder(), "matmos/");
 		this.chatter = new Chatter(this, MOD_RAW_NAME);
 		
-		manager().hookTickEvents(true);
+        ((OperatorCaster) op()).setTickEnabled(true);
+
 		
 		// Look for installation errors
 		if (!this.matmosFolder.exists())
@@ -126,11 +142,9 @@ public class MAtMod extends HaddonImpl
 		this.userControl = new MAtUserControl(this);
 		this.dataGatherer = new MAtDataGatherer(this);
 		this.expansionManager =
-			new ExpansionManager("expansions_r25/", new File(
-				util().getModsFolder(), "matmos/expansions_r25_userconfig/"), new MAtCacheRegistry());
+			new ExpansionManager("expansions_r26/", new File(
+				util().getModsFolder(), "matmos/expansions_r26_userconfig/"), new MAtCacheRegistry());
 		this.updateNotifier = new MAtUpdateNotifier(this);
-		
-		manager().hookFrameEvents(true);
 		
 		// Create default configuration
 		this.config = new ConfigProperty();
@@ -140,9 +154,12 @@ public class MAtMod extends HaddonImpl
 		this.config.setProperty("reversed.controls", false);
 		this.config.setProperty("sound.autopreview", true);
 		this.config.setProperty("globalvolume.scale", 1f);
+		this.config.setProperty("key.code", 65);
 		this.config.setProperty("useroptions.altitudes.high", true);
 		this.config.setProperty("useroptions.altitudes.low", true);
 		this.config.setProperty("useroptions.biome.override", -1);
+		this.config.setProperty("debug.mode", 0);
+		this.config.setProperty("minecraftsound.ambient.volume", 1f);
 		this.config.setProperty("update_found.enabled", true);
 		this.config.setProperty("update_found.version", MAtMod.VERSION);
 		this.config.setProperty("update_found.display.remaining.value", 0);
@@ -224,8 +241,10 @@ public class MAtMod extends HaddonImpl
 	
 	private void findTotalConversionAutostart()
 	{
-		for (File file : new File(this.matmosFolder, "sets/").listFiles())
+		try
 		{
+		for (File file : new File(this.matmosFolder, "sets/").listFiles())
+			{
 			if (file.isDirectory()
 				&& new File(file, "mat_set.json").exists() && new File(file, "autostart.token").exists()
 				&& new File(file, "autostart.token").isFile())
@@ -238,7 +257,13 @@ public class MAtMod extends HaddonImpl
 				saveConfig();
 			}
 		}
-	}
+		}
+		catch (Throwable th) // no total conversions, how handled this before?
+			{
+			return;
+			}
+}
+	
 	
 	public void initializeAndEnable()
 	{
@@ -442,7 +467,7 @@ public class MAtMod extends HaddonImpl
 		this.expansionManager.soundRoutine();
 		this.soundManagerMaster.routine();
 		
-		this.userControl.frameRoutine(semi);
+		this.userControl.onFrame(semi);
 	}
 	
 	@Override
@@ -461,12 +486,11 @@ public class MAtMod extends HaddonImpl
 					Ha3Utility.COLOR_YELLOW, " was NOT found. This folder should exist on a normal installation.");
 				
 			}
-			manager().hookTickEvents(false);
-			manager().hookFrameEvents(false);
+	        ((OperatorCaster) op()).setTickEnabled(false);
 			return;
 		}
 		
-		this.userControl.tickRoutine();
+		this.userControl.onTick();
 		if (this.isRunning)
 		{
 			if (!this.dataRoll)
@@ -552,6 +576,12 @@ public class MAtMod extends HaddonImpl
 	public Ha3SoundCommunicator getSoundCommunicator()
 	{
 		return this.sndComm;
+	}
+	
+	@Override
+	public Identity getIdentity()
+	{
+		return this.identity;
 	}
 	
 	public Chatter getChatter()

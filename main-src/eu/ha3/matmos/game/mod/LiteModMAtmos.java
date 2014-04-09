@@ -5,9 +5,9 @@ import eu.ha3.mc.haddon.litemod.LiteBase;
 
 /* x-placeholder */
 
-public class mod_MAtmos extends LiteBase
+public class LiteModMAtmos extends LiteBase
 {
-	public mod_MAtmos()
+	public LiteModMAtmos()
 	{
 		super(new MAtMod());
 		

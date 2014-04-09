@@ -1,4 +1,4 @@
-package eu.ha3.matmos.game.data;
+/*package eu.ha3.matmos.game.data;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +9,7 @@ import WeatherPony.Seasons.api.Season;
 import eu.ha3.matmos.engine.implem.IntegerData;
 import eu.ha3.matmos.game.system.MAtMod;
 
-/*
+
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
                     Version 2, December 2004 
 
@@ -23,7 +23,7 @@ import eu.ha3.matmos.game.system.MAtMod;
    TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION 
 
   0. You just DO WHAT THE FUCK YOU WANT TO. 
-*/
+
 
 public class MAtProcessorSeasonsModAPI extends MAtProcessorModel
 {
@@ -70,3 +70,4 @@ public class MAtProcessorSeasonsModAPI extends MAtProcessorModel
 		setValue(1, ic);
 	}
 }
+*/

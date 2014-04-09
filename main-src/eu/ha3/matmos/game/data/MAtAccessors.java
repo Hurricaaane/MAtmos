@@ -9,6 +9,7 @@ import net.minecraft.src.World;
 import net.minecraft.src.WorldInfo;
 import eu.ha3.mc.haddon.PrivateAccessException;
 import eu.ha3.mc.haddon.Utility;
+import eu.ha3.mc.haddon.implem.HaddonUtilitySingleton;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -35,12 +36,28 @@ public class MAtAccessors
 	
 	public static boolean getIsJumpingOf(EntityPlayerSP player)
 	{
-		return player.isJumping;
+		try {
+			return (Boolean) ((Utility) HaddonUtilitySingleton.getInstance()).getPrivate(player, "isJumping");
+		}
+		catch (PrivateAccessException e)
+		{
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+		//return player.isJumping;
 	}
 	
 	public static boolean getIsInWebOf(EntityPlayerSP player)
 	{
-		return player.isInWeb;
+		try {
+			return (Boolean) ((Utility) HaddonUtilitySingleton.getInstance()).getPrivate(player, "isInWeb");
+		}
+		catch (PrivateAccessException e)
+		{
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+		//		return player.isInWeb;
 	}
 	
 	public static WorldInfo getWorldInfoOf(World world)

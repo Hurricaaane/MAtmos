@@ -32,6 +32,6 @@ public class Chatter
 		System.arraycopy(in, 0, dest, 0, in.length);
 		System.arraycopy(args, 0, dest, in.length, args.length);
 		
-		this.mod.getManager().getUtility().printChat(dest);
+		this.mod.getUtility().printChat(dest);
 	}
 }
