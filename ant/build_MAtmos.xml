@@ -26,7 +26,7 @@
 	<property name="litemodversion" value="1.6.4" />
 
 	<!-- Your name, this gets written into the mod metadata and jar metadata -->
-	<property name="author"         value="Hurricaane (ported by Gaelmare)" />
+	<property name="author"         value="Hurricaaane (ported by Gaelmare)" />
 
 	<!-- The name of the eclipse project to build, for upstream dependencies see the targets below -->
 	<property name="project"        value="MAtmos" />
