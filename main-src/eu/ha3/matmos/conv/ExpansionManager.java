@@ -14,21 +14,7 @@ import eu.ha3.matmos.engine.interfaces.SoundRelay;
 import eu.ha3.matmos.requirem.Collation;
 import eu.ha3.matmos.requirem.CollationOfRequirements;
 
-/*
-            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
-                    Version 2, December 2004
-
- Copyright (C) 2004 Sam Hocevar <sam@hocevar.net>
-
- Everyone is permitted to copy and distribute verbatim or modified
- copies of this license document, and changing it is allowed as long
- as the name is changed.
-
-            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
-   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
-
-  0. You just DO WHAT THE FUCK YOU WANT TO.
- */
+/* x-placeholder-wtfplv2 */
 
 public class ExpansionManager
 {
@@ -45,13 +31,14 @@ public class ExpansionManager
 	private CacheRegistry cacheRegistry;
 	private File packsFolder;
 	
-	public ExpansionManager(String expansionsSubdir, File userconfigFolder, CacheRegistry registry)
+	public ExpansionManager(String expansionsSubdir, File userconfigFolder, File modsFolder, CacheRegistry registry)
 	{
 		this.expansions = new HashMap<String, Expansion>();
 		this.cacheRegistry = registry;
 		
 		this.expansionsSubdir = expansionsSubdir;
 		this.userconfigFolder = userconfigFolder;
+		this.packsFolder = modsFolder;
 		
 		if (!this.userconfigFolder.exists())
 		{
@@ -236,7 +223,6 @@ public class ExpansionManager
 	{
 		if (!modsDir.exists())
 			return;
-		
 		for (File mod : modsDir.listFiles())
 		{
 			if (mod.isDirectory()) //&& mod.getName().startsWith("matmos_"))

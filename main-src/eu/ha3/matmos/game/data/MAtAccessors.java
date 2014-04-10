@@ -50,7 +50,8 @@ public class MAtAccessors
 	public static boolean getIsInWebOf(EntityPlayerSP player)
 	{
 		try {
-			return (Boolean) ((Utility) HaddonUtilitySingleton.getInstance()).getPrivate(player, "isInWeb");
+			return (Boolean) ((Utility) HaddonUtilitySingleton
+					.getInstance()).getPrivate(player, "isInWeb");
 		}
 		catch (PrivateAccessException e)
 		{
@@ -68,9 +69,9 @@ public class MAtAccessors
 	public static SoundPool getSoundPoolSounds(Utility util)
 	{
 		try
-		{
-			return (SoundPool) util.getPrivateValueLiteral(
-				net.minecraft.src.SoundManager.class, Minecraft.getMinecraft().sndManager, "d", 3);
+		{ 
+			return 	((SoundPool) util.getPrivate(Minecraft.getMinecraft().sndManager,
+					"soundPoolSounds"));
 		}
 		catch (PrivateAccessException e)
 		{

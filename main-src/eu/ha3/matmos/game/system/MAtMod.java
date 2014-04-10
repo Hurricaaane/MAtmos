@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import paulscode.sound.SoundSystem;
 import net.minecraft.src.FolderResourcePack;
 import eu.ha3.mc.haddon.implem.Ha3SoundCommunicator;
 import eu.ha3.mc.haddon.implem.Ha3Utility;
@@ -47,21 +48,7 @@ import eu.ha3.mc.haddon.SupportsTickEvents;
 import eu.ha3.mc.haddon.OperatorCaster;
 import eu.ha3.util.property.simple.ConfigProperty;
 
-/*
-            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
-                    Version 2, December 2004
-
- Copyright (C) 2004 Sam Hocevar <sam@hocevar.net>
-
- Everyone is permitted to copy and distribute verbatim or modified
- copies of this license document, and changing it is allowed as long
- as the name is changed.
-
-            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
-   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
-
-  0. You just DO WHAT THE FUCK YOU WANT TO.
- */
+/* x-placeholder-wtfplv2 */
 
 public class MAtMod extends HaddonImpl
 	implements SupportsFrameEvents, SupportsTickEvents, SupportsKeyEvents, ResourceManagerReloadListener
@@ -77,7 +64,7 @@ public class MAtMod extends HaddonImpl
 	
 	private File matmosFolder;
 	private File packsFolder;
-	private String usingTotalConversion;
+//	private String usingTotalConversion;
 	
 	private MAtModPhase phase;
 	private ConfigProperty config;
@@ -117,21 +104,32 @@ public class MAtMod extends HaddonImpl
 	
 	@Override
 	public void onLoad()
-	{
-//        util().registerPrivateGetter("getSoundManager", SoundManager.class, 5, "field_147694_f", "f");
-//        util().registerPrivateGetter("getSoundSystem", SoundaManager.class, 4, "field_148620_e", "e");
+	{      
+        util().registerPrivateGetter("currentServerData", Minecraft.class, -1, "currentServerData", "field_71422_O", "M");
+
+        util().registerPrivateGetter("defaultResourcePacks", Minecraft.class, -1, "defaultResourcePacks", "field_110449_ao", "aq");
         
-        util().registerPrivateGetter("isJumping", EntityPlayerSP.class, -1, "field_70703_bu", "bu");
-        util().registerPrivateGetter("isInWeb", Entity.class, -1, "field_70134_J", "J");
+        util().registerPrivateGetter("sndSystem", SoundManager.class, -1, "sndSystem", "field_77381_a", "b");
+        util().registerPrivateGetter("soundPoolSounds", SoundManager.class, -1, "soundPoolSounds", "field_77379_b", "d");
+
+        util().registerPrivateGetter("isJumping", EntityPlayerSP.class, -1, "isJumping", "field_70703_bu", "bd");
+        util().registerPrivateGetter("isInWeb", Entity.class, -1, "isInWeb", "field_70134_J", "K");
 
         this.matmosFolder = new File(util().getModsFolder(), "matmos/");
+		// Look for installation errors
+		if (!this.matmosFolder.exists())
+		{
+			this.isFatalError = true;
+			return;
+		}
+
 		this.chatter = new Chatter(this, MOD_RAW_NAME);
 		
         ((OperatorCaster) op()).setTickEnabled(true);
 
-		
+    	this.packsFolder = new File(this.matmosFolder, "packs/");
 		// Look for installation errors
-		if (!this.matmosFolder.exists())
+		if (!this.packsFolder.exists())
 		{
 			this.isFatalError = true;
 			return;
@@ -142,8 +140,9 @@ public class MAtMod extends HaddonImpl
 		this.userControl = new MAtUserControl(this);
 		this.dataGatherer = new MAtDataGatherer(this);
 		this.expansionManager =
-			new ExpansionManager("expansions_r26/", new File(
-				util().getModsFolder(), "matmos/expansions_r26_userconfig/"), new MAtCacheRegistry());
+			new ExpansionManager("expansions_r26/",
+					new File(this.matmosFolder, "expansions_r26_userconfig/"),
+					this.packsFolder, new MAtCacheRegistry());
 		this.updateNotifier = new MAtUpdateNotifier(this);
 		
 		// Create default configuration
@@ -164,7 +163,6 @@ public class MAtMod extends HaddonImpl
 		this.config.setProperty("update_found.version", MAtMod.VERSION);
 		this.config.setProperty("update_found.display.remaining.value", 0);
 		this.config.setProperty("update_found.display.count.value", 3);
-		this.config.setProperty("totalconversion.name", "default");
 		this.config.commit();
 		
 		// Load configuration from source
@@ -180,9 +178,7 @@ public class MAtMod extends HaddonImpl
 		}
 		
 		this.updateNotifier.loadConfig(this.config);
-		
-		findTotalConversionAutostart();
-		setupTotalConversion();
+
 		appendResourcePacks();
 		createSoundManagerMaster();
 		
@@ -205,7 +201,7 @@ public class MAtMod extends HaddonImpl
 		{
 			@SuppressWarnings("unchecked")
 			List<ResourcePack> resourcePacks =
-				(List<ResourcePack>) util().getPrivateValueLiteral(Minecraft.class, Minecraft.getMinecraft(), "aq", 63);
+				(List<ResourcePack>) util().getPrivate(Minecraft.getMinecraft(), "defaultResourcePacks");
 			
 			for (File file : this.packsFolder.listFiles())
 			{
@@ -221,49 +217,6 @@ public class MAtMod extends HaddonImpl
 			e.printStackTrace();
 		}
 	}
-	
-	private void setupTotalConversion()
-	{
-		if (!this.config.getString("totalconversion.name").equals("default"))
-		{
-			this.usingTotalConversion = this.config.getString("totalconversion.name");
-			this.packsFolder = new File(this.matmosFolder, "sets/" + this.usingTotalConversion + "/");
-		}
-		
-		if (this.packsFolder == null || !this.packsFolder.exists() || !this.packsFolder.isDirectory())
-		{
-			this.usingTotalConversion = "default";
-			this.packsFolder = new File(this.matmosFolder, "sets/default/");
-			this.config.setProperty("totalconversion.name", "default");
-		}
-		this.expansionManager.setPacksFolder(this.packsFolder);
-	}
-	
-	private void findTotalConversionAutostart()
-	{
-		try
-		{
-		for (File file : new File(this.matmosFolder, "sets/").listFiles())
-			{
-			if (file.isDirectory()
-				&& new File(file, "mat_set.json").exists() && new File(file, "autostart.token").exists()
-				&& new File(file, "autostart.token").isFile())
-			{
-				MAtmosConvLogger.info("Found autostart token in valid expansion set: " + file.getName());
-				
-				new File(file, "autostart.token").delete();
-				
-				this.config.setProperty("totalconversion.name", file.getName());
-				saveConfig();
-			}
-		}
-		}
-		catch (Throwable th) // no total conversions, how handled this before?
-			{
-			return;
-			}
-}
-	
 	
 	public void initializeAndEnable()
 	{
@@ -587,36 +540,6 @@ public class MAtMod extends HaddonImpl
 	public Chatter getChatter()
 	{
 		return this.chatter;
-	}
-	
-	/**
-	 * Returns a list of all possible Total Conversions, sorted with the loaded
-	 * Total Conversion first, and "default" second if it is not already the
-	 * loaded Total Conversion.
-	 * 
-	 * @return
-	 */
-	public List<String> getTotalConversionsSpecialSort()
-	{
-		List<String> possibilities = new ArrayList<String>();
-		for (File file : new File(this.matmosFolder, "sets/").listFiles())
-		{
-			if (file.isDirectory() && new File(file, "mat_set.json").exists())
-			{
-				possibilities.add(file.getName());
-			}
-		}
-		Collections.sort(possibilities);
-		
-		// Make sure default is present and second
-		possibilities.remove("default");
-		possibilities.add(0, "default");
-		
-		// Make sure the loaded set is first
-		possibilities.remove(this.usingTotalConversion);
-		possibilities.add(0, this.usingTotalConversion);
-		
-		return null;
 	}
 	
 }
