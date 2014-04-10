@@ -263,7 +263,7 @@
 		<echo level="info" message="Building final mod output" />
 
 		<mkdir dir="${dist.dir}" />
-		<jar destfile="${dist.dir}/${file.prefix}_${ant.project.name}_${version}_mc${mcversion}.${file.type}" duplicate="preserve" index="true" manifestencoding="UTF-8">
+		<jar destfile="${dist.dir}/${file.prefix}_${ant.project.name}_r${version}_${mcversion}.${file.type}" duplicate="preserve" index="true" manifestencoding="UTF-8">
 			<manifest>
 				<attribute name="Built-By" value="MCP (http://mcp.ocean-labs.de)" />
 				<attribute name="Implementation-Vendor" value="${author}" />
@@ -279,7 +279,7 @@
 	        <echo level="info" message="Building final output" />
 	        <mkdir dir="${dist.dir}" />
 	    	<zip destfile="${dist.dir}/${ant.project.name}_r${version}_${mcversion}.zip" duplicate="fail">
-	            <fileset file="${dist.dir}/${file.prefix}_${ant.project.name}_${version}_mc${mcversion}.${file.type}" />
+	            <fileset file="${dist.dir}/${file.prefix}_${ant.project.name}_r${version}_${mcversion}.${file.type}" />
                 <fileset dir="${HOME}/src/MAtmos/matmos-packaging"/>	        	
 	        </zip>
 	    </target>
