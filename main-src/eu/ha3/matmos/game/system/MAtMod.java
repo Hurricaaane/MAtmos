@@ -29,6 +29,7 @@ import net.minecraft.src.SoundManager;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.mumfrey.liteloader.core.LiteLoader;
 
 import eu.ha3.easy.TimeStatistic;
 import eu.ha3.matmos.conv.CustomVolume;
@@ -107,14 +108,16 @@ public class MAtMod extends HaddonImpl
 	{      
         util().registerPrivateGetter("currentServerData", Minecraft.class, -1, "currentServerData", "field_71422_O", "M");
 
-        util().registerPrivateGetter("defaultResourcePacks", Minecraft.class, -1, "defaultResourcePacks", "field_110449_ao", "aq");
-        
         util().registerPrivateGetter("sndSystem", SoundManager.class, -1, "sndSystem", "field_77381_a", "b");
         util().registerPrivateGetter("soundPoolSounds", SoundManager.class, -1, "soundPoolSounds", "field_77379_b", "d");
 
         util().registerPrivateGetter("isJumping", EntityPlayerSP.class, -1, "isJumping", "field_70703_bu", "bd");
         util().registerPrivateGetter("isInWeb", Entity.class, -1, "isInWeb", "field_70134_J", "K");
 
+        this.chatter = new Chatter(this, MOD_RAW_NAME);
+        ((OperatorCaster) op()).setTickEnabled(true);
+        ((OperatorCaster) op()).setFrameEnabled(true);
+        
         this.matmosFolder = new File(util().getModsFolder(), "matmos/");
 		// Look for installation errors
 		if (!this.matmosFolder.exists())
@@ -122,10 +125,6 @@ public class MAtMod extends HaddonImpl
 			this.isFatalError = true;
 			return;
 		}
-
-		this.chatter = new Chatter(this, MOD_RAW_NAME);
-		
-        ((OperatorCaster) op()).setTickEnabled(true);
 
     	this.packsFolder = new File(this.matmosFolder, "packs/");
 		// Look for installation errors
@@ -197,25 +196,15 @@ public class MAtMod extends HaddonImpl
 	
 	private void appendResourcePacks()
 	{
-		try
+		for (File file : this.packsFolder.listFiles())
 		{
-			@SuppressWarnings("unchecked")
-			List<ResourcePack> resourcePacks =
-				(List<ResourcePack>) util().getPrivate(Minecraft.getMinecraft(), "defaultResourcePacks");
-			
-			for (File file : this.packsFolder.listFiles())
+			if (file.isDirectory())
 			{
-				if (file.isDirectory())
-				{
-					MAtmosConvLogger.info("Adding resource pack at " + file.getAbsolutePath());
-					resourcePacks.add(new FolderResourcePack(file));
-				}
+				MAtmosConvLogger.info("Adding resource pack at " + file.getAbsolutePath());
+				LiteLoader.getInstance().registerModResourcePack(new FolderResourcePack(file));
 			}
 		}
-		catch (PrivateAccessException e)
-		{
-			e.printStackTrace();
-		}
+		Minecraft.getMinecraft().refreshResources();
 	}
 	
 	public void initializeAndEnable()
