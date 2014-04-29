@@ -1,11 +1,6 @@
 package eu.ha3.matmos.game.user;
 
 import net.minecraft.src.GuiScreen;
-import eu.ha3.mc.haddon.SupportsFrameEvents;
-import eu.ha3.mc.haddon.SupportsKeyEvents;
-import eu.ha3.mc.haddon.SupportsTickEvents;
-import eu.ha3.mc.haddon.implem.Ha3Utility;
-import eu.ha3.mc.quick.keys.KeyWatcher;
 import net.minecraft.src.KeyBinding;
 import net.minecraft.src.Minecraft;
 
@@ -13,12 +8,18 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.input.Keyboard;
 
 import eu.ha3.easy.TimeStatistic;
+import eu.ha3.matmos.conv.MAtmosConvLogger;
 import eu.ha3.matmos.game.gui.MAtGuiMenu;
 import eu.ha3.matmos.game.system.MAtMod;
 import eu.ha3.matmos.game.system.MAtModPhase;
 import eu.ha3.mc.convenience.Ha3HoldActions;
 import eu.ha3.mc.convenience.Ha3KeyHolding;
 import eu.ha3.mc.convenience.Ha3KeyManager;
+import eu.ha3.mc.haddon.SupportsFrameEvents;
+import eu.ha3.mc.haddon.SupportsKeyEvents;
+import eu.ha3.mc.haddon.SupportsTickEvents;
+import eu.ha3.mc.haddon.implem.Ha3Utility;
+import eu.ha3.mc.quick.keys.KeyWatcher;
 
 /* x-placeholder-wtfplv2 */
 
@@ -33,6 +34,8 @@ public class MAtUserControl implements Ha3HoldActions, SupportsTickEvents, Suppo
 	
 	private int loadingCount;
 	
+	private int tickRound;
+	
 	public MAtUserControl(MAtMod mAtmosHaddon)
 	{
 		this.mod = mAtmosHaddon;
@@ -42,11 +45,11 @@ public class MAtUserControl implements Ha3HoldActions, SupportsTickEvents, Suppo
 	{
 		this.keyBindingMain = new KeyBinding("key.matmos", 65);
 		Minecraft.getMinecraft().gameSettings.keyBindings =
-				ArrayUtils.addAll(Minecraft.getMinecraft().gameSettings.keyBindings, this.keyBindingMain);
-			this.watcher.add(this.keyBindingMain);
-			this.keyBindingMain.keyCode = this.mod.getConfig().getInteger("key.code");
-			KeyBinding.resetKeyBindingArrayAndHash();
-			
+			ArrayUtils.addAll(Minecraft.getMinecraft().gameSettings.keyBindings, this.keyBindingMain);
+		this.watcher.add(this.keyBindingMain);
+		this.keyBindingMain.keyCode = this.mod.getConfig().getInteger("key.code");
+		KeyBinding.resetKeyBindingArrayAndHash();
+		
 		this.scroller = new MAtScroller(this.mod);
 		
 		this.keyManager.addKeyBinding(this.keyBindingMain, new Ha3KeyHolding(this, 7));
@@ -59,6 +62,7 @@ public class MAtUserControl implements Ha3HoldActions, SupportsTickEvents, Suppo
 		
 		return Keyboard.getKeyName(this.keyBindingMain.keyCode);
 	}
+	
 	@Override
 	public void onKey(KeyBinding event)
 	{
@@ -68,6 +72,17 @@ public class MAtUserControl implements Ha3HoldActions, SupportsTickEvents, Suppo
 	@Override
 	public void onTick()
 	{
+		if (this.tickRound == 0)
+		{
+			int keyCode = this.keyBindingMain.keyCode;
+			if (keyCode != this.mod.getConfig().getInteger("key.code"))
+			{
+				MAtmosConvLogger.info("Key binding changed. Saving...");
+				this.mod.getConfig().setProperty("key.code", keyCode);
+				this.mod.saveConfig();
+			}
+		}
+		
 		this.watcher.onTick();
 		this.keyManager.handleRuntime();
 		
@@ -76,6 +91,7 @@ public class MAtUserControl implements Ha3HoldActions, SupportsTickEvents, Suppo
 		{
 			this.mod.getGlobalVolumeControl().setVolume(this.scroller.getValue());
 		}
+		this.tickRound = (this.tickRound + 1) % 100;
 	}
 	
 	@Override
@@ -83,7 +99,7 @@ public class MAtUserControl implements Ha3HoldActions, SupportsTickEvents, Suppo
 	{
 		this.scroller.draw(fspan);
 	}
-		
+	
 	public void communicateKeyBindingEvent(KeyBinding event)
 	{
 		this.keyManager.handleKeyDown(event);

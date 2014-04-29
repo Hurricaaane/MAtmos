@@ -4,27 +4,19 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import paulscode.sound.SoundSystem;
-import net.minecraft.src.FolderResourcePack;
-import eu.ha3.mc.haddon.implem.Ha3SoundCommunicator;
-import eu.ha3.mc.haddon.implem.Ha3Utility;
-import eu.ha3.mc.haddon.implem.HaddonImpl;
-import eu.ha3.mc.haddon.implem.HaddonIdentity;
 import net.minecraft.src.Entity;
-import net.minecraft.src.EntityLivingBase;
 import net.minecraft.src.EntityPlayerSP;
+import net.minecraft.src.FolderResourcePack;
 import net.minecraft.src.KeyBinding;
 import net.minecraft.src.Minecraft;
 import net.minecraft.src.ReloadableResourceManager;
 import net.minecraft.src.ResourceManager;
 import net.minecraft.src.ResourceManagerReloadListener;
-import net.minecraft.src.ResourcePack;
 import net.minecraft.src.SoundManager;
 
 import com.google.gson.Gson;
@@ -39,14 +31,16 @@ import eu.ha3.matmos.conv.MAtmosConvLogger;
 import eu.ha3.matmos.engine.interfaces.Sheet;
 import eu.ha3.matmos.game.data.MAtCatchAllRequirements;
 import eu.ha3.matmos.game.data.MAtDataGatherer;
-import eu.ha3.matmos.game.user.MAtUpdateNotifier;
 import eu.ha3.matmos.game.user.MAtUserControl;
 import eu.ha3.mc.haddon.Identity;
-import eu.ha3.mc.haddon.PrivateAccessException;
+import eu.ha3.mc.haddon.OperatorCaster;
 import eu.ha3.mc.haddon.SupportsFrameEvents;
 import eu.ha3.mc.haddon.SupportsKeyEvents;
 import eu.ha3.mc.haddon.SupportsTickEvents;
-import eu.ha3.mc.haddon.OperatorCaster;
+import eu.ha3.mc.haddon.implem.Ha3SoundCommunicator;
+import eu.ha3.mc.haddon.implem.Ha3Utility;
+import eu.ha3.mc.haddon.implem.HaddonIdentity;
+import eu.ha3.mc.haddon.implem.HaddonImpl;
 import eu.ha3.util.property.simple.ConfigProperty;
 
 /* x-placeholder-wtfplv2 */
@@ -59,13 +53,13 @@ public class MAtMod extends HaddonImpl
 	final static public String MOD_RAW_NAME = "MAtmos";
 	final static public String MOD_VERSIONNED_NAME = MOD_RAW_NAME + " r" + VERSION + " for " + FOR;
 	protected final String ADDRESS = "http://matmos.ha3.eu";
-    protected final Identity identity = new HaddonIdentity(this.MOD_RAW_NAME, this.VERSION, this.FOR, this.ADDRESS);
+	protected final Identity identity = new HaddonIdentity(this.MOD_RAW_NAME, this.VERSION, this.FOR, this.ADDRESS);
 	
 	final static public MAtmosConvLogger LOGGER = new MAtmosConvLogger();
 	
 	private File matmosFolder;
 	private File packsFolder;
-//	private String usingTotalConversion;
+	//	private String usingTotalConversion;
 	
 	private MAtModPhase phase;
 	private ConfigProperty config;
@@ -77,12 +71,10 @@ public class MAtMod extends HaddonImpl
 	private MAtUserControl userControl;
 	private MAtDataGatherer dataGatherer;
 	private MAtSoundManagerMaster soundManagerMaster;
-	private MAtUpdateNotifier updateNotifier;
 	
 	private boolean isFatalError;
 	private boolean isRunning;
 	
-	private boolean firstTickPassed;
 	private TimeStatistic timeStatistic;
 	
 	private boolean dumpReady = false;
@@ -105,28 +97,30 @@ public class MAtMod extends HaddonImpl
 	
 	@Override
 	public void onLoad()
-	{      
-        util().registerPrivateGetter("currentServerData", Minecraft.class, -1, "currentServerData", "field_71422_O", "M");
-
-        util().registerPrivateGetter("sndSystem", SoundManager.class, -1, "sndSystem", "field_77381_a", "b");
-        util().registerPrivateGetter("soundPoolSounds", SoundManager.class, -1, "soundPoolSounds", "field_77379_b", "d");
-
-        util().registerPrivateGetter("isJumping", EntityPlayerSP.class, -1, "isJumping", "field_70703_bu", "bd");
-        util().registerPrivateGetter("isInWeb", Entity.class, -1, "isInWeb", "field_70134_J", "K");
-
-        this.chatter = new Chatter(this, MOD_RAW_NAME);
-        ((OperatorCaster) op()).setTickEnabled(true);
-        ((OperatorCaster) op()).setFrameEnabled(true);
-        
-        this.matmosFolder = new File(util().getModsFolder(), "matmos/");
+	{
+		util().registerPrivateGetter(
+			"currentServerData", Minecraft.class, -1, "currentServerData", "field_71422_O", "M");
+		
+		util().registerPrivateGetter("sndSystem", SoundManager.class, -1, "sndSystem", "field_77381_a", "b");
+		util()
+			.registerPrivateGetter("soundPoolSounds", SoundManager.class, -1, "soundPoolSounds", "field_77379_b", "d");
+		
+		util().registerPrivateGetter("isJumping", EntityPlayerSP.class, -1, "isJumping", "field_70703_bu", "bd");
+		util().registerPrivateGetter("isInWeb", Entity.class, -1, "isInWeb", "field_70134_J", "K");
+		
+		this.chatter = new Chatter(this, MOD_RAW_NAME);
+		((OperatorCaster) op()).setTickEnabled(true);
+		((OperatorCaster) op()).setFrameEnabled(true);
+		
+		this.matmosFolder = new File(util().getModsFolder(), "matmos/");
 		// Look for installation errors
 		if (!this.matmosFolder.exists())
 		{
 			this.isFatalError = true;
 			return;
 		}
-
-    	this.packsFolder = new File(this.matmosFolder, "packs/");
+		
+		this.packsFolder = new File(this.matmosFolder, "packs/");
 		// Look for installation errors
 		if (!this.packsFolder.exists())
 		{
@@ -139,10 +133,9 @@ public class MAtMod extends HaddonImpl
 		this.userControl = new MAtUserControl(this);
 		this.dataGatherer = new MAtDataGatherer(this);
 		this.expansionManager =
-			new ExpansionManager("expansions_r26/",
-					new File(this.matmosFolder, "expansions_r26_userconfig/"),
-					this.packsFolder, new MAtCacheRegistry());
-		this.updateNotifier = new MAtUpdateNotifier(this);
+			new ExpansionManager(
+				"expansions_r25/", new File(this.matmosFolder, "expansions_r25_userconfig/"), this.packsFolder,
+				new MAtCacheRegistry());
 		
 		// Create default configuration
 		this.config = new ConfigProperty();
@@ -176,8 +169,6 @@ public class MAtMod extends HaddonImpl
 			throw new RuntimeException("Error caused config not to work: " + e.getMessage());
 		}
 		
-		this.updateNotifier.loadConfig(this.config);
-
 		appendResourcePacks();
 		createSoundManagerMaster();
 		
@@ -428,7 +419,7 @@ public class MAtMod extends HaddonImpl
 					Ha3Utility.COLOR_YELLOW, " was NOT found. This folder should exist on a normal installation.");
 				
 			}
-	        ((OperatorCaster) op()).setTickEnabled(false);
+			((OperatorCaster) op()).setTickEnabled(false);
 			return;
 		}
 		
@@ -444,14 +435,8 @@ public class MAtMod extends HaddonImpl
 			this.dataGatherer.tickRoutine();
 			this.expansionManager.dataRoutine();
 		}
-		
-		if (!this.firstTickPassed)
-		{
-			this.firstTickPassed = true;
-			this.updateNotifier.attempt();
-		}
 	}
-
+	
 	// ResourceManagerReloadListener
 	@Override
 	public void onResourceManagerReload(ResourceManager var1)
