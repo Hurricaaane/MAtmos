@@ -34,10 +34,10 @@ public class MAtAccessors
 		return player.getFoodStats();
 	}
 	
-	public static boolean getIsJumpingOf(EntityPlayerSP player)
+	public static boolean getIsJumpingOf(Utility util, EntityPlayerSP player)
 	{
 		try {
-			return (Boolean) ((Utility) HaddonUtilitySingleton.getInstance()).getPrivate(player, "isJumping");
+			return (Boolean) (util.getPrivate(player, "isJumping"));
 		}
 		catch (PrivateAccessException e)
 		{
@@ -47,11 +47,10 @@ public class MAtAccessors
 		//return player.isJumping;
 	}
 	
-	public static boolean getIsInWebOf(EntityPlayerSP player)
+	public static boolean getIsInWebOf(Utility util, EntityPlayerSP player)
 	{
 		try {
-			return (Boolean) ((Utility) HaddonUtilitySingleton
-					.getInstance()).getPrivate(player, "isInWeb");
+			return (Boolean) (util.getPrivate(player, "isInWeb"));
 		}
 		catch (PrivateAccessException e)
 		{
