@@ -1,5 +1,7 @@
 package eu.ha3.matmos.game.data;
 
+import net.minecraft.src.Entity;
+import net.minecraft.src.EntityLivingBase;
 import net.minecraft.src.EntityPlayerSP;
 import net.minecraft.src.FoodStats;
 import net.minecraft.src.Minecraft;
@@ -37,7 +39,7 @@ public class MAtAccessors
 	public static boolean getIsJumpingOf(Utility util, EntityPlayerSP player)
 	{
 		try {
-			return (Boolean) (util.getPrivate(player, "isJumping"));
+			return (Boolean) (util.getPrivate((EntityLivingBase)player, "isJumping"));
 		}
 		catch (PrivateAccessException e)
 		{
@@ -50,7 +52,7 @@ public class MAtAccessors
 	public static boolean getIsInWebOf(Utility util, EntityPlayerSP player)
 	{
 		try {
-			return (Boolean) (util.getPrivate(player, "isInWeb"));
+			return (Boolean) (util.getPrivate((Entity)player, "isInWeb"));
 		}
 		catch (PrivateAccessException e)
 		{
