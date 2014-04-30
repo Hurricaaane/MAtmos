@@ -13,20 +13,17 @@ import eu.ha3.matmos.game.system.MAtMod;
 import eu.ha3.matmos.game.system.MAtmosUtility;
 import eu.ha3.mc.convenience.Ha3HoldActions;
 import eu.ha3.mc.convenience.Ha3KeyHolding;
-import eu.ha3.mc.convenience.Ha3KeyManager;
+import eu.ha3.mc.convenience.Ha3KeyManager_2;
 import eu.ha3.mc.haddon.supporting.SupportsFrameEvents;
-import eu.ha3.mc.haddon.supporting.SupportsKeyEvents;
 import eu.ha3.mc.haddon.supporting.SupportsTickEvents;
 import eu.ha3.mc.quick.chat.ChatColorsSimple;
-import eu.ha3.mc.quick.keys.KeyWatcher;
 
 /* x-placeholder */
 
-public class UserControl implements Ha3HoldActions, SupportsTickEvents, SupportsFrameEvents, SupportsKeyEvents
+public class UserControl implements Ha3HoldActions, SupportsTickEvents, SupportsFrameEvents
 {
 	private final MAtMod mod;
-	private final KeyWatcher watcher = new KeyWatcher(this);
-	private final Ha3KeyManager keyManager = new Ha3KeyManager();
+	private final Ha3KeyManager_2 keyManager = new Ha3KeyManager_2();
 	
 	private KeyBinding keyBindingMain;
 	private VolumeScroller scroller;
@@ -44,12 +41,12 @@ public class UserControl implements Ha3HoldActions, SupportsTickEvents, Supports
 		this.keyBindingMain = new KeyBinding("MAtmos", 65, "key.categories.misc");
 		Minecraft.getMinecraft().gameSettings.keyBindings =
 			ArrayUtils.addAll(Minecraft.getMinecraft().gameSettings.keyBindings, this.keyBindingMain);
-		this.watcher.add(this.keyBindingMain);
 		this.keyBindingMain.setKeyCode(this.mod.getConfig().getInteger("key.code"));
 		KeyBinding.resetKeyBindingArrayAndHash();
 		
-		this.scroller = new VolumeScroller(this.mod);
 		this.keyManager.addKeyBinding(this.keyBindingMain, new Ha3KeyHolding(this, 7));
+		
+		this.scroller = new VolumeScroller(this.mod);
 	}
 	
 	private String getKeyBindingMainFriendlyName()
@@ -61,16 +58,9 @@ public class UserControl implements Ha3HoldActions, SupportsTickEvents, Supports
 	}
 	
 	@Override
-	public void onKey(KeyBinding event)
-	{
-		this.keyManager.handleKeyDown(event);
-	}
-	
-	@Override
 	public void onTick()
 	{
-		this.watcher.onTick();
-		this.keyManager.handleRuntime();
+		this.keyManager.onTick();
 		
 		this.scroller.routine();
 		if (this.scroller.isRunning())

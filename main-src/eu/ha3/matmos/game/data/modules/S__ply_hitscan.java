@@ -7,8 +7,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import eu.ha3.matmos.engine.core.interfaces.Data;
+import eu.ha3.matmos.game.data.MODULE_CONSTANTS;
 import eu.ha3.matmos.game.data.abstractions.module.Module;
 import eu.ha3.matmos.game.data.abstractions.module.ModuleProcessor;
+import eu.ha3.matmos.game.system.MAtmosUtility;
 
 /*
 --filenotes-placeholder
@@ -30,7 +32,34 @@ public class S__ply_hitscan extends ModuleProcessor implements Module
 	protected void doProcess()
 	{
 		Minecraft mc = Minecraft.getMinecraft();
-		setValue("mouse_over_something", mc.objectMouseOver != null);
-		setValue("mouse_over_what_remapped", this.equiv.get(mc.objectMouseOver.typeOfHit));
+		
+		if (mc.objectMouseOver == null || mc.objectMouseOver.typeOfHit == null)
+		{
+			setValue("mouse_over_something", false);
+			setValue("mouse_over_what", "");
+			setValue("block", MODULE_CONSTANTS.LEGACY_NO_BLOCK_IN_THIS_CONTEXT);
+			setValue("meta", MODULE_CONSTANTS.LEGACY_NO_BLOCK_IN_THIS_CONTEXT);
+			setValue("powermeta", MODULE_CONSTANTS.LEGACY_NO_BLOCK_IN_THIS_CONTEXT);
+			
+			return;
+		}
+		
+		setValue("mouse_over_something", true);
+		setValue("mouse_over_what", this.equiv.get(mc.objectMouseOver.typeOfHit));
+		setValue(
+			"block",
+			mc.objectMouseOver.typeOfHit == MovingObjectType.BLOCK ? MAtmosUtility.getNameAt(
+				mc.objectMouseOver.blockX, mc.objectMouseOver.blockY, mc.objectMouseOver.blockZ,
+				MODULE_CONSTANTS.NO_BLOCK_OUT_OF_BOUNDS) : MODULE_CONSTANTS.NO_BLOCK_IN_THIS_CONTEXT);
+		setValue(
+			"meta",
+			mc.objectMouseOver.typeOfHit == MovingObjectType.BLOCK ? MAtmosUtility.getMetaAsStringAt(
+				mc.objectMouseOver.blockX, mc.objectMouseOver.blockY, mc.objectMouseOver.blockZ,
+				MODULE_CONSTANTS.NO_BLOCK_OUT_OF_BOUNDS) : MODULE_CONSTANTS.NO_BLOCK_IN_THIS_CONTEXT);
+		setValue(
+			"powermeta",
+			mc.objectMouseOver.typeOfHit == MovingObjectType.BLOCK ? MAtmosUtility.getPowerMetaAt(
+				mc.objectMouseOver.blockX, mc.objectMouseOver.blockY, mc.objectMouseOver.blockZ,
+				MODULE_CONSTANTS.NO_BLOCK_OUT_OF_BOUNDS) : MODULE_CONSTANTS.NO_BLOCK_IN_THIS_CONTEXT);
 	}
 }

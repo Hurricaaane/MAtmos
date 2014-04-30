@@ -26,6 +26,8 @@ public class TimedEventInformation extends MultistateComponent implements Simula
 	private final ReferenceTime time;
 	private List<TimedEvent> events;
 	
+	private HelperFadeCalculator calc;
+	
 	private boolean isPlaying;
 	private long startTime;
 	private long stopTime;
@@ -39,6 +41,8 @@ public class TimedEventInformation extends MultistateComponent implements Simula
 		this.machineName = machineName;
 		this.provider = provider;
 		this.time = time;
+		
+		this.calc = new HelperFadeCalculator(time);
 		
 		this.events = events;
 		this.delayBeforeFadeIn = delayBeforeFadeIn;
@@ -55,11 +59,6 @@ public class TimedEventInformation extends MultistateComponent implements Simula
 	private void signalStoppable()
 	{
 		this.stopTime = this.time.getMilliseconds() + (long) (this.delayBeforeFadeOut * 1000);
-		
-		/*if (this.stopTime < (long) (this.startTime + this.fadeInTime * 1000))
-		{
-			this.stopTime = (long) (this.startTime + this.fadeInTime * 1000);
-		}*/
 	}
 	
 	@Override
@@ -92,6 +91,7 @@ public class TimedEventInformation extends MultistateComponent implements Simula
 			if (this.time.getMilliseconds() > this.startTime)
 			{
 				this.isPlaying = true;
+				this.calc.fadeIn((long) (this.fadeInTime * 1000));
 				for (TimedEventInterface t : this.events)
 				{
 					t.restart(this.time);
@@ -103,10 +103,11 @@ public class TimedEventInformation extends MultistateComponent implements Simula
 			if (this.time.getMilliseconds() > this.stopTime)
 			{
 				this.isPlaying = false;
+				this.calc.fadeOut((long) (this.fadeOutTime * 1000));
 			}
 		}
 		
-		if (this.isPlaying || this.time.getMilliseconds() < (long) (this.stopTime + this.fadeOutTime * 1000))
+		if (this.isPlaying || this.calc.calculateFadeFactor() > 0f)
 		{
 			play();
 		}
@@ -114,59 +115,10 @@ public class TimedEventInformation extends MultistateComponent implements Simula
 	
 	private void play()
 	{
-		float fadeFactor = calculateFadeFactor();
+		float fadeFactor = this.calc.calculateFadeFactor();
 		for (TimedEventInterface t : this.events)
 		{
 			t.play(this.time, fadeFactor);
 		}
-	}
-	
-	private float calculateFadeFactor()
-	{
-		float ret = 1f;
-		long ms = this.time.getMilliseconds();
-		
-		if (this.isPlaying)
-		{
-			if (this.fadeInTime == 0f)
-			{
-				ret = 1f;
-			}
-			else
-			{
-				float fac = (ms - this.startTime) / (this.fadeInTime * 1000f);
-				if (fac > 1f)
-				{
-					fac = 1f;
-				}
-				else if (fac < 0f)
-				{
-					fac = 0f;
-				}
-				ret = fac;
-			}
-		}
-		else
-		{
-			if (this.fadeOutTime == 0f)
-			{
-				ret = 0f;
-			}
-			else
-			{
-				float fac = (ms - this.stopTime) / (this.fadeOutTime * 1000f);
-				if (fac > 1f)
-				{
-					fac = 1f;
-				}
-				else if (fac < 0f)
-				{
-					fac = 0f;
-				}
-				ret = 1 - fac;
-			}
-		}
-		
-		return ret;
 	}
 }

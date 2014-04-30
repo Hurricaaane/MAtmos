@@ -295,6 +295,30 @@ public class MAtmosUtility
 	}
 	
 	/**
+	 * Returns the metadata of a certain block at the specified coordinates.
+	 * 
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param defaultIfFail
+	 * @return
+	 */
+	public static String getMetaAsStringAt(int x, int y, int z, String defaultIfFail)
+	{
+		if (!isWithinBounds(y))
+			return defaultIfFail;
+		
+		try
+		{
+			return Integer.toString(Minecraft.getMinecraft().theWorld.getBlockMetadata(x, y, z));
+		}
+		catch (Exception e)
+		{
+			return defaultIfFail;
+		}
+	}
+	
+	/**
 	 * Returns the legacy number value of an item stack.
 	 * 
 	 * @param itemStack

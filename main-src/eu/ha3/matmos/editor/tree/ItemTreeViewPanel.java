@@ -105,4 +105,10 @@ public class ItemTreeViewPanel extends JPanel implements ISerialUpdate, NamedSer
 			}
 		}
 	}
+	
+	public ItemTreeNode getSelectedITN()
+	{
+		return (ItemTreeNode) (this.itemTree.getSelectionPath().getLastPathComponent() instanceof ItemTreeNode
+			? this.itemTree.getSelectionPath().getLastPathComponent() : null);
+	}
 }

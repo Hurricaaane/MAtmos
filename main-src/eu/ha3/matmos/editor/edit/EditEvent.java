@@ -270,7 +270,7 @@ public class EditEvent extends JPanel
 			return;
 		
 		List<String> paths = new ArrayList<String>();
-		String[] lines = this.files.getText().split("\n");
+		String[] lines = this.files.getText().split(System.getProperty("line.separator"));
 		for (String line : lines)
 		{
 			if (!line.equals(""))
@@ -324,7 +324,7 @@ public class EditEvent extends JPanel
 		for (String path : this.event.path)
 		{
 			paths.append(path);
-			paths.append('\n');
+			paths.append(System.getProperty("line.separator"));
 		}
 		this.files.setText(paths.toString());
 	}

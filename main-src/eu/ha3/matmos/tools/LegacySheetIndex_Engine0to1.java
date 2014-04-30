@@ -129,9 +129,9 @@ public class LegacySheetIndex_Engine0to1 implements SheetIndex
 		add(97, "legacy", "gui_instanceof_container");
 		add(100, "legacy", "riding_horse");
 		
-		add(26, "UNKNOWN", "unknown_26");
+		add(26, "cb_column", "can_rain_reach");
 		add(59, "UNKNOWN", "unknown_59");
-		add(96, "UNKNOWN", "unknown_59");
+		add(96, "UNKNOWN", "unknown_96");
 		
 		add(75, "server_info", "has_server_info");
 		add(76, "server_info", "addressinput_hashcode");

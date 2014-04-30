@@ -9,6 +9,7 @@ import java.util.Map;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiScreenResourcePacks;
 import eu.ha3.matmos.expansions.Expansion;
 import eu.ha3.matmos.expansions.volume.VolumeUpdatable;
 import eu.ha3.matmos.game.system.MAtMod;
@@ -267,6 +268,13 @@ public class MAtGuiMenu extends GuiScreen
 			+ _MIX * (this.IDS_PER_PAGE + 4), _TURNOFFWIDTH, _UNIT, "Turn Off"));
 		
 		//this.screenTitle = stringtranslate.translateKey("controls.title");
+		
+		if (!this.mod.hasResourcePacksLoaded())
+		{
+			this.buttonList.add(new GuiButton(
+				199, _LEFT + _MIX, _SEPARATOR + _MIX * (this.IDS_PER_PAGE + 1), _ELEMENT_WIDTH - _MIX * 2, _UNIT,
+				(this.mod.hasNonethelessResourcePacksInstalled() ? "Enable" : "Install") + " MAtmos Resource Pack"));
+		}
 	}
 	
 	@Override
@@ -278,6 +286,11 @@ public class MAtGuiMenu extends GuiScreen
 		{
 			// This triggers onGuiClosed
 			mc.displayGuiScreen(this.parentScreen);
+		}
+		else if (par1GuiButton.id == 199)
+		{
+			// This triggers onGuiClosed
+			this.mc.displayGuiScreen(new GuiScreenResourcePacks(this));
 		}
 		else if (par1GuiButton.id == 201)
 		{
@@ -382,6 +395,28 @@ public class MAtGuiMenu extends GuiScreen
 			drawCenteredString(this.fontRendererObj, ChatColorsSimple.COLOR_YELLOW
 				+ "Dev mode is enabled. This may cause Minecraft to run slower.", this.width / 2, _SEPARATOR
 				+ _MIX * (this.IDS_PER_PAGE + 3) - 9, 0xffffff);
+		}
+		
+		if (!this.mod.hasResourcePacksLoaded())
+		{
+			if (this.mod.hasNonethelessResourcePacksInstalled())
+			{
+				drawCenteredString(
+					this.fontRendererObj, "Your MAtmos Resource Pack isn't enabled yet!", this.width / 2, 10
+						+ 22 * 6 - 40 + 20, 0xff0000);
+				drawCenteredString(
+					this.fontRendererObj, "Activate it in the Minecraft Options menu for it to run.", this.width / 2,
+					10 + 22 * 6 - 40 + 28, 0xff0000);
+			}
+			else
+			{
+				drawCenteredString(
+					this.fontRendererObj, "You don't have any MAtmos Resource Pack installed!", this.width / 2, 10
+						+ 22 * 6 - 40 + 20, 0xff0000);
+				drawCenteredString(
+					this.fontRendererObj, "Put the Resource Pack in the resourcepacks/ folder.", this.width / 2, 10
+						+ 22 * 6 - 40 + 28, 0xff0000);
+			}
 		}
 		
 		super.drawScreen(par1, par2, par3);

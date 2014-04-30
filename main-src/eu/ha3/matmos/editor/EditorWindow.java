@@ -32,6 +32,8 @@ import eu.ha3.matmos.editor.filechooser.JasonFileChooser;
 import eu.ha3.matmos.editor.filechooser.OverwriteWarningJasonFileChooser;
 import eu.ha3.matmos.editor.interfaces.Editor;
 import eu.ha3.matmos.editor.interfaces.Window;
+import eu.ha3.matmos.editor.tree.ItemTreeBranch;
+import eu.ha3.matmos.editor.tree.ItemTreeNode;
 import eu.ha3.matmos.editor.tree.ItemTreeViewPanel;
 import eu.ha3.matmos.jsonformat.serializable.expansion.SerialRoot;
 
@@ -236,7 +238,6 @@ public class EditorWindow extends JFrame implements Window
 				String name = "New item";
 				while (true)
 				{
-					new PopupHelper();
 					name = PopupHelper.askForName(EditorWindow.this, "Create new item...", name);
 					
 					if (name == null || EditorWindow.this.model.createItem(choice, name))
@@ -247,6 +248,18 @@ public class EditorWindow extends JFrame implements Window
 		mnCreate.add(mntmAdd);
 		
 		JMenuItem mntmNewMenuItem = new JMenuItem("Duplicate item...");
+		mntmNewMenuItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				ItemTreeNode node = getSelectedITN();
+				if (node == null)
+					return;
+				
+				EditorWindow.this.model.duplicateItem(
+					((ItemTreeBranch) node.getParent()).getSelector(), node.getItemName());
+			}
+		});
 		mnCreate.add(mntmNewMenuItem);
 		
 		JMenu mnOptions = new JMenu("Options");
@@ -381,6 +394,11 @@ public class EditorWindow extends JFrame implements Window
 		jsonTab.add(jsonPanel, BorderLayout.CENTER);
 		
 		init();
+	}
+	
+	private ItemTreeNode getSelectedITN()
+	{
+		return this.panelTree.getSelectedITN();
 	}
 	
 	private void init()

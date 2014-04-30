@@ -28,12 +28,11 @@ public class DeltaSheet extends GenericSheet implements VirtualSheet
 			String newValue = this.values.get(key);
 			Long newLong = LongFloatSimplificator.longOf(newValue);
 			
+			String previousValue =
+				this.data.getSheet(this.actualSheet).exists(key) ? this.data.getSheet(this.actualSheet).get(key) : "0";
+			
 			if (newLong != null)
 			{
-				String previousValue =
-					this.data.getSheet(this.actualSheet).exists(key)
-						? this.data.getSheet(this.actualSheet).get(key) : "0";
-				
 				Long previousLong = LongFloatSimplificator.longOf(previousValue);
 				
 				// Set it here, we needed to retreive previous value first
@@ -44,13 +43,15 @@ public class DeltaSheet extends GenericSheet implements VirtualSheet
 				}
 				else
 				{
-					this.data.getSheet(this.deltaSheet).set(key, "NO_DELTA");
+					this.data.getSheet(this.deltaSheet).set(
+						key, newValue.equals(previousValue) ? "NOT_MODIFIED" : "MODIFIED");
 				}
 			}
 			else
 			{
 				this.data.getSheet(this.actualSheet).set(key, newValue);
-				this.data.getSheet(this.deltaSheet).set(key, "NO_DELTA");
+				this.data.getSheet(this.deltaSheet).set(
+					key, newValue.equals(previousValue) ? "NOT_MODIFIED" : "MODIFIED");
 			}
 		}
 		

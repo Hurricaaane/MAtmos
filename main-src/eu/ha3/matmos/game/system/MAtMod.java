@@ -50,7 +50,7 @@ public class MAtMod extends HaddonImpl
 {
 	// Identity
 	protected final String NAME = "MAtmos";
-	protected final int VERSION = 26;
+	protected final int VERSION = 27;
 	protected final String FOR = "1.7.2";
 	protected final String ADDRESS = "http://matmos.ha3.eu";
 	protected final Date DATE = new Date(1394610076);
@@ -75,6 +75,9 @@ public class MAtMod extends HaddonImpl
 	
 	// Use once
 	private boolean hasFirstTickPassed;
+	private boolean hasResourcePacks;
+	private boolean hasDisabledResourcePacks;
+	private boolean hasResourcePacks_FixMe;
 	
 	// Debug queue
 	private Object queueLock = new Object();
@@ -200,6 +203,17 @@ public class MAtMod extends HaddonImpl
 		this.expansionManager.setCollector(this.dataGatherer);
 		this.expansionManager.loadExpansions();
 		
+		this.hasResourcePacks = true;
+		if (this.expansionManager.getExpansions().size() == 0)
+		{
+			MAtResourcePackDealer dealer = new MAtResourcePackDealer();
+			if (dealer.findResourcePacks().size() == 0)
+			{
+				this.hasResourcePacks = false;
+				this.hasDisabledResourcePacks = dealer.findDisabledResourcePacks().size() > 0;
+			}
+		}
+		
 		MAtLog.info("Expansions loaded (" + stat.getSecondsAsString(1) + "s).");
 	}
 	
@@ -310,6 +324,29 @@ public class MAtMod extends HaddonImpl
 					+ " ambience is incomplete, etc.");
 			getChatter().printChatShort(
 				"Use at your own risk. " + "Please check regularly for updates and resource pack updates.");
+			
+			if (!this.hasResourcePacks)
+			{
+				this.hasResourcePacks_FixMe = true;
+				if (this.hasDisabledResourcePacks)
+				{
+					this.chatter.printChat(ChatColorsSimple.COLOR_RED, "Resource Pack not enabled yet!");
+					this.chatter.printChatShort(ChatColorsSimple.COLOR_WHITE, "You need to activate "
+						+ "\"MAtmos Resource Pack\" in the Minecraft Options menu for it to run.");
+				}
+				else
+				{
+					this.chatter.printChat(ChatColorsSimple.COLOR_RED, "Resource Pack missing from resourcepacks/!");
+					this.chatter.printChatShort(
+						ChatColorsSimple.COLOR_WHITE,
+						"You may have forgotten to put the Resource Pack file into your resourcepacks/ folder.");
+				}
+			}
+		}
+		if (this.hasResourcePacks_FixMe && this.hasResourcePacks)
+		{
+			this.hasResourcePacks_FixMe = false;
+			this.chatter.printChat(ChatColorsSimple.COLOR_BRIGHTGREEN, "It should work now!");
 		}
 	}
 	
@@ -420,6 +457,16 @@ public class MAtMod extends HaddonImpl
 	public VolumeUpdatable getGlobalVolumeControl()
 	{
 		return this.expansionManager;
+	}
+	
+	public boolean hasResourcePacksLoaded()
+	{
+		return this.hasResourcePacks;
+	}
+	
+	public boolean hasNonethelessResourcePacksInstalled()
+	{
+		return this.hasDisabledResourcePacks;
 	}
 	
 	public void synchronize()

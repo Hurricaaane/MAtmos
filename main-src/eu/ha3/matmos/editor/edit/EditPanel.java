@@ -19,8 +19,8 @@ import javax.swing.border.TitledBorder;
 
 import eu.ha3.matmos.editor.InstantTextField;
 import eu.ha3.matmos.editor.interfaces.Editor;
-import eu.ha3.matmos.editor.interfaces.NamedSerialEditor;
 import eu.ha3.matmos.editor.interfaces.IFlaggable;
+import eu.ha3.matmos.editor.interfaces.NamedSerialEditor;
 import eu.ha3.matmos.jsonformat.serializable.expansion.SerialCondition;
 import eu.ha3.matmos.jsonformat.serializable.expansion.SerialEvent;
 import eu.ha3.matmos.jsonformat.serializable.expansion.SerialList;
@@ -88,6 +88,14 @@ public class EditPanel extends JPanel implements NamedSerialEditor, IFlaggable
 		gbc.gridy = 0;
 		panel.add(this.textField, gbc);
 		this.textField.setColumns(10);
+		this.textField.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				EditPanel.this.model.renameItem(
+					EditPanel.this.nameOfItem, EditPanel.this.editFocus, EditPanel.this.textField.getText());
+			}
+		});
 		
 		this.btnRename = new JButton("Rename");
 		GridBagConstraints gbc_1 = new GridBagConstraints();

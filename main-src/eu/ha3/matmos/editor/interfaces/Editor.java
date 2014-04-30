@@ -54,4 +54,6 @@ public interface Editor
 	public void informInnerChange();
 	
 	public SerialRoot getRootForCopyPurposes();
+	
+	public void duplicateItem(Selector selector, String name);
 }

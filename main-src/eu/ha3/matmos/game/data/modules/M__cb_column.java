@@ -35,6 +35,5 @@ public class M__cb_column extends ModuleProcessor implements Module
 		setValue("topmost_block", w.getTopSolidOrLiquidBlock(x, z));
 		setValue("thickness_overhead", w.getTopSolidOrLiquidBlock(x, z) - y);
 		setValue("can_rain_reach", w.canBlockSeeTheSky(x, y, z) && !(w.getTopSolidOrLiquidBlock(x, z) > y));
-		// FIXME: 26 is unresolved
 	}
 }

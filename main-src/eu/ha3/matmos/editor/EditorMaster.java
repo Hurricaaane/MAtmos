@@ -9,6 +9,8 @@ import java.util.Scanner;
 
 import javax.swing.UIManager;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonParser;
 import com.google.gson.stream.MalformedJsonException;
 
 import eu.ha3.matmos.editor.interfaces.Editor;
@@ -476,5 +478,61 @@ public class EditorMaster implements Runnable, Editor, UnpluggedListener
 	public SerialRoot getRootForCopyPurposes()
 	{
 		return this.root;
+	}
+	
+	@Override
+	public void duplicateItem(Selector selector, String name)
+	{
+		switch (selector)
+		{
+		case CONDITION:
+			doDuplicateItem(selector, name, this.root.condition);
+			break;
+		case SET:
+			doDuplicateItem(selector, name, this.root.set);
+			break;
+		case MACHINE:
+			doDuplicateItem(selector, name, this.root.machine);
+			break;
+		case LIST:
+			doDuplicateItem(selector, name, this.root.list);
+			break;
+		case DYNAMIC:
+			doDuplicateItem(selector, name, this.root.dynamic);
+			break;
+		case EVENT:
+			doDuplicateItem(selector, name, this.root.event);
+			break;
+		case LOGIC:
+			break;
+		case SUPPORT:
+			break;
+		default:
+			break;
+		}
+	}
+	
+	private <T> void doDuplicateItem(Selector selector, String name, Map<String, T> map)
+	{
+		if (map == null)
+			return;
+		
+		if (!map.containsKey(name))
+			return;
+		
+		Class<? extends Object> serialClass = map.get(name).getClass();
+		@SuppressWarnings("unchecked")
+		T duplicate =
+			(T) new Gson().fromJson(new JsonParser().parse(Jason.toJson(map.get(name))).getAsJsonObject(), serialClass);
+		
+		int add = 1;
+		while (map.containsKey(name + " (" + add + ")"))
+		{
+			add = add + 1;
+		}
+		map.put(name + " (" + add + ")", duplicate);
+		
+		flagChange(true);
+		this.window__EventQueue.setEditFocus(name + " (" + add + ")", duplicate, true);
 	}
 }
