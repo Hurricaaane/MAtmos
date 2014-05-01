@@ -212,7 +212,7 @@ public class MAtProcessorFrequent extends MAtProcessorModel
 				break;
 			
 			case 42:
-				setValue(42, MAtAccessors.getIsJumpingOf(player) ? 1 : 0);
+				setValue(42, MAtAccessors.getIsJumpingOf(mod().util(),player) ? 1 : 0);
 				break;
 			
 			case 43:
@@ -220,7 +220,7 @@ public class MAtProcessorFrequent extends MAtProcessorModel
 				break;
 			
 			case 44:
-				setValue(44, MAtAccessors.getIsInWebOf(player) ? 1 : 0);
+				setValue(44, MAtAccessors.getIsInWebOf(mod().util(),player) ? 1 : 0);
 				break;
 			
 			case 45:

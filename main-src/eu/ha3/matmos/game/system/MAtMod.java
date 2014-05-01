@@ -10,6 +10,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import net.minecraft.src.Entity;
+import net.minecraft.src.EntityLivingBase;
 import net.minecraft.src.EntityPlayerSP;
 import net.minecraft.src.FolderResourcePack;
 import net.minecraft.src.KeyBinding;
@@ -105,7 +106,7 @@ public class MAtMod extends HaddonImpl
 		util()
 			.registerPrivateGetter("soundPoolSounds", SoundManager.class, -1, "soundPoolSounds", "field_77379_b", "d");
 		
-		util().registerPrivateGetter("isJumping", EntityPlayerSP.class, -1, "isJumping", "field_70703_bu", "bd");
+		util().registerPrivateGetter("isJumping", EntityLivingBase.class, -1, "isJumping", "field_70703_bu", "bd");
 		util().registerPrivateGetter("isInWeb", Entity.class, -1, "isInWeb", "field_70134_J", "K");
 		
 		this.chatter = new Chatter(this, MOD_RAW_NAME);
