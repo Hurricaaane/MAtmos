@@ -7,7 +7,6 @@ import net.minecraft.src.ItemStack;
 import net.minecraft.src.Minecraft;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.NBTTagList;
-import eu.ha3.matmos.conv.MAtmosConvLogger;
 import eu.ha3.matmos.engine.implem.IntegerData;
 import eu.ha3.matmos.game.system.MAtMod;
 
@@ -68,7 +67,7 @@ public abstract class MAtProcessorEnchantments extends MAtProcessorModel
 				}
 				else
 				{
-					MAtmosConvLogger.warning("Found enchantment which ID is " + id + "!!!");
+					//MAtmosConvLogger.warning("Found enchantment which ID is " + id + "!!!");
 				}
 			}
 		}
