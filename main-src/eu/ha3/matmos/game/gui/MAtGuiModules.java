@@ -57,6 +57,11 @@ public class MAtGuiModules extends GuiScreen
 			201, _LEFT + _MIX + _WIDTH - _MIX * 2 - _GAP - _TURNOFFWIDTH + _GAP, _SEPARATOR + _MIX * (5 + 4),
 			_TURNOFFWIDTH, _UNIT, "Discard"));
 		
+		this.buttonList
+			.add(new GuiButton(
+				202, _LEFT + _MIX + _WIDTH - _MIX * 2 + _GAP, _SEPARATOR + _MIX * (5 + 4), _TURNOFFWIDTH, _UNIT,
+				"Deltas?"));
+		
 		for (int id = 0; id < this.val.size(); id++)
 		{
 			int flid = id / 18;
@@ -79,6 +84,10 @@ public class MAtGuiModules extends GuiScreen
 		else if (par1GuiButton.id == 201)
 		{
 			this.mod.getVisualDebugger().noDebug();
+		}
+		else if (par1GuiButton.id == 202)
+		{
+			this.mod.getVisualDebugger().toggleDeltas();
 		}
 		else if (par1GuiButton.id < this.val.size())
 		{

@@ -22,4 +22,8 @@ public class MODULE_CONSTANTS
 	 * This is a magic value to designate the lack of equipped item.
 	 */
 	public static String NO_ITEM = "";
+	public static String NO_POWERMETA = "";
+	public static String NO_NAME = "";
+	public static int NO_ENTITY = -1;
+	public static int NO_META = -1;
 }

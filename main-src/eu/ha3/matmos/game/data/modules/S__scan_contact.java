@@ -33,7 +33,7 @@ public class S__scan_contact extends AbstractStringCountModule
 		for (BlockTriplet triplet : this.blocks)
 		{
 			increment(triplet.getBlockRelative(x, y, z, ""));
-			increment(triplet.getBMetaRelative(x, y, z, ""));
+			increment(triplet.getPowerMetaRelative(x, y, z, ""));
 		}
 	}
 }

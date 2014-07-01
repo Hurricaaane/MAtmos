@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.EntityList;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import eu.ha3.matmos.engine.core.interfaces.Data;
@@ -37,14 +38,15 @@ public class S__ply_hitscan extends ModuleProcessor implements Module
 		{
 			setValue("mouse_over_something", false);
 			setValue("mouse_over_what", "");
-			setValue("block", MODULE_CONSTANTS.LEGACY_NO_BLOCK_IN_THIS_CONTEXT);
-			setValue("meta", MODULE_CONSTANTS.LEGACY_NO_BLOCK_IN_THIS_CONTEXT);
-			setValue("powermeta", MODULE_CONSTANTS.LEGACY_NO_BLOCK_IN_THIS_CONTEXT);
+			setValue("block", MODULE_CONSTANTS.NO_BLOCK_IN_THIS_CONTEXT);
+			setValue("meta", MODULE_CONSTANTS.NO_META);
+			setValue("powermeta", MODULE_CONSTANTS.NO_POWERMETA);
+			setValue("entity_id", MODULE_CONSTANTS.NO_ENTITY);
 			
 			return;
 		}
 		
-		setValue("mouse_over_something", true);
+		setValue("mouse_over_something", mc.objectMouseOver.typeOfHit != MovingObjectType.MISS);
 		setValue("mouse_over_what", this.equiv.get(mc.objectMouseOver.typeOfHit));
 		setValue(
 			"block",
@@ -61,5 +63,9 @@ public class S__ply_hitscan extends ModuleProcessor implements Module
 			mc.objectMouseOver.typeOfHit == MovingObjectType.BLOCK ? MAtmosUtility.getPowerMetaAt(
 				mc.objectMouseOver.blockX, mc.objectMouseOver.blockY, mc.objectMouseOver.blockZ,
 				MODULE_CONSTANTS.NO_BLOCK_OUT_OF_BOUNDS) : MODULE_CONSTANTS.NO_BLOCK_IN_THIS_CONTEXT);
+		setValue(
+			"entity_id",
+			mc.objectMouseOver.typeOfHit == MovingObjectType.ENTITY ? EntityList
+				.getEntityID(mc.objectMouseOver.entityHit) : MODULE_CONSTANTS.NO_ENTITY);
 	}
 }

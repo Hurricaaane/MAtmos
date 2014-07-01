@@ -19,6 +19,7 @@ import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import paulscode.sound.SoundSystem;
+import eu.ha3.easy.StopWatchStatistic;
 import eu.ha3.easy.TimeStatistic;
 import eu.ha3.matmos.expansions.Expansion;
 import eu.ha3.matmos.expansions.ExpansionManager;
@@ -48,6 +49,8 @@ public class MAtMod extends HaddonImpl
 	implements SupportsFrameEvents, SupportsTickEvents, NotifiableHaddon, IResourceManagerReloadListener,
 	SoundAccessor, Stable
 {
+	private static final boolean _COMPILE_IS_UNSTABLE = false;
+	
 	// Identity
 	protected final String NAME = "MAtmos";
 	protected final int VERSION = 27;
@@ -78,6 +81,9 @@ public class MAtMod extends HaddonImpl
 	private boolean hasResourcePacks;
 	private boolean hasDisabledResourcePacks;
 	private boolean hasResourcePacks_FixMe;
+	
+	// Debug
+	private StopWatchStatistic timeStat = new StopWatchStatistic();
 	
 	// Debug queue
 	private Object queueLock = new Object();
@@ -280,8 +286,10 @@ public class MAtMod extends HaddonImpl
 				}
 			}
 			
+			this.timeStat.reset();
 			this.dataGatherer.process();
 			this.expansionManager.onTick();
+			this.timeStat.stop();
 			
 			if (MAtmosUtility.isUnderwaterAnyGamemode())
 			{
@@ -312,18 +320,23 @@ public class MAtMod extends HaddonImpl
 		if (!this.hasFirstTickPassed)
 		{
 			this.hasFirstTickPassed = true;
+			
 			this.updateNotifier.attempt();
-			getChatter().printChatShort("http://matmos.ha3.eu/");
-			getChatter().printChat(
-				ChatColorsSimple.COLOR_RED
-					+ "You are using a " + ChatColorsSimple.COLOR_YELLOW + "test" + ChatColorsSimple.COLOR_RED
-					+ " version of MAtmos.");
-			getChatter().printChatShort(
-				"By using this version, you understand that this mod isn't intended for"
-					+ " actual game sessions, MAtmos may not work, might crash, the sound"
-					+ " ambience is incomplete, etc.");
-			getChatter().printChatShort(
-				"Use at your own risk. " + "Please check regularly for updates and resource pack updates.");
+			
+			if (MAtMod._COMPILE_IS_UNSTABLE)
+			{
+				getChatter().printChatShort("http://matmos.ha3.eu/");
+				getChatter().printChat(
+					ChatColorsSimple.COLOR_RED
+						+ "You are using a " + ChatColorsSimple.COLOR_YELLOW + "test" + ChatColorsSimple.COLOR_RED
+						+ " version of MAtmos.");
+				getChatter().printChatShort(
+					"By using this version, you understand that this mod isn't intended for"
+						+ " actual game sessions, MAtmos may not work, might crash, the sound"
+						+ " ambience is incomplete, etc.");
+				getChatter().printChatShort(
+					"Use at your own risk. " + "Please check regularly for updates and resource pack updates.");
+			}
 			
 			if (!this.hasResourcePacks)
 			{
@@ -482,6 +495,11 @@ public class MAtMod extends HaddonImpl
 	public VisualDebugger getVisualDebugger()
 	{
 		return this.visualDebugger;
+	}
+	
+	public StopWatchStatistic getLag()
+	{
+		return this.timeStat;
 	}
 	
 	public void queueForNextTick(Runnable runnable)

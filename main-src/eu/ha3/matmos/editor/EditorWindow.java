@@ -212,11 +212,46 @@ public class EditorWindow extends JFrame implements Window
 		JSeparator separator_2 = new JSeparator();
 		mnFile.add(separator_2);
 		
-		this.mntmReplaceCurrentFile = new JMenuItem("Replace current file with backup...");
+		this.mntmReplaceCurrentFile = new JMenuItem("Replace current file with backup... (NOT IMPLEMENTED)");
 		mnFile.add(this.mntmReplaceCurrentFile);
 		
-		this.mntmFDiscardChanges = new JMenuItem("Discard changes and reload");
+		this.mntmFDiscardChanges = new JMenuItem("Discard changes and reload (NOT IMPLEMENTED)");
 		mnFile.add(this.mntmFDiscardChanges);
+		
+		JSeparator separator_7 = new JSeparator();
+		mnFile.add(separator_7);
+		
+		JMenuItem mntmMergeAnotherFile = new JMenuItem("Merge another file in...");
+		mntmMergeAnotherFile.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				if (!continueUnsavedChangesWarningIfNecessary())
+					return;
+				
+				JFileChooser fc = new JasonFileChooser(EditorWindow.this.model.getExpansionDirectory());
+				int returnValue = fc.showOpenDialog(EditorWindow.this);
+				if (returnValue != JFileChooser.APPROVE_OPTION)
+					return;
+				
+				File file = fc.getSelectedFile();
+				if (file == null || !file.exists() || file.isDirectory())
+				{
+					if (file.isDirectory())
+					{
+						showErrorPopup("Unexpected error: The file is a directory.");
+					}
+					else
+					{
+						showErrorPopup("Unexpected error: The file does not exist.");
+					}
+					return;
+				}
+				
+				EditorWindow.this.model.mergeFrom(file);
+			}
+		});
+		mnFile.add(mntmMergeAnotherFile);
 		
 		JSeparator separator = new JSeparator();
 		mnFile.add(separator);
@@ -261,6 +296,49 @@ public class EditorWindow extends JFrame implements Window
 			}
 		});
 		mnCreate.add(mntmNewMenuItem);
+		
+		JSeparator separator_6 = new JSeparator();
+		mnCreate.add(separator_6);
+		
+		JMenuItem mntmPurgeUnusedLogic = new JMenuItem("Purge unused logic");
+		mntmPurgeUnusedLogic.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				int saveOption =
+					JOptionPane.showConfirmDialog(
+						EditorWindow.this,
+						"This is going to remove all set and conditions that are recursively unused by any machine.\n"
+							+ "Make sure you have backups before appenting this. Confirm?", "Purging logic",
+						JOptionPane.CANCEL_OPTION);
+				
+				if (saveOption == JOptionPane.YES_OPTION)
+				{
+					EditorWindow.this.model.purgeLogic();
+				}
+			}
+		});
+		mnCreate.add(mntmPurgeUnusedLogic);
+		
+		JMenuItem mntmPurgeUnusedSupports = new JMenuItem("Purge unused supports");
+		mntmPurgeUnusedSupports.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				int saveOption =
+					JOptionPane.showConfirmDialog(
+						EditorWindow.this,
+						"This is going to remove all supports items that are unused by any machine.\n"
+							+ "Make sure you have backups before appenting this. Confirm?", "Purging supports",
+						JOptionPane.CANCEL_OPTION);
+				
+				if (saveOption == JOptionPane.YES_OPTION)
+				{
+					EditorWindow.this.model.purgeSupports();
+				}
+			}
+		});
+		mnCreate.add(mntmPurgeUnusedSupports);
 		
 		JMenu mnOptions = new JMenu("Options");
 		mnOptions.setMnemonic('o');

@@ -218,5 +218,4 @@ public class ScannerModule implements PassOnceModule, ScanOperations, Progress
 	{
 		return this.scanner.getProgress_Total();
 	}
-	
 }

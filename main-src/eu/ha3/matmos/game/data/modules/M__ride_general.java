@@ -9,6 +9,7 @@ import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.player.EntityPlayer;
 import eu.ha3.matmos.engine.core.interfaces.Data;
+import eu.ha3.matmos.game.data.MODULE_CONSTANTS;
 import eu.ha3.matmos.game.data.abstractions.module.Module;
 import eu.ha3.matmos.game.data.abstractions.module.ModuleProcessor;
 
@@ -41,7 +42,7 @@ public class M__ride_general extends ModuleProcessor implements Module
 		if (ride == null)
 		{
 			setValue("burning", false);
-			setValue("entity_id", -1);
+			setValue("entity_id", MODULE_CONSTANTS.NO_ENTITY);
 			return;
 		}
 		

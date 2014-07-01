@@ -245,6 +245,31 @@ public class MAtmosUtility
 	}
 	
 	/**
+	 * Returns the PowerMeta, a string that combines the item name and the
+	 * metadata of a certain block.
+	 * 
+	 * @param item
+	 * @return
+	 */
+	public static String asPowerMeta(ItemStack item)
+	{
+		return asPowerMeta(nameOf(item.getItem()), item.getItemDamage());
+	}
+	
+	/**
+	 * Returns the PowerMeta, a string that combines the item name and the
+	 * metadata of a certain block.
+	 * 
+	 * @param item
+	 * @param meta
+	 * @return
+	 */
+	public static String asPowerMeta(Item item, int meta)
+	{
+		return asPowerMeta(nameOf(item), meta);
+	}
+	
+	/**
 	 * Returns the PowerMeta, a string that combines the block name and the
 	 * metadata of a certain block.
 	 * 
@@ -258,8 +283,8 @@ public class MAtmosUtility
 	}
 	
 	/**
-	 * Returns the PowerMeta, a string that combines the block name and the
-	 * metadata of a certain block.
+	 * Returns the PowerMeta, a string that combines the item/block name and its
+	 * metadata.
 	 * 
 	 * @param block
 	 * @param meta

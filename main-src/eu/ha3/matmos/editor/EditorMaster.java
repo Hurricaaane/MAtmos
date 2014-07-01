@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -18,6 +19,7 @@ import eu.ha3.matmos.editor.interfaces.Window;
 import eu.ha3.matmos.editor.tree.Selector;
 import eu.ha3.matmos.engine.core.implem.ProviderCollection;
 import eu.ha3.matmos.expansions.debugunit.ReadOnlyJasonStringEDU;
+import eu.ha3.matmos.jsonformat.serializable.expansion.SerialEvent;
 import eu.ha3.matmos.jsonformat.serializable.expansion.SerialRoot;
 import eu.ha3.matmos.pluggable.PluggableIntoMinecraft;
 import eu.ha3.matmos.pluggable.UnpluggedListener;
@@ -197,6 +199,37 @@ public class EditorMaster implements Runnable, Editor, UnpluggedListener
 		System.out.println(jasonString);
 		this.root = new JasonExpansions_Engine1Deserializer2000().jsonToSerial(jasonString);
 		this.hasModifiedContents = false;
+		updateFileAndContentsState();
+	}
+	
+	private void mergeFile(File potentialFile) throws IOException, MalformedJsonException
+	{
+		String jasonString = new Scanner(new FileInputStream(potentialFile)).useDelimiter("\\Z").next();
+		System.out.println(jasonString);
+		SerialRoot mergeFrom = new JasonExpansions_Engine1Deserializer2000().jsonToSerial(jasonString);
+		
+		if (Collections.disjoint(this.root.condition.keySet(), mergeFrom.condition.keySet())
+			&& Collections.disjoint(this.root.dynamic.keySet(), mergeFrom.dynamic.keySet())
+			&& Collections.disjoint(this.root.event.keySet(), mergeFrom.event.keySet())
+			&& Collections.disjoint(this.root.list.keySet(), mergeFrom.list.keySet())
+			&& Collections.disjoint(this.root.machine.keySet(), mergeFrom.machine.keySet())
+			&& Collections.disjoint(this.root.set.keySet(), mergeFrom.set.keySet()))
+		{
+		}
+		else
+		{
+			showErrorPopup("The two expansions have elements in common.\n"
+				+ "The elements in common will be overriden by the file you are currently importing for the merge.");
+		}
+		
+		this.root.condition.putAll(mergeFrom.condition);
+		this.root.dynamic.putAll(mergeFrom.dynamic);
+		this.root.event.putAll(mergeFrom.event);
+		this.root.list.putAll(mergeFrom.list);
+		this.root.machine.putAll(mergeFrom.machine);
+		this.root.set.putAll(mergeFrom.set);
+		
+		this.hasModifiedContents = true;
 		updateFileAndContentsState();
 	}
 	
@@ -534,5 +567,59 @@ public class EditorMaster implements Runnable, Editor, UnpluggedListener
 		
 		flagChange(true);
 		this.window__EventQueue.setEditFocus(name + " (" + add + ")", duplicate, true);
+	}
+	
+	@Override
+	public void purgeLogic()
+	{
+		new PurgeOperator().purgeLogic(this.root);
+		flagChange(true);
+		this.window__EventQueue.setEditFocus(null, null, false);
+	}
+	
+	@Override
+	public void purgeSupports()
+	{
+		new PurgeOperator().purgeEvents(this.root);
+		flagChange(true);
+		this.window__EventQueue.setEditFocus(null, null, false);
+	}
+	
+	@Override
+	public void pushSound(SerialEvent event)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void mergeFrom(File potentialFile)
+	{
+		if (potentialFile == null)
+		{
+			showErrorPopup("Missing file pointer.");
+			return;
+		}
+		
+		if (potentialFile.isDirectory())
+		{
+			showErrorPopup("The selected file is actually a directory.");
+			return;
+		}
+		
+		if (!potentialFile.exists())
+		{
+			showErrorPopup("The selected file is inaccessible.");
+			return;
+		}
+		
+		try
+		{
+			mergeFile(potentialFile);
+		}
+		catch (Exception e)
+		{
+			showErrorPopup("Merge error. The current state may be corrupt:\n" + e.getLocalizedMessage());
+		}
 	}
 }

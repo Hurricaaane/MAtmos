@@ -24,7 +24,7 @@ public final class BlockTriplet
 		return MAtmosUtility.getNameAt(xx + this.nx, yy + this.ny, zz + this.nz, defaultIfFail);
 	}
 	
-	public String getBMetaRelative(int xx, int yy, int zz, String defaultIfFail)
+	public String getPowerMetaRelative(int xx, int yy, int zz, String defaultIfFail)
 	{
 		return MAtmosUtility.getPowerMetaAt(xx + this.nx, yy + this.ny, zz + this.nz, defaultIfFail);
 	}

@@ -22,6 +22,7 @@ import eu.ha3.matmos.editor.interfaces.Editor;
 import eu.ha3.matmos.editor.interfaces.IFlaggable;
 import eu.ha3.matmos.editor.interfaces.NamedSerialEditor;
 import eu.ha3.matmos.jsonformat.serializable.expansion.SerialCondition;
+import eu.ha3.matmos.jsonformat.serializable.expansion.SerialDynamic;
 import eu.ha3.matmos.jsonformat.serializable.expansion.SerialEvent;
 import eu.ha3.matmos.jsonformat.serializable.expansion.SerialList;
 import eu.ha3.matmos.jsonformat.serializable.expansion.SerialMachine;
@@ -201,6 +202,10 @@ public class EditPanel extends JPanel implements NamedSerialEditor, IFlaggable
 		else if (this.editFocus instanceof SerialMachine)
 		{
 			showEdit(new EditMachine(this, (SerialMachine) this.editFocus));
+		}
+		else if (this.editFocus instanceof SerialDynamic)
+		{
+			showEdit(new EditDynamic(this, (SerialDynamic) this.editFocus));
 		}
 		else
 		{

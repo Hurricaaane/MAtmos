@@ -5,6 +5,7 @@ import java.io.File;
 import eu.ha3.matmos.editor.KnowledgeItemType;
 import eu.ha3.matmos.editor.tree.Selector;
 import eu.ha3.matmos.engine.core.implem.ProviderCollection;
+import eu.ha3.matmos.jsonformat.serializable.expansion.SerialEvent;
 import eu.ha3.matmos.jsonformat.serializable.expansion.SerialRoot;
 
 /*
@@ -56,4 +57,12 @@ public interface Editor
 	public SerialRoot getRootForCopyPurposes();
 	
 	public void duplicateItem(Selector selector, String name);
+	
+	public void purgeLogic();
+	
+	public void purgeSupports();
+	
+	public void pushSound(SerialEvent event);
+	
+	public void mergeFrom(File file);
 }

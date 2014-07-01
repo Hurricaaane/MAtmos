@@ -4,12 +4,12 @@ package eu.ha3.matmos.log;
 
 public class MAtLog
 {
-	final private static String modName = "MAtmos";
+	private static final String modName = "MAtmos";
 	
-	public final static int SEVERE = 3;
-	public final static int WARNING = 2;
-	public final static int INFO = 1;
-	public final static int FINE = 0;
+	public static final int SEVERE = 3;
+	public static final int WARNING = 2;
+	public static final int INFO = 1;
+	public static final int FINE = 0;
 	
 	private static int refinedness = 1;
 	
@@ -43,17 +43,6 @@ public class MAtLog
 		if (refinedLevel >= refinedness)
 		{
 			System.out.println("(" + modName + ": " + type + ") " + message);
-		}
-	}
-	
-	// Don't use printErr, the messages come out unsync with print  
-	@SuppressWarnings("unused")
-	@Deprecated
-	private static void printErr(String message, String type, int refinedLevel)
-	{
-		if (refinedLevel >= refinedness)
-		{
-			System.err.println("(" + modName + ": " + type + ") " + message);
 		}
 	}
 }

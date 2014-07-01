@@ -17,7 +17,7 @@ import eu.ha3.matmos.engine.core.interfaces.Data;
  * 
  * @author Hurry
  */
-public abstract class AbstractEnchantmentModule extends ModuleProcessor implements Module
+public abstract class AbstractEnchantmentModule extends ModuleProcessor implements RegistryBasedModule
 {
 	private Set<String> oldThings = new LinkedHashSet<String>();
 	
@@ -26,6 +26,12 @@ public abstract class AbstractEnchantmentModule extends ModuleProcessor implemen
 		super(dataIn, name);
 		dataIn.getSheet(name).setDefaultValue("0");
 		dataIn.getSheet(name + ModuleProcessor.DELTA_SUFFIX).setDefaultValue("0");
+	}
+	
+	@Override
+	public String getRegistryName()
+	{
+		return "enchantment";
 	}
 	
 	@Override

@@ -35,6 +35,7 @@ public class VisualDebugger implements SupportsFrameEvents
 	private DebugMode mode = DebugMode.NONE;
 	private VisualExpansionDebugging ed;
 	private String scanDebug;
+	private boolean deltas = false;
 	
 	public VisualDebugger(MAtMod mod, ModularDataGatherer dataGatherer)
 	{
@@ -69,6 +70,14 @@ public class VisualDebugger implements SupportsFrameEvents
 	@Override
 	public void onFrame(float semi)
 	{
+		if (this.mod.isDebugMode())
+		{
+			this.mod.util().prepareDrawString();
+			this.mod.util().drawString(
+				ChatColorsSimple.COLOR_GRAY + this.mod.getLag().getMilliseconds() + "ms", 1f, 1f, 0, 0, '3', 0, 0, 0,
+				0, true);
+		}
+		
 		if (this.mode == DebugMode.NONE)
 			return;
 		
@@ -93,6 +102,15 @@ public class VisualDebugger implements SupportsFrameEvents
 	
 	private void debugScan()
 	{
+		debugScanWithSheet(this.dataGatherer.getData().getSheet(this.scanDebug), false);
+		if (this.deltas && this.dataGatherer.getData().getSheetNames().contains(this.scanDebug + "_delta"))
+		{
+			debugScanWithSheet(this.dataGatherer.getData().getSheet(this.scanDebug + "_delta"), true);
+		}
+	}
+	
+	private void debugScanWithSheet(final Sheet sheet, boolean isDeltaPass)
+	{
 		Minecraft mc = Minecraft.getMinecraft();
 		int fac = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight).getScaleFactor();
 		
@@ -100,7 +118,6 @@ public class VisualDebugger implements SupportsFrameEvents
 		GL11.glPushMatrix();
 		GL11.glScalef(scale, scale, 1.0F);
 		
-		final Sheet sheet = this.dataGatherer.getData().getSheet(this.scanDebug);
 		final int ALL = 50;
 		
 		List<String> sort = new ArrayList<String>(sheet.keySet());
@@ -169,6 +186,8 @@ public class VisualDebugger implements SupportsFrameEvents
 		
 		lineNumber = lineNumber + 1;
 		
+		int leftAlign = 2 + (isDeltaPass ? 300 : 0);
+		
 		for (String index : sort)
 		{
 			if (lineNumber <= 100 && !index.contains("^"))
@@ -218,7 +237,7 @@ public class VisualDebugger implements SupportsFrameEvents
 							fontRenderer.drawStringWithShadow(bars
 								+ (fill == ALL * 2
 									? ChatColorsSimple.COLOR_YELLOW + "++" + ChatColorsSimple.THEN_RESET : "") + " ("
-								+ count + ", " + percentage + "%) " + index, 2, 2 + 9 * lineNumber, 0xFFFFFF);
+								+ count + ", " + percentage + "%) " + index, leftAlign, 2 + 9 * lineNumber, 0xFFFFFF);
 							lineNumber = lineNumber + 1;
 						}
 					}
@@ -231,13 +250,13 @@ public class VisualDebugger implements SupportsFrameEvents
 						if (!index.equals("0"))
 						{
 							fontRenderer.drawStringWithShadow(
-								index + " (" + EntityList.getStringFromID(Integer.parseInt(index)) + "): " + val, 2,
-								2 + 9 * lineNumber, 0xFFFFFF);
+								index + " (" + EntityList.getStringFromID(Integer.parseInt(index)) + "): " + val,
+								leftAlign, 2 + 9 * lineNumber, 0xFFFFFF);
 						}
 						else
 						{
 							fontRenderer.drawStringWithShadow(
-								index + " (Player): " + val, 2, 2 + 9 * lineNumber, 0xFFFFFF);
+								index + " (Player): " + val, leftAlign, 2 + 9 * lineNumber, 0xFFFFFF);
 						}
 						
 						lineNumber = lineNumber + 1;
@@ -255,7 +274,7 @@ public class VisualDebugger implements SupportsFrameEvents
 					{
 						color = 0x0099FF;
 					}
-					fontRenderer.drawStringWithShadow(index + ": " + val, 2, 2 + 9 * lineNumber, color);
+					fontRenderer.drawStringWithShadow(index + ": " + val, leftAlign, 2 + 9 * lineNumber, color);
 					lineNumber = lineNumber + 1;
 				}
 			}
@@ -263,8 +282,15 @@ public class VisualDebugger implements SupportsFrameEvents
 		GL11.glPopMatrix();
 	}
 	
+	public void toggleDeltas()
+	{
+		this.deltas = !this.deltas;
+		
+	}
+	
 	private enum DebugMode
 	{
 		NONE, SCAN, EXPANSION;
 	}
+	
 }

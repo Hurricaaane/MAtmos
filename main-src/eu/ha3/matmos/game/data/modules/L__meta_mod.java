@@ -17,6 +17,8 @@ public class L__meta_mod extends ModuleProcessor implements Module
 	{
 		super(data, "meta_mod");
 		this.mod = mod;
+		
+		EI("mod_tick", "Current tick internal to the mod.");
 	}
 	
 	@Override

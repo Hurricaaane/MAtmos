@@ -376,6 +376,11 @@ public class MAtGuiMenu extends GuiScreen
 	@Override
 	public void drawScreen(int par1, int par2, float par3)
 	{
+		final int _GAP = 2;
+		final int _UNIT = 20;
+		final int _MIX = _GAP + _UNIT;
+		final int _SEPARATOR = 10;
+		
 		if (!this.mod.isDebugMode())
 		{
 			drawGradientRect(0, 0, this.width, this.height, 0xC0000000, 0x60000000);
@@ -388,14 +393,15 @@ public class MAtGuiMenu extends GuiScreen
 				this.fontRendererObj, "MAtmos Expansions " + ChatColorsSimple.COLOR_GOLD + "(Dev mode)",
 				this.width / 2, 8, 0xffffff);
 			
-			final int _GAP = 2;
-			final int _UNIT = 20;
-			final int _MIX = _GAP + _UNIT;
-			final int _SEPARATOR = 10;
 			drawCenteredString(this.fontRendererObj, ChatColorsSimple.COLOR_YELLOW
 				+ "Dev mode is enabled. This may cause Minecraft to run slower.", this.width / 2, _SEPARATOR
 				+ _MIX * (this.IDS_PER_PAGE + 3) - 9, 0xffffff);
 		}
+		
+		this.mod.util().prepareDrawString();
+		this.mod.util().drawString(
+			ChatColorsSimple.COLOR_GRAY + this.mod.getLag().getMilliseconds() + "ms", 1f, 1f, 0, 0, '3', 0, 0, 0, 0,
+			true);
 		
 		if (!this.mod.hasResourcePacksLoaded())
 		{

@@ -17,7 +17,7 @@ import eu.ha3.matmos.engine.core.interfaces.Data;
  * 
  * @author Hurry
  */
-public abstract class AbstractPotionQualityModule extends ModuleProcessor implements Module
+public abstract class AbstractPotionQualityModule extends ModuleProcessor implements RegistryBasedModule
 {
 	private Set<String> oldThings = new LinkedHashSet<String>();
 	
@@ -26,6 +26,12 @@ public abstract class AbstractPotionQualityModule extends ModuleProcessor implem
 		super(data, name);
 		data.getSheet(name).setDefaultValue("0");
 		data.getSheet(name + ModuleProcessor.DELTA_SUFFIX).setDefaultValue("0");
+	}
+	
+	@Override
+	public String getRegistryName()
+	{
+		return "potion";
 	}
 	
 	@Override

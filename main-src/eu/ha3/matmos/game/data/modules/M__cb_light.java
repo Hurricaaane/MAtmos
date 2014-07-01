@@ -1,12 +1,12 @@
 package eu.ha3.matmos.game.data.modules;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import eu.ha3.matmos.engine.core.interfaces.Data;
 import eu.ha3.matmos.game.data.abstractions.module.Module;
 import eu.ha3.matmos.game.data.abstractions.module.ModuleProcessor;
+import eu.ha3.matmos.game.system.MAtmosUtility;
 
 /*
 --filenotes-placeholder
@@ -23,11 +23,10 @@ public class M__cb_light extends ModuleProcessor implements Module
 	protected void doProcess()
 	{
 		World w = Minecraft.getMinecraft().theWorld;
-		EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
 		
-		int x = (int) Math.floor(player.posX);
-		int y = (int) Math.floor(player.posY);
-		int z = (int) Math.floor(player.posZ);
+		int x = MAtmosUtility.getPlayerX();
+		int y = MAtmosUtility.getPlayerY();
+		int z = MAtmosUtility.getPlayerZ();
 		
 		setValue("sky", w.getSavedLightValue(EnumSkyBlock.Sky, x, y, z));
 		setValue("lamp", w.getSavedLightValue(EnumSkyBlock.Block, x, y, z));

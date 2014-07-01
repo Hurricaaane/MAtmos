@@ -62,6 +62,13 @@ public class EditEvent extends JPanel
 		options.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
 		JButton btnTest = new JButton("Test sound in-game");
+		btnTest.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				EditEvent.this.edit.getModel().pushSound(EditEvent.this.event);
+			}
+		});
 		options.add(btnTest);
 		
 		JPanel information = new JPanel();
@@ -71,7 +78,7 @@ public class EditEvent extends JPanel
 		
 		JLabel lblSoundsPlayedEqually =
 			new JLabel(
-				"<html>Sounds played equally on both ears must be stereo;<br>Fixed location sounds must be mono.</html>");
+				"<html>Stereo sounds are always played equally on both ears.<br>Mono sounds will be played above the player if distance is 0.</html>");
 		information.add(lblSoundsPlayedEqually);
 		
 		JPanel internal = new JPanel();

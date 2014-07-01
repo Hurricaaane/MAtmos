@@ -17,6 +17,14 @@ public class M__cb_column extends ModuleProcessor implements Module
 	public M__cb_column(Data data)
 	{
 		super(data, "cb_column");
+		
+		EI("y-2", "Block under the feet");
+		EI("y-1", "Block at the legs");
+		EI("y0", "Block at the body (y)");
+		EI("y1", "Block over the head");
+		EI("topmost_block", "y coordinate of the top most solid block");
+		EI("thickness_overhead", "Number of blocks over the player until topmost_block");
+		EI("can_rain_reach", "Can rain reach y?");
 	}
 	
 	@Override

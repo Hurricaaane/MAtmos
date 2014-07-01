@@ -74,7 +74,7 @@ public class S__detect implements Processor, PassOnceModule
 				{
 				}
 			};
-			dataIn.getSheet(radiModulePrefix + radiNum).setDefaultValue("0");
+			dataIn.getSheet(radiModulePrefix + radiNum).setDefaultValue(Integer.toString(Integer.MAX_VALUE));
 			this.submodules.add(radiModulePrefix + radiNum);
 			this.entityCount[i] = new HashMap<Integer, Integer>();
 		}

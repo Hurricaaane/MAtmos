@@ -1,5 +1,6 @@
 package eu.ha3.matmos.game.data;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
@@ -166,7 +167,7 @@ public class ModularDataGatherer implements Collector, Processor
 		addModule(new ScannerModule(
 			this.data, "_POM__scan_small", "scan_small", true, -1, 2 /*64*/, 16, 8, 16, 16 * 8 * 16));
 		
-		MAtLog.info("Modules initialized.");
+		MAtLog.info("Modules initialized: " + Arrays.toString(new TreeSet<String>(this.modules.keySet()).toArray()));
 	}
 	
 	public Data getData()

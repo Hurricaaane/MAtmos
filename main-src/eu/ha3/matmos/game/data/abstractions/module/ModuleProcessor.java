@@ -1,5 +1,8 @@
 package eu.ha3.matmos.game.data.abstractions.module;
 
+import java.util.Map;
+import java.util.TreeMap;
+
 import eu.ha3.matmos.engine.core.interfaces.Data;
 
 /*
@@ -13,11 +16,13 @@ import eu.ha3.matmos.engine.core.interfaces.Data;
  * 
  * @author Hurry
  */
-public abstract class ModuleProcessor extends ProcessorModel implements Module
+public abstract class ModuleProcessor extends ProcessorModel implements EntryBasedModule
 {
 	public static final String DELTA_SUFFIX = "_delta";
 	
 	private final String name;
+	
+	private Map<String, EI> eis = new TreeMap<String, EI>();
 	
 	public ModuleProcessor(Data data, String name)
 	{
@@ -34,5 +39,32 @@ public abstract class ModuleProcessor extends ProcessorModel implements Module
 	public final String getModuleName()
 	{
 		return this.name;
+	}
+	
+	@Override
+	public Map<String, EI> getModuleEntries()
+	{
+		return this.eis;
+	}
+	
+	/**
+	 * Internal method to create an EI.
+	 * 
+	 * @param name
+	 * @param desc
+	 */
+	protected void EI(String name, String desc)
+	{
+		this.eis.put(name, new EI(name, desc));
+	}
+	
+	/**
+	 * Internal method to register an EI.
+	 * 
+	 * @param ei
+	 */
+	protected void EI(EI ei)
+	{
+		this.eis.put(ei.getName(), ei);
 	}
 }

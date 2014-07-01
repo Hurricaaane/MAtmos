@@ -22,7 +22,10 @@ public class Condition extends DependableComponent implements Visualized
 	
 	private final SheetCommander sheetCommander;
 	
-	private int siVersion = -1;
+	// Fixes a bug where conditions don't evaluate for sheet indexes that don't exist
+	// Required for ALWAYS_TRUE / ALWAYS_FALSE
+	// This was caused by default value for undefined sheet indexes being -1 (equal to initial siVersion)
+	private int siVersion = Integer.MIN_VALUE;
 	
 	private final Collection<String> dependencies;
 	

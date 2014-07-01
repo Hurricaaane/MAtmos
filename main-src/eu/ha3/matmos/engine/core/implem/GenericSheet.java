@@ -31,10 +31,6 @@ public class GenericSheet implements Sheet
 	{
 		if (!value.equals(this.values.get(key)))
 		{
-			//if (!(this instanceof VirtualSheet))
-			//{
-			//	System.out.println(key + ": " + this.values.get(key) + " >> " + value);
-			//}
 			int ver = this.versions.containsKey(key) ? this.versions.get(key) : -1;
 			this.values.put(key, value);
 			this.versions.put(key, ver + 1);
