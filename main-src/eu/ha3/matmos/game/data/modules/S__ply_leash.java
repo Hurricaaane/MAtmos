@@ -34,11 +34,9 @@ public class S__ply_leash extends ModuleProcessor implements Module
 		
 		@SuppressWarnings("unchecked")
 		List<EntityLiving> var6 =
-			w.getEntitiesWithinAABB(
-				EntityLiving.class,
-				AxisAlignedBB.getAABBPool().getAABB(
-					player.posX - distance, player.posY - distance, player.posZ - distance, player.posX + distance,
-					player.posY + distance, player.posZ + distance));
+			w.getEntitiesWithinAABB(EntityLiving.class, AxisAlignedBB.getBoundingBox(
+				player.posX - distance, player.posY - distance, player.posZ - distance, player.posX + distance,
+				player.posY + distance, player.posZ + distance));
 		
 		if (var6 != null)
 		{

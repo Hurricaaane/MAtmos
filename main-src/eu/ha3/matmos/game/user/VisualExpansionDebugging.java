@@ -45,7 +45,7 @@ public class VisualExpansionDebugging implements SupportsFrameEvents
 	public void onFrame(float semi)
 	{
 		Minecraft mc = Minecraft.getMinecraft();
-		int fac = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight).getScaleFactor();
+		int fac = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight).getScaleFactor();
 		
 		float scale = 1f / fac;
 		GL11.glPushMatrix();
@@ -134,7 +134,7 @@ public class VisualExpansionDebugging implements SupportsFrameEvents
 		boolean isActive = vis.isActive();
 		
 		Minecraft mc = Minecraft.getMinecraft();
-		FontRenderer fontRenderer = mc.fontRenderer;
+		FontRenderer fontRenderer = mc.fontRendererObj;
 		
 		fontRenderer.drawStringWithShadow(name + "(" + feed + ")", x, y, isActive ? 0x0099FF : 0xFF0000);
 		

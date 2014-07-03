@@ -36,11 +36,11 @@ public class VolumeScroller extends Ha3Scroller
 	protected void doDraw(float fspan)
 	{
 		Minecraft mc = Minecraft.getMinecraft();
-		FontRenderer fontRenderer = mc.fontRenderer;
+		FontRenderer fontRenderer = mc.fontRendererObj;
 		
 		String msgper = (int) Math.floor(this.doneValue * 100) + "%";
 		
-		ScaledResolution screenRes = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
+		ScaledResolution screenRes = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
 		
 		int scrWidth = screenRes.getScaledWidth();
 		int scrHeight = screenRes.getScaledHeight();
@@ -90,7 +90,7 @@ public class VolumeScroller extends Ha3Scroller
 	
 	private int getWidthOf(String s)
 	{
-		return Minecraft.getMinecraft().fontRenderer.getStringWidth(s);
+		return Minecraft.getMinecraft().fontRendererObj.getStringWidth(s);
 	}
 	
 	public float getValue()

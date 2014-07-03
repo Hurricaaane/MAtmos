@@ -37,7 +37,7 @@ public class R__server_info extends ModuleProcessor implements Module
 	@Override
 	protected void doProcess()
 	{
-		ServerData serverData = Minecraft.getMinecraft().func_147104_D();
+		ServerData serverData = Minecraft.getMinecraft().getCurrentServerData();
 		
 		if (serverData != null && serverData.serverIP != null)
 		{

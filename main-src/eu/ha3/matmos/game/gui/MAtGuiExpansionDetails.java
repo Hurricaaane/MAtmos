@@ -65,8 +65,7 @@ public class MAtGuiExpansionDetails extends GuiScreen
 		final int _GAP = 2;
 		final int _UNIT = 20;
 		
-		int h =
-			new ScaledResolution(this.mc.gameSettings, this.mc.displayWidth, this.mc.displayHeight).getScaledHeight();
+		int h = new ScaledResolution(this.mc, this.mc.displayWidth, this.mc.displayHeight).getScaledHeight();
 		h = h - _UNIT - _GAP;
 		
 		this.buttonList.add(new GuiButton(200, _GAP, h, 70, _UNIT, "Close"));

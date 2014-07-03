@@ -22,8 +22,8 @@ public class NoAttenuationMovingSound extends MovingSound
 		ResourceLocation p_i45104_1_, HelperFadeCalculator fade, boolean isLooping, boolean usesPause)
 	{
 		super(p_i45104_1_);
-		this.field_147666_i = ISound.AttenuationType.NONE;
-		this.field_147659_g = true; // TODO: What does this do?
+		this.attenuationType = ISound.AttenuationType.NONE;
+		this.repeat = true; // TODO: What does this do?
 		
 		this.isLooping = isLooping;
 		this.usesPause = usesPause;
@@ -34,9 +34,9 @@ public class NoAttenuationMovingSound extends MovingSound
 	{
 		Entity e = Minecraft.getMinecraft().thePlayer;
 		
-		this.field_147660_d = (float) e.posX;
-		this.field_147661_e = (float) e.posY;
-		this.field_147658_f = (float) e.posZ;
+		this.xPosF = (float) e.posX;
+		this.yPosF = (float) e.posY;
+		this.zPosF = (float) e.posZ;
 		
 		float volumeFactor = this.fade.calculateFadeFactor();
 		float pitchFactor = 1f;
@@ -51,7 +51,7 @@ public class NoAttenuationMovingSound extends MovingSound
 			else
 			{
 				// Kill
-				this.field_147668_j = true;
+				this.donePlaying = true;
 			}
 		}
 	}

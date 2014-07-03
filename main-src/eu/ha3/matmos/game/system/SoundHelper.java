@@ -62,10 +62,10 @@ public class SoundHelper implements SoundCapabilities
 		if (this.isInterrupt)
 			return;
 		
-		StreamingSound sound =
+		/*StreamingSound sound =
 			new StreamingSoundUsingAccessor(
 				this.accessor, path, volume * this.volumeModulator, pitch, isLooping, usesPause);
-		this.streaming.put(customName, sound);
+		this.streaming.put(customName, sound);*/
 	}
 	
 	@Override

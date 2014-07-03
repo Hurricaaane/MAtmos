@@ -67,13 +67,13 @@ public class M__ride_horse extends ModuleProcessor implements Module
 		setValue(
 			"ridden_by_owner",
 			ride.riddenByEntity instanceof EntityPlayer
-				&& !ride.getOwnerName().equals("")
-				&& ride.getOwnerName().equals(((EntityPlayer) ride.riddenByEntity).getGameProfile().getName()));
+				&& !ride.func_152119_ch().equals("")
+				&& ride.func_152119_ch().equals(((EntityPlayer) ride.riddenByEntity).getGameProfile().getId()));
 		setValue(
 			"leashed_to_owner",
 			ride.getLeashedToEntity() instanceof EntityPlayer
-				&& !ride.getOwnerName().equals("")
-				&& ride.getOwnerName().equals(((EntityPlayer) ride.getLeashedToEntity()).getGameProfile().getName()));
+				&& !ride.func_152119_ch().equals("")
+				&& ride.func_152119_ch().equals(((EntityPlayer) ride.getLeashedToEntity()).getGameProfile().getId()));
 		
 		if (ride.getLeashed() && ride.getLeashedToEntity() != null)
 		{
@@ -87,7 +87,7 @@ public class M__ride_horse extends ModuleProcessor implements Module
 		
 		// Server only?
 		setValue("temper", ride.getTemper());
-		setValue("owner_name", ride.getOwnerName());
+		setValue("owner_uuid", ride.func_152119_ch());
 		setValue("reproduced", ride.getHasReproduced());
 		setValue("bred", ride.func_110205_ce());
 	}

@@ -482,7 +482,7 @@ public class LegacyXMLExpansions_Engine1
 		Long l = LongFloatSimplificator.longOf(index);
 		if (l != null && l < 256)
 		{
-			Object o = Block.blockRegistry.getObjectForID((int) (long) l);
+			Object o = Block.blockRegistry.getObjectById((int) (long) l);
 			if (o != null && o instanceof Block)
 			{
 				index = MAtmosUtility.nameOf((Block) o);

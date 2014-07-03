@@ -49,12 +49,12 @@ public class MAtMod extends HaddonImpl
 	implements SupportsFrameEvents, SupportsTickEvents, NotifiableHaddon, IResourceManagerReloadListener,
 	SoundAccessor, Stable
 {
-	private static final boolean _COMPILE_IS_UNSTABLE = false;
+	private static final boolean _COMPILE_IS_UNSTABLE = true;
 	
 	// Identity
 	protected final String NAME = "MAtmos";
-	protected final int VERSION = 27;
-	protected final String FOR = "1.7.2";
+	protected final int VERSION = 28;
+	protected final String FOR = "1.7.10";
 	protected final String ADDRESS = "http://matmos.ha3.eu";
 	protected final Date DATE = new Date(1394610076);
 	protected final Identity identity = new HaddonIdentity(this.NAME, this.VERSION, this.FOR, this.ADDRESS);

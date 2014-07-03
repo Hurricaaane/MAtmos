@@ -13,6 +13,6 @@ public class NoAttenuationSound extends PositionedSoundRecord
 	public NoAttenuationSound(ResourceLocation r, float a, float b, float c, float d, float e)
 	{
 		super(r, a, b, c, d, e);
-		this.field_147666_i = ISound.AttenuationType.NONE;
+		this.attenuationType = ISound.AttenuationType.NONE;
 	}
 }

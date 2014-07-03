@@ -253,7 +253,7 @@ public class MAtmosUtility
 	 */
 	public static String asPowerMeta(ItemStack item)
 	{
-		return asPowerMeta(nameOf(item.getItem()), item.getItemDamage());
+		return asPowerMeta(nameOf(item.getItem()), item.getMetadata());
 	}
 	
 	/**

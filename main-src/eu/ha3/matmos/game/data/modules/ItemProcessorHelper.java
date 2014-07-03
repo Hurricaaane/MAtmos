@@ -23,7 +23,7 @@ public class ItemProcessorHelper
 		else
 		{
 			model.setValue(prefix + "_item", MAtmosUtility.nameOf(item));
-			model.setValue(prefix + "_damage", item.getItemDamage());
+			model.setValue(prefix + "_damage", item.getMetadata());
 			model.setValue(prefix + "_name_display", item.getDisplayName());
 			model.setValue(prefix + "_powermeta", MAtmosUtility.asPowerMeta(item));
 		}
