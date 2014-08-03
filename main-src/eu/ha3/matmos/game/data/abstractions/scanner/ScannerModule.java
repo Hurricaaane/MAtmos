@@ -9,6 +9,7 @@ import eu.ha3.matmos.game.data.abstractions.module.ExternalStringCountModule;
 import eu.ha3.matmos.game.data.abstractions.module.PassOnceModule;
 import eu.ha3.matmos.game.data.abstractions.module.ThousandStringCountModule;
 import eu.ha3.matmos.game.system.MAtmosUtility;
+import eu.ha3.matmos.log.MAtLog;
 
 /*
 --filenotes-placeholder
@@ -18,7 +19,7 @@ public class ScannerModule implements PassOnceModule, ScanOperations, Progress
 {
 	public static final String THOUSAND_SUFFIX = "_p1k";
 	
-	private static final int LET_MINECRAFT_BOOT_FIRST = 100;
+	private static final int WORLD_LOADING_DURATION = 100;
 	
 	private final String passOnceName;
 	private final boolean requireThousand;
@@ -37,8 +38,9 @@ public class ScannerModule implements PassOnceModule, ScanOperations, Progress
 	
 	//
 	
-	private int ticksPassed;
-	private boolean progressInProgress;
+	private int ticksSinceBoot;
+	private boolean firstScan;
+	private boolean workInProgress;
 	
 	private int dimension = Integer.MIN_VALUE;
 	private int xx = Integer.MIN_VALUE;
@@ -99,6 +101,9 @@ public class ScannerModule implements PassOnceModule, ScanOperations, Progress
 		// 
 		
 		this.scanner.setPipeline(this);
+		
+		this.ticksSinceBoot = 0;
+		this.firstScan = true;
 	}
 	
 	@Override
@@ -116,45 +121,90 @@ public class ScannerModule implements PassOnceModule, ScanOperations, Progress
 	@Override
 	public void process()
 	{
-		if (this.ticksPassed < LET_MINECRAFT_BOOT_FIRST)
+		if (tryToReboot())
 		{
-			this.ticksPassed = this.ticksPassed + 1;
+			MAtLog.info("Detected large movement or teleportation. Rebooted module " + getModuleName());
+			return;
+		}
+		
+		if (this.ticksSinceBoot < WORLD_LOADING_DURATION)
+		{
+			this.ticksSinceBoot = this.ticksSinceBoot + 1;
 			return;
 		}
 		
 		tryToBoot();
 		
-		if (this.progressInProgress)
+		if (this.workInProgress)
 		{
 			this.scanner.routine();
 		}
-		this.ticksPassed = this.ticksPassed + 1;
+		this.ticksSinceBoot = this.ticksSinceBoot + 1;
+	}
+	
+	private boolean tryToReboot()
+	{
+		int x = MAtmosUtility.getPlayerX();
+		int y = MAtmosUtility.clampToBounds(MAtmosUtility.getPlayerY());
+		int z = MAtmosUtility.getPlayerZ();
+		
+		if (Minecraft.getMinecraft().thePlayer.dimension != this.dimension)
+		{
+			reboot();
+			return true;
+		}
+		
+		int max = Math.max(Math.abs(this.xx - x), Math.abs(this.yy - y));
+		max = Math.max(max, Math.abs(this.zz - z));
+		
+		if (max > 128)
+		{
+			reboot();
+			return true;
+		}
+		
+		return false;
+	}
+	
+	private void reboot()
+	{
+		this.scanner.stopScan();
+		this.workInProgress = false;
+		
+		this.ticksSinceBoot = 0;
+		this.firstScan = true;
+		
+		this.dimension = Minecraft.getMinecraft().thePlayer.dimension;
+		this.xx = MAtmosUtility.getPlayerX();
+		this.yy = MAtmosUtility.clampToBounds(MAtmosUtility.getPlayerY());
+		this.zz = MAtmosUtility.getPlayerZ();
 	}
 	
 	private void tryToBoot()
 	{
-		if (this.progressInProgress)
+		if (this.workInProgress)
 			return;
 		
-		if (this.ticksPassed % this.pulse == 0)
+		if (this.ticksSinceBoot % this.pulse == 0)
 		{
 			boolean go = false;
-			if (this.movement >= 0)
+			
+			if (this.firstScan)
 			{
-				if (Minecraft.getMinecraft().thePlayer.dimension == this.dimension)
-				{
-					int x = MAtmosUtility.getPlayerX();
-					int y = MAtmosUtility.clampToBounds(MAtmosUtility.getPlayerY());
-					int z = MAtmosUtility.getPlayerZ();
-					
-					int max = Math.max(Math.abs(this.xx - x), Math.abs(this.yy - y));
-					max = Math.max(max, Math.abs(this.zz - z));
-					go = max > this.movement;
-				}
-				else
-				{
-					go = true;
-				}
+				this.firstScan = false;
+				
+				go = true;
+			}
+			else if (this.movement >= 0)
+			{
+				int x = MAtmosUtility.getPlayerX();
+				int y = MAtmosUtility.clampToBounds(MAtmosUtility.getPlayerY());
+				int z = MAtmosUtility.getPlayerZ();
+				
+				int max = Math.max(Math.abs(this.xx - x), Math.abs(this.yy - y));
+				max = Math.max(max, Math.abs(this.zz - z));
+				
+				go = max > this.movement;
 			}
 			else
 			{
@@ -163,9 +213,8 @@ public class ScannerModule implements PassOnceModule, ScanOperations, Progress
 			
 			if (go)
 			{
-				this.progressInProgress = true;
+				this.workInProgress = true;
 				
-				this.dimension = Minecraft.getMinecraft().thePlayer.dimension;
 				this.xx = MAtmosUtility.getPlayerX();
 				this.yy = MAtmosUtility.clampToBounds(MAtmosUtility.getPlayerY());
 				this.zz = MAtmosUtility.getPlayerZ();
@@ -178,17 +227,10 @@ public class ScannerModule implements PassOnceModule, ScanOperations, Progress
 	@Override
 	public void input(int x, int y, int z)
 	{
-		if (Minecraft.getMinecraft().thePlayer.dimension != this.dimension)
-		{
-			this.base.increment("minecraft:air");
-			this.base.increment("minecraft:air^0");
-			this.thousand.increment("minecraft:air");
-			return;
-		}
-		
-		this.base.increment(MAtmosUtility.getNameAt(x, y, z, ""));
+		String name = MAtmosUtility.getNameAt(x, y, z, "");
+		this.base.increment(name);
 		this.base.increment(MAtmosUtility.getPowerMetaAt(x, y, z, ""));
-		this.thousand.increment(MAtmosUtility.getNameAt(x, y, z, ""));
+		this.thousand.increment(name);
 	}
 	
 	@Override
@@ -204,7 +246,7 @@ public class ScannerModule implements PassOnceModule, ScanOperations, Progress
 		{
 			this.thousand.apply();
 		}
-		this.progressInProgress = false;
+		this.workInProgress = false;
 	}
 	
 	@Override
