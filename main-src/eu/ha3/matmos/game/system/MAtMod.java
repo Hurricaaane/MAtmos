@@ -338,6 +338,13 @@ public class MAtMod extends HaddonImpl
 					"Use at your own risk. " + "Please check regularly for updates and resource pack updates.");
 			}
 			
+			if (isDebugMode())
+			{
+				getChatter().printChat(
+					ChatColorsSimple.COLOR_GOLD + "Developer mode is enabled in the Advanced options.");
+				getChatter().printChatShort("This affects performance. Your game may run slower.");
+			}
+			
 			if (!this.hasResourcePacks)
 			{
 				this.hasResourcePacks_FixMe = true;
