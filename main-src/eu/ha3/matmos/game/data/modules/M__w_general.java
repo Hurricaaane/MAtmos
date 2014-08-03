@@ -28,11 +28,15 @@ public class M__w_general extends ModuleProcessor implements Module
 		
 		setValue("time_modulo24k", (int) (info.getWorldTime() % 24000L));
 		setValue("rain", info.isRaining());
-		setValue("thunder", info.isThundering());
+		//setValue("thunder", info.isThundering());
+		setValue("thunder", w.getWeightedThunderStrength(0f) > 0.9f);
 		setValue("dimension", player.dimension);
 		setValue("light_subtracted", w.skylightSubtracted);
 		setValue("remote", w.isRemote);
 		setValue("moon_phase", w.getMoonPhase());
+		
+		setValue("rain_force1k", Math.round(w.getRainStrength(0f) * 1000));
+		setValue("thunder_force1k", Math.round(w.getWeightedThunderStrength(0f) * 1000));
 		
 	}
 }
