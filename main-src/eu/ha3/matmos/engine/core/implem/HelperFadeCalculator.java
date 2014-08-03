@@ -59,20 +59,36 @@ public class HelperFadeCalculator
 		long curTime = this.time.getMilliseconds();
 		if (this.foLast)
 		{
-			this.fade = 1 - (curTime - this.fadeOutTime) / (float) this.fadeOutDuration;
-			if (this.fade < 0f)
+			if (this.fadeOutDuration <= 0f)
 			{
 				this.fade = 0f;
 				this.complete = true;
 			}
+			else
+			{
+				this.fade = 1 - (curTime - this.fadeOutTime) / (float) this.fadeOutDuration;
+				if (this.fade < 0f)
+				{
+					this.fade = 0f;
+					this.complete = true;
+				}
+			}
 		}
 		else
 		{
-			this.fade = (curTime - this.fadeInTime) / (float) this.fadeInDuration;
-			if (this.fade > 1f)
+			if (this.fadeInDuration <= 0f)
 			{
 				this.fade = 1f;
 				this.complete = true;
+			}
+			else
+			{
+				this.fade = (curTime - this.fadeInTime) / (float) this.fadeInDuration;
+				if (this.fade > 1f)
+				{
+					this.fade = 1f;
+					this.complete = true;
+				}
 			}
 		}
 		
