@@ -98,6 +98,16 @@ public class S__detect implements Processor, PassOnceModule
 		{
 			mappy.clear();
 		}
+		
+		// Reset old things
+		for (int entityID : this.minimumDistanceReports.keySet())
+		{
+			for (int i = 0; i < this.radiusValuesSorted.length; i++)
+			{
+				this.radiusSheets[i].setValueIntIndex(entityID, 0);
+			}
+			this.mindistModel.setValueIntIndex(entityID, Integer.MAX_VALUE);
+		}
 		this.minimumDistanceReports.clear();
 	}
 	
@@ -156,19 +166,12 @@ public class S__detect implements Processor, PassOnceModule
 					{
 						// If something is within 1 meter, it certainly also is within 5 meters:
 						// expand now and exit the loop.
-						for (int above = i; above < this.radiusValuesSorted.length; above++)
+						int eID = e instanceof EntityPlayer ? 0 : EntityList.getEntityID(e);
+						if (eID >= 0)
 						{
-							if (e instanceof EntityPlayer)
+							for (int above = i; above < this.radiusValuesSorted.length; above++)
 							{
-								addToEntityCount(above, 0, 1);
-							}
-							else
-							{
-								int eID = EntityList.getEntityID(e);
-								if (eID != 0)
-								{
-									addToEntityCount(above, eID, 1);
-								}
+								addToEntityCount(above, eID, 1);
 							}
 						}
 						reported = true;
@@ -185,32 +188,18 @@ public class S__detect implements Processor, PassOnceModule
 		{
 			if (this.collector.requires(this.radiusSheets[i].getModuleName()))
 			{
-				for (int entityID = 0; entityID < this.max; entityID++)
+				for (int entityID : this.entityCount[i].keySet())
 				{
-					if (this.entityCount[i].containsKey(entityID))
-					{
-						this.radiusSheets[i].setValueIntIndex(entityID, this.entityCount[i].get(entityID));
-					}
-					else
-					{
-						this.radiusSheets[i].setValueIntIndex(entityID, 0);
-					}
+					this.radiusSheets[i].setValueIntIndex(entityID, this.entityCount[i].get(entityID));
 				}
 			}
 		}
 		if (this.collector.requires(this.mindistModel.getModuleName()))
 		{
-			for (int entityID = 0; entityID < this.max; entityID++)
+			for (int entityID : this.minimumDistanceReports.keySet())
 			{
-				if (this.minimumDistanceReports.containsKey(entityID))
-				{
-					this.mindistModel.setValueIntIndex(
-						entityID, (int) Math.floor(this.minimumDistanceReports.get(entityID) * 1000));
-				}
-				else
-				{
-					this.mindistModel.setValueIntIndex(entityID, Integer.MAX_VALUE);
-				}
+				this.mindistModel.setValueIntIndex(
+					entityID, (int) Math.floor(this.minimumDistanceReports.get(entityID) * 1000));
 			}
 		}
 		
