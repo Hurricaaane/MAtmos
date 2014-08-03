@@ -8,6 +8,8 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import eu.ha3.easy.StopWatchStatistic;
+import eu.ha3.easy.TimeStatistic;
 import eu.ha3.matmos.engine.core.implem.GenericSheet;
 import eu.ha3.matmos.engine.core.implem.SelfGeneratingData;
 import eu.ha3.matmos.engine.core.interfaces.Data;
@@ -64,6 +66,8 @@ public class ModularDataGatherer implements Collector, Processor
 	
 	private Data data;
 	private int ticksPassed;
+	
+	private StopWatchStatistic watch = new StopWatchStatistic();
 	
 	public static final String LEGACY_PREFIX = "legacy";
 	
@@ -165,7 +169,8 @@ public class ModularDataGatherer implements Collector, Processor
 				this.data, "_POM__scan_large", "scan_large", true, 8, 20 /*256*/, 64, 32, 64, 16 * 8 * 16/*64 * 64 * 2*/);
 		addModule(this.largeScanner);
 		addModule(new ScannerModule(
-			this.data, "_POM__scan_small", "scan_small", true, -1, 2 /*64*/, 16, 8, 16, 16 * 8 * 16));
+			this.data, "_POM__scan_small", "scan_small", true, -1, 2 /*64*/, 16, 8, 16, 16 * 4 * 16));
+		// Each ticks, check half of the small scan
 		
 		MAtLog.info("Modules initialized: " + Arrays.toString(new TreeSet<String>(this.modules.keySet()).toArray()));
 	}
@@ -178,8 +183,10 @@ public class ModularDataGatherer implements Collector, Processor
 	@Override
 	public void process()
 	{
+		TimeStatistic stat = new TimeStatistic();
 		for (String requiredModule : this.iteratedThroughModules)
 		{
+			this.watch.reset();
 			try
 			{
 				this.modules.get(requiredModule).process();
@@ -189,9 +196,15 @@ public class ModularDataGatherer implements Collector, Processor
 				e.printStackTrace();
 				IDontKnowHowToCode.whoops__printExceptionToChat(this.mod.getChatter(), e, requiredModule.hashCode());
 			}
+			this.watch.stop();
+			if (this.watch.getMilliseconds() > 50 && this.mod.isDebugMode())
+			{
+				MAtLog.warning("WARNING: Module " + requiredModule + " took " + stat.getMilliseconds() + "ms!!!");
+			}
 		}
 		
 		this.ticksPassed = this.ticksPassed + 1;
+		
 	}
 	
 	@Override
