@@ -37,7 +37,8 @@ public class ExpansionManager implements VolumeUpdatable, Stable, SupportsTickEv
 	private final File userconfigFolder;
 	
 	private final MAtResourcePackDealer dealer = new MAtResourcePackDealer();
-	private Map<String, Expansion> expansions;
+	private final Map<String, Expansion> expansions = new HashMap<String, Expansion>();
+	//private final Map<String, IResourcePack> confirmedResourcePacks = new LinkedHashMap<String, IResourcePack>();
 	
 	private boolean isActivated;
 	private Data data;
@@ -49,8 +50,6 @@ public class ExpansionManager implements VolumeUpdatable, Stable, SupportsTickEv
 	{
 		this.userconfigFolder = userconfigFolder;
 		this.accessor = accessor;
-		
-		this.expansions = new HashMap<String, Expansion>();
 		
 		if (!this.userconfigFolder.exists())
 		{
@@ -103,8 +102,7 @@ public class ExpansionManager implements VolumeUpdatable, Stable, SupportsTickEv
 			}
 			catch (Exception e)
 			{
-				MAtLog.warning(pack.getResourcePackName()
-					+ " " + "has failed with an error: " + e.getMessage());
+				MAtLog.warning(pack.getResourcePackName() + " " + "has failed with an error: " + e.getMessage());
 			}
 		}
 	}
@@ -269,6 +267,7 @@ public class ExpansionManager implements VolumeUpdatable, Stable, SupportsTickEv
 			expansion.dispose();
 		}
 		this.expansions.clear();
+		//this.confirmedResourcePacks.clear();
 	}
 	
 	@Override
