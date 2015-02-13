@@ -111,7 +111,7 @@ public class ModularDataGatherer implements Collector, Processor
 	 * ProcessorModel. Cycle: Every n ticks. Cycle = 1: Every ticks.
 	 * 
 	 * @param module
-	 * @param interval
+	 * @param cycle
 	 */
 	private void addModule(Module module, int cycle)
 	{

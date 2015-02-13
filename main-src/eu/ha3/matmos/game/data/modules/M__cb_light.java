@@ -1,6 +1,7 @@
 package eu.ha3.matmos.game.data.modules;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import eu.ha3.matmos.engine.core.interfaces.Data;
@@ -23,14 +24,19 @@ public class M__cb_light extends ModuleProcessor implements Module
 	protected void doProcess()
 	{
 		World w = Minecraft.getMinecraft().theWorld;
-		
-		int x = MAtmosUtility.getPlayerX();
-		int y = MAtmosUtility.getPlayerY();
-		int z = MAtmosUtility.getPlayerZ();
-		
-		setValue("sky", w.getSavedLightValue(EnumSkyBlock.Sky, x, y, z));
-		setValue("lamp", w.getSavedLightValue(EnumSkyBlock.Block, x, y, z));
-		setValue("final", w.getBlockLightValue(x, y, z));
-		setValue("see_sky", w.canBlockSeeTheSky(x, y, z));
+        BlockPos playerPos = MAtmosUtility.getPlayerPosition();
+
+        /* dag edits
+         * Use BlockPos
+         * getSavedLightValue(..) -> getLightFor(..)
+         * EnumSkyBlock.Sky -> EnumSkyBlock.SKY
+         * EnumSkyBlock.Block -> EnumSkyBlock.BLOCK
+         * getBlockLightValue(..) -> getLight(..)
+         * canBlockSeeTheSky(..) -> canSeeSky(..)
+         */
+        setValue("sky", w.getLightFor(EnumSkyBlock.SKY, playerPos));
+		setValue("lamp", w.getLightFor(EnumSkyBlock.BLOCK, playerPos));
+		setValue("final", w.getLight(playerPos));
+        setValue("see_sky", w.canSeeSky(playerPos));
 	}
 }

@@ -44,19 +44,22 @@ public class L__legacy_hitscan extends ModuleProcessor implements Module
 			
 			return;
 		}
-		
+
+        // dag edits - getBlockPos().get..()
 		setValue("mouse_over_something", mc.objectMouseOver.typeOfHit != MovingObjectType.MISS);
 		setValue("mouse_over_what_remapped", this.equiv.get(mc.objectMouseOver.typeOfHit));
 		setValue(
 			"block_as_number",
 			mc.objectMouseOver.typeOfHit == MovingObjectType.BLOCK
 				? MAtmosUtility.legacyOf(MAtmosUtility.getBlockAt(
-					mc.objectMouseOver.blockX, mc.objectMouseOver.blockY, mc.objectMouseOver.blockZ))
+					mc.objectMouseOver.getBlockPos().getX(), mc.objectMouseOver.getBlockPos().getY(),
+                    mc.objectMouseOver.getBlockPos().getZ()))
 				: MODULE_CONSTANTS.LEGACY_NO_BLOCK_IN_THIS_CONTEXT);
 		setValue(
 			"meta_as_number",
 			mc.objectMouseOver.typeOfHit == MovingObjectType.BLOCK ? MAtmosUtility.getMetaAt(
-				mc.objectMouseOver.blockX, mc.objectMouseOver.blockY, mc.objectMouseOver.blockZ,
+				mc.objectMouseOver.getBlockPos().getX(), mc.objectMouseOver.getBlockPos().getY(),
+                    mc.objectMouseOver.getBlockPos().getZ(),
 				MODULE_CONSTANTS.LEGACY_NO_BLOCK_OUT_OF_BOUNDS) : MODULE_CONSTANTS.LEGACY_NO_BLOCK_IN_THIS_CONTEXT);
 	}
 }

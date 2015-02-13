@@ -1,6 +1,7 @@
 package eu.ha3.matmos.game.data.modules;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import eu.ha3.matmos.engine.core.interfaces.Data;
 import eu.ha3.matmos.game.data.MODULE_CONSTANTS;
@@ -35,13 +36,17 @@ public class M__cb_column extends ModuleProcessor implements Module
 		int x = MAtmosUtility.getPlayerX();
 		int y = MAtmosUtility.getPlayerY();
 		int z = MAtmosUtility.getPlayerZ();
+
+        // dag edit - Use BlockPos
+        BlockPos playerPos = MAtmosUtility.getPlayerPosition();
+        BlockPos topMostBlock = w.getTopSolidOrLiquidBlock(playerPos);
 		
 		setValue("y-1", MAtmosUtility.getNameAt(x, y - 1, z, MODULE_CONSTANTS.NO_BLOCK_OUT_OF_BOUNDS));
-		setValue("y-2", MAtmosUtility.getNameAt(x, y - 2, z, MODULE_CONSTANTS.NO_BLOCK_OUT_OF_BOUNDS));
+        setValue("y-2", MAtmosUtility.getNameAt(x, y - 2, z, MODULE_CONSTANTS.NO_BLOCK_OUT_OF_BOUNDS));
 		setValue("y0", MAtmosUtility.getNameAt(x, y + 0, z, MODULE_CONSTANTS.NO_BLOCK_OUT_OF_BOUNDS));
 		setValue("y1", MAtmosUtility.getNameAt(x, y + 1, z, MODULE_CONSTANTS.NO_BLOCK_OUT_OF_BOUNDS));
-		setValue("topmost_block", w.getTopSolidOrLiquidBlock(x, z));
-		setValue("thickness_overhead", w.getTopSolidOrLiquidBlock(x, z) - y);
-		setValue("can_rain_reach", w.canBlockSeeTheSky(x, y, z) && !(w.getTopSolidOrLiquidBlock(x, z) > y));
+		setValue("topmost_block", topMostBlock.getY());
+		setValue("thickness_overhead", topMostBlock.getY() - y);
+		setValue("can_rain_reach", w.canSeeSky(playerPos) && !(topMostBlock.getY() > y));
 	}
 }

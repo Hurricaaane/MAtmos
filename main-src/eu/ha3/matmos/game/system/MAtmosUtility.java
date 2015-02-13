@@ -2,16 +2,25 @@ package eu.ha3.matmos.game.system;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundCategory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 
 /* x-placeholder */
 
 public class MAtmosUtility
 {
+    // dag edit - added getPlayerPosition()
+    public static BlockPos getPlayerPosition()
+    {
+        return Minecraft.getMinecraft().thePlayer.getPosition();
+    }
+
 	public static int getPlayerX()
 	{
 		return (int) Math.floor(Minecraft.getMinecraft().thePlayer.posX);
@@ -115,7 +124,8 @@ public class MAtmosUtility
 	 */
 	private static Block getBlockAt(World world, int x, int y, int z)
 	{
-		Block block = world.getBlock(x, y, z);
+        // dag edit getBlock(...) -> getBlockState(...).getBlock()
+		Block block = world.getBlockState(new BlockPos(x, y, z)).getBlock();
 		return block;
 	}
 	
@@ -146,7 +156,8 @@ public class MAtmosUtility
 	public static String nameOf(Block block)
 	{
 		// RegistryNamespaced
-		return Block.blockRegistry.getNameForObject(block);
+        // dag edit + .toString() [check]
+		return Block.blockRegistry.getNameForObject(block).toString();
 	}
 	
 	/**
@@ -170,7 +181,8 @@ public class MAtmosUtility
 	public static String nameOf(Item item)
 	{
 		// RegistryNamespaced
-		return Item.itemRegistry.getNameForObject(item);
+        // dag edit + .toString() [check]
+		return Item.itemRegistry.getNameForObject(item).toString();
 	}
 	
 	public static boolean isSoundMasterEnabled()
@@ -234,9 +246,11 @@ public class MAtmosUtility
 		
 		try
 		{
+            // dag edit
+            IBlockState blockState = Minecraft.getMinecraft().theWorld.getBlockState(new BlockPos(x, y, z));
 			return asPowerMeta(
 				getNameAt(Minecraft.getMinecraft().theWorld, x, y, z),
-				Minecraft.getMinecraft().theWorld.getBlockMetadata(x, y, z));
+                blockState.getBlock().getMetaFromState(blockState));
 		}
 		catch (Exception e)
 		{
@@ -311,7 +325,9 @@ public class MAtmosUtility
 		
 		try
 		{
-			return Minecraft.getMinecraft().theWorld.getBlockMetadata(x, y, z);
+            // dag edit - use BlockState
+            IBlockState blockState = Minecraft.getMinecraft().theWorld.getBlockState(new BlockPos(x, y, z));
+			return blockState.getBlock().getMetaFromState(blockState);
 		}
 		catch (Exception e)
 		{
@@ -335,7 +351,9 @@ public class MAtmosUtility
 		
 		try
 		{
-			return Integer.toString(Minecraft.getMinecraft().theWorld.getBlockMetadata(x, y, z));
+            // dag edit - use BlockState
+            IBlockState blockState = Minecraft.getMinecraft().theWorld.getBlockState(new BlockPos(x, y, z));
+			return Integer.toString(blockState.getBlock().getMetaFromState(blockState));
 		}
 		catch (Exception e)
 		{

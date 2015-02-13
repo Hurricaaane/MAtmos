@@ -1,16 +1,16 @@
 package eu.ha3.matmos.game.data.modules;
 
-import java.util.Iterator;
-import java.util.List;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.world.World;
 import eu.ha3.matmos.engine.core.interfaces.Data;
 import eu.ha3.matmos.game.data.abstractions.module.Module;
 import eu.ha3.matmos.game.data.abstractions.module.ModuleProcessor;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.world.World;
+
+import java.util.Iterator;
+import java.util.List;
 
 /*
 --filenotes-placeholder
@@ -26,17 +26,19 @@ public class S__ply_leash extends ModuleProcessor implements Module
 	@Override
 	protected void doProcess()
 	{
-		EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
+        // dag edit EntityClientPlayerMP -> EntityPlayerSP
+		EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
 		World w = Minecraft.getMinecraft().theWorld;
 		
 		final int distance = 20;
 		int count = 0;
-		
+
+        // dag edit AxisAlignedBB.getBoundingBox(..) -> AxisAlignedBB.fromBounds(..)
 		@SuppressWarnings("unchecked")
 		List<EntityLiving> var6 =
-			w.getEntitiesWithinAABB(EntityLiving.class, AxisAlignedBB.getBoundingBox(
-				player.posX - distance, player.posY - distance, player.posZ - distance, player.posX + distance,
-				player.posY + distance, player.posZ + distance));
+			w.getEntitiesWithinAABB(EntityLiving.class, AxisAlignedBB.fromBounds(
+                    player.posX - distance, player.posY - distance, player.posZ - distance, player.posX + distance,
+                    player.posY + distance, player.posZ + distance));
 		
 		if (var6 != null)
 		{

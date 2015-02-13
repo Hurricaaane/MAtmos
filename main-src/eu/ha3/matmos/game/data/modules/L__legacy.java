@@ -1,18 +1,18 @@
 package eu.ha3.matmos.game.data.modules;
 
+import eu.ha3.matmos.engine.core.interfaces.Data;
+import eu.ha3.matmos.game.data.MODULE_CONSTANTS;
+import eu.ha3.matmos.game.data.abstractions.module.Module;
+import eu.ha3.matmos.game.data.abstractions.module.ModuleProcessor;
+import eu.ha3.matmos.game.system.MAtmosUtility;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityBoat;
 import net.minecraft.entity.item.EntityMinecartEmpty;
 import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.item.ItemStack;
-import eu.ha3.matmos.engine.core.interfaces.Data;
-import eu.ha3.matmos.game.data.MODULE_CONSTANTS;
-import eu.ha3.matmos.game.data.abstractions.module.Module;
-import eu.ha3.matmos.game.data.abstractions.module.ModuleProcessor;
-import eu.ha3.matmos.game.system.MAtmosUtility;
 
 /*
 --filenotes-placeholder
@@ -29,7 +29,8 @@ public class L__legacy extends ModuleProcessor implements Module
 	protected void doProcess()
 	{
 		Minecraft mc = Minecraft.getMinecraft();
-		EntityClientPlayerMP player = mc.thePlayer;
+        // dag edit EntityClientPlayerMP -> EntityPlayerSP
+		EntityPlayerSP player = mc.thePlayer;
 		Entity ride = player.ridingEntity;
 		
 		setValue("player_health_ceil", (int) Math.ceil(player.getHealth()));

@@ -64,16 +64,18 @@ public class M__ride_horse extends ModuleProcessor implements Module
 		
 		setValue("health1k", (int) (ride.getHealth() * 1000));
 		setValue("leashed_to_player", ride.getLeashed() && ride.getLeashedToEntity() instanceof EntityPlayer);
+        // dag edit func_152119_ch() -> getOwnerId()
 		setValue(
 			"ridden_by_owner",
 			ride.riddenByEntity instanceof EntityPlayer
-				&& !ride.func_152119_ch().equals("")
-				&& ride.func_152119_ch().equals(((EntityPlayer) ride.riddenByEntity).getGameProfile().getId()));
+				&& !ride.getOwnerId().equals("")
+				&& ride.getOwnerId().equals(((EntityPlayer) ride.riddenByEntity).getGameProfile().getId().toString()));
+        // dag edit func_152119_ch() -> getOwnerId()
 		setValue(
 			"leashed_to_owner",
 			ride.getLeashedToEntity() instanceof EntityPlayer
-				&& !ride.func_152119_ch().equals("")
-				&& ride.func_152119_ch().equals(((EntityPlayer) ride.getLeashedToEntity()).getGameProfile().getId()));
+				&& !ride.getOwnerId().equals("")
+				&& ride.getOwnerId().equals(((EntityPlayer) ride.getLeashedToEntity()).getGameProfile().getId().toString()));
 		
 		if (ride.getLeashed() && ride.getLeashedToEntity() != null)
 		{
@@ -87,8 +89,10 @@ public class M__ride_horse extends ModuleProcessor implements Module
 		
 		// Server only?
 		setValue("temper", ride.getTemper());
-		setValue("owner_uuid", ride.func_152119_ch());
+        // dag edit func_152119_ch() -> getOwnerId()
+		setValue("owner_uuid", ride.getOwnerId());
 		setValue("reproduced", ride.getHasReproduced());
-		setValue("bred", ride.func_110205_ce());
+        // dag edit func_110205_ce() -> isBreeding() [this is probably wrong, not sure what 'bred' represents]
+        setValue("bred", ride.isBreeding());
 	}
 }

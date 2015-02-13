@@ -48,21 +48,28 @@ public class S__ply_hitscan extends ModuleProcessor implements Module
 		
 		setValue("mouse_over_something", mc.objectMouseOver.typeOfHit != MovingObjectType.MISS);
 		setValue("mouse_over_what", this.equiv.get(mc.objectMouseOver.typeOfHit));
+        // dag edit -> getBlockPos().get..()
 		setValue(
 			"block",
 			mc.objectMouseOver.typeOfHit == MovingObjectType.BLOCK ? MAtmosUtility.getNameAt(
-				mc.objectMouseOver.blockX, mc.objectMouseOver.blockY, mc.objectMouseOver.blockZ,
+				mc.objectMouseOver.getBlockPos().getX(), mc.objectMouseOver.getBlockPos().getY(),
+                    mc.objectMouseOver.getBlockPos().getZ(),
 				MODULE_CONSTANTS.NO_BLOCK_OUT_OF_BOUNDS) : MODULE_CONSTANTS.NO_BLOCK_IN_THIS_CONTEXT);
+        // dag edit -> getBlockPos().get..()
 		setValue(
 			"meta",
 			mc.objectMouseOver.typeOfHit == MovingObjectType.BLOCK ? MAtmosUtility.getMetaAsStringAt(
-				mc.objectMouseOver.blockX, mc.objectMouseOver.blockY, mc.objectMouseOver.blockZ,
+				mc.objectMouseOver.getBlockPos().getX(), mc.objectMouseOver.getBlockPos().getY(),
+                    mc.objectMouseOver.getBlockPos().getZ(),
 				MODULE_CONSTANTS.NO_BLOCK_OUT_OF_BOUNDS) : MODULE_CONSTANTS.NO_BLOCK_IN_THIS_CONTEXT);
+        // dag edit -> getBlockPos().get..()
 		setValue(
 			"powermeta",
 			mc.objectMouseOver.typeOfHit == MovingObjectType.BLOCK ? MAtmosUtility.getPowerMetaAt(
-				mc.objectMouseOver.blockX, mc.objectMouseOver.blockY, mc.objectMouseOver.blockZ,
+				mc.objectMouseOver.getBlockPos().getX(), mc.objectMouseOver.getBlockPos().getY(),
+                    mc.objectMouseOver.getBlockPos().getZ(),
 				MODULE_CONSTANTS.NO_BLOCK_OUT_OF_BOUNDS) : MODULE_CONSTANTS.NO_BLOCK_IN_THIS_CONTEXT);
+        // dag edit -> getBlockPos().get..()
 		setValue(
 			"entity_id",
 			mc.objectMouseOver.typeOfHit == MovingObjectType.ENTITY ? EntityList

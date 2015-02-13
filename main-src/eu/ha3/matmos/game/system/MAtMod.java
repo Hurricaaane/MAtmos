@@ -52,9 +52,9 @@ public class MAtMod extends HaddonImpl
 	private static final boolean _COMPILE_IS_UNSTABLE = true;
 	
 	// Identity
-	protected final String NAME = "MAtmos";
-	protected final int VERSION = 28;
-	protected final String FOR = "1.7.10";
+	protected final String NAME = "MAtmos-UnofficialBeta";
+	protected final int VERSION = 29;
+	protected final String FOR = "1.8";
 	protected final String ADDRESS = "http://matmos.ha3.eu";
 	protected final Date DATE = new Date(1394610076);
 	protected final Identity identity = new HaddonIdentity(this.NAME, this.VERSION, this.FOR, this.ADDRESS);
@@ -99,9 +99,10 @@ public class MAtMod extends HaddonImpl
 	{
 		util().registerPrivateGetter("getSoundManager", SoundHandler.class, 5, "field_147694_f", "f");
 		util().registerPrivateGetter("getSoundSystem", SoundManager.class, 4, "field_148620_e", "e");
-		
-		util().registerPrivateGetter("isJumping", EntityLivingBase.class, -1, "isJumping", "field_70703_bu", "bd");
-		util().registerPrivateGetter("isInWeb", Entity.class, -1, "isInWeb", "field_70134_J", "J");
+
+        // dag edit - update to 1.8 obf stuff
+		util().registerPrivateGetter("isJumping", EntityLivingBase.class, -1, "isJumping", "field_70703_bu", "aW");
+		util().registerPrivateGetter("isInWeb", Entity.class, -1, "isInWeb", "field_70134_J", "H");
 		
 		((OperatorCaster) op()).setTickEnabled(true);
 		
@@ -328,7 +329,7 @@ public class MAtMod extends HaddonImpl
 				getChatter().printChatShort("http://matmos.ha3.eu/");
 				getChatter().printChat(
 					ChatColorsSimple.COLOR_RED
-						+ "You are using a " + ChatColorsSimple.COLOR_YELLOW + "test" + ChatColorsSimple.COLOR_RED
+						+ "You are using an " + ChatColorsSimple.COLOR_YELLOW + "Unofficial Beta" + ChatColorsSimple.COLOR_RED
 						+ " version of MAtmos.");
 				getChatter().printChatShort(
 					"By using this version, you understand that this mod isn't intended for"
