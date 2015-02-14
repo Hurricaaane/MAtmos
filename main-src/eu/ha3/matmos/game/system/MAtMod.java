@@ -109,7 +109,7 @@ public class MAtMod extends HaddonImpl
 		TimeStatistic timeMeasure = new TimeStatistic(Locale.ENGLISH);
 		this.userControl = new UserControl(this);
 		this.expansionManager =
-			new ExpansionManager(new File(util().getModsFolder(), "matmos/expansions_r27_userconfig/"), this);
+			new ExpansionManager(new File(util().getModsFolder(), "matmos/expansions_r29_userconfig/"), this);
 		
 		// Create default configuration
 		this.updateNotifier.fillDefaults(this.config);
