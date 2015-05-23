@@ -33,11 +33,9 @@ public class M__ply_general extends ModuleProcessor implements Module
         setValue("wet", player.isWet());
         setValue("on_ground", player.onGround);
         setValue("burning", player.isBurning());
-        //setValue("jumping", UnresolvedPrivateAccessors__entity.getInstance().isJumping(player));
-        //setValue("in_web", UnresolvedPrivateAccessors__entity.getInstance().isInWeb(player));
+        setValue("jumping", player.movementInput.jump);
         try
         {
-            setValue("jumping", (Boolean) this.util.getPrivate(player, "isJumping"));
             setValue("in_web", (Boolean) this.util.getPrivate(player, "isInWeb"));
         }
         catch (PrivateAccessException e)

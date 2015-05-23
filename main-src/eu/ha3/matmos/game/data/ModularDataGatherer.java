@@ -1,13 +1,5 @@
 package eu.ha3.matmos.game.data;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
-
 import eu.ha3.easy.StopWatchStatistic;
 import eu.ha3.easy.TimeStatistic;
 import eu.ha3.matmos.engine.core.implem.GenericSheet;
@@ -21,40 +13,12 @@ import eu.ha3.matmos.game.data.abstractions.module.PassOnceModule;
 import eu.ha3.matmos.game.data.abstractions.module.ProcessorModel;
 import eu.ha3.matmos.game.data.abstractions.scanner.Progress;
 import eu.ha3.matmos.game.data.abstractions.scanner.ScannerModule;
-import eu.ha3.matmos.game.data.modules.L__legacy;
-import eu.ha3.matmos.game.data.modules.L__legacy_column;
-import eu.ha3.matmos.game.data.modules.L__legacy_hitscan;
-import eu.ha3.matmos.game.data.modules.L__legacy_random;
-import eu.ha3.matmos.game.data.modules.L__meta_mod;
-import eu.ha3.matmos.game.data.modules.M__cb_column;
-import eu.ha3.matmos.game.data.modules.M__cb_light;
-import eu.ha3.matmos.game.data.modules.M__cb_pos;
-import eu.ha3.matmos.game.data.modules.M__gui_general;
-import eu.ha3.matmos.game.data.modules.M__ply_action;
-import eu.ha3.matmos.game.data.modules.M__ply_armor;
-import eu.ha3.matmos.game.data.modules.M__ply_general;
-import eu.ha3.matmos.game.data.modules.M__ply_inventory;
-import eu.ha3.matmos.game.data.modules.M__ply_motion;
-import eu.ha3.matmos.game.data.modules.M__ply_stats;
-import eu.ha3.matmos.game.data.modules.M__ride_general;
-import eu.ha3.matmos.game.data.modules.M__ride_horse;
-import eu.ha3.matmos.game.data.modules.M__ride_motion;
-import eu.ha3.matmos.game.data.modules.M__w_biome;
-import eu.ha3.matmos.game.data.modules.M__w_general;
-import eu.ha3.matmos.game.data.modules.R__legacy_configvars;
-import eu.ha3.matmos.game.data.modules.R__meta_option;
-import eu.ha3.matmos.game.data.modules.R__server_info;
-import eu.ha3.matmos.game.data.modules.S__detect;
-import eu.ha3.matmos.game.data.modules.S__ench_armor;
-import eu.ha3.matmos.game.data.modules.S__ench_current;
-import eu.ha3.matmos.game.data.modules.S__ply_hitscan;
-import eu.ha3.matmos.game.data.modules.S__ply_leash;
-import eu.ha3.matmos.game.data.modules.S__potion_duration;
-import eu.ha3.matmos.game.data.modules.S__potion_power;
-import eu.ha3.matmos.game.data.modules.S__scan_contact;
+import eu.ha3.matmos.game.data.modules.*;
 import eu.ha3.matmos.game.system.IDontKnowHowToCode;
 import eu.ha3.matmos.game.system.MAtMod;
 import eu.ha3.matmos.log.MAtLog;
+
+import java.util.*;
 
 /*
 --filenotes-placeholder
@@ -144,6 +108,7 @@ public class ModularDataGatherer implements Collector, Processor
 		addModule(new M__ride_general(this.data));
 		addModule(new M__ride_horse(this.data));
 		addModule(new M__ride_motion(this.data));
+        addModule(new M_timed_random(this.data), 20);
 		addModule(new M__w_biome(this.data, this.mod), 20);
 		addModule(new M__w_general(this.data));
 		addModule(new R__legacy_configvars(this.data, this.mod), 10000);
@@ -163,13 +128,14 @@ public class ModularDataGatherer implements Collector, Processor
 		
 		//this.frequent.add(new MAtProcessorEntityDetector(
 		//	this.mod, this.data, "DetectMinDist", "Detect", "_Deltas", ENTITYIDS_MAX, 2, 5, 10, 20, 50));
-		
+        // 16 * 8 * 16
 		this.largeScanner =
 			new ScannerModule(
-				this.data, "_POM__scan_large", "scan_large", true, 8, 20 /*256*/, 64, 32, 64, 16 * 8 * 16/*64 * 64 * 2*/);
+				this.data, "_POM__scan_large", "scan_large", true, 8, 20 /*256*/, 64, 32, 64, 1024/*64 * 64 * 2*/);
 		addModule(this.largeScanner);
+        // 16 * 4 * 16
 		addModule(new ScannerModule(
-			this.data, "_POM__scan_small", "scan_small", true, -1, 2 /*64*/, 16, 8, 16, 16 * 4 * 16));
+			this.data, "_POM__scan_small", "scan_small", true, -1, 2 /*64*/, 16, 8, 16, 512));
 		// Each ticks, check half of the small scan
 		
 		MAtLog.info("Modules initialized: " + Arrays.toString(new TreeSet<String>(this.modules.keySet()).toArray()));
@@ -202,9 +168,7 @@ public class ModularDataGatherer implements Collector, Processor
 				MAtLog.warning("WARNING: Module " + requiredModule + " took " + stat.getMilliseconds() + "ms!!!");
 			}
 		}
-		
 		this.ticksPassed = this.ticksPassed + 1;
-		
 	}
 	
 	@Override

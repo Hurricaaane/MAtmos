@@ -93,7 +93,6 @@ public class ScanVolumetric implements Progress
 	{
 		if (!this.isScanning)
 			return false;
-		
 		long ops = 0;
 		while (ops < this.opspercall && this.progress < this.finalProgress)
 		{

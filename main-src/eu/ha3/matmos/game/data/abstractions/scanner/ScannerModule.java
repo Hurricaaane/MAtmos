@@ -1,15 +1,15 @@
 package eu.ha3.matmos.game.data.abstractions.scanner;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import net.minecraft.client.Minecraft;
 import eu.ha3.matmos.engine.core.interfaces.Data;
 import eu.ha3.matmos.game.data.abstractions.module.ExternalStringCountModule;
 import eu.ha3.matmos.game.data.abstractions.module.PassOnceModule;
 import eu.ha3.matmos.game.data.abstractions.module.ThousandStringCountModule;
 import eu.ha3.matmos.game.system.MAtmosUtility;
 import eu.ha3.matmos.log.MAtLog;
+import net.minecraft.client.Minecraft;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /*
 --filenotes-placeholder
@@ -227,7 +227,8 @@ public class ScannerModule implements PassOnceModule, ScanOperations, Progress
 	@Override
 	public void input(int x, int y, int z)
 	{
-		String name = MAtmosUtility.getNameAt(x, y, z, "");
+        // MAtmosUtility.getNameAt(x, y, z, "")
+		String name = MAtmosUtility.nameOf(MAtmosUtility.getBlockAt(x, y, z));
 		this.base.increment(name);
 		this.base.increment(MAtmosUtility.getPowerMetaAt(x, y, z, ""));
 		this.thousand.increment(name);

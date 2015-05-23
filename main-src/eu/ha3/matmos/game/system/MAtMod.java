@@ -1,24 +1,5 @@
 package eu.ha3.matmos.game.system;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.SoundCategory;
-import net.minecraft.client.audio.SoundHandler;
-import net.minecraft.client.audio.SoundManager;
-import net.minecraft.client.resources.IReloadableResourceManager;
-import net.minecraft.client.resources.IResourceManager;
-import net.minecraft.client.resources.IResourceManagerReloadListener;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import paulscode.sound.SoundSystem;
 import eu.ha3.easy.StopWatchStatistic;
 import eu.ha3.easy.TimeStatistic;
 import eu.ha3.matmos.expansions.Expansion;
@@ -42,6 +23,20 @@ import eu.ha3.mc.quick.chat.Chatter;
 import eu.ha3.mc.quick.update.NotifiableHaddon;
 import eu.ha3.mc.quick.update.UpdateNotifier;
 import eu.ha3.util.property.simple.ConfigProperty;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.SoundCategory;
+import net.minecraft.client.audio.SoundHandler;
+import net.minecraft.client.audio.SoundManager;
+import net.minecraft.client.resources.IReloadableResourceManager;
+import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.client.resources.IResourceManagerReloadListener;
+import net.minecraft.entity.Entity;
+import paulscode.sound.SoundSystem;
+
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.util.*;
 
 /* x-placeholder */
 
@@ -101,7 +96,6 @@ public class MAtMod extends HaddonImpl
 		util().registerPrivateGetter("getSoundSystem", SoundManager.class, 4, "field_148620_e", "e");
 
         // dag edit - update to 1.8 obf stuff
-		util().registerPrivateGetter("isJumping", EntityLivingBase.class, -1, "isJumping", "field_70703_bu", "aW");
 		util().registerPrivateGetter("isInWeb", Entity.class, -1, "isInWeb", "field_70134_J", "H");
 		
 		((OperatorCaster) op()).setTickEnabled(true);

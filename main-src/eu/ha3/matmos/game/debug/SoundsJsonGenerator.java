@@ -1,5 +1,8 @@
 package eu.ha3.matmos.game.debug;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -7,9 +10,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 /*
 --filenotes-placeholder
@@ -39,7 +39,10 @@ public class SoundsJsonGenerator implements Runnable
 		List<String> workingNames = new ArrayList<String>();
 		for (String name : this.filenames)
 		{
-			workingNames.add(name.substring(0, name.indexOf(".")));
+            if (name.endsWith(".ogg"))
+            {
+                workingNames.add(name.substring(0, name.indexOf(".")));
+            }
 		}
 		
 		Map<String, List> catNames = new LinkedHashMap<String, List>();

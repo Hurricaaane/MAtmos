@@ -2,23 +2,22 @@ package eu.ha3.matmos.game.system;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundCategory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 
 /* x-placeholder */
 
 public class MAtmosUtility
 {
-    // dag edit - added getPlayerPosition()
-    public static BlockPos getPlayerPosition()
+    private static final MAtMutableBlockPos position = new MAtMutableBlockPos();
+
+    public static MAtMutableBlockPos getPlayerPosition()
     {
-        return Minecraft.getMinecraft().thePlayer.getPosition();
+        return position.of(getPlayerX(), getPlayerY(), getPlayerZ());
     }
 
 	public static int getPlayerX()
@@ -70,7 +69,6 @@ public class MAtmosUtility
 		
 		return y;
 	}
-	
 	/**
 	 * Gets the block at a certain location in the current world. This method is
 	 * not safe against locations in undefined space.
@@ -101,15 +99,8 @@ public class MAtmosUtility
 	{
 		if (!isWithinBounds(y))
 			return defaultIfFail;
-		
-		try
-		{
-			return getNameAt(Minecraft.getMinecraft().theWorld, x, y, z);
-		}
-		catch (Exception e)
-		{
-			return defaultIfFail;
-		}
+
+        return getNameAt(Minecraft.getMinecraft().theWorld, x, y, z);
 	}
 	
 	/**
@@ -124,9 +115,7 @@ public class MAtmosUtility
 	 */
 	private static Block getBlockAt(World world, int x, int y, int z)
 	{
-        // dag edit getBlock(...) -> getBlockState(...).getBlock()
-		Block block = world.getBlockState(new BlockPos(x, y, z)).getBlock();
-		return block;
+		return world.getBlockState(position.of(x, y, z)).getBlock();
 	}
 	
 	/**
@@ -155,8 +144,6 @@ public class MAtmosUtility
 	 */
 	public static String nameOf(Block block)
 	{
-		// RegistryNamespaced
-        // dag edit + .toString() [check]
 		return Block.blockRegistry.getNameForObject(block).toString();
 	}
 	
@@ -168,7 +155,6 @@ public class MAtmosUtility
 	 */
 	public static String nameOf(ItemStack itemStack)
 	{
-		// RegistryNamespaced
 		return nameOf(itemStack.getItem());
 	}
 	
@@ -180,8 +166,6 @@ public class MAtmosUtility
 	 */
 	public static String nameOf(Item item)
 	{
-		// RegistryNamespaced
-        // dag edit + .toString() [check]
 		return Item.itemRegistry.getNameForObject(item).toString();
 	}
 	
@@ -207,8 +191,7 @@ public class MAtmosUtility
 	 * @param attenuation
 	 * @param rollf
 	 */
-	public static void playSound(
-		String name, float nx, float ny, float nz, float volume, float pitch, int attenuation, float rollf)
+	public static void playSound(String name, float nx, float ny, float nz, float volume, float pitch, int attenuation, float rollf)
 	{
 		Minecraft.getMinecraft().theWorld.playSound(nx, ny, nz, name, volume, pitch, false);
 	}
@@ -243,19 +226,10 @@ public class MAtmosUtility
 	{
 		if (!isWithinBounds(y))
 			return defaultIfFail;
-		
-		try
-		{
-            // dag edit
-            IBlockState blockState = Minecraft.getMinecraft().theWorld.getBlockState(new BlockPos(x, y, z));
-			return asPowerMeta(
-				getNameAt(Minecraft.getMinecraft().theWorld, x, y, z),
-                blockState.getBlock().getMetaFromState(blockState));
-		}
-		catch (Exception e)
-		{
-			return defaultIfFail;
-		}
+
+        Block block = getBlockAt(x, y, z);
+        IBlockState blockState = Minecraft.getMinecraft().theWorld.getBlockState(position.of(x, y, z));
+        return asPowerMeta(block,  block.getMetaFromState(blockState));
 	}
 	
 	/**
@@ -322,17 +296,9 @@ public class MAtmosUtility
 	{
 		if (!isWithinBounds(y))
 			return defaultIfFail;
-		
-		try
-		{
-            // dag edit - use BlockState
-            IBlockState blockState = Minecraft.getMinecraft().theWorld.getBlockState(new BlockPos(x, y, z));
-			return blockState.getBlock().getMetaFromState(blockState);
-		}
-		catch (Exception e)
-		{
-			return defaultIfFail;
-		}
+
+        IBlockState blockState = Minecraft.getMinecraft().theWorld.getBlockState(position.of(x, y, z));
+        return blockState.getBlock().getMetaFromState(blockState);
 	}
 	
 	/**
@@ -348,17 +314,9 @@ public class MAtmosUtility
 	{
 		if (!isWithinBounds(y))
 			return defaultIfFail;
-		
-		try
-		{
-            // dag edit - use BlockState
-            IBlockState blockState = Minecraft.getMinecraft().theWorld.getBlockState(new BlockPos(x, y, z));
-			return Integer.toString(blockState.getBlock().getMetaFromState(blockState));
-		}
-		catch (Exception e)
-		{
-			return defaultIfFail;
-		}
+
+        IBlockState blockState = Minecraft.getMinecraft().theWorld.getBlockState(position.of(x, y, z));
+        return Integer.toString(blockState.getBlock().getMetaFromState(blockState));
 	}
 	
 	/**
@@ -369,7 +327,6 @@ public class MAtmosUtility
 	 */
 	public static int legacyOf(ItemStack itemStack)
 	{
-		// RegistryNamespaced
 		return Item.itemRegistry.getIDForObject(itemStack.getItem());
 	}
 	
@@ -381,7 +338,6 @@ public class MAtmosUtility
 	 */
 	public static int legacyOf(Block block)
 	{
-		// RegistryNamespaced
 		return Block.blockRegistry.getIDForObject(block);
 	}
 	
