@@ -1,11 +1,11 @@
 package eu.ha3.matmos.game.system;
 
+import eu.ha3.matmos.log.MAtLog;
+import eu.ha3.mc.quick.chat.Chatter;
+import net.minecraft.util.EnumChatFormatting;
+
 import java.util.HashSet;
 import java.util.Set;
-
-import eu.ha3.matmos.log.MAtLog;
-import eu.ha3.mc.quick.chat.ChatColorsSimple;
-import eu.ha3.mc.quick.chat.Chatter;
 
 /*
 --filenotes-placeholder
@@ -45,19 +45,18 @@ public class IDontKnowHowToCode
 			return;
 		crash.add(crashToken);
 		
-		chatter.printChat(ChatColorsSimple.COLOR_RED, "MAtmos is crashing: ", ChatColorsSimple.COLOR_WHITE, e
-			.getClass().getName(), ": ", e.getCause());
+		chatter.printChat(EnumChatFormatting.RED, "MAtmos is crashing: ", EnumChatFormatting.WHITE, e.getClass().getName(), ": ", e.getCause());
 		
 		int i = 0;
 		for (StackTraceElement x : e.getStackTrace())
 		{
 			if (i <= 5 || x.toString().contains("MAt") || x.toString().contains("eu.ha3.matmos."))
 			{
-				chatter.printChat(ChatColorsSimple.COLOR_WHITE, x.toString());
+				chatter.printChat(EnumChatFormatting.WHITE, x.toString());
 			}
 			i++;
 		}
 		
-		chatter.printChat(ChatColorsSimple.COLOR_RED, "Please report this issue :(");
+		chatter.printChat(EnumChatFormatting.RED, "Please report this issue :(");
 	}
 }

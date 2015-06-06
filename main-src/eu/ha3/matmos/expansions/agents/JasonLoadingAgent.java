@@ -1,10 +1,10 @@
 package eu.ha3.matmos.expansions.agents;
 
-import java.util.Scanner;
-
 import eu.ha3.matmos.engine.core.implem.Knowledge;
 import eu.ha3.matmos.expansions.ExpansionIdentity;
 import eu.ha3.matmos.tools.JasonExpansions_Engine1Deserializer2000;
+
+import java.util.Scanner;
 
 /*
 --filenotes-placeholder

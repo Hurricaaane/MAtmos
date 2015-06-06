@@ -1,8 +1,8 @@
 package eu.ha3.matmos.engine.core.visualize;
 
-import java.util.Collection;
-
 import eu.ha3.matmos.engine.core.interfaces.Dependable;
+
+import java.util.Collection;
 
 /*
 --filenotes-placeholder

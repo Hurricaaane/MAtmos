@@ -1,21 +1,20 @@
 package eu.ha3.matmos.game.data.modules;
 
+import eu.ha3.matmos.engine.core.interfaces.Data;
+import eu.ha3.matmos.game.data.abstractions.module.Module;
+import eu.ha3.matmos.game.data.abstractions.module.ModuleProcessor;
+import eu.ha3.matmos.log.MAtLog;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ServerData;
+
+import javax.naming.directory.Attributes;
+import javax.naming.directory.InitialDirContext;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Map;
-
-import javax.naming.directory.Attributes;
-import javax.naming.directory.InitialDirContext;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ServerData;
-import eu.ha3.matmos.engine.core.interfaces.Data;
-import eu.ha3.matmos.game.data.abstractions.module.Module;
-import eu.ha3.matmos.game.data.abstractions.module.ModuleProcessor;
-import eu.ha3.matmos.log.MAtLog;
 
 /*
 --filenotes-placeholder

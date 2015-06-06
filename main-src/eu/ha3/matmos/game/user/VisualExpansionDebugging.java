@@ -1,19 +1,5 @@
 package eu.ha3.matmos.game.user;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeMap;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.ScaledResolution;
-
-import org.lwjgl.opengl.GL11;
-
 import eu.ha3.matmos.engine.core.implem.Junction;
 import eu.ha3.matmos.engine.core.implem.Machine;
 import eu.ha3.matmos.engine.core.implem.ProviderCollection;
@@ -23,6 +9,12 @@ import eu.ha3.matmos.engine.core.visualize.Visualized;
 import eu.ha3.matmos.game.system.IDontKnowHowToCode;
 import eu.ha3.matmos.game.system.MAtMod;
 import eu.ha3.mc.haddon.supporting.SupportsFrameEvents;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.ScaledResolution;
+import org.lwjgl.opengl.GL11;
+
+import java.util.*;
 
 /*
 --filenotes-placeholder

@@ -1,5 +1,9 @@
 package eu.ha3.matmos.game.data.modules;
 
+import eu.ha3.matmos.engine.core.interfaces.Data;
+import eu.ha3.matmos.game.data.MODULE_CONSTANTS;
+import eu.ha3.matmos.game.data.abstractions.module.Module;
+import eu.ha3.matmos.game.data.abstractions.module.ModuleProcessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -8,10 +12,6 @@ import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.player.EntityPlayer;
-import eu.ha3.matmos.engine.core.interfaces.Data;
-import eu.ha3.matmos.game.data.MODULE_CONSTANTS;
-import eu.ha3.matmos.game.data.abstractions.module.Module;
-import eu.ha3.matmos.game.data.abstractions.module.ModuleProcessor;
 
 /*
 --filenotes-placeholder

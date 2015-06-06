@@ -1,33 +1,17 @@
 package eu.ha3.matmos.editor.edit;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.UIManager;
-import javax.swing.border.TitledBorder;
-
 import eu.ha3.matmos.editor.InstantTextField;
 import eu.ha3.matmos.editor.interfaces.Editor;
 import eu.ha3.matmos.editor.interfaces.IFlaggable;
 import eu.ha3.matmos.editor.interfaces.NamedSerialEditor;
-import eu.ha3.matmos.jsonformat.serializable.expansion.SerialCondition;
-import eu.ha3.matmos.jsonformat.serializable.expansion.SerialDynamic;
-import eu.ha3.matmos.jsonformat.serializable.expansion.SerialEvent;
-import eu.ha3.matmos.jsonformat.serializable.expansion.SerialList;
-import eu.ha3.matmos.jsonformat.serializable.expansion.SerialMachine;
-import eu.ha3.matmos.jsonformat.serializable.expansion.SerialRoot;
-import eu.ha3.matmos.jsonformat.serializable.expansion.SerialSet;
+import eu.ha3.matmos.jsonformat.serializable.expansion.*;
+
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 
 /*
 --filenotes-placeholder

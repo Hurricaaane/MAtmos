@@ -1,19 +1,5 @@
 package eu.ha3.matmos.game.user;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiChat;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.entity.EntityList;
-
-import org.apache.commons.lang3.StringUtils;
-import org.lwjgl.opengl.GL11;
-
 import eu.ha3.matmos.engine.core.implem.LongFloatSimplificator;
 import eu.ha3.matmos.engine.core.interfaces.Sheet;
 import eu.ha3.matmos.game.data.ModularDataGatherer;
@@ -21,7 +7,19 @@ import eu.ha3.matmos.game.data.abstractions.scanner.Progress;
 import eu.ha3.matmos.game.data.abstractions.scanner.ScannerModule;
 import eu.ha3.matmos.game.system.MAtMod;
 import eu.ha3.mc.haddon.supporting.SupportsFrameEvents;
-import eu.ha3.mc.quick.chat.ChatColorsSimple;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.entity.EntityList;
+import net.minecraft.util.EnumChatFormatting;
+import org.apache.commons.lang3.StringUtils;
+import org.lwjgl.opengl.GL11;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /*
 --filenotes-placeholder
@@ -74,7 +72,7 @@ public class VisualDebugger implements SupportsFrameEvents
 		{
 			this.mod.util().prepareDrawString();
 			this.mod.util().drawString(
-				ChatColorsSimple.COLOR_GRAY + this.mod.getLag().getMilliseconds() + "ms", 1f, 1f, 0, 0, '3', 0, 0, 0,
+                    EnumChatFormatting.GRAY.toString() + this.mod.getLag().getMilliseconds() + "ms", 1f, 1f, 0, 0, '3', 0, 0, 0,
 				0, true);
 		}
 		
@@ -222,11 +220,11 @@ public class VisualDebugger implements SupportsFrameEvents
 							String bars = "";
 							if (superFill > 0)
 							{
-								bars = bars + ChatColorsSimple.COLOR_YELLOW + StringUtils.repeat("|", superFill);
+								bars = bars + EnumChatFormatting.YELLOW + StringUtils.repeat("|", superFill);
 							}
 							bars =
 								bars
-									+ eu.ha3.mc.quick.chat.ChatColorsSimple.THEN_RESET
+									+ EnumChatFormatting.RESET
 									+ StringUtils.repeat("|", fill - superFill * 2);
 							
 							if (index.startsWith("minecraft:"))
@@ -236,7 +234,7 @@ public class VisualDebugger implements SupportsFrameEvents
 							
 							fontRenderer.drawStringWithShadow(bars
 								+ (fill == ALL * 2
-									? ChatColorsSimple.COLOR_YELLOW + "++" + ChatColorsSimple.THEN_RESET : "") + " ("
+									? EnumChatFormatting.YELLOW + "++" + EnumChatFormatting.RESET : "") + " ("
 								+ count + ", " + percentage + "%) " + index, leftAlign, 2 + 9 * lineNumber, 0xFFFFFF);
 							lineNumber = lineNumber + 1;
 						}

@@ -1,27 +1,10 @@
 package eu.ha3.matmos.expansions;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.Scanner;
-import java.util.Set;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.FolderResourcePack;
-import net.minecraft.util.ResourceLocation;
 import eu.ha3.easy.TimeStatistic;
 import eu.ha3.matmos.engine.core.implem.Knowledge;
 import eu.ha3.matmos.engine.core.implem.ProviderCollection;
 import eu.ha3.matmos.engine.core.implem.SystemClock;
-import eu.ha3.matmos.engine.core.interfaces.Data;
-import eu.ha3.matmos.engine.core.interfaces.Evaluated;
-import eu.ha3.matmos.engine.core.interfaces.EventInterface;
-import eu.ha3.matmos.engine.core.interfaces.ReferenceTime;
-import eu.ha3.matmos.engine.core.interfaces.Simulated;
+import eu.ha3.matmos.engine.core.interfaces.*;
 import eu.ha3.matmos.expansions.agents.LoadingAgent;
 import eu.ha3.matmos.expansions.agents.RawJasonLoadingAgent;
 import eu.ha3.matmos.expansions.debugunit.ExpansionDebugUnit;
@@ -36,6 +19,13 @@ import eu.ha3.matmos.game.system.SoundHelperRelay;
 import eu.ha3.matmos.log.MAtLog;
 import eu.ha3.matmos.pluggable.PluggableIntoMinecraft;
 import eu.ha3.util.property.simple.ConfigProperty;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.FolderResourcePack;
+import net.minecraft.util.ResourceLocation;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
 /* x-placeholder */
 
@@ -64,9 +54,8 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 	private LoadingAgent jasonDebugPush;
 	private List<PluggableIntoMinecraft> pluggables = new ArrayList<PluggableIntoMinecraft>();
 	
-	public Expansion(
-		ExpansionIdentity identity, Data data, Collector collector, SoundAccessor accessor,
-		VolumeContainer masterVolume, File configurationSource)
+	public Expansion(ExpansionIdentity identity, Data data, Collector collector, SoundAccessor accessor,
+                     VolumeContainer masterVolume, File configurationSource)
 	{
 		this.identity = identity;
 		this.masterVolume = masterVolume;
@@ -145,7 +134,7 @@ public class Expansion implements VolumeUpdatable, Stable, Simulated, Evaluated
 			newKnowledge();
 		}
 		
-		this.knowledge.cacheSounds();
+		this.knowledge.cacheSounds(this.identity);
 	}
 	
 	public void playSample()

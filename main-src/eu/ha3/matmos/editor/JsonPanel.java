@@ -1,19 +1,12 @@
 package eu.ha3.matmos.editor;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.Toolkit;
+import eu.ha3.matmos.editor.interfaces.Editor;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-
-import eu.ha3.matmos.editor.interfaces.Editor;
 
 /*
 --filenotes-placeholder

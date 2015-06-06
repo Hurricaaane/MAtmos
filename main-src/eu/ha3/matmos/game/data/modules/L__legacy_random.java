@@ -1,10 +1,10 @@
 package eu.ha3.matmos.game.data.modules;
 
-import java.util.Random;
-
 import eu.ha3.matmos.engine.core.interfaces.Data;
 import eu.ha3.matmos.game.data.abstractions.module.Module;
 import eu.ha3.matmos.game.data.abstractions.module.ModuleProcessor;
+
+import java.util.Random;
 
 /*
 --filenotes-placeholder

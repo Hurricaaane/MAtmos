@@ -1,12 +1,12 @@
 package eu.ha3.matmos.editor.interfaces;
 
-import java.io.File;
-
 import eu.ha3.matmos.editor.KnowledgeItemType;
 import eu.ha3.matmos.editor.tree.Selector;
 import eu.ha3.matmos.engine.core.implem.ProviderCollection;
 import eu.ha3.matmos.jsonformat.serializable.expansion.SerialEvent;
 import eu.ha3.matmos.jsonformat.serializable.expansion.SerialRoot;
+
+import java.io.File;
 
 /*
 --filenotes-placeholder

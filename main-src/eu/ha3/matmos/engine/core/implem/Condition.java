@@ -1,14 +1,14 @@
 package eu.ha3.matmos.engine.core.implem;
 
-import java.util.Collection;
-import java.util.HashSet;
-
 import eu.ha3.matmos.engine.core.implem.abstractions.DependableComponent;
 import eu.ha3.matmos.engine.core.interfaces.Operator;
 import eu.ha3.matmos.engine.core.interfaces.SheetCommander;
 import eu.ha3.matmos.engine.core.interfaces.SheetIndex;
 import eu.ha3.matmos.engine.core.visualize.Visualized;
 import eu.ha3.matmos.log.MAtLog;
+
+import java.util.Collection;
+import java.util.HashSet;
 
 /* x-placeholder */
 

@@ -1,10 +1,10 @@
 package eu.ha3.matmos.engine.core.implem;
 
-import java.util.Map;
-import java.util.Set;
-
 import eu.ha3.matmos.engine.core.implem.abstractions.Provider;
 import eu.ha3.matmos.engine.core.interfaces.Versionned;
+
+import java.util.Map;
+import java.util.Set;
 
 /*
 --filenotes-placeholder

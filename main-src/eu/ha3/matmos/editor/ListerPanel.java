@@ -1,21 +1,11 @@
 package eu.ha3.matmos.editor;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
+import eu.ha3.matmos.editor.interfaces.ILister;
+
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Map;
-
-import javax.swing.AbstractListModel;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ListSelectionModel;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.SwingConstants;
-
-import eu.ha3.matmos.editor.interfaces.ILister;
 
 /*
 --filenotes-placeholder

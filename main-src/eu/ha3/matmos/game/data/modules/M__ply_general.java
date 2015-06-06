@@ -51,8 +51,8 @@ public class M__ply_general extends ModuleProcessor implements Module
         setValue("airborne", player.isAirBorne);
         setValue("using_item", player.isUsingItem());
         setValue("riding", player.isRiding());
-        setValue("creative", Minecraft.getMinecraft().playerController != null
-                && Minecraft.getMinecraft().playerController.isInCreativeMode());
+        setValue("creative", player.capabilities.isCreativeMode);
+        setValue("flying", player.capabilities.isFlying);
 
         setValue("under_water", MAtmosUtility.isUnderwaterAnyGamemode());
     }

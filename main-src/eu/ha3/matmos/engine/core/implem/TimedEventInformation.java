@@ -1,12 +1,12 @@
 package eu.ha3.matmos.engine.core.implem;
 
-import java.util.List;
-
 import eu.ha3.matmos.engine.core.implem.abstractions.MultistateComponent;
 import eu.ha3.matmos.engine.core.implem.abstractions.Provider;
 import eu.ha3.matmos.engine.core.interfaces.ReferenceTime;
 import eu.ha3.matmos.engine.core.interfaces.Simulated;
 import eu.ha3.matmos.engine.core.interfaces.TimedEventInterface;
+
+import java.util.List;
 
 /*
 --filenotes-placeholder

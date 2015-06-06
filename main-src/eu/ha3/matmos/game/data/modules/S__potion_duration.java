@@ -1,8 +1,8 @@
 package eu.ha3.matmos.game.data.modules;
 
-import net.minecraft.potion.PotionEffect;
 import eu.ha3.matmos.engine.core.interfaces.Data;
 import eu.ha3.matmos.game.data.abstractions.module.AbstractPotionQualityModule;
+import net.minecraft.potion.PotionEffect;
 
 /*
 --filenotes-placeholder

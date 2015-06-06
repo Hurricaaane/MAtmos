@@ -1,12 +1,12 @@
 package eu.ha3.matmos.game.gui;
 
+import eu.ha3.matmos.expansions.Expansion;
+import eu.ha3.matmos.game.system.MAtMod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
-import eu.ha3.matmos.expansions.Expansion;
-import eu.ha3.matmos.game.system.MAtMod;
-import eu.ha3.mc.quick.chat.ChatColorsSimple;
+import net.minecraft.util.EnumChatFormatting;
 
 /*
 --filenotes-placeholder
@@ -29,7 +29,7 @@ public class MAtGuiExpansionInfo extends GuiScreen
 		
 		this.info =
 			expansion.hasMoreInfo()
-				? expansion.getInfo().replace("\r", "").replace("§", "\u00A7").split("\n")
+				? expansion.getInfo().replace("\r", "").replace("ï¿½", "\u00A7").split("\n")
 				: new String[] { "No info.txt available." };
 	}
 	
@@ -38,9 +38,8 @@ public class MAtGuiExpansionInfo extends GuiScreen
 	{
 		drawGradientRect(0, 0, this.width, this.height, 0xF0000000, 0x90000000);
 		
-		drawCenteredString(this.fontRendererObj, "About "
-			+ ChatColorsSimple.COLOR_YELLOW + ChatColorsSimple.THEN_ITALIC + this.expansion.getFriendlyName()
-			+ ChatColorsSimple.THEN_RESET + "...", this.width / 2, 4, 0xffffff);
+		drawCenteredString(this.fontRendererObj, "About " + EnumChatFormatting.YELLOW + EnumChatFormatting.ITALIC
+                + this.expansion.getFriendlyName() + EnumChatFormatting.RESET + "...", this.width / 2, 4, 0xffffff);
 		
 		int lc = 0;
 		for (String line : this.info)

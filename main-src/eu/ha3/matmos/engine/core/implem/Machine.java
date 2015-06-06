@@ -1,17 +1,13 @@
 package eu.ha3.matmos.engine.core.implem;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.TreeSet;
-
 import eu.ha3.matmos.engine.core.implem.abstractions.DependableComponent;
 import eu.ha3.matmos.engine.core.implem.abstractions.Provider;
 import eu.ha3.matmos.engine.core.interfaces.Overrided;
 import eu.ha3.matmos.engine.core.interfaces.Simulated;
 import eu.ha3.matmos.engine.core.visualize.VisualizedSpecialDependencies;
 import eu.ha3.matmos.log.MAtLog;
+
+import java.util.*;
 
 /* x-placeholder */
 

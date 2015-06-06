@@ -1,20 +1,18 @@
 package eu.ha3.matmos.expansions.agents;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.w3c.dom.Document;
-
 import eu.ha3.matmos.engine.core.implem.Knowledge;
 import eu.ha3.matmos.expansions.ExpansionIdentity;
 import eu.ha3.matmos.jsonformat.serializable.expansion.SerialRoot;
 import eu.ha3.matmos.tools.Jason;
 import eu.ha3.matmos.tools.JasonExpansions_Engine1Deserializer2000;
 import eu.ha3.matmos.tools.LegacyXMLExpansions_Engine1;
+import org.w3c.dom.Document;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 /*
 --filenotes-placeholder

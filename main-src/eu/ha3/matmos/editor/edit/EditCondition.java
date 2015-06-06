@@ -1,24 +1,14 @@
 package eu.ha3.matmos.editor.edit;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.UIManager;
-import javax.swing.border.TitledBorder;
-
 import eu.ha3.matmos.editor.InstantTextField;
 import eu.ha3.matmos.engine.core.interfaces.Operator;
 import eu.ha3.matmos.jsonformat.serializable.expansion.SerialCondition;
+
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /*
 --filenotes-placeholder

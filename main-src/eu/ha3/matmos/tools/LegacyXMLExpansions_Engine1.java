@@ -1,35 +1,23 @@
 package eu.ha3.matmos.tools;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.xml.xpath.XPathExpressionException;
-
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.sf.practicalxml.DomUtil;
-
-import org.w3c.dom.DOMException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-
 import eu.ha3.matmos.engine.core.implem.Dynamic;
 import eu.ha3.matmos.engine.core.implem.LongFloatSimplificator;
 import eu.ha3.matmos.engine.core.implem.SheetEntry;
 import eu.ha3.matmos.engine.core.interfaces.Operator;
 import eu.ha3.matmos.engine.core.interfaces.SheetIndex;
 import eu.ha3.matmos.game.system.MAtmosUtility;
-import eu.ha3.matmos.jsonformat.serializable.expansion.SerialCondition;
-import eu.ha3.matmos.jsonformat.serializable.expansion.SerialDynamic;
-import eu.ha3.matmos.jsonformat.serializable.expansion.SerialDynamicSheetIndex;
-import eu.ha3.matmos.jsonformat.serializable.expansion.SerialEvent;
-import eu.ha3.matmos.jsonformat.serializable.expansion.SerialList;
-import eu.ha3.matmos.jsonformat.serializable.expansion.SerialMachine;
-import eu.ha3.matmos.jsonformat.serializable.expansion.SerialMachineEvent;
-import eu.ha3.matmos.jsonformat.serializable.expansion.SerialMachineStream;
-import eu.ha3.matmos.jsonformat.serializable.expansion.SerialRoot;
-import eu.ha3.matmos.jsonformat.serializable.expansion.SerialSet;
+import eu.ha3.matmos.jsonformat.serializable.expansion.*;
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
+import net.sf.practicalxml.DomUtil;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
+import javax.xml.xpath.XPathExpressionException;
+import java.util.HashMap;
+import java.util.Map;
 
 /* x-placeholder */
 

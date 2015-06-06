@@ -31,12 +31,12 @@ public class M__w_biome extends ModuleProcessor implements Module
 		if (biomej <= -1)
 		{
 			setValue("id", calculateBiome().biomeID);
-			setValue("_name_debugonly", calculateBiome().biomeName);
+			setValue("biome_name", calculateBiome().biomeName);
 		}
 		else
 		{
 			setValue("id", biomej);
-			setValue("_name_debugonly", "");
+			setValue("biome_name", "");
 		}
 	}
 	

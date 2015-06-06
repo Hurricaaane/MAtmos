@@ -1,9 +1,8 @@
 package eu.ha3.matmos.editor.filechooser;
 
-import java.io.File;
-
-import javax.swing.JFileChooser;
+import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.io.File;
 
 /*
 --filenotes-placeholder

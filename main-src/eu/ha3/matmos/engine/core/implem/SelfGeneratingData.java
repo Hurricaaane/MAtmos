@@ -1,11 +1,11 @@
 package eu.ha3.matmos.engine.core.implem;
 
+import eu.ha3.matmos.engine.core.interfaces.Data;
+import eu.ha3.matmos.engine.core.interfaces.Sheet;
+
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-
-import eu.ha3.matmos.engine.core.interfaces.Data;
-import eu.ha3.matmos.engine.core.interfaces.Sheet;
 
 /* x-placeholder */
 

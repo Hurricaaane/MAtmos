@@ -1,6 +1,6 @@
 package eu.ha3.matmos.editor.interfaces;
 
-import java.awt.Component;
+import java.awt.*;
 
 /*
 --filenotes-placeholder

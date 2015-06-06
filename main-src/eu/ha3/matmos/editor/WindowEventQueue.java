@@ -1,9 +1,9 @@
 package eu.ha3.matmos.editor;
 
-import java.awt.Component;
-
 import eu.ha3.matmos.editor.interfaces.Window;
 import eu.ha3.matmos.jsonformat.serializable.expansion.SerialRoot;
+
+import java.awt.*;
 
 /*
 --filenotes-placeholder

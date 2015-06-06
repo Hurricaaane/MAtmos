@@ -1,9 +1,5 @@
 package eu.ha3.matmos.game.debug;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 import eu.ha3.matmos.engine.core.implem.ProviderCollection;
 import eu.ha3.matmos.engine.core.interfaces.Data;
 import eu.ha3.matmos.expansions.Expansion;
@@ -11,7 +7,11 @@ import eu.ha3.matmos.expansions.debugunit.FolderResourcePackEditableEDU;
 import eu.ha3.matmos.game.system.MAtMod;
 import eu.ha3.matmos.pluggable.PluggableIntoMinecraft;
 import eu.ha3.matmos.pluggable.UnpluggedListener;
-import eu.ha3.mc.quick.chat.ChatColorsSimple;
+import net.minecraft.util.EnumChatFormatting;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /*
 --filenotes-placeholder
@@ -82,7 +82,7 @@ public class PluggableIntoMAtmos implements PluggableIntoMinecraft
 			public void run()
 			{
 				PluggableIntoMAtmos.this.mod.getChatter().printChat(
-					ChatColorsSimple.COLOR_AQUA
+                        EnumChatFormatting.AQUA
 						+ "Reloading from editor state: " + PluggableIntoMAtmos.this.expansion.getName() + " "
 						+ getTimestamp());
 				PluggableIntoMAtmos.this.expansion.pushDebugJasonAndRefreshKnowledge(jasonString);
@@ -117,7 +117,7 @@ public class PluggableIntoMAtmos implements PluggableIntoMinecraft
 			public void run()
 			{
 				PluggableIntoMAtmos.this.mod.getChatter().printChat(
-					ChatColorsSimple.COLOR_BLUE
+                        EnumChatFormatting.BLUE
 						+ "Reloading from disk: " + PluggableIntoMAtmos.this.expansion.getName() + " " + getTimestamp());
 				PluggableIntoMAtmos.this.expansion.refreshKnowledge();
 			}
@@ -126,7 +126,7 @@ public class PluggableIntoMAtmos implements PluggableIntoMinecraft
 	
 	protected String getTimestamp()
 	{
-		return ChatColorsSimple.COLOR_BLACK + "(" + System.currentTimeMillis() + ")";
+		return EnumChatFormatting.BLACK + "(" + System.currentTimeMillis() + ")";
 	}
 	
 	@Override

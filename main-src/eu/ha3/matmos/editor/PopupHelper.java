@@ -1,6 +1,6 @@
 package eu.ha3.matmos.editor;
 
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 /*
 --filenotes-placeholder

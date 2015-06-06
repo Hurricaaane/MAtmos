@@ -1,11 +1,11 @@
 package eu.ha3.matmos.engine.core.implem.abstractions;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import eu.ha3.matmos.engine.core.interfaces.Named;
 import eu.ha3.matmos.engine.core.interfaces.VersionListener;
 import eu.ha3.matmos.engine.core.interfaces.Versionned;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /* x-placeholder */
 

@@ -1,11 +1,11 @@
 package eu.ha3.matmos.game.system;
 
+import eu.ha3.matmos.engine.core.implem.HelperFadeCalculator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.MovingSound;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
-import eu.ha3.matmos.engine.core.implem.HelperFadeCalculator;
 
 /*
 --filenotes-placeholder

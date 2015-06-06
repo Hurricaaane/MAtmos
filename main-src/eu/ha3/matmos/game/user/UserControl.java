@@ -1,12 +1,5 @@
 package eu.ha3.matmos.game.user;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.settings.KeyBinding;
-
-import org.apache.commons.lang3.ArrayUtils;
-import org.lwjgl.input.Keyboard;
-
 import eu.ha3.easy.TimeStatistic;
 import eu.ha3.matmos.game.gui.MAtGuiMenu;
 import eu.ha3.matmos.game.system.MAtMod;
@@ -16,7 +9,12 @@ import eu.ha3.mc.convenience.Ha3KeyHolding;
 import eu.ha3.mc.convenience.Ha3KeyManager_2;
 import eu.ha3.mc.haddon.supporting.SupportsFrameEvents;
 import eu.ha3.mc.haddon.supporting.SupportsTickEvents;
-import eu.ha3.mc.quick.chat.ChatColorsSimple;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.util.EnumChatFormatting;
+import org.apache.commons.lang3.ArrayUtils;
+import org.lwjgl.input.Keyboard;
 
 /* x-placeholder */
 
@@ -79,20 +77,20 @@ public class UserControl implements Ha3HoldActions, SupportsTickEvents, Supports
 	{
 		if (!this.mod.isInitialized())
 		{
-			this.mod.getChatter().printChat(ChatColorsSimple.COLOR_RED, "Unknown error: MAtmos isn't initialized");
+			this.mod.getChatter().printChat(EnumChatFormatting.RED, "Unknown error: MAtmos isn't initialized");
 		}
 		else
 		{
 			if (!MAtmosUtility.isSoundMasterEnabled())
 			{
 				this.mod.getChatter().printChat(
-					ChatColorsSimple.COLOR_RED, "Warning: ", ChatColorsSimple.COLOR_WHITE,
+                        EnumChatFormatting.RED, "Warning: ", EnumChatFormatting.WHITE,
 					"Sounds are turned off in your game settings!");
 			}
 			if (!MAtmosUtility.isSoundAmbientEnabled())
 			{
 				this.mod.getChatter().printChat(
-					ChatColorsSimple.COLOR_RED, "Warning: ", ChatColorsSimple.COLOR_WHITE,
+                        EnumChatFormatting.RED, "Warning: ", EnumChatFormatting.WHITE,
 					"Ambient sounds are at 0% volume in the advanced MAtmos options menu!");
 			}
 		}
@@ -154,22 +152,22 @@ public class UserControl implements Ha3HoldActions, SupportsTickEvents, Supports
 		{
 			this.mod.deactivate();
 			this.mod.getChatter().printChat(
-				ChatColorsSimple.COLOR_YELLOW, "Stopped. Press ", ChatColorsSimple.COLOR_WHITE,
-				getKeyBindingMainFriendlyName(), ChatColorsSimple.COLOR_YELLOW, " to re-enable.");
+                    EnumChatFormatting.YELLOW, "Stopped. Press ", EnumChatFormatting.WHITE,
+				getKeyBindingMainFriendlyName(), EnumChatFormatting.YELLOW, " to re-enable.");
 			
 		}
 		else if (this.mod.isInitialized())
 		{
 			if (this.loadingCount != 0)
 			{
-				this.mod.getChatter().printChat(ChatColorsSimple.COLOR_BRIGHTGREEN, "Loading...");
+				this.mod.getChatter().printChat(EnumChatFormatting.GREEN, "Loading...");
 			}
 			else
 			{
 				this.mod.getChatter().printChat(
-					ChatColorsSimple.COLOR_BRIGHTGREEN, "Loading...", ChatColorsSimple.COLOR_YELLOW, " (Hold ",
-					ChatColorsSimple.COLOR_WHITE, getKeyBindingMainFriendlyName() + " down",
-					ChatColorsSimple.COLOR_YELLOW, " to tweak the volume)");
+                        EnumChatFormatting.GREEN, "Loading...", EnumChatFormatting.YELLOW, " (Hold ",
+                        EnumChatFormatting.WHITE, getKeyBindingMainFriendlyName() + " down",
+                        EnumChatFormatting.YELLOW, " to tweak the volume)");
 			}
 			
 			this.loadingCount++;
@@ -191,7 +189,7 @@ public class UserControl implements Ha3HoldActions, SupportsTickEvents, Supports
 		TimeStatistic stat = new TimeStatistic();
 		this.mod.initializeAndEnable();
 		this.mod.getChatter().printChat(
-			ChatColorsSimple.COLOR_BRIGHTGREEN, "Loading for the first time (" + stat.getSecondsAsString(2) + "s)");
+                EnumChatFormatting.GREEN, "Loading for the first time (" + stat.getSecondsAsString(2) + "s)");
 	}
 	
 	private void whenWantsForcing()
@@ -202,7 +200,7 @@ public class UserControl implements Ha3HoldActions, SupportsTickEvents, Supports
 			this.mod.reloadEverything();
 			this.mod.activate();
 			this.mod.getChatter().printChat(
-				ChatColorsSimple.COLOR_BRIGHTGREEN, "Reloading expansions (" + stat.getSecondsAsString(2) + "s)");
+                    EnumChatFormatting.GREEN, "Reloading expansions (" + stat.getSecondsAsString(2) + "s)");
 		}
 		else if (!this.mod.isInitialized())
 		{

@@ -1,38 +1,18 @@
 package eu.ha3.matmos.tools;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map.Entry;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
-
-import eu.ha3.matmos.engine.core.implem.Condition;
-import eu.ha3.matmos.engine.core.implem.Dynamic;
-import eu.ha3.matmos.engine.core.implem.Event;
-import eu.ha3.matmos.engine.core.implem.Junction;
-import eu.ha3.matmos.engine.core.implem.Knowledge;
-import eu.ha3.matmos.engine.core.implem.Machine;
-import eu.ha3.matmos.engine.core.implem.Possibilities;
-import eu.ha3.matmos.engine.core.implem.ProviderCollection;
-import eu.ha3.matmos.engine.core.implem.SheetEntry;
-import eu.ha3.matmos.engine.core.implem.StreamInformation;
-import eu.ha3.matmos.engine.core.implem.TimedEvent;
-import eu.ha3.matmos.engine.core.implem.TimedEventInformation;
+import eu.ha3.matmos.engine.core.implem.*;
 import eu.ha3.matmos.engine.core.interfaces.Named;
 import eu.ha3.matmos.engine.core.interfaces.Operator;
 import eu.ha3.matmos.engine.core.interfaces.SheetIndex;
 import eu.ha3.matmos.expansions.ExpansionIdentity;
-import eu.ha3.matmos.jsonformat.serializable.expansion.SerialCondition;
-import eu.ha3.matmos.jsonformat.serializable.expansion.SerialDynamic;
-import eu.ha3.matmos.jsonformat.serializable.expansion.SerialDynamicSheetIndex;
-import eu.ha3.matmos.jsonformat.serializable.expansion.SerialEvent;
-import eu.ha3.matmos.jsonformat.serializable.expansion.SerialList;
-import eu.ha3.matmos.jsonformat.serializable.expansion.SerialMachine;
-import eu.ha3.matmos.jsonformat.serializable.expansion.SerialMachineEvent;
-import eu.ha3.matmos.jsonformat.serializable.expansion.SerialRoot;
-import eu.ha3.matmos.jsonformat.serializable.expansion.SerialSet;
+import eu.ha3.matmos.jsonformat.serializable.expansion.*;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map.Entry;
 
 /*
 --filenotes-placeholder

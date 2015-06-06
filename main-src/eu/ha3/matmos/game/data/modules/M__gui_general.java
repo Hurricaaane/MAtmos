@@ -1,25 +1,11 @@
 package eu.ha3.matmos.game.data.modules;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiCommandBlock;
-import net.minecraft.client.gui.GuiEnchantment;
-import net.minecraft.client.gui.GuiHopper;
-import net.minecraft.client.gui.GuiMerchant;
-import net.minecraft.client.gui.GuiRepair;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.inventory.GuiBeacon;
-import net.minecraft.client.gui.inventory.GuiBrewingStand;
-import net.minecraft.client.gui.inventory.GuiChest;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.gui.inventory.GuiContainerCreative;
-import net.minecraft.client.gui.inventory.GuiCrafting;
-import net.minecraft.client.gui.inventory.GuiDispenser;
-import net.minecraft.client.gui.inventory.GuiFurnace;
-import net.minecraft.client.gui.inventory.GuiInventory;
-import net.minecraft.client.gui.inventory.GuiScreenHorseInventory;
 import eu.ha3.matmos.engine.core.interfaces.Data;
 import eu.ha3.matmos.game.data.abstractions.module.Module;
 import eu.ha3.matmos.game.data.abstractions.module.ModuleProcessor;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.*;
+import net.minecraft.client.gui.inventory.*;
 
 /*
 --filenotes-placeholder

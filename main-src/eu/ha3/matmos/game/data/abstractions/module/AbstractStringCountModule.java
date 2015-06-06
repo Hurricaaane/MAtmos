@@ -1,12 +1,12 @@
 package eu.ha3.matmos.game.data.abstractions.module;
 
+import eu.ha3.matmos.engine.core.interfaces.Data;
+
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
-import eu.ha3.matmos.engine.core.interfaces.Data;
 
 /*
 --filenotes-placeholder

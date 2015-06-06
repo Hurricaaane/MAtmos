@@ -1,20 +1,17 @@
 package eu.ha3.matmos.editor.tree;
 
-import java.awt.BorderLayout;
-import java.util.Enumeration;
-
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTree;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.TreePath;
-
 import eu.ha3.matmos.editor.KnowledgeItemType;
 import eu.ha3.matmos.editor.interfaces.Editor;
 import eu.ha3.matmos.editor.interfaces.ISerialUpdate;
 import eu.ha3.matmos.editor.interfaces.NamedSerialEditor;
 import eu.ha3.matmos.jsonformat.serializable.expansion.SerialRoot;
+
+import javax.swing.*;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.TreePath;
+import java.awt.*;
+import java.util.Enumeration;
 
 /*
 --filenotes-placeholder

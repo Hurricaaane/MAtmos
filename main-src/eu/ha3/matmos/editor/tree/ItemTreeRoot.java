@@ -1,16 +1,11 @@
 package eu.ha3.matmos.editor.tree;
 
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.TreeSet;
-
-import javax.swing.tree.DefaultMutableTreeNode;
-
 import eu.ha3.matmos.editor.KnowledgeItemType;
 import eu.ha3.matmos.editor.interfaces.ISerialUpdate;
 import eu.ha3.matmos.jsonformat.serializable.expansion.SerialRoot;
+
+import javax.swing.tree.DefaultMutableTreeNode;
+import java.util.*;
 
 /*
 --filenotes-placeholder

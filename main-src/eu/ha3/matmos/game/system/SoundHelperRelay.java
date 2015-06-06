@@ -1,11 +1,11 @@
 package eu.ha3.matmos.game.system;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import eu.ha3.matmos.engine.core.interfaces.SoundRelay;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import eu.ha3.matmos.engine.core.interfaces.SoundRelay;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /*
 --filenotes-placeholder

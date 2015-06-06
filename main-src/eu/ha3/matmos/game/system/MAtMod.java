@@ -18,7 +18,6 @@ import eu.ha3.mc.haddon.implem.HaddonIdentity;
 import eu.ha3.mc.haddon.implem.HaddonImpl;
 import eu.ha3.mc.haddon.supporting.SupportsFrameEvents;
 import eu.ha3.mc.haddon.supporting.SupportsTickEvents;
-import eu.ha3.mc.quick.chat.ChatColorsSimple;
 import eu.ha3.mc.quick.chat.Chatter;
 import eu.ha3.mc.quick.update.NotifiableHaddon;
 import eu.ha3.mc.quick.update.UpdateNotifier;
@@ -31,6 +30,7 @@ import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.EnumChatFormatting;
 import paulscode.sound.SoundSystem;
 
 import java.io.File;
@@ -56,7 +56,7 @@ public class MAtMod extends HaddonImpl
 	
 	// NotifiableHaddon and UpdateNotifier
 	private final ConfigProperty config = new ConfigProperty();
-	private final Chatter chatter = new Chatter(this, this.NAME);
+	private final Chatter chatter = new Chatter(this, this.NAME + ": ");
 	private final UpdateNotifier updateNotifier = new UpdateNotifier(
 		this, "http://q.mc.ha3.eu/query/matmos-main-version-vn.json?ver=%d");
 	
@@ -322,21 +322,22 @@ public class MAtMod extends HaddonImpl
 			{
 				getChatter().printChatShort("http://matmos.ha3.eu/");
 				getChatter().printChat(
-					ChatColorsSimple.COLOR_RED
-						+ "You are using an " + ChatColorsSimple.COLOR_YELLOW + "Unofficial Beta" + ChatColorsSimple.COLOR_RED
-						+ " version of MAtmos.");
-				getChatter().printChatShort(
-					"By using this version, you understand that this mod isn't intended for"
-						+ " actual game sessions, MAtmos may not work, might crash, the sound"
-						+ " ambience is incomplete, etc.");
-				getChatter().printChatShort(
-					"Use at your own risk. " + "Please check regularly for updates and resource pack updates.");
+                        EnumChatFormatting.RED,
+                        "You are using an ",
+                        EnumChatFormatting.YELLOW,
+                        "Unofficial Beta",
+                        EnumChatFormatting.RED,
+                        " version of MAtmos.");
+
+				getChatter().printChatShort("By using this version, you understand that this mod isn't intended for " +
+                        "actual game sessions, MAtmos may not work, might crash, the sound ambience is incomplete, etc.");
+
+				getChatter().printChatShort("Use at your own risk. Please check regularly for updates and resource pack updates.");
 			}
 			
 			if (isDebugMode())
 			{
-				getChatter().printChat(
-					ChatColorsSimple.COLOR_GOLD + "Developer mode is enabled in the Advanced options.");
+				getChatter().printChat(EnumChatFormatting.GOLD, "Developer mode is enabled in the Advanced options.");
 				getChatter().printChatShort("This affects performance. Your game may run slower.");
 			}
 			
@@ -345,23 +346,20 @@ public class MAtMod extends HaddonImpl
 				this.hasResourcePacks_FixMe = true;
 				if (this.hasDisabledResourcePacks)
 				{
-					this.chatter.printChat(ChatColorsSimple.COLOR_RED, "Resource Pack not enabled yet!");
-					this.chatter.printChatShort(ChatColorsSimple.COLOR_WHITE, "You need to activate "
-						+ "\"MAtmos Resource Pack\" in the Minecraft Options menu for it to run.");
+					this.chatter.printChat(EnumChatFormatting.RED, "Resource Pack not enabled yet!");
+					this.chatter.printChatShort(EnumChatFormatting.WHITE, "You need to activate \"MAtmos Resource Pack\" in the Minecraft Options menu for it to run.");
 				}
 				else
 				{
-					this.chatter.printChat(ChatColorsSimple.COLOR_RED, "Resource Pack missing from resourcepacks/!");
-					this.chatter.printChatShort(
-						ChatColorsSimple.COLOR_WHITE,
-						"You may have forgotten to put the Resource Pack file into your resourcepacks/ folder.");
+					this.chatter.printChat(EnumChatFormatting.RED, "Resource Pack missing from resourcepacks/!");
+					this.chatter.printChatShort(EnumChatFormatting.WHITE,"You may have forgotten to put the Resource Pack file into your resourcepacks/ folder.");
 				}
 			}
 		}
 		if (this.hasResourcePacks_FixMe && this.hasResourcePacks)
 		{
 			this.hasResourcePacks_FixMe = false;
-			this.chatter.printChat(ChatColorsSimple.COLOR_BRIGHTGREEN, "It should work now!");
+			this.chatter.printChat(EnumChatFormatting.GREEN, "It should work now!");
 		}
 	}
 	
@@ -521,12 +519,12 @@ public class MAtMod extends HaddonImpl
 	{
 		if (isDebugMode())
 		{
-			getChatter().printChat(ChatColorsSimple.COLOR_GOLD + "Dev/Editor mode enabled.");
+			getChatter().printChat(EnumChatFormatting.GOLD, "Dev/Editor mode enabled.");
 			getChatter().printChatShort("Enabling this mode may cause Minecraft to run slower.");
 		}
 		else
 		{
-			getChatter().printChat(ChatColorsSimple.COLOR_GOLD + "Dev/Editor mode disabled.");
+			getChatter().printChat(EnumChatFormatting.GOLD, "Dev/Editor mode disabled.");
 		}
 		
 		this.dataGatherer.forceRecomputeModuleStack_debugModeChanged();

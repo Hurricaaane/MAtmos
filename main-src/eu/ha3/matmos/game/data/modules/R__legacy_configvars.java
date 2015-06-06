@@ -1,14 +1,14 @@
 package eu.ha3.matmos.game.data.modules;
 
-import java.io.File;
-import java.io.IOException;
-
 import eu.ha3.matmos.engine.core.interfaces.Data;
 import eu.ha3.matmos.game.data.abstractions.module.Module;
 import eu.ha3.matmos.game.data.abstractions.module.ModuleProcessor;
 import eu.ha3.matmos.game.system.IDontKnowHowToCode;
 import eu.ha3.matmos.game.system.MAtMod;
 import eu.ha3.util.property.simple.ConfigProperty;
+
+import java.io.File;
+import java.io.IOException;
 
 /*
 --filenotes-placeholder

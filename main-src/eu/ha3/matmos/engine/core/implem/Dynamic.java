@@ -1,15 +1,11 @@
 package eu.ha3.matmos.engine.core.implem;
 
+import eu.ha3.matmos.engine.core.implem.abstractions.Component;
+import eu.ha3.matmos.engine.core.interfaces.*;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-
-import eu.ha3.matmos.engine.core.implem.abstractions.Component;
-import eu.ha3.matmos.engine.core.interfaces.Dependable;
-import eu.ha3.matmos.engine.core.interfaces.Evaluated;
-import eu.ha3.matmos.engine.core.interfaces.InformationContainer;
-import eu.ha3.matmos.engine.core.interfaces.SheetCommander;
-import eu.ha3.matmos.engine.core.interfaces.SheetIndex;
 
 /* x-placeholder */
 

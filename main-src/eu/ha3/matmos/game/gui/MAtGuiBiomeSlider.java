@@ -1,13 +1,13 @@
 package eu.ha3.matmos.game.gui;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import net.minecraft.world.biome.BiomeGenBase;
 import eu.ha3.matmos.game.system.MAtMod;
 import eu.ha3.mc.gui.HDisplayStringProvider;
 import eu.ha3.mc.gui.HGuiSliderControl;
 import eu.ha3.mc.gui.HSliderListener;
+import net.minecraft.world.biome.BiomeGenBase;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /* x-placeholder */
 

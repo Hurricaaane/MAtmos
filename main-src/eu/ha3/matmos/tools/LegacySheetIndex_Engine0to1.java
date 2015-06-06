@@ -1,11 +1,11 @@
 package eu.ha3.matmos.tools;
 
-import java.util.Map;
-import java.util.TreeMap;
-
 import eu.ha3.matmos.engine.core.implem.LongFloatSimplificator;
 import eu.ha3.matmos.engine.core.interfaces.SheetIndex;
 import eu.ha3.matmos.game.data.abstractions.module.ModuleProcessor;
+
+import java.util.Map;
+import java.util.TreeMap;
 
 /*
 --filenotes-placeholder

@@ -1,23 +1,19 @@
 package eu.ha3.matmos.game.gui;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiScreenResourcePacks;
 import eu.ha3.matmos.expansions.Expansion;
 import eu.ha3.matmos.expansions.volume.VolumeUpdatable;
 import eu.ha3.matmos.game.system.MAtMod;
 import eu.ha3.mc.gui.HDisplayStringProvider;
 import eu.ha3.mc.gui.HGuiSliderControl;
 import eu.ha3.mc.gui.HSliderListener;
-import eu.ha3.mc.quick.chat.ChatColorsSimple;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiScreenResourcePacks;
+import net.minecraft.util.EnumChatFormatting;
+
+import java.io.IOException;
+import java.util.*;
 
 /*
 --filenotes-placeholder
@@ -180,7 +176,7 @@ public class MAtGuiMenu extends GuiScreen
 						display = display + (int) Math.floor(expansion.getVolume() * 100) + "%";
 					}
 					
-					return ChatColorsSimple.THEN_ITALIC + display;
+					return EnumChatFormatting.ITALIC + display;
 				}
 			});
 			sliderControl.updateDisplayString();
@@ -221,7 +217,7 @@ public class MAtGuiMenu extends GuiScreen
 						MAtGuiMenu.this.mc.displayGuiScreen(new MAtGuiExpansionDetails(
 							MAtGuiMenu.this, MAtGuiMenu.this.mod, expansion));
 					}
-				}), _RIGHT - _UNIT, _MIX * (id + 1), _UNIT, _UNIT, ChatColorsSimple.COLOR_GOLD + "+"));
+				}), _RIGHT - _UNIT, _MIX * (id + 1), _UNIT, _UNIT, EnumChatFormatting.GOLD + "+"));
 			}
 			
 			id++;
@@ -237,7 +233,7 @@ public class MAtGuiMenu extends GuiScreen
 		else
 		{
 			this.buttonList.add(new GuiButton(
-				230, _RIGHT - _UNIT, _MIX * (this.IDS_PER_PAGE + 2), 40, _UNIT, ChatColorsSimple.COLOR_GOLD + "OSD"));
+				230, _RIGHT - _UNIT, _MIX * (this.IDS_PER_PAGE + 2), 40, _UNIT, EnumChatFormatting.GOLD + "OSD"));
 		}
 		
 		if (this.pageFromZero != 0)
@@ -257,7 +253,7 @@ public class MAtGuiMenu extends GuiScreen
 		
 		this.buttonList.add(new GuiButton(
 			211, _LEFT + _AWID + _GAP, _SEPARATOR + _MIX * (this.IDS_PER_PAGE + 3), _AWID, _UNIT, (this.mod
-				.isDebugMode() ? ChatColorsSimple.COLOR_GOLD : "") + "Advanced options..."));
+				.isDebugMode() ? EnumChatFormatting.GOLD : "") + "Advanced options..."));
 		
 		final int _TURNOFFWIDTH = _ELEMENT_WIDTH / 5;
 		
@@ -392,18 +388,16 @@ public class MAtGuiMenu extends GuiScreen
 		{
 			drawGradientRect(0, 0, this.width, this.height, 0xC0C06000, 0x60C06000);
 			drawCenteredString(
-				this.fontRendererObj, "MAtmos Expansions " + ChatColorsSimple.COLOR_GOLD + "(Dev mode)",
+				this.fontRendererObj, "MAtmos Expansions " + EnumChatFormatting.GOLD + "(Dev mode)",
 				this.width / 2, 8, 0xffffff);
 			
-			drawCenteredString(this.fontRendererObj, ChatColorsSimple.COLOR_YELLOW
+			drawCenteredString(this.fontRendererObj, EnumChatFormatting.YELLOW
 				+ "Dev mode is enabled. This may cause Minecraft to run slower.", this.width / 2, _SEPARATOR
 				+ _MIX * (this.IDS_PER_PAGE + 3) - 9, 0xffffff);
 		}
 		
 		this.mod.util().prepareDrawString();
-		this.mod.util().drawString(
-			ChatColorsSimple.COLOR_GRAY + this.mod.getLag().getMilliseconds() + "ms", 1f, 1f, 0, 0, '3', 0, 0, 0, 0,
-			true);
+		this.mod.util().drawString(EnumChatFormatting.GRAY.toString() + this.mod.getLag().getMilliseconds() + "ms", 1f, 1f, 0, 0, '3', 0, 0, 0, 0, true);
 		
 		if (!this.mod.hasResourcePacksLoaded())
 		{

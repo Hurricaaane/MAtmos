@@ -1,9 +1,9 @@
 package eu.ha3.matmos.game.data.modules;
 
-import net.minecraft.item.ItemStack;
 import eu.ha3.matmos.game.data.MODULE_CONSTANTS;
 import eu.ha3.matmos.game.data.abstractions.module.ProcessorModel;
 import eu.ha3.matmos.game.system.MAtmosUtility;
+import net.minecraft.item.ItemStack;
 
 /*
 --filenotes-placeholder
