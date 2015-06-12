@@ -2,7 +2,7 @@
 <project name="MAtmos" basedir="." default="main">
 
 	<!-- The version of your mod, can be any string as long as it's valid as part of a file name -->
-	<property name="version"        value="29ub4" />
+	<property name="version"        value="29ub5" />
 
 	<!-- The Minecraft version the mod is for, appended to the output file name for reference -->
 	<property name="mcversion"      value="1.8" />

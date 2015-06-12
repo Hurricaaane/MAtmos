@@ -52,7 +52,7 @@ public class MAtMod extends HaddonImpl
 	protected final String FOR = "1.8";
 	protected final String ADDRESS = "http://matmos.ha3.eu";
 	protected final Date DATE = new Date(1394610076);
-	protected final Identity identity = new HaddonIdentity(this.NAME, this.VERSION, this.FOR, this.ADDRESS);
+	protected final Identity identity = new HaddonIdentity(this.NAME, this.VERSION, this.FOR, this.ADDRESS).setPrefix("r");
 	
 	// NotifiableHaddon and UpdateNotifier
 	private final ConfigProperty config = new ConfigProperty();
