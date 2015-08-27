@@ -16,6 +16,7 @@ public class SoundHelperRelay extends SoundHelper implements SoundRelay
 {
 	private static int streamingToken;
 	private Map<String, String> paths;
+	private Map<Integer, NoAttenuationMovingSound> streams = new TreeMap<Integer, NoAttenuationMovingSound>();
 	
 	public SoundHelperRelay(SoundAccessor accessor)
 	{
@@ -57,8 +58,6 @@ public class SoundHelperRelay extends SoundHelper implements SoundRelay
 	{
 		return SoundHelperRelay.streamingToken++;
 	}
-	
-	private Map<Integer, NoAttenuationMovingSound> streams = new TreeMap<Integer, NoAttenuationMovingSound>();
 
 	@Override
 	public boolean setupStreamingToken(
