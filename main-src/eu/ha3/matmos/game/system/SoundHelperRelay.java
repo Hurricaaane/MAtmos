@@ -1,11 +1,12 @@
 package eu.ha3.matmos.game.system;
 
 import eu.ha3.matmos.engine.core.interfaces.SoundRelay;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.ResourceLocation;
 
 /*
 --filenotes-placeholder
@@ -57,33 +58,34 @@ public class SoundHelperRelay extends SoundHelper implements SoundRelay
 		return SoundHelperRelay.streamingToken++;
 	}
 	
+	private Map<Integer, NoAttenuationMovingSound> streams = new TreeMap<Integer, NoAttenuationMovingSound>();
+
 	@Override
 	public boolean setupStreamingToken(
 		int token, String path, float volume, float pitch, boolean isLooping, boolean usesPause)
 	{
-		//registerStreaming(tokenToString(token), path, volume, pitch, isLooping, usesPause);
-		return true;
-	}
-	
-	public String tokenToString(int token)
-	{
-		return token + "_";
+		String loc = path.replace(".ogg", "").replace('/', '.').replaceAll("[0-9]", "");
+		NoAttenuationMovingSound nams = new NoAttenuationMovingSound(new ResourceLocation(loc), volume, pitch);
+		
+		streams.put(token, nams);
+		return true; 
 	}
 	
 	@Override
 	public void startStreaming(int token, float fadeDuration)
 	{
-		//playStreaming(tokenToString(token), (int) (fadeDuration * 1000));
+		Minecraft.getMinecraft().getSoundHandler().playSound(streams.get(token));
 	}
 	
 	@Override
 	public void stopStreaming(int token, float fadeDuration)
 	{
-		//stopStreaming(tokenToString(token), (int) (fadeDuration * 1000));
+		Minecraft.getMinecraft().getSoundHandler().stopSound(streams.get(token));
 	}
 	
 	@Override
 	public void eraseStreamingToken(int token)
 	{
+		Minecraft.getMinecraft().getSoundHandler().stopSound(streams.get(token));
 	}
 }

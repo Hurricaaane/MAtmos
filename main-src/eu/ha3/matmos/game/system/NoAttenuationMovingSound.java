@@ -1,6 +1,5 @@
 package eu.ha3.matmos.game.system;
 
-import eu.ha3.matmos.engine.core.implem.HelperFadeCalculator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.MovingSound;
@@ -13,20 +12,16 @@ import net.minecraft.util.ResourceLocation;
 
 public class NoAttenuationMovingSound extends MovingSound
 {
-	private HelperFadeCalculator fade;
-	
-	private boolean isLooping;
-	private boolean usesPause;
-	
-	protected NoAttenuationMovingSound(
-		ResourceLocation p_i45104_1_, HelperFadeCalculator fade, boolean isLooping, boolean usesPause)
+	protected NoAttenuationMovingSound(ResourceLocation myResource, float volume, float pitch)
 	{
-		super(p_i45104_1_);
+		super(myResource);
+
 		this.attenuationType = ISound.AttenuationType.NONE;
-		this.repeat = true; // TODO: What does this do?
-		
-		this.isLooping = isLooping;
-		this.usesPause = usesPause;
+		this.repeat = true;
+		this.repeatDelay = 0;
+
+		this.volume = volume;
+		this.pitch = pitch;
 	}
 	
 	@Override
@@ -37,22 +32,10 @@ public class NoAttenuationMovingSound extends MovingSound
 		this.xPosF = (float) e.posX;
 		this.yPosF = (float) e.posY;
 		this.zPosF = (float) e.posZ;
-		
-		float volumeFactor = this.fade.calculateFadeFactor();
-		float pitchFactor = 1f;
-		if (volumeFactor < 0.01f)
-		{
-			if (this.usesPause)
-			{
-				// Set pitch to zero to vitrually pause it
-				volumeFactor = 0f;
-				pitchFactor = 0f;
-			}
-			else
-			{
-				// Kill
-				this.donePlaying = true;
-			}
-		}
+	}
+
+	public void kill()
+	{
+		this.donePlaying = true;
 	}
 }
