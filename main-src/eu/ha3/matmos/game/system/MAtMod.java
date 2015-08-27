@@ -1,12 +1,11 @@
 package eu.ha3.matmos.game.system;
 
+import com.google.common.base.Optional;
 import eu.ha3.easy.StopWatchStatistic;
 import eu.ha3.easy.TimeStatistic;
 import eu.ha3.matmos.expansions.Expansion;
-import eu.ha3.matmos.expansions.ExpansionManager;
 import eu.ha3.matmos.expansions.Stable;
 import eu.ha3.matmos.expansions.volume.VolumeUpdatable;
-import eu.ha3.matmos.game.data.ModularDataGatherer;
 import eu.ha3.matmos.game.user.UserControl;
 import eu.ha3.matmos.game.user.VisualDebugger;
 import eu.ha3.matmos.log.MAtLog;
@@ -22,6 +21,15 @@ import eu.ha3.mc.quick.chat.Chatter;
 import eu.ha3.mc.quick.update.NotifiableHaddon;
 import eu.ha3.mc.quick.update.UpdateNotifier;
 import eu.ha3.util.property.simple.ConfigProperty;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundCategory;
 import net.minecraft.client.audio.SoundHandler;
@@ -32,11 +40,6 @@ import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.EnumChatFormatting;
 import paulscode.sound.SoundSystem;
-
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.util.*;
 
 /* x-placeholder */
 
@@ -61,21 +64,15 @@ public class MAtMod extends HaddonImpl
 		this, "http://q.mc.ha3.eu/query/matmos-main-version-vn.json?ver=%d");
 	
 	// State
-	private boolean isInitialized;
-	private boolean isActivated;
+	private boolean isListenerInstalled; 
+	private Optional<Simulacrum> simulacrum = Optional.absent();
 	private boolean isUnderwaterMode;
 	
 	// Components
-	private ExpansionManager expansionManager;
 	private UserControl userControl;
-	private ModularDataGatherer dataGatherer;
-	private VisualDebugger visualDebugger;
 	
 	// Use once
 	private boolean hasFirstTickPassed;
-	private boolean hasResourcePacks;
-	private boolean hasDisabledResourcePacks;
-	private boolean hasResourcePacks_FixMe;
 	
 	// Debug
 	private StopWatchStatistic timeStat = new StopWatchStatistic();
@@ -83,6 +80,7 @@ public class MAtMod extends HaddonImpl
 	// Debug queue
 	private Object queueLock = new Object();
 	private List<Runnable> queue = new ArrayList<Runnable>();
+	private boolean hasResourcePacks_FixMe;
 	
 	public MAtMod()
 	{
@@ -99,12 +97,11 @@ public class MAtMod extends HaddonImpl
 		util().registerPrivateGetter("isInWeb", Entity.class, -1, "isInWeb", "field_70134_J", "H");
 		
 		((OperatorCaster) op()).setTickEnabled(true);
+		((OperatorCaster) op()).setFrameEnabled(true);
 		
 		TimeStatistic timeMeasure = new TimeStatistic(Locale.ENGLISH);
 		this.userControl = new UserControl(this);
-		this.expansionManager =
-			new ExpansionManager(new File(util().getModsFolder(), "matmos/expansions_r29_userconfig/"), this);
-		
+
 		// Create default configuration
 		this.updateNotifier.fillDefaults(this.config);
 		this.config.setProperty("world.height", 256);
@@ -133,7 +130,6 @@ public class MAtMod extends HaddonImpl
 			throw new RuntimeException("Error caused config not to work: " + e.getMessage());
 		}
 		
-		this.expansionManager.setVolumeAndUpdate(this.config.getFloat("globalvolume.scale"));
 		resetAmbientVolume();
 		
 		this.updateNotifier.loadConfig(this.config);
@@ -145,7 +141,7 @@ public class MAtMod extends HaddonImpl
 		
 		if (this.config.getBoolean("start.enabled"))
 		{
-			initializeAndEnable();
+			start();
 		}
 	}
 	
@@ -168,85 +164,54 @@ public class MAtMod extends HaddonImpl
 		Minecraft.getMinecraft().gameSettings.setSoundLevel(SoundCategory.AMBIENT, 0.01f);
 	}
 	
-	public void initializeAndEnable()
+	public void start()
 	{
-		if (this.isInitialized)
-			return;
-		
-		this.isInitialized = true;
-		
-		((OperatorCaster) op()).setFrameEnabled(true);
-		
-		IResourceManager resMan = Minecraft.getMinecraft().getResourceManager();
-		if (resMan instanceof IReloadableResourceManager)
+		if (!this.isListenerInstalled)
 		{
-			((IReloadableResourceManager) resMan).registerReloadListener(this);
+			this.isListenerInstalled = true;
+
+			IResourceManager resMan = Minecraft.getMinecraft().getResourceManager();
+			if (resMan instanceof IReloadableResourceManager)
+			{
+				((IReloadableResourceManager) resMan).registerReloadListener(this);
+			}
 		}
-		
-		reloadEverything();
+
+		refresh();
+	}
+
+	public void refresh()
+	{
+		deactivate();
 		activate();
 	}
 	
-	public void reloadEverything()
+	public boolean isActivated()
 	{
-		if (!this.isInitialized)
-			return;
-		
-		this.expansionManager.deactivate();
-		this.expansionManager.dispose();
-		
-		TimeStatistic stat = new TimeStatistic(Locale.ENGLISH);
-		
-		this.dataGatherer = new ModularDataGatherer(this);
-		this.dataGatherer.load();
-		this.visualDebugger = new VisualDebugger(this, this.dataGatherer);
-		this.expansionManager.setData(this.dataGatherer.getData());
-		this.expansionManager.setCollector(this.dataGatherer);
-		this.expansionManager.loadExpansions();
-		
-		this.hasResourcePacks = true;
-		if (this.expansionManager.getExpansions().size() == 0)
-		{
-			MAtResourcePackDealer dealer = new MAtResourcePackDealer();
-			if (dealer.findResourcePacks().size() == 0)
-			{
-				this.hasResourcePacks = false;
-				this.hasDisabledResourcePacks = dealer.findDisabledResourcePacks().size() > 0;
-			}
-		}
-		
-		MAtLog.info("Expansions loaded (" + stat.getSecondsAsString(1) + "s).");
+		return this.simulacrum.isPresent();
 	}
-	
+
 	@Override
 	public void activate()
 	{
-		if (!this.isInitialized)
+		if (isActivated())
 			return;
 		
-		if (this.isActivated)
-			return;
-		
-		this.isActivated = true;
 		
 		MAtLog.fine("Loading...");
-		this.expansionManager.activate();
+		this.simulacrum = Optional.of(new Simulacrum(this));
 		MAtLog.fine("Loaded.");
 	}
 	
 	@Override
 	public void deactivate()
 	{
-		if (!this.isInitialized)
+		if (!isActivated())
 			return;
-		
-		if (!this.isActivated)
-			return;
-		
-		this.isActivated = false;
-		
+
 		MAtLog.fine("Stopping...");
-		this.expansionManager.deactivate();
+		this.simulacrum.get().dispose();
+		this.simulacrum = Optional.absent();
 		MAtLog.fine("Stopped.");
 	}
 	
@@ -255,20 +220,18 @@ public class MAtMod extends HaddonImpl
 	@Override
 	public void onFrame(float semi)
 	{
-		if (!this.isActivated)
+		if (!isActivated())
 			return;
 		
-		this.expansionManager.onFrame(semi);
+		this.simulacrum.get().onFrame(semi);
 		this.userControl.onFrame(semi);
-		this.visualDebugger.onFrame(semi);
-		
 	}
 	
 	@Override
 	public void onTick()
 	{
 		this.userControl.onTick();
-		if (this.isActivated)
+		if (this.isActivated())
 		{
 			if (!this.queue.isEmpty())
 			{
@@ -282,8 +245,7 @@ public class MAtMod extends HaddonImpl
 			}
 			
 			this.timeStat.reset();
-			this.dataGatherer.process();
-			this.expansionManager.onTick();
+			this.simulacrum.get().onTick();
 			this.timeStat.stop();
 			
 			if (MAtmosUtility.isUnderwaterAnyGamemode())
@@ -341,10 +303,10 @@ public class MAtMod extends HaddonImpl
 				getChatter().printChatShort("This affects performance. Your game may run slower.");
 			}
 			
-			if (!this.hasResourcePacks)
+			if (!this.simulacrum.get().hasResourcePacks())
 			{
 				this.hasResourcePacks_FixMe = true;
-				if (this.hasDisabledResourcePacks)
+				if (this.simulacrum.get().hasDisabledResourcePacks())
 				{
 					this.chatter.printChat(EnumChatFormatting.RED, "Resource Pack not enabled yet!");
 					this.chatter.printChatShort(EnumChatFormatting.WHITE, "You need to activate \"MAtmos Resource Pack\" in the Minecraft Options menu for it to run.");
@@ -356,22 +318,29 @@ public class MAtMod extends HaddonImpl
 				}
 			}
 		}
-		if (this.hasResourcePacks_FixMe && this.hasResourcePacks)
+
+		if (this.isActivated())
 		{
-			this.hasResourcePacks_FixMe = false;
-			this.chatter.printChat(EnumChatFormatting.GREEN, "It should work now!");
+			if (this.hasResourcePacks_FixMe && this.simulacrum.get().hasResourcePacks())
+			{
+				this.hasResourcePacks_FixMe = false;
+				this.chatter.printChat(EnumChatFormatting.GREEN, "It should work now!");
+			}
 		}
 	}
 	
 	@Override
 	public void dispose()
 	{
+		if (isActivated())
+			this.simulacrum.get().dispose();
 	}
 	
 	@Override
 	public void interrupt()
 	{
-		this.expansionManager.interrupt();
+		if (isActivated())
+			this.simulacrum.get().interruptBrutally();
 	}
 	
 	@Override
@@ -382,32 +351,26 @@ public class MAtMod extends HaddonImpl
 		interrupt();
 		
 		// Initiate hot reload
-		if (this.isActivated)
+		if (this.isActivated())
 		{
+			simulacrum.get().interruptBrutally();
 			deactivate();
-			reloadEverything();
 			activate();
 		}
-		else
-		{
-			reloadEverything();
-		}
 	}
-	
+
+	@SuppressWarnings("unchecked")
 	public Map<String, Expansion> getExpansionList()
 	{
-		return this.expansionManager.getExpansions();
+		if (isActivated())
+			return this.simulacrum.get().getExpansions();
+		else
+			return (Map<String, Expansion>) Collections.EMPTY_MAP;
 	}
 	
 	public boolean isInitialized()
 	{
-		return this.isInitialized;
-	}
-	
-	@Override
-	public boolean isActivated()
-	{
-		return this.isActivated;
+		return this.isListenerInstalled;
 	}
 	
 	@Override
@@ -469,32 +432,41 @@ public class MAtMod extends HaddonImpl
 	
 	public VolumeUpdatable getGlobalVolumeControl()
 	{
-		return this.expansionManager;
+		return this.simulacrum.get().getGlobalVolumeControl();
 	}
 	
 	public boolean hasResourcePacksLoaded()
 	{
-		return this.hasResourcePacks;
+		if (!isActivated())
+			return false;
+
+		return this.simulacrum.get().hasResourcePacks();
 	}
 	
 	public boolean hasNonethelessResourcePacksInstalled()
 	{
-		return this.hasDisabledResourcePacks;
+		if (!isActivated())
+			return false;
+
+		return this.simulacrum.get().hasDisabledResourcePacks();
 	}
 	
 	public void synchronize()
 	{
-		this.expansionManager.synchronize();
+		if (isActivated())
+			this.simulacrum.get().synchronize();
 	}
 	
 	public void saveExpansions()
 	{
-		this.expansionManager.saveConfig();
+		if (isActivated())
+			this.simulacrum.get().saveConfig();
 	}
 	
 	public VisualDebugger getVisualDebugger()
 	{
-		return this.visualDebugger;
+		// UNCHECKED!
+		return this.simulacrum.get().getVisualDebugger();
 	}
 	
 	public StopWatchStatistic getLag()
@@ -526,8 +498,7 @@ public class MAtMod extends HaddonImpl
 		{
 			getChatter().printChat(EnumChatFormatting.GOLD, "Dev/Editor mode disabled.");
 		}
-		
-		this.dataGatherer.forceRecomputeModuleStack_debugModeChanged();
+		refresh();
 	}
 	
 	public boolean isEditorAvailable()
@@ -558,5 +529,16 @@ public class MAtMod extends HaddonImpl
 		{
 			return null;
 		}
+	}
+
+	public Optional<Expansion> getExpansionEffort(String expansionName)
+	{
+		if (!isActivated())
+			return Optional.absent();
+
+		if (!simulacrum.get().getExpansions().containsKey(expansionName))
+			return Optional.absent();
+
+		return Optional.of(simulacrum.get().getExpansions().get(expansionName));
 	}
 }

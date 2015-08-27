@@ -187,7 +187,7 @@ public class UserControl implements Ha3HoldActions, SupportsTickEvents, Supports
 			return;
 		
 		TimeStatistic stat = new TimeStatistic();
-		this.mod.initializeAndEnable();
+		this.mod.start();
 		this.mod.getChatter().printChat(
                 EnumChatFormatting.GREEN, "Loading for the first time (" + stat.getSecondsAsString(2) + "s)");
 	}
@@ -197,7 +197,7 @@ public class UserControl implements Ha3HoldActions, SupportsTickEvents, Supports
 		if (!this.mod.isActivated() && this.mod.isInitialized())
 		{
 			TimeStatistic stat = new TimeStatistic();
-			this.mod.reloadEverything();
+			this.mod.refresh();
 			this.mod.activate();
 			this.mod.getChatter().printChat(
                     EnumChatFormatting.GREEN, "Reloading expansions (" + stat.getSecondsAsString(2) + "s)");

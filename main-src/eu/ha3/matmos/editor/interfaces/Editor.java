@@ -2,10 +2,8 @@ package eu.ha3.matmos.editor.interfaces;
 
 import eu.ha3.matmos.editor.KnowledgeItemType;
 import eu.ha3.matmos.editor.tree.Selector;
-import eu.ha3.matmos.engine.core.implem.ProviderCollection;
 import eu.ha3.matmos.jsonformat.serializable.expansion.SerialEvent;
 import eu.ha3.matmos.jsonformat.serializable.expansion.SerialRoot;
-
 import java.io.File;
 
 /*
@@ -24,11 +22,7 @@ public interface Editor
 	
 	public void minecraftPushCurrentState();
 	
-	public ProviderCollection getProviderCollectionIfAvailable();
-	
 	public boolean isMinecraftControlled();
-	
-	public boolean isPlugged();
 	
 	public boolean hasValidFile();
 	

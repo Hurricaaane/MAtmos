@@ -6,16 +6,12 @@ import com.google.gson.stream.MalformedJsonException;
 import eu.ha3.matmos.editor.interfaces.Editor;
 import eu.ha3.matmos.editor.interfaces.Window;
 import eu.ha3.matmos.editor.tree.Selector;
-import eu.ha3.matmos.engine.core.implem.ProviderCollection;
 import eu.ha3.matmos.expansions.debugunit.ReadOnlyJasonStringEDU;
 import eu.ha3.matmos.jsonformat.serializable.expansion.SerialEvent;
 import eu.ha3.matmos.jsonformat.serializable.expansion.SerialRoot;
 import eu.ha3.matmos.pluggable.PluggableIntoMinecraft;
-import eu.ha3.matmos.pluggable.UnpluggedListener;
 import eu.ha3.matmos.tools.Jason;
 import eu.ha3.matmos.tools.JasonExpansions_Engine1Deserializer2000;
-
-import javax.swing.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
@@ -23,18 +19,18 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Scanner;
+import javax.swing.UIManager;
 
 /*
 --filenotes-placeholder
 */
 
-public class EditorMaster implements Runnable, Editor, UnpluggedListener
+public class EditorMaster implements Runnable, Editor
 {
 	//private IEditorWindow __WINDOW;
 	private Window window__EventQueue;
 	
 	private final PluggableIntoMinecraft minecraft;
-	private boolean isUnplugged;
 	
 	private File file;
 	private File workingDirectory = new File(System.getProperty("user.dir"));
@@ -58,8 +54,6 @@ public class EditorMaster implements Runnable, Editor, UnpluggedListener
 		this.minecraft = minecraft;
 		if (minecraft != null)
 		{
-			minecraft.addUnpluggedListener(this);
-			
 			File fileIF = minecraft.getFileIfAvailable();
 			File workingDirectoryIF = minecraft.getWorkingDirectoryIfAvailable();
 			if (fileIF != null && workingDirectoryIF != null)
@@ -250,9 +244,6 @@ public class EditorMaster implements Runnable, Editor, UnpluggedListener
 	@Override
 	public void minecraftReloadFromDisk()
 	{
-		if (!isPlugged())
-			return;
-		
 		this.minecraft.reloadFromDisk();
 	}
 	
@@ -261,16 +252,7 @@ public class EditorMaster implements Runnable, Editor, UnpluggedListener
 	{
 		return this.file != null;
 	}
-	
-	@Override
-	public ProviderCollection getProviderCollectionIfAvailable()
-	{
-		if (!isPlugged())
-			return null;
-		
-		return this.minecraft.getProviders();
-	}
-	
+
 	@Override
 	public File getWorkingDirectory()
 	{
@@ -298,9 +280,6 @@ public class EditorMaster implements Runnable, Editor, UnpluggedListener
 	@Override
 	public void minecraftPushCurrentState()
 	{
-		if (!isPlugged())
-			return;
-		
 		this.minecraft.pushJason(Jason.toJson(this.root));
 	}
 	
@@ -356,19 +335,6 @@ public class EditorMaster implements Runnable, Editor, UnpluggedListener
 		}
 		
 		return true;
-	}
-	
-	@Override
-	public void onUnpluggedEvent(PluggableIntoMinecraft pluggable)
-	{
-		this.isUnplugged = true;
-		this.window__EventQueue.disableMinecraftCapabilitites();
-	}
-	
-	@Override
-	public boolean isPlugged()
-	{
-		return isMinecraftControlled() && !this.isUnplugged;
 	}
 	
 	@Override

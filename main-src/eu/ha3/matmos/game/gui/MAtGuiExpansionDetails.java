@@ -9,13 +9,12 @@ import eu.ha3.matmos.game.debug.SoundsJsonGenerator;
 import eu.ha3.matmos.game.system.IDontKnowHowToCode;
 import eu.ha3.matmos.game.system.MAtMod;
 import eu.ha3.matmos.game.user.VisualExpansionDebugging;
+import java.io.File;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.EnumChatFormatting;
-
-import java.io.File;
 
 /*
 --filenotes-placeholder
@@ -108,7 +107,6 @@ public class MAtGuiExpansionDetails extends GuiScreen
 			if (debugUnit != null)
 			{
 				PluggableIntoMAtmos plug = new PluggableIntoMAtmos(this.mod, this.expansion);
-				this.expansion.addPluggable(plug);
 				
 				Runnable editor = this.mod.instantiateRunnableEditor(plug);
 				if (editor != null)
