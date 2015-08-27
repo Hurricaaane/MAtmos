@@ -52,6 +52,8 @@ public class Simulacrum implements SupportsTickEvents, SupportsFrameEvents
 			}
 		}
 
+		this.expansionManager.synchronize();
+
 		MAtLog.info("Expansions loaded (" + stat.getSecondsAsString(1) + "s).");
 	}
 
