@@ -9,6 +9,7 @@ import eu.ha3.mc.convenience.Ha3KeyHolding;
 import eu.ha3.mc.convenience.Ha3KeyManager_2;
 import eu.ha3.mc.haddon.supporting.SupportsFrameEvents;
 import eu.ha3.mc.haddon.supporting.SupportsTickEvents;
+import eu.ha3.mc.presencefootsteps.log.PFLog;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.settings.KeyBinding;
@@ -25,6 +26,7 @@ public class UserControl implements Ha3HoldActions, SupportsTickEvents, Supports
 	
 	private KeyBinding keyBindingMain;
 	private VolumeScroller scroller;
+	private int tickRound;
 	
 	private int loadingCount;
 	
@@ -59,6 +61,19 @@ public class UserControl implements Ha3HoldActions, SupportsTickEvents, Supports
 	public void onTick()
 	{
 		this.keyManager.onTick();
+
+		// Copied from Sollace's Presence Footsteps solution to bindings disappearing
+		if (tickRound == 0)
+		{
+			int keyCode = keyBindingMain.getKeyCode();
+			if (keyCode != mod.getConfig().getInteger("key.code"))
+			{
+				PFLog.log("Key binding changed. Saving...");
+				mod.getConfig().setProperty("key.code", keyCode);
+				mod.saveConfig();
+			}
+		}
+		tickRound = (tickRound + 1) % 100;
 		
 		this.scroller.routine();
 		if (this.scroller.isRunning())
@@ -99,7 +114,7 @@ public class UserControl implements Ha3HoldActions, SupportsTickEvents, Supports
 	@Override
 	public void beginHold()
 	{
-		if (this.mod.getConfig().getBoolean("reversed.controls"))
+		if (this.mod.getConfig().getBoolean("reversed.controls") && false)
 		{
 			displayMenu();
 		}
@@ -112,7 +127,7 @@ public class UserControl implements Ha3HoldActions, SupportsTickEvents, Supports
 	@Override
 	public void shortPress()
 	{
-		if (this.mod.getConfig().getBoolean("reversed.controls"))
+		if (this.mod.getConfig().getBoolean("reversed.controls") && false)
 		{
 			whenWantsToggle();
 		}
