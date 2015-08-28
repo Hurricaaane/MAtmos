@@ -47,7 +47,7 @@ public interface SoundCapabilities
 	 * @param customName
 	 * @param fadeIn
 	 */
-	public void playStreaming(String customName, int fadeIn);
+	public void playStreaming(String customName, float fadeIn);
 	
 	/**
 	 * Stops a streaming sound, fading out if it's greater than zero. Fading
@@ -56,7 +56,7 @@ public interface SoundCapabilities
 	 * @param customName
 	 * @param fadeOut
 	 */
-	public void stopStreaming(String customName, int fadeOut);
+	public void stopStreaming(String customName, float fadeOut);
 	
 	/**
 	 * Instantly applies a volume modulation of all currently running stuff and
